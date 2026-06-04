@@ -1,4 +1,159 @@
-onclick="restart()"
+<!DOCTYPE html>
+<html>
+
+<body
+style="
+margin:0;
+height:100vh; " 
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+text-align:center;
+background:white;
+">
+
+<h1>Hallo! Ich bin Kapi 🦫</h1>
+
+<img src="capy.png" width="450">
+
+<p id="message" style="font-size:30px;">
+Guten Morgen! Schön, dich kennenzulernen! 🌟
+</p>
+
+<button
+style="
+font-size:24px;
+padding:12px 24px;
+border-radius:12px;
+cursor:pointer;
+"
+onclick="sayHallo()">
+👋 Hallo Kapi
+</button>
+
+<script>
+function sayHallo() {
+    document.getElementById("message").innerText =
+        "Hallo! Wie geht's dir? 😊";
+}
+</script>
+
+</body>
+</html>
+
+    document.getElementById("buttons").innerHTML = 
+        <button
+        onclick="goodAnswer()"
+        style="
+        font-size:22px;
+        padding:15px 25px;
+        margin:10px;
+        border-radius:20px;
+        border:none;
+        cursor:pointer;
+        ">
+            😊 Mir geht's gut!
+        </button>
+
+        <button
+        onclick="badAnswer()"
+        style="
+        font-size:22px;
+        padding:15px 25px;
+        margin:10px;
+        border-radius:20px;
+        border:none;
+        cursor:pointer;
+        ">
+            😢 Nicht so gut.
+        </button>
+    ;
+}
+
+function goodAnswer() {
+
+    document.getElementById("message").innerText =
+        "Das freut mich! 🌟\n\nWas möchtest du heute lernen?";
+
+    showLessons();
+}
+
+function badAnswer() {
+
+    document.getElementById("message").innerText =
+        "Oh nein! Hoffentlich wird dein Tag besser. 💛\n\nWas möchtest du heute lernen?";
+
+    showLessons();
+}
+
+function showLessons() {
+
+    document.getElementById("buttons").innerHTML = 
+
+        <button
+        onclick="chooseLesson('Hören')"
+        style="
+        font-size:22px;
+        padding:15px 25px;
+        margin:10px;
+        border-radius:20px;
+        border:none;
+        cursor:pointer;
+        ">
+            👂 Hören
+        </button>
+
+        <button
+        onclick="chooseLesson('Sprechen')"
+        style="
+        font-size:22px;
+        padding:15px 25px;
+        margin:10px;
+        border-radius:20px;
+        border:none;
+        cursor:pointer;
+        ">
+            🗣️ Sprechen
+        </button>
+
+        <button
+        onclick="chooseLesson('Lesen')"
+        style="
+        font-size:22px;
+        padding:15px 25px;
+        margin:10px;
+        border-radius:20px;
+        border:none;
+        cursor:pointer;
+        ">
+            📖 Lesen
+        </button>
+
+        <button
+        onclick="chooseLesson('Schreiben')"
+        style="
+        font-size:22px;
+        padding:15px 25px;
+        margin:10px;
+        border-radius:20px;
+        border:none;
+        cursor:pointer;
+        ">
+            ✍️ Schreiben
+        </button>
+
+    ;
+}
+
+function chooseLesson(lesson) {
+
+    document.getElementById("message").innerText =
+        "Super! Heute lernen wir " + lesson + "! 🎉";
+
+    document.getElementById("buttons").innerHTML = 
+        <button
+        onclick="restart()"
         style="
         font-size:22px;
         padding:15px 25px;
@@ -9,7 +164,7 @@ onclick="restart()"
         ">
             🦫 Zurück zu Kapi
         </button>
-    `;
+    ;
 }
 
 function restart() {
@@ -17,7 +172,7 @@ function restart() {
     document.getElementById("message").innerText =
         "Guten Morgen! Schön, dich kennenzulernen! 🌟";
 
-    document.getElementById("buttons").innerHTML = `
+    document.getElementById("buttons").innerHTML = 
         <button
         style="
         font-size:24px;
@@ -29,10 +184,10 @@ function restart() {
         onclick="sayHallo()">
             👋 Hallo Kapi
         </button>
-    `;
+    ;
 }
 
 </script>
 
 </body>
-</html>
+</html> "
