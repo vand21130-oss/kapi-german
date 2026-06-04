@@ -244,9 +244,10 @@ cursor:pointer;
 function goodAnswer() {
 
 document.getElementById("message").innerText =
-"Das freut mich! 🌟\n\nWas möchtest du heute lernen?";
+"Das freut mich! 🌟";
 
-showLessons();
+showLevels();
+
 
 }
 
@@ -258,7 +259,14 @@ document.getElementById("message").innerText =
 showLessons();
 
 }
+function badAnswer() {
 
+document.getElementById("message").innerText =
+"Oh nein! Hoffentlich wird dein Tag besser. 💛";
+
+showLevels();
+
+}
 // ===== LESSONS =====
 
 function showLessons() {
