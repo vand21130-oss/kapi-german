@@ -4,7 +4,7 @@
 <body
 style="
 margin:0;
-height:100vh; " 
+height:100vh;
 display:flex;
 flex-direction:column;
 justify-content:center;
@@ -21,6 +21,10 @@ background:white;
 Guten Morgen! Schön, dich kennenzulernen! 🌟
 </p>
 
+<p id="timer" style="font-size:40px;"></p>
+
+<div id="buttons">
+
 <button
 style="
 font-size:24px;
@@ -32,162 +36,386 @@ onclick="sayHallo()">
 👋 Hallo Kapi
 </button>
 
+</div>
+
 <script>
-function sayHallo() {
-    document.getElementById("message").innerText =
-        "Hallo! Wie geht's dir? 😊";
+
+let currentTeil = "";
+let countdown;
+
+// ===== TEIL 1 =====
+
+const teil1 = [
+
+{
+thema:"Fremdsprachen lernen",
+punkte:[
+"Vorteile für Beruf und Zukunft",
+"Kognitive Fähigkeiten fördern",
+"Kulturelles Verständnis erweitern",
+"Zeitaufwand und Schwierigkeiten"
+]
+},
+
+{
+thema:"Stress vermeiden",
+punkte:[
+"Ursachen erkennen",
+"Methoden zur Entspannung",
+"Auswirkungen auf Gesundheit",
+"Balance zwischen Arbeit und Freizeit"
+]
+},
+
+{
+thema:"Im Ausland arbeiten",
+punkte:[
+"Berufliche Chancen erweitern",
+"Kulturelle Erfahrungen bereichern",
+"Sprachkenntnisse verbessern",
+"Familie und Freunde vernachlässigen"
+]
 }
-</script>
 
-</body>
-</html>
+];
 
-    document.getElementById("buttons").innerHTML = 
-        <button
-        onclick="goodAnswer()"
-        style="
-        font-size:22px;
-        padding:15px 25px;
-        margin:10px;
-        border-radius:20px;
-        border:none;
-        cursor:pointer;
-        ">
-            😊 Mir geht's gut!
-        </button>
+// ===== TEIL 2 =====
 
-        <button
-        onclick="badAnswer()"
-        style="
-        font-size:22px;
-        padding:15px 25px;
-        margin:10px;
-        border-radius:20px;
-        border:none;
-        cursor:pointer;
-        ">
-            😢 Nicht so gut.
-        </button>
-    ;
+const teil2 = [
+
+"Soll man die Arbeitszeit verkürzen?",
+
+"Online studieren oder Präsenzunterricht?",
+
+"Bargeld oder Kreditkarte?",
+
+"Soll man in sozialen Medien aktiv sein?",
+
+"Books oder E-Books?"
+
+];
+
+// ===== TIMER =====
+
+function startTimer() {
+
+clearInterval(countdown);
+
+let time = 120;
+
+countdown = setInterval(function(){
+
+let minutes = Math.floor(time / 60);
+let seconds = time % 60;
+
+document.getElementById("timer").innerText =
+minutes + ":" +
+seconds.toString().padStart(2,"0");
+
+time--;
+
+if(time < 0){
+
+clearInterval(countdown);
+
+document.getElementById("timer").innerText =
+"⏰ Zeit ist um!";
+
+}
+
+},1000);
+
+}
+
+// ===== START =====
+
+function sayHallo() {
+
+document.getElementById("message").innerText =
+"Hallo! Wie geht's dir? 😊";
+
+document.getElementById("buttons").innerHTML = `
+
+<button
+onclick="goodAnswer()"
+style="
+font-size:22px;
+padding:15px 25px;
+margin:10px;
+border-radius:20px;
+border:none;
+cursor:pointer;
+">
+😊 Mir geht's gut!
+</button>
+
+<button
+onclick="badAnswer()"
+style="
+font-size:22px;
+padding:15px 25px;
+margin:10px;
+border-radius:20px;
+border:none;
+cursor:pointer;
+">
+😢 Nicht so gut.
+</button>
+
+`;
+
 }
 
 function goodAnswer() {
 
-    document.getElementById("message").innerText =
-        "Das freut mich! 🌟\n\nWas möchtest du heute lernen?";
+document.getElementById("message").innerText =
+"Das freut mich! 🌟\n\nWas möchtest du heute lernen?";
 
-    showLessons();
+showLessons();
+
 }
 
 function badAnswer() {
 
-    document.getElementById("message").innerText =
-        "Oh nein! Hoffentlich wird dein Tag besser. 💛\n\nWas möchtest du heute lernen?";
+document.getElementById("message").innerText =
+"Oh nein! Hoffentlich wird dein Tag besser. 💛\n\nWas möchtest du heute lernen?";
 
-    showLessons();
+showLessons();
+
 }
+
+// ===== LESSONS =====
 
 function showLessons() {
 
-    document.getElementById("buttons").innerHTML = 
+document.getElementById("buttons").innerHTML = `
 
-        <button
-        onclick="chooseLesson('Hören')"
-        style="
-        font-size:22px;
-        padding:15px 25px;
-        margin:10px;
-        border-radius:20px;
-        border:none;
-        cursor:pointer;
-        ">
-            👂 Hören
-        </button>
+<button onclick="chooseLesson('Hören')" style="
+font-size:22px;
+padding:15px 25px;
+margin:10px;
+border-radius:20px;
+border:none;
+cursor:pointer;
+">
+👂 Hören
+</button>
 
-        <button
-        onclick="chooseLesson('Sprechen')"
-        style="
-        font-size:22px;
-        padding:15px 25px;
-        margin:10px;
-        border-radius:20px;
-        border:none;
-        cursor:pointer;
-        ">
-            🗣️ Sprechen
-        </button>
+<button onclick="chooseLesson('Sprechen')" style="
+font-size:22px;
+padding:15px 25px;
+margin:10px;
+border-radius:20px;
+border:none;
+cursor:pointer;
+">
+🗣️ Sprechen
+</button>
 
-        <button
-        onclick="chooseLesson('Lesen')"
-        style="
-        font-size:22px;
-        padding:15px 25px;
-        margin:10px;
-        border-radius:20px;
-        border:none;
-        cursor:pointer;
-        ">
-            📖 Lesen
-        </button>
+<button onclick="chooseLesson('Lesen')" style="
+font-size:22px;
+padding:15px 25px;
+margin:10px;
+border-radius:20px;
+border:none;
+cursor:pointer;
+">
+📖 Lesen
+</button>
 
-        <button
-        onclick="chooseLesson('Schreiben')"
-        style="
-        font-size:22px;
-        padding:15px 25px;
-        margin:10px;
-        border-radius:20px;
-        border:none;
-        cursor:pointer;
-        ">
-            ✍️ Schreiben
-        </button>
+<button onclick="chooseLesson('Schreiben')" style="
+font-size:22px;
+padding:15px 25px;
+margin:10px;
+border-radius:20px;
+border:none;
+cursor:pointer;
+">
+✍️ Schreiben
+</button>
 
-    ;
+`;
+
 }
+
+// ===== SPRECHEN =====
 
 function chooseLesson(lesson) {
 
-    document.getElementById("message").innerText =
-        "Super! Heute lernen wir " + lesson + "! 🎉";
+if(lesson === "Sprechen"){
 
-    document.getElementById("buttons").innerHTML = 
-        <button
-        onclick="restart()"
-        style="
-        font-size:22px;
-        padding:15px 25px;
-        margin:10px;
-        border-radius:20px;
-        border:none;
-        cursor:pointer;
-        ">
-            🦫 Zurück zu Kapi
-        </button>
-    ;
+document.getElementById("message").innerHTML =
+"Welchen Teil möchtest du üben?";
+
+document.getElementById("buttons").innerHTML = `
+
+<button onclick="showTeil1()" style="
+font-size:22px;
+padding:15px 25px;
+margin:10px;
+border-radius:20px;
+border:none;
+cursor:pointer;
+">
+🎤 Teil 1
+</button>
+
+<button onclick="showTeil2()" style="
+font-size:22px;
+padding:15px 25px;
+margin:10px;
+border-radius:20px;
+border:none;
+cursor:pointer;
+">
+🎤 Teil 2
+</button>
+
+<button onclick="showLessons()" style="
+font-size:22px;
+padding:15px 25px;
+margin:10px;
+border-radius:20px;
+border:none;
+cursor:pointer;
+">
+🦫 Zurück
+</button>
+
+`;
+
+return;
+
 }
 
-function restart() {
+document.getElementById("message").innerText =
+"Super! Heute lernen wir " + lesson + "! 🎉";
 
-    document.getElementById("message").innerText =
-        "Guten Morgen! Schön, dich kennenzulernen! 🌟";
+}
 
-    document.getElementById("buttons").innerHTML = 
-        <button
-        style="
-        font-size:24px;
-        padding:12px 24px;
-        border-radius:12px;
-        border:none;
-        cursor:pointer;
-        "
-        onclick="sayHallo()">
-            👋 Hallo Kapi
-        </button>
-    ;
+// ===== TEIL 1 =====
+
+function showTeil1(){
+
+currentTeil = "teil1";
+
+let thema =
+teil1[Math.floor(Math.random()*teil1.length)];
+
+document.getElementById("message").innerHTML =
+
+"<b>🗣️ Goethe B2 - Teil 1</b><br><br>" +
+
+thema.thema +
+
+"<br><br>• " +
+
+thema.punkte.join("<br>• ");
+
+document.getElementById("buttons").innerHTML = `
+
+<button onclick="showTeil1()" style="
+font-size:22px;
+padding:15px 25px;
+margin:10px;
+border-radius:20px;
+border:none;
+cursor:pointer;
+">
+🔄 Neues Thema
+</button>
+
+<button onclick="restart()" style="
+font-size:22px;
+padding:15px 25px;
+margin:10px;
+border-radius:20px;
+border:none;
+cursor:pointer;
+">
+🦫 Zurück
+</button>
+
+`;
+
+startTimer();
+
+}
+
+// ===== TEIL 2 =====
+
+function showTeil2(){
+
+currentTeil = "teil2";
+
+let thema =
+teil2[Math.floor(Math.random()*teil2.length)];
+
+document.getElementById("message").innerHTML =
+
+"<b>🗣️ Goethe B2 - Teil 2</b><br><br>" +
+
+thema;
+
+document.getElementById("buttons").innerHTML = `
+
+<button onclick="showTeil2()" style="
+font-size:22px;
+padding:15px 25px;
+margin:10px;
+border-radius:20px;
+border:none;
+cursor:pointer;
+">
+🔄 Neues Thema
+</button>
+
+<button onclick="restart()" style="
+font-size:22px;
+padding:15px 25px;
+margin:10px;
+border-radius:20px;
+border:none;
+cursor:pointer;
+">
+🦫 Zurück
+</button>
+
+`;
+
+startTimer();
+
+}
+
+// ===== RESTART =====
+
+function restart(){
+
+clearInterval(countdown);
+
+document.getElementById("timer").innerText = "";
+
+document.getElementById("message").innerText =
+"Guten Morgen! Schön, dich kennenzulernen! 🌟";
+
+document.getElementById("buttons").innerHTML = `
+
+<button
+style="
+font-size:24px;
+padding:12px 24px;
+border-radius:12px;
+cursor:pointer;
+"
+onclick="sayHallo()">
+👋 Hallo Kapi
+</button>
+
+`;
+
 }
 
 </script>
 
 </body>
-</html> "
+</html>
