@@ -75,77 +75,15 @@ function sayHallo() {
 function goodAnswer() {
 
     document.getElementById("message").innerText =
-        "Das freut mich! 🌟";
+        "Das freut mich! 🌟\n\nWas möchtest du heute lernen?";
+
+    showLessonButtons();
 }
 
 function badAnswer() {
 
     document.getElementById("message").innerText =
-        "Oh nein! Hoffentlich wird dein Tag besser. 💛";
-}
+        "Oh nein! Hoffentlich wird dein Tag besser. 💛\n\nWas möchtest du heute lernen?";
 
-</script>
-
-</body>
-</html>
-function showLessonButtons() {
-
-    document.getElementById("buttons").innerHTML = `
-
-        <button onclick="chooseLesson('Hören')"
-        style="
-        font-size:22px;
-        padding:15px 25px;
-        margin:10px;
-        border-radius:20px;
-        border:none;
-        cursor:pointer;
-        ">
-        👂 Hören
-        </button>
-
-        <button onclick="chooseLesson('Sprechen')"
-        style="
-        font-size:22px;
-        padding:15px 25px;
-        margin:10px;
-        border-radius:20px;
-        border:none;
-        cursor:pointer;
-        ">
-        🗣️ Sprechen
-        </button>
-
-        <button onclick="chooseLesson('Lesen')"
-        style="
-        font-size:22px;
-        padding:15px 25px;
-        margin:10px;
-        border-radius:20px;
-        border:none;
-        cursor:pointer;
-        ">
-        📖 Lesen
-        </button>
-
-        <button onclick="chooseLesson('Schreiben')"
-        style="
-        font-size:22px;
-        padding:15px 25px;
-        margin:10px;
-        border-radius:20px;
-        border:none;
-        cursor:pointer;
-        ">
-        ✍️ Schreiben
-        </button>
-
-    `;
-}
-
-function chooseLesson(lesson) {
-
-    document.getElementById("message").innerText =
-        "Super! Heute lernen wir: " + lesson + " 🎉";
-
+    showLessonButtons();
 }
