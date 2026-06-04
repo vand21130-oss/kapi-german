@@ -1,18 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+<body
+style="
+margin:0;
+height:100vh;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+text-align:center;
+background:white;
+">
+
+<h1>Hallo! Ich bin Kapi 🦫</h1>
+
+<img src="capy.png" width="450">
+
+<p id="message" style="font-size:30px;">
+Guten Morgen! Schön, dich kennenzulernen! 🌟
+</p>
+
+<div id="buttons">
+
+<button
+style="
+font-size:24px;
+padding:12px 24px;
+border-radius:12px;
+cursor:pointer;
+"
+onclick="sayHallo()">
+👋 Hallo Kapi
+</button>
+
+</div>
+
 <script>
-function sayHello() {
+
+function sayHallo() {
+
     document.getElementById("message").innerText =
         "Hallo! Wie geht's dir? 😊";
 
-    document.getElementById("choices").style.display = "block";
+    document.getElementById("buttons").innerHTML = `
+        <button onclick="goodAnswer()">
+            😊 Mir geht's gut!
+        </button>
+
+        <button onclick="badAnswer()">
+            😢 Nicht so gut.
+        </button>
+    `;
 }
 
-function answerGood() {
+function goodAnswer() {
+
     document.getElementById("message").innerText =
         "Das freut mich! 🌟";
 }
 
-function answerBad() {
+function badAnswer() {
+
     document.getElementById("message").innerText =
         "Oh nein! Hoffentlich wird dein Tag besser. 💛";
 }
+
 </script>
+
+</body>
+</html>
