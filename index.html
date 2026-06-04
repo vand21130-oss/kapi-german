@@ -40,8 +40,83 @@ onclick="sayHallo()">
 
 <script>
 
+<script>
+
 let currentTeil = "";
+let currentLevel = "";
 let countdown;
+
+// ===== LEVEL =====
+
+function showLevels() {
+
+document.getElementById("message").innerText =
+"Welches Niveau möchtest du heute üben? 📚";
+
+document.getElementById("buttons").innerHTML = `
+
+<button onclick="chooseLevel('A1')" style="
+font-size:22px;
+padding:15px 25px;
+margin:10px;
+border-radius:20px;
+border:none;
+cursor:pointer;
+">
+🟢 A1
+</button>
+
+<button onclick="chooseLevel('A2')" style="
+font-size:22px;
+padding:15px 25px;
+margin:10px;
+border-radius:20px;
+border:none;
+cursor:pointer;
+">
+🔵 A2
+</button>
+
+<button onclick="chooseLevel('B1')" style="
+font-size:22px;
+padding:15px 25px;
+margin:10px;
+border-radius:20px;
+border:none;
+cursor:pointer;
+">
+🟡 B1
+</button>
+
+<button onclick="chooseLevel('B2')" style="
+font-size:22px;
+padding:15px 25px;
+margin:10px;
+border-radius:20px;
+border:none;
+cursor:pointer;
+">
+🟠 B2
+</button>
+
+`;
+}
+
+function chooseLevel(level){
+
+currentLevel = level;
+
+document.getElementById("message").innerText =
+"Super! Heute üben wir Deutsch auf Niveau " +
+level + " 🇩🇪";
+
+showLessons();
+
+}
+
+// ===== TEIL 1 =====
+
+const teil1 = [
 
 // ===== TEIL 1 =====
 
