@@ -72,12 +72,31 @@ function sayHallo() {
     `;
 }
 
+
 function goodAnswer() {
 
     document.getElementById("message").innerText =
         "Das freut mich! 🌟\n\nWas möchtest du heute lernen?";
 
-    showLessonButtons();
+    document.getElementById("buttons").innerHTML = `
+
+        <button onclick="chooseLesson('Hören')">
+            👂 Hören
+        </button>
+
+        <button onclick="chooseLesson('Sprechen')">
+            🗣️ Sprechen
+        </button>
+
+        <button onclick="chooseLesson('Lesen')">
+            📖 Lesen
+        </button>
+
+        <button onclick="chooseLesson('Schreiben')">
+            ✍️ Schreiben
+        </button>
+
+    `;
 }
 
 function badAnswer() {
@@ -85,5 +104,23 @@ function badAnswer() {
     document.getElementById("message").innerText =
         "Oh nein! Hoffentlich wird dein Tag besser. 💛\n\nWas möchtest du heute lernen?";
 
-    showLessonButtons();
+    document.getElementById("buttons").innerHTML = `
+
+        <button onclick="chooseLesson('Hören')">
+            👂 Hören
+        </button>
+
+        <button onclick="chooseLesson('Sprechen')">
+            🗣️ Sprechen
+        </button>
+
+        <button onclick="chooseLesson('Lesen')">
+            📖 Lesen
+        </button>
+
+        <button onclick="chooseLesson('Schreiben')">
+            ✍️ Schreiben
+        </button>
+
+    `;
 }
