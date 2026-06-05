@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
-
+<head>
+    <meta charset="UTF-8">
+</head>
 <body
 style="
 margin:0;
@@ -103,30 +105,45 @@ function toggleRecording() {
         isRecording = false;
         recordBtn.innerHTML = "🎤 Aufnehmen";
         
-        // Gọi AI giả lập sửa lỗi
+        // GỌI HÀM KẾT NỐI API
         simulateAIFeedback(finalTranscript);
     }
 }
 
-function simulateAIFeedback(text) {
+// HÀM MỚI: ĐÃ ĐƯỢC NỐI VỚI VERCEL
+async function simulateAIFeedback(text) {
     let aiCorrection = document.getElementById("ai-correction");
+    let transcriptText = document.getElementById("transcript-text");
+
     if (!text.trim()) {
-        aiCorrection.innerHTML = "<p style='color:red;'>Ich habe nichts gehört.</p>";
+        transcriptText.innerHTML = "<b>Oops!</b>"; 
+        aiCorrection.innerHTML = "<p style='color:red;'>Ich habe nichts gehört. (Kapi chưa nghe thấy gì cả)</p>";
         aiCorrection.style.display = "block";
         return;
     }
 
-    aiCorrection.innerHTML = `
-        <h4 style="margin-bottom: 5px;">Korrektur:</h4>
-        <p style="font-size: 18px; margin-top:0;">
-            Ich denke, <s style="color: red;">dass ist das</s> eine gute Idee. <br>
-            <span style="color: green;">➡️ Ich denke, dass das eine gute Idee ist.</span>
-        </p>
-        <p><b>Erklärung:</b> Nach "dass" muss das Verb am Ende stehen!</p>
-        <h4 style="margin-bottom: 5px;">Bessere Alternative (B2):</h4>
-        <p style="font-size: 18px; margin-top:0;"><i>"Ich stehe auf dem Standpunkt, dass..."</i></p>
-    `;
+    aiCorrection.innerHTML = "<p style='color:#0984e3;'><i>Kapi đang suy nghĩ để sửa bài cho cậu... 🧠🦫</i></p>";
     aiCorrection.style.display = "block";
+
+    try {
+        // GỌI VÀO "PHÒNG TỐI" TẠI VERCEL THAY VÌ GỌI THẲNG GEMINI
+        const response = await fetch('/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text: text })
+        });
+
+        const data = await response.json();
+        
+        if (data.result) {
+            aiCorrection.innerHTML = data.result;
+        } else {
+            aiCorrection.innerHTML = "<p style='color:red;'>Kapi đang bị nghẽn mạch, cậu thử lại nhé!</p>";
+        }
+    } catch (error) {
+        aiCorrection.innerHTML = "<p style='color:red;'>Lỗi mạng rồi! Không thể kết nối với não bộ Kapi.</p>";
+        console.error(error);
+    }
 }
 // ===== KẾT THÚC PHẦN THÊM MỚI =====
 
