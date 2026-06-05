@@ -23,6 +23,21 @@ Guten Morgen! Schön, dich kennenzulernen! 🌟
 
 <p id="timer" style="font-size:40px;"></p>
 
+<!-- PHẦN THÊM MỚI: Khung hiển thị lời nói và sửa lỗi (Mặc định ẩn) -->
+<div id="feedback-area" style="
+display:none; 
+max-width: 800px; 
+margin: 10px auto; 
+padding: 20px; 
+background-color: #f5f5f5; 
+border-radius: 12px; 
+text-align: left;
+">
+    <p id="transcript-text" style="font-size: 20px;"><i>Dein Text erscheint hier...</i></p>
+    <div id="ai-correction" style="display: none; margin-top: 15px; border-top: 1px solid #ccc; padding-top: 15px;"></div>
+</div>
+<!-- KẾT THÚC PHẦN THÊM MỚI -->
+
 <div id="buttons">
 
 <button
@@ -40,15 +55,86 @@ onclick="sayHallo()">
 
 <script>
 
-
 let currentTeil = "";
 let currentLevel = "";
 let countdown;
 
+// ===== PHẦN THÊM MỚI: LOGIC GHI ÂM VÀ SỬA LỖI =====
+let recognition;
+let isRecording = false;
+let finalTranscript = "";
+
+if ('webkitSpeechRecognition' in window) {
+    recognition = new webkitSpeechRecognition();
+    recognition.continuous = true;
+    recognition.interimResults = true;
+    recognition.lang = 'de-DE'; // Nghe tiếng Đức
+
+    recognition.onresult = function(event) {
+        let interimTranscript = '';
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+            if (event.results[i].isFinal) {
+                finalTranscript += event.results[i][0].transcript + ". ";
+            } else {
+                interimTranscript += event.results[i][0].transcript;
+            }
+        }
+        document.getElementById("transcript-text").innerHTML = 
+            "<b>Du sagst:</b> " + finalTranscript + "<i style='color:gray'>" + interimTranscript + "</i>";
+    };
+}
+
+function toggleRecording() {
+    let recordBtn = document.getElementById("record-btn");
+    let feedbackArea = document.getElementById("feedback-area");
+    let aiCorrection = document.getElementById("ai-correction");
+    
+    if (!isRecording) {
+        finalTranscript = "";
+        document.getElementById("transcript-text").innerHTML = "<i>Kapi hört zu... 🦫🎤</i>";
+        aiCorrection.style.display = "none";
+        feedbackArea.style.display = "block";
+        
+        recognition.start();
+        isRecording = true;
+        recordBtn.innerHTML = "🛑 Stopp";
+    } else {
+        recognition.stop();
+        isRecording = false;
+        recordBtn.innerHTML = "🎤 Aufnehmen";
+        
+        // Gọi AI giả lập sửa lỗi
+        simulateAIFeedback(finalTranscript);
+    }
+}
+
+function simulateAIFeedback(text) {
+    let aiCorrection = document.getElementById("ai-correction");
+    if (!text.trim()) {
+        aiCorrection.innerHTML = "<p style='color:red;'>Ich habe nichts gehört.</p>";
+        aiCorrection.style.display = "block";
+        return;
+    }
+
+    aiCorrection.innerHTML = `
+        <h4 style="margin-bottom: 5px;">Korrektur:</h4>
+        <p style="font-size: 18px; margin-top:0;">
+            Ich denke, <s style="color: red;">dass ist das</s> eine gute Idee. <br>
+            <span style="color: green;">➡️ Ich denke, dass das eine gute Idee ist.</span>
+        </p>
+        <p><b>Erklärung:</b> Nach "dass" muss das Verb am Ende stehen!</p>
+        <h4 style="margin-bottom: 5px;">Bessere Alternative (B2):</h4>
+        <p style="font-size: 18px; margin-top:0;"><i>"Ich stehe auf dem Standpunkt, dass..."</i></p>
+    `;
+    aiCorrection.style.display = "block";
+}
+// ===== KẾT THÚC PHẦN THÊM MỚI =====
+
+
 // ===== LEVEL =====
 
 function showLevels() {
-
+document.getElementById("feedback-area").style.display = "none"; // Thêm dòng này để ẩn feedback
 document.getElementById("message").innerText =
 "Welches Niveau möchtest du heute üben? 📚";
 
@@ -516,57 +602,31 @@ punkte:[
 
 const teil2 = [
 
-
 "Soll man die Arbeitszeit verkürzen?",
-
 "Wie sinnvoll ist ein Großraumbüro für Angestellte?",
-
 "Soll ein Angestellter von zu Hause aus arbeiten?",
-
 "Flexible Arbeitszeiten",
-
 "Online studieren oder Präsenzunterricht?",
-
 "Sollen Studierende ihre Professoren beurteilen?",
-
 "Umweltschutz an der Universität",
-
 "Duales Studium",
-
 "Soll man ein Eigenheim kaufen, statt zu mieten?",
-
 "Soll man in einer Wohngemeinschaft (WG) leben?",
-
 "Soll man in der Stadt oder auf dem Land wohnen?",
-
 "Bargeld oder Kreditkarte?",
-
 "Ist Markenkleidung wichtig?",
-
 "Soll man im Internet kaufen?",
-
 "Sollten Geschäfte jeden Tag geöffnet haben?",
-
 "Online-Meeting",
-
 "Gespräche online",
-
 "Präsentationen bei Online-Meetings ersetzen?",
-
 "Soll man in sozialen Medien aktiv sein?",
-
 "Sollen junge Kinder Haustiere adoptieren?",
-
 "Soll man mit Kindern reisen?",
-
 "Sollen Kinder Fremdsprachen lernen?",
-
 "Books oder E-Books?",
-
 "Ausländische Filme in Originalsprache zeigen?",
-
 "Nachrichten kostenpflichtig – sinnvoll?"
-
 
 ];
 
@@ -662,7 +722,7 @@ showLevels();
 // ===== LESSONS =====
 
 function showLessons() {
-
+document.getElementById("feedback-area").style.display = "none"; // Thêm dòng này để ẩn feedback
 document.getElementById("buttons").innerHTML = `
 
 <button onclick="chooseLesson('Hören')" style="
@@ -771,7 +831,7 @@ document.getElementById("message").innerText =
 // ===== TEIL 1 =====
 
 function showTeil1(){
-
+document.getElementById("feedback-area").style.display = "none"; // Ẩn lúc chuyển câu
 currentTeil = "teil1";
 
 let thema =
@@ -787,7 +847,20 @@ thema.thema +
 
 thema.punkte.join("<br>• ");
 
+// THÊM NÚT GHI ÂM VÀO ĐÂY, giữ nguyên style cũ của cậu
 document.getElementById("buttons").innerHTML = `
+
+<button id="record-btn" onclick="toggleRecording()" style="
+font-size:22px;
+padding:15px 25px;
+margin:10px;
+border-radius:20px;
+border:none;
+cursor:pointer;
+background-color: #e2e8f0;
+">
+🎤 Aufnehmen
+</button>
 
 <button onclick="showTeil1()" style="
 font-size:22px;
@@ -820,7 +893,7 @@ startTimer();
 // ===== TEIL 2 =====
 
 function showTeil2(){
-
+document.getElementById("feedback-area").style.display = "none"; // Ẩn lúc chuyển câu
 currentTeil = "teil2";
 
 let thema =
@@ -832,7 +905,20 @@ document.getElementById("message").innerHTML =
 
 thema;
 
+// THÊM NÚT GHI ÂM VÀO ĐÂY, giữ nguyên style cũ của cậu
 document.getElementById("buttons").innerHTML = `
+
+<button id="record-btn" onclick="toggleRecording()" style="
+font-size:22px;
+padding:15px 25px;
+margin:10px;
+border-radius:20px;
+border:none;
+cursor:pointer;
+background-color: #e2e8f0;
+">
+🎤 Aufnehmen
+</button>
 
 <button onclick="showTeil2()" style="
 font-size:22px;
@@ -867,8 +953,13 @@ startTimer();
 function restart(){
 
 clearInterval(countdown);
+if(isRecording) {
+    recognition.stop();
+    isRecording = false;
+}
 
 document.getElementById("timer").innerText = "";
+document.getElementById("feedback-area").style.display = "none"; // Thêm dòng này để ẩn feedback
 
 document.getElementById("message").innerText =
 "Guten Morgen! Schön, dich kennenzulernen! 🌟";
@@ -893,4 +984,4 @@ onclick="sayHallo()">
 </script>
 
 </body>
-</html> 
+</html>
