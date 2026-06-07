@@ -5,8 +5,11 @@ module.exports = async function handler(req, res) {
     }
 
     const { text } = req.body;
-    // Lấy chìa khóa bí mật từ "két sắt" của Vercel (không lộ ra ngoài public)
-    const GEMINI_API_KEY = process.env.GEMINI_API_KEY; 
+    const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+
+    if (!GEMINI_API_KEY) {
+        return res.status(500).json({ error: 'Thiếu API key!' });
+    }
 
     const prompt = `
     Bạn là một giáo viên tiếng Đức. Học sinh B2 vừa nói câu sau: "${text}".
@@ -20,22 +23,18 @@ module.exports = async function handler(req, res) {
     `;
 
     try {
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-        });
+        const response = await fetch(
+            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+            }
+        );
 
         const data = await response.json();
-        console.error("Gemini response:", JSON.stringify(data));
-        let aiHtml = data.candidates[0].content.parts[0].text;
-        
-        // Dọn dẹp rác markdown nếu AI lỡ viết thêm
-        aiHtml = aiHtml.replace(/```html/g, "").replace(/```/g, "");
+        console.log("Gemini status:", response.status);
+        console.log("Gemini data:", JSON.stringify(data));
 
-        // Trả kết quả về cho file HTML
-        res.status(200).json({ result: aiHtml });
-    } catch (error) {
-        res.status(500).json({ error: 'Lỗi mạng khi kết nối não bộ Kapi' });
-    }
-}
+        if (!response.ok) {
+            return res.status(500).json({ error: `Gemini lỗi $
