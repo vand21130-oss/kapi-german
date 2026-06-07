@@ -37,6 +37,16 @@ async function toggleRecording() {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
         mediaRecorder = new MediaRecorder(stream);
         mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+        mediaRecorder.onstop = async () => {
+
+    console.log("Kapi đã dừng ghi âm");
+
+    const audioBlob = new Blob(audioChunks, {
+        type: 'audio/webm'
+    });
+
+    console.log("Audio size:", audioBlob.size);
+};
         mediaRecorder.start();
         isRecording = true;
         recordBtn.innerHTML = "🛑 Stopp";
