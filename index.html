@@ -36,9 +36,35 @@ async function toggleRecording() {
         audioChunks = [];
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
         mediaRecorder = new MediaRecorder(stream);
-        mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
-        mediaRecorder.onstop = async () => {
 
+    mediaRecorder.stream.getTracks().forEach(t => t.stop());
+
+    const audioBlob = new Blob(audioChunks, {
+        type: 'audio/webm'
+    });
+
+    console.log("Audio size:", audioBlob.size);
+
+    const formData = new FormData();
+    formData.append('audio', audioBlob, 'audio.webm');
+
+    try {
+
+        const transcribeRes = await fetch('/api/transcribe', {
+            method: 'POST',
+            body: formData
+        });
+
+        const transcribeData = await transcribeRes.json();
+
+        console.log("Transcribe:", transcribeData);
+
+    } catch(error) {
+
+        console.error(error);
+
+    }
+};
     console.log("Kapi đã dừng ghi âm");
 
     const audioBlob = new Blob(audioChunks, {
