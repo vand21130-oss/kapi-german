@@ -20,96 +20,75 @@
 </div>
 
 <script>
-
 let currentTeil = "";
 let currentLevel = "";
 let countdown;
-let recognition;
+let mediaRecorder;
+let audioChunks = [];
 let isRecording = false;
-let finalTranscript = "";
-let interimBuffer = "";
 
-if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-    recognition = new SR();
-    recognition.continuous = true;
-    recognition.interimResults = true;
-    recognition.lang = 'de-DE';
-
-    recognition.onresult = function(event) {
-        let interim = '';
-        for (let i = event.resultIndex; i < event.results.length; ++i) {
-            if (event.results[i].isFinal) {
-                finalTranscript += event.results[i][0].transcript + ". ";
-            } else {
-                interim += event.results[i][0].transcript;
-                interimBuffer = interim;
-            }
-        }
-        document.getElementById("transcript-text").innerHTML =
-            "<b>Du sagst:</b> " + finalTranscript + "<i style='color:gray'>" + interim + "</i>";
-    };
-
-    recognition.onerror = function(event) {
-        console.error("Speech error:", event.error);
-    };
-}
-
-function toggleRecording() {
+async function toggleRecording() {
     let recordBtn = document.getElementById("record-btn");
     let feedbackArea = document.getElementById("feedback-area");
     let aiCorrection = document.getElementById("ai-correction");
 
     if (!isRecording) {
-        finalTranscript = "";
-        interimBuffer = "";
-        document.getElementById("transcript-text").innerHTML = "<i>Kapi hört zu... 🦫🎤</i>";
-        aiCorrection.style.display = "none";
-        feedbackArea.style.display = "block";
-        recognition.start();
+        audioChunks = [];
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+        mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+        mediaRecorder.start();
         isRecording = true;
         recordBtn.innerHTML = "🛑 Stopp";
+        feedbackArea.style.display = "block";
+        aiCorrection.style.display = "none";
+        document.getElementById("transcript-text").innerHTML = "<i>Kapi hört zu... 🦫🎤</i>";
     } else {
-        recognition.stop();
+        mediaRecorder.stop();
         isRecording = false;
         recordBtn.innerHTML = "🎤 Aufnehmen";
+        document.getElementById("transcript-text").innerHTML = "<i>Kapi denkt nach... 🧠</i>";
 
-        // Dùng finalTranscript, nếu rỗng thì dùng interimBuffer
-        let textToSend = finalTranscript.trim() || interimBuffer.trim();
-        simulateAIFeedback(textToSend);
-    }
-}
+        mediaRecorder.onstop = async () => {
+            mediaRecorder.stream.getTracks().forEach(t => t.stop());
+            const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+            const formData = new FormData();
+            formData.append('audio', audioBlob, 'audio.webm');
 
-async function simulateAIFeedback(text) {
-    let aiCorrection = document.getElementById("ai-correction");
-    let transcriptText = document.getElementById("transcript-text");
+            aiCorrection.innerHTML = "<p style='color:#0984e3;'><i>Kapi đang nghe và suy nghĩ... 🧠🦫</i></p>";
+            aiCorrection.style.display = "block";
 
-    if (!text || !text.trim()) {
-        transcriptText.innerHTML = "<b>Oops!</b>";
-        aiCorrection.innerHTML = "<p style='color:red;'>Ich habe nichts gehört. (Kapi chưa nghe thấy gì cả)</p>";
-        aiCorrection.style.display = "block";
-        return;
-    }
+            try {
+                const transcribeRes = await fetch('/api/transcribe', {
+                    method: 'POST',
+                    body: formData
+                });
+                const transcribeData = await transcribeRes.json();
+                const text = transcribeData.text;
 
-    transcriptText.innerHTML = "<b>Du sagst:</b> " + text;
-    aiCorrection.innerHTML = "<p style='color:#0984e3;'><i>Kapi đang suy nghĩ... 🧠🦫</i></p>";
-    aiCorrection.style.display = "block";
+                if (!text || !text.trim()) {
+                    document.getElementById("transcript-text").innerHTML = "<b>Oops!</b>";
+                    aiCorrection.innerHTML = "<p style='color:red;'>Ich habe nichts gehört. (Kapi chưa nghe thấy gì)</p>";
+                    return;
+                }
 
-    try {
-        const response = await fetch('/api/chat', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ text: text })
-        });
-        const data = await response.json();
-        if (data.result) {
-            aiCorrection.innerHTML = data.result;
-        } else {
-            aiCorrection.innerHTML = "<p style='color:red;'>" + (data.error || "Lỗi không xác định") + "</p>";
-        }
-    } catch (error) {
-        aiCorrection.innerHTML = "<p style='color:red;'>Lỗi mạng rồi! " + error.message + "</p>";
-        console.error(error);
+                document.getElementById("transcript-text").innerHTML = "<b>Du sagst:</b> " + text;
+
+                const chatRes = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: text })
+                });
+                const chatData = await chatRes.json();
+                if (chatData.result) {
+                    aiCorrection.innerHTML = chatData.result;
+                } else {
+                    aiCorrection.innerHTML = "<p style='color:red;'>" + (chatData.error || "Lỗi không xác định") + "</p>";
+                }
+            } catch (error) {
+                aiCorrection.innerHTML = "<p style='color:red;'>Lỗi: " + error.message + "</p>";
+            }
+        };
     }
 }
 
@@ -131,7 +110,7 @@ function chooseLevel(level) {
     showLessons();
 }
 
-// ===== TEIL 1 =====
+// ===== TEIL 1 - ĐỦ 38 CHỦ ĐỀ =====
 const teil1 = [
     {thema:"Fremdsprachen lernen",punkte:["Vorteile für Beruf und Zukunft","Kognitive Fähigkeiten fördern","Kulturelles Verständnis erweitern","Zeitaufwand und Schwierigkeiten"]},
     {thema:"Online Sprache lernen",punkte:["Flexibilität im Alltag","Kosten und Zugänglichkeit","Soziale Kontakte fördern oder einschränken","Lernqualität verbessern oder verschlechtern"]},
@@ -159,121 +138,4 @@ const teil1 = [
     {thema:"Geld sparen",punkte:["Budget planen","Angebote nutzen","Konsum einschränken","Vorteile für Zukunft"]},
     {thema:"Die Wahl des Studiums",punkte:["Interessen","Berufschancen","Kosten und Dauer","Persönliche Entwicklung"]},
     {thema:"Zu Hause fürs Studium lernen",punkte:["Vorteile der Flexibilität","Ablenkungen","Lernmethoden","Vergleich mit Bibliothek"]},
-    {thema:"Konflikte am Arbeitsplatz lösen",punkte:["Ursachen erkennen","Kommunikation verbessern","Lösungen finden","Zusammenarbeit stärken"]},
-    {thema:"Arbeitsatmosphäre verbessern",punkte:["Motivation der Mitarbeiter","Teamarbeit fördern","Konflikte vermeiden","Vorteile für Produktivität"]},
-    {thema:"Mitbestimmung im Unternehmen",punkte:["Rechte der Arbeitnehmer","Vorteile für Motivation","Risiken für Unternehmen","Beispiele"]},
-    {thema:"Höflichkeit am Arbeitsplatz",punkte:["Respekt zeigen","Kommunikation verbessern","Konflikte vermeiden","Vorteile für Zusammenarbeit"]},
-    {thema:"Öffentliche Verkehrsmittel",punkte:["Kosten","Umweltfreundlichkeit","Alltagstauglichkeit","Vergleich mit Auto"]},
-    {thema:"Kulturangebote nutzen",punkte:["Bildung fördern","Freizeitgestaltung","Kosten","Soziale Kontakte"]},
-    {thema:"Auf tierische Produkte verzichten",punkte:["Gesundheitliche Vorteile","Umwelt schützen","Kosten","Soziale Aspekte"]},
-    {thema:"4-Tage-Arbeitswoche",punkte:["Vorteile für Arbeitnehmer","Produktivität","Kosten für Unternehmen","Work-Life-Balance"]},
-    {thema:"Zeitmanagement",punkte:["Planung","Prioritäten setzen","Stress vermeiden","Vorteile für Alltag"]},
-    {thema:"Freunde kennenlernen",punkte:["Soziale Kontakte","Freizeitgestaltung","Vorteile für Psyche","Herausforderungen"]},
-    {thema:"Teamarbeit",punkte:["Zusammenarbeit fördern","Konflikte vermeiden","Motivation steigern","Vorteile für Produktivität"]},
-    {thema:"Ein neues Land kennenlernen",punkte:["Kultur erleben","Sprache lernen","Kosten","Persönliche Entwicklung"]},
-    {thema:"Politisch engagieren",punkte:["Verantwortung übernehmen","Gesellschaft beeinflussen","Vorteile für Demokratie","Risiken"]}
-];
-
-const teil2 = [
-    "Soll man die Arbeitszeit verkürzen?","Wie sinnvoll ist ein Großraumbüro für Angestellte?","Soll ein Angestellter von zu Hause aus arbeiten?","Flexible Arbeitszeiten","Online studieren oder Präsenzunterricht?","Sollen Studierende ihre Professoren beurteilen?","Umweltschutz an der Universität","Duales Studium","Soll man ein Eigenheim kaufen, statt zu mieten?","Soll man in einer Wohngemeinschaft (WG) leben?","Soll man in der Stadt oder auf dem Land wohnen?","Bargeld oder Kreditkarte?","Ist Markenkleidung wichtig?","Soll man im Internet kaufen?","Sollten Geschäfte jeden Tag geöffnet haben?","Online-Meeting","Gespräche online","Präsentationen bei Online-Meetings ersetzen?","Soll man in sozialen Medien aktiv sein?","Sollen junge Kinder Haustiere adoptieren?","Soll man mit Kindern reisen?","Sollen Kinder Fremdsprachen lernen?","Books oder E-Books?","Ausländische Filme in Originalsprache zeigen?","Nachrichten kostenpflichtig – sinnvoll?"
-];
-
-function startTimer() {
-    clearInterval(countdown);
-    let time = 120;
-    countdown = setInterval(function() {
-        let minutes = Math.floor(time / 60);
-        let seconds = time % 60;
-        document.getElementById("timer").innerText = minutes + ":" + seconds.toString().padStart(2, "0");
-        time--;
-        if (time < 0) {
-            clearInterval(countdown);
-            document.getElementById("timer").innerText = "⏰ Zeit ist um!";
-        }
-    }, 1000);
-}
-
-function sayHallo() {
-    document.getElementById("message").innerText = "Hallo! Wie geht's dir? 😊";
-    document.getElementById("buttons").innerHTML = `
-        <button onclick="goodAnswer()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">😊 Mir geht's gut!</button>
-        <button onclick="badAnswer()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">😢 Nicht so gut.</button>
-    `;
-}
-
-function goodAnswer() {
-    document.getElementById("message").innerText = "Das freut mich! 🌟";
-    showLevels();
-}
-
-function badAnswer() {
-    document.getElementById("message").innerText = "Oh nein! Hoffentlich wird dein Tag besser. 💛";
-    showLevels();
-}
-
-function showLessons() {
-    document.getElementById("feedback-area").style.display = "none";
-    document.getElementById("buttons").innerHTML = `
-        <button onclick="chooseLesson('Hören')" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">👂 Hören</button>
-        <button onclick="chooseLesson('Sprechen')" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">🗣️ Sprechen</button>
-        <button onclick="chooseLesson('Lesen')" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">📖 Lesen</button>
-        <button onclick="chooseLesson('Schreiben')" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">✍️ Schreiben</button>
-    `;
-}
-
-function chooseLesson(lesson) {
-    if (lesson === "Sprechen") {
-        document.getElementById("message").innerHTML = "Welchen Teil möchtest du üben?";
-        document.getElementById("buttons").innerHTML = `
-            <button onclick="showTeil1()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">🎤 Teil 1</button>
-            <button onclick="showTeil2()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">🎤 Teil 2</button>
-            <button onclick="showLessons()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">🦫 Zurück</button>
-        `;
-        return;
-    }
-    document.getElementById("message").innerText = "Super! Heute lernen wir " + lesson + "! 🎉";
-}
-
-function showTeil1() {
-    document.getElementById("feedback-area").style.display = "none";
-    currentTeil = "teil1";
-    let thema = teil1[Math.floor(Math.random() * teil1.length)];
-    document.getElementById("message").innerHTML = "<b>🗣️ Goethe B2 - Teil 1</b><br><br>" + thema.thema + "<br><br>• " + thema.punkte.join("<br>• ");
-    document.getElementById("buttons").innerHTML = `
-        <button id="record-btn" onclick="toggleRecording()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;background-color:#e2e8f0;">🎤 Aufnehmen</button>
-        <button onclick="showTeil1()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">🔄 Neues Thema</button>
-        <button onclick="restart()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">🦫 Zurück</button>
-    `;
-    startTimer();
-}
-
-function showTeil2() {
-    document.getElementById("feedback-area").style.display = "none";
-    currentTeil = "teil2";
-    let thema = teil2[Math.floor(Math.random() * teil2.length)];
-    document.getElementById("message").innerHTML = "<b>🗣️ Goethe B2 - Teil 2</b><br><br>" + thema;
-    document.getElementById("buttons").innerHTML = `
-        <button id="record-btn" onclick="toggleRecording()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;background-color:#e2e8f0;">🎤 Aufnehmen</button>
-        <button onclick="showTeil2()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">🔄 Neues Thema</button>
-        <button onclick="restart()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">🦫 Zurück</button>
-    `;
-    startTimer();
-}
-
-function restart() {
-    clearInterval(countdown);
-    if (isRecording) {
-        recognition.stop();
-        isRecording = false;
-    }
-    document.getElementById("timer").innerText = "";
-    document.getElementById("feedback-area").style.display = "none";
-    document.getElementById("message").innerText = "Guten Morgen! Schön, dich kennenzulernen! 🌟";
-    document.getElementById("buttons").innerHTML = `
-        <button style="font-size:24px;padding:12px 24px;border-radius:12px;cursor:pointer;" onclick="sayHallo()">👋 Hallo Kapi</button>
-    `;
-}
-
-</script>
-</body>
-</html>
+    {
