@@ -32,7 +32,13 @@ module.exports = async function handler(req, res) {
                 body: formData
             });
             const data = await response.json();
-            res.status(200).json({ text: data.text });
+
+console.log("WHISPER DATA:");
+console.log(JSON.stringify(data, null, 2));
+            res.status(200).json({
+    text: data.text,
+    debug: data
+});
         } catch (error) {
             res.status(500).json({ error: error.message });
         }
