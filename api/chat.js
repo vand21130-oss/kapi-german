@@ -27,6 +27,7 @@ module.exports = async function handler(req, res) {
         });
 
         const data = await response.json();
+        console.error("Gemini response:", JSON.stringify(data));
         let aiHtml = data.candidates[0].content.parts[0].text;
         
         // Dọn dẹp rác markdown nếu AI lỡ viết thêm
