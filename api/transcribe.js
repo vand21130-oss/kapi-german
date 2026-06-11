@@ -9,7 +9,6 @@ module.exports = async function handler(req, res) {
     }
     const buffer = Buffer.concat(chunks);
 
-    // Tách boundary từ content-type
     const contentType = req.headers['content-type'] || '';
     const boundaryMatch = contentType.match(/boundary=(.+)$/);
     if (!boundaryMatch) {
@@ -17,7 +16,7 @@ module.exports = async function handler(req, res) {
     }
     const boundary = boundaryMatch[1];
 
-    // Tìm audio data trong multipart
+    // Tách audio data từ multipart
     const boundaryBuf = Buffer.from('--' + boundary);
     const parts = [];
     let start = 0;
@@ -28,7 +27,6 @@ module.exports = async function handler(req, res) {
         }
     }
 
-    // Lấy phần audio (bỏ header)
     let audioBuffer = null;
     for (const part of parts) {
         const headerEnd = part.indexOf('\r\n\r\n');
@@ -44,24 +42,45 @@ module.exports = async function handler(req, res) {
         return res.status(400).json({ error: 'No audio found' });
     }
 
-    const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
-    const formData = new FormData();
-    const blob = new Blob([audioBuffer], { type: 'audio/webm' });
-    formData.append('file', blob, 'audio.webm');
-    formData.append('model', 'whisper-1');
-    formData.append('language', 'de');
+    const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+    const audioBase64 = audioBuffer.toString('base64');
 
     try {
-        const response = await fetch('https://api.openai.com/v1/audio/transcriptions', {
-            method: 'POST',
-            headers: { 'Authorization': `Bearer ${OPENAI_API_KEY}` },
-            body: formData
-        });
+        const response = await fetch(
+            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
+            {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [{
+                        parts: [
+                            {
+                                inline_data: {
+                                    mime_type: 'audio/webm',
+                                    data: audioBase64
+                                }
+                            },
+                            {
+                                text: 'Bitte transkribiere genau was auf Deutsch gesagt wurde. Gib NUR den gesprochenen Text zurück, ohne Erklärungen.'
+                            }
+                        ]
+                    }]
+                })
+            }
+        );
+
         const data = await response.json();
-        console.log("Whisper response:", JSON.stringify(data));
-        res.status(200).json({ text: data.text, debug: data });
+        console.log("Gemini transcribe:", JSON.stringify(data));
+
+        if (!data.candidates || !data.candidates[0]) {
+            return res.status(500).json({ error: JSON.stringify(data) });
+        }
+
+        const text = data.candidates[0].content.parts[0].text.trim();
+        res.status(200).json({ text: text });
+
     } catch (error) {
-        console.error("Whisper error:", error.message);
+        console.error("Error:", error.message);
         res.status(500).json({ error: error.message });
     }
 }
