@@ -269,26 +269,6 @@ function restart() {
         <button style="font-size:24px;padding:12px 24px;border-radius:12px;cursor:pointer;" onclick="sayHallo()">👋 Hallo Kapi</button>
     `;
 }
-    function chooseLesson(lesson) {
-    if (lesson === "Sprechen") {
-        document.getElementById("message").innerHTML = "Welchen Teil möchtest du üben?";
-        document.getElementById("buttons").innerHTML = `
-            <button onclick="showTeil1()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">🎤 Teil 1</button>
-            <button onclick="showTeil2()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">🎤 Teil 2</button>
-            <button onclick="showLessons()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">🦫 Zurück</button>
-        `;
-        return;
-    }
-    if (lesson === "Lesen") {
-        document.getElementById("message").innerHTML = "Was möchtest du lesen? 📖";
-        document.getElementById("buttons").innerHTML = `
-            <button onclick="showLesenMenu()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">🏥 Medizin</button>
-            <button onclick="showLessons()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">🦫 Zurück</button>
-        `;
-        return;
-    }
-    document.getElementById("message").innerText = "Super! Heute lernen wir " + lesson + "! 🎉";
-}
 
 const medizinQuestions = [
     {
