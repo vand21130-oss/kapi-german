@@ -29,14 +29,18 @@ let isRecording = false;
 let currentQuestionIndex = 0;
 let score = 0;
 let shuffledQuestions = [];
-let questionHistory = []; // Lưu lịch sử câu hỏi để quay lại
+let questionHistory = [];
+let currentGruppe = "";
+let currentVokabelIndex = 0;
+let minigameQuestions = [];
+let minigameIndex = 0;
+let minigameScore = 0;
 
 // ===== GHI ÂM =====
 async function toggleRecording() {
     let recordBtn = document.getElementById("record-btn");
     let feedbackArea = document.getElementById("feedback-area");
     let aiCorrection = document.getElementById("ai-correction");
-
     if (!isRecording) {
         audioChunks = [];
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -162,17 +166,10 @@ function chooseLesson(lesson) {
         `;
         return;
     }
-   if (lesson === "Vokabeln") {
-    document.getElementById("message").innerHTML = "Welches Thema? 📝";
-    document.getElementById("buttons").innerHTML = `
-        <button onclick="showMedizinMenu()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#e8f5e9;">🏥 Medizinische Fachbegriffe</button>
-        <button onclick="showLessons()" style="font-size:20px;padding:10px 20px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#eee;">⬅️ Zurück</button>
-    `;
-    return;
-}
+    if (lesson === "Vokabeln") {
         document.getElementById("message").innerHTML = "Welches Thema? 📝";
         document.getElementById("buttons").innerHTML = `
-            <button onclick="startMedizin()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#e8f5e9;">🏥 Medizinische Fachbegriffe</button>
+            <button onclick="showMedizinMenu()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#e8f5e9;">🏥 Medizinische Fachbegriffe</button>
             <button onclick="showLessons()" style="font-size:20px;padding:10px 20px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#eee;">⬅️ Zurück</button>
         `;
         return;
@@ -261,6 +258,160 @@ function restart() {
     goHome();
 }
 
+// ===== VOKABELN MENU =====
+function showMedizinMenu() {
+    document.getElementById("feedback-area").style.display = "none";
+    document.getElementById("message").innerHTML = "🏥 Medizinische Fachbegriffe";
+    document.getElementById("buttons").innerHTML = `
+        <button onclick="showVokabelGruppe('diagnostik')" style="font-size:20px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#e3f2fd;">🩺 Diagnostische Instrumente</button>
+        <button onclick="showVokabelGruppe('verbandmaterial')" style="font-size:20px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#fce4ec;">🩹 Verbandmaterial</button>
+        <button onclick="showVokabelGruppe('intensiv')" style="font-size:20px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#f3e5f5;">🏥 Intensivmedizin</button>
+        <button onclick="startMedizin()" style="font-size:20px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#fff3e0;">🎯 Luyện tập</button>
+        <button onclick="chooseLesson('Vokabeln')" style="font-size:18px;padding:10px 20px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#eee;">⬅️ Zurück</button>
+    `;
+}
+
+// ===== TỪ VỰNG THEO NHÓM =====
+const vokabelGruppen = {
+    diagnostik: {
+        titel: "🩺 Diagnostische Instrumente",
+        woerter: [
+            {de:"Das Stethoskop", vi:"Ống nghe", bild:"https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=300"},
+            {de:"Das Blutdruckmessgerät", vi:"Máy đo huyết áp", bild:"https://images.unsplash.com/photo-1559757175-5700dde675bc?w=300"},
+            {de:"Das Thermometer", vi:"Nhiệt kế", bild:"https://images.unsplash.com/photo-1584515933487-779824d29309?w=300"},
+            {de:"Die Taschenlampe (Pupillenleuchte)", vi:"Đèn soi đồng tử", bild:"https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=300"},
+            {de:"Der Pulsoximeter", vi:"Máy đo SpO2", bild:"https://images.unsplash.com/photo-1585435557343-3b092031a831?w=300"},
+            {de:"Der Reflexhammer", vi:"Búa phản xạ", bild:"https://images.unsplash.com/photo-1581594693702-fbdc51b2763b?w=300"}
+        ]
+    },
+    verbandmaterial: {
+        titel: "🩹 Verbandmaterial & Verbrauchsmaterial",
+        woerter: [
+            {de:"Die Spritze", vi:"Bơm tiêm", bild:"https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=300"},
+            {de:"Die Kanüle (die Nadel)", vi:"Kim tiêm", bild:"https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=300"},
+            {de:"Der Tupfer", vi:"Gạc/bông thấm", bild:"https://images.unsplash.com/photo-1583947215259-38e31be8751f?w=300"},
+            {de:"Die Kompresse", vi:"Gạc đắp vết thương", bild:"https://images.unsplash.com/photo-1603398938378-e54eab446dde?w=300"},
+            {de:"Das Pflaster", vi:"Băng dán cá nhân", bild:"https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=300"},
+            {de:"Die Mullbinde", vi:"Băng cuộn", bild:"https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=300"},
+            {de:"Das Desinfektionsmittel", vi:"Dung dịch sát khuẩn", bild:"https://images.unsplash.com/photo-1584036561566-baf8f5f1b144?w=300"},
+            {de:"Die Handschuhe (Einmalhandschuhe)", vi:"Găng tay dùng một lần", bild:"https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=300"}
+        ]
+    },
+    intensiv: {
+        titel: "🏥 Intensivmedizinische Ausstattung",
+        woerter: [
+            {de:"Das Infusionsgerät / Der Infusionsständer", vi:"Máy truyền dịch / Cây treo dịch", bild:"https://images.unsplash.com/photo-1516549655169-df83a0774514?w=300"},
+            {de:"Die Magensonde", vi:"Ống thông dạ dày", bild:"https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=300"},
+            {de:"Der Blasenkatheter (DK)", vi:"Ống thông tiểu", bild:"https://images.unsplash.com/photo-1559757175-5700dde675bc?w=300"},
+            {de:"Die Sauerstoffmaske", vi:"Mặt nạ thở oxy", bild:"https://images.unsplash.com/photo-1584515933487-779824d29309?w=300"},
+            {de:"Der Beatmungsschlauch", vi:"Ống nội khí quản", bild:"https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=300"},
+            {de:"Das EKG-Gerät", vi:"Máy điện tâm đồ", bild:"https://images.unsplash.com/photo-1551190822-a9333d879b1f?w=300"}
+        ]
+    }
+};
+
+function showVokabelGruppe(gruppe) {
+    currentGruppe = gruppe;
+    currentVokabelIndex = 0;
+    showVokabel();
+}
+
+function showVokabel() {
+    const gruppe = vokabelGruppen[currentGruppe];
+    const wort = gruppe.woerter[currentVokabelIndex];
+    const total = gruppe.woerter.length;
+    document.getElementById("feedback-area").style.display = "none";
+    document.getElementById("message").innerHTML = `
+        <span style="font-size:16px;color:#666;">${gruppe.titel} | ${currentVokabelIndex + 1}/${total}</span><br><br>
+        <img src="${wort.bild}" style="width:250px;height:180px;object-fit:cover;border-radius:12px;margin:10px;" onerror="this.src='https://via.placeholder.com/250x180?text=Kein+Bild'"><br>
+        <b style="font-size:26px;">${wort.de}</b><br>
+        <span style="font-size:22px;color:#555;">${wort.vi}</span>
+    `;
+    const prevBtn = currentVokabelIndex > 0 ? `<button onclick="prevVokabel()" style="font-size:20px;padding:12px 22px;margin:8px;border-radius:15px;border:none;cursor:pointer;background:#eee;">⬅️ Trước</button>` : '';
+    const nextBtn = currentVokabelIndex < total - 1
+        ? `<button onclick="nextVokabel()" style="font-size:20px;padding:12px 22px;margin:8px;border-radius:15px;border:none;cursor:pointer;background:#4CAF50;color:white;">➡️ Tiếp</button>`
+        : `<button onclick="startMinigame()" style="font-size:20px;padding:12px 22px;margin:8px;border-radius:15px;border:none;cursor:pointer;background:#ff9800;color:white;">🎮 Minigame!</button>`;
+    document.getElementById("buttons").innerHTML = `
+        ${prevBtn}
+        ${nextBtn}
+        <button onclick="showMedizinMenu()" style="font-size:18px;padding:10px 20px;margin:8px;border-radius:15px;border:none;cursor:pointer;background:#eee;">🏠 Menu</button>
+    `;
+}
+
+function nextVokabel() { currentVokabelIndex++; showVokabel(); }
+function prevVokabel() { currentVokabelIndex--; showVokabel(); }
+
+// ===== MINIGAME =====
+function startMinigame() {
+    const gruppe = vokabelGruppen[currentGruppe];
+    minigameScore = 0;
+    minigameIndex = 0;
+    minigameQuestions = [...gruppe.woerter].sort(() => Math.random() - 0.5);
+    showMinigameQuestion();
+}
+
+function showMinigameQuestion() {
+    const gruppe = vokabelGruppen[currentGruppe];
+    if (minigameIndex >= minigameQuestions.length) { showMinigameResult(); return; }
+    const current = minigameQuestions[minigameIndex];
+    let wrongAnswers = gruppe.woerter.filter(w => w.de !== current.de).sort(() => Math.random() - 0.5).slice(0, 3);
+    let answers = [...wrongAnswers, current].sort(() => Math.random() - 0.5);
+    document.getElementById("feedback-area").style.display = "none";
+    document.getElementById("message").innerHTML = `
+        <span style="font-size:16px;color:#666;">🎮 Minigame | Câu ${minigameIndex + 1}/${minigameQuestions.length} | Điểm: ${minigameScore}</span><br><br>
+        <img src="${current.bild}" style="width:250px;height:180px;object-fit:cover;border-radius:12px;margin:10px;" onerror="this.src='https://via.placeholder.com/250x180?text=?'"><br>
+        <b>Đây là gì? / Was ist das?</b>
+    `;
+    document.getElementById("buttons").innerHTML = answers.map(a => `
+        <button onclick="checkMinigame('${encodeURIComponent(a.de)}', '${encodeURIComponent(current.de)}', '${encodeURIComponent(current.vi)}')" style="font-size:18px;padding:12px 20px;margin:8px;border-radius:15px;border:2px solid #ddd;cursor:pointer;display:block;width:90%;max-width:500px;text-align:left;">
+            ${a.de}
+        </button>
+    `).join('');
+}
+
+function checkMinigame(chosenEncoded, correctEncoded, viEncoded) {
+    const chosen = decodeURIComponent(chosenEncoded);
+    const correct = decodeURIComponent(correctEncoded);
+    const vi = decodeURIComponent(viEncoded);
+    const isCorrect = chosen === correct;
+    if (isCorrect) minigameScore++;
+    const feedbackArea = document.getElementById("feedback-area");
+    const aiCorrection = document.getElementById("ai-correction");
+    feedbackArea.style.display = "block";
+    aiCorrection.style.display = "block";
+    aiCorrection.innerHTML = `
+        <p style="font-size:22px;">${isCorrect ? "✅ Richtig! / Đúng rồi!" : "❌ Falsch! / Sai rồi!"}</p>
+        ${!isCorrect ? `<p style="font-size:18px;color:green;">✔️ Đáp án đúng: <b>${correct}</b></p>` : ""}
+        <p style="font-size:16px;">${correct} = ${vi}</p>
+        <button onclick="nextMinigame()" style="font-size:20px;padding:10px 25px;border-radius:15px;border:none;cursor:pointer;background:#4CAF50;color:white;margin-top:10px;">
+            ${minigameIndex + 1 >= minigameQuestions.length ? "🏆 Kết quả" : "➡️ Tiếp"}
+        </button>
+    `;
+}
+
+function nextMinigame() {
+    minigameIndex++;
+    document.getElementById("feedback-area").style.display = "none";
+    showMinigameQuestion();
+}
+
+function showMinigameResult() {
+    const total = minigameQuestions.length;
+    const percent = Math.round((minigameScore / total) * 100);
+    const emoji = percent >= 80 ? "🏆" : percent >= 60 ? "👍" : "💪";
+    document.getElementById("message").innerHTML = `
+        ${emoji} <b>Kết quả Minigame!</b><br><br>
+        ${minigameScore}/${total} (${percent}%)<br><br>
+        ${percent >= 80 ? "Ausgezeichnet! 🌟" : percent >= 60 ? "Gut gemacht! 👏" : "Weiter üben! 💪"}
+    `;
+    document.getElementById("buttons").innerHTML = `
+        <button onclick="startMinigame()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#ff9800;color:white;">🔄 Nochmal</button>
+        <button onclick="showVokabelGruppe(currentGruppe)" style="font-size:20px;padding:12px 22px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#e3f2fd;">📖 Ôn lại từ</button>
+        <button onclick="showMedizinMenu()" style="font-size:18px;padding:10px 20px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#eee;">⬅️ Menu</button>
+    `;
+    document.getElementById("feedback-area").style.display = "none";
+}
+
 // ===== VOKABELN QUIZ =====
 const medizinQuestions = [
     {type:"luecke",frage:"Der Patient klagt über starken ___ an der Haut nach dem Kontakt mit Pflanzen.",antworten:["Juckreiz","Schnupfen","Heiserkeit","Abwehr"],richtig:0,erklaerung:"Juckreiz = ngứa (cảm giác ngứa trên da) / Juckreiz bedeutet das unangenehme Gefühl auf der Haut, das zum Kratzen reizt."},
@@ -319,7 +470,7 @@ function showQuestion() {
         <button onclick="checkAnswer(${a.original}, ${q.richtig}, '${encodeURIComponent(q.erklaerung)}', '${encodeURIComponent(q.antworten[q.richtig])}')" style="font-size:18px;padding:12px 20px;margin:8px;border-radius:15px;border:2px solid #ddd;cursor:pointer;display:block;width:90%;max-width:600px;text-align:left;">
             <b>${labels[i]}.</b> ${a.text}
         </button>
-    `).join('') + backBtn + `<button onclick="chooseLesson('Vokabeln')" style="font-size:18px;padding:10px 20px;margin:8px;border-radius:15px;border:none;cursor:pointer;background:#eee;">🏠 Thema wechseln</button>`;
+    `).join('') + backBtn + `<button onclick="showMedizinMenu()" style="font-size:18px;padding:10px 20px;margin:8px;border-radius:15px;border:none;cursor:pointer;background:#eee;">🏠 Menu</button>`;
 }
 
 function prevQuestion() {
@@ -369,185 +520,7 @@ function showResult() {
     `;
     document.getElementById("buttons").innerHTML = `
         <button onclick="startMedizin()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#e8f5e9;">🔄 Nochmal / Thử lại</button>
-        <button onclick="chooseLesson('Vokabeln')" style="font-size:20px;padding:10px 20px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#eee;">⬅️ Zurück</button>
-    `;
-    document.getElementById("feedback-area").style.display = "none";
-}
-    // ===== MEDIZIN MENU =====
-function showMedizinMenu() {
-    document.getElementById("feedback-area").style.display = "none";
-    document.getElementById("message").innerHTML = "🏥 Medizinische Fachbegriffe";
-    document.getElementById("buttons").innerHTML = `
-        <button onclick="showVokabelGruppe('diagnostik')" style="font-size:20px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#e3f2fd;">🩺 Diagnostische Instrumente</button>
-        <button onclick="showVokabelGruppe('verbandmaterial')" style="font-size:20px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#fce4ec;">🩹 Verbandmaterial</button>
-        <button onclick="showVokabelGruppe('intensiv')" style="font-size:20px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#f3e5f5;">🏥 Intensivmedizin</button>
-        <button onclick="startMedizin()" style="font-size:20px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#fff3e0;">🎯 Luyện tập</button>
-        <button onclick="chooseLesson('Vokabeln')" style="font-size:18px;padding:10px 20px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#eee;">⬅️ Zurück</button>
-    `;
-}
-
-// ===== TỪ VỰNG THEO NHÓM =====
-const vokabelGruppen = {
-    diagnostik: {
-        titel: "🩺 Diagnostische Instrumente",
-        farbe: "#e3f2fd",
-        woerter: [
-            {de:"Das Stethoskop", vi:"Ống nghe", bild:"https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=300"},
-            {de:"Das Blutdruckmessgerät", vi:"Máy đo huyết áp", bild:"https://images.unsplash.com/photo-1559757175-5700dde675bc?w=300"},
-            {de:"Das Thermometer", vi:"Nhiệt kế", bild:"https://images.unsplash.com/photo-1584515933487-779824d29309?w=300"},
-            {de:"Die Taschenlampe (Pupillenleuchte)", vi:"Đèn soi đồng tử", bild:"https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=300"},
-            {de:"Der Pulsoximeter", vi:"Máy đo SpO2", bild:"https://images.unsplash.com/photo-1585435557343-3b092031a831?w=300"},
-            {de:"Der Reflexhammer", vi:"Búa phản xạ", bild:"https://images.unsplash.com/photo-1581594693702-fbdc51b2763b?w=300"}
-        ]
-    },
-    verbandmaterial: {
-        titel: "🩹 Verbandmaterial & Verbrauchsmaterial",
-        farbe: "#fce4ec",
-        woerter: [
-            {de:"Die Spritze", vi:"Bơm tiêm", bild:"https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=300"},
-            {de:"Die Kanüle (die Nadel)", vi:"Kim tiêm", bild:"https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=300"},
-            {de:"Der Tupfer", vi:"Gạc/bông thấm", bild:"https://images.unsplash.com/photo-1583947215259-38e31be8751f?w=300"},
-            {de:"Die Kompresse", vi:"Gạc đắp vết thương", bild:"https://images.unsplash.com/photo-1603398938378-e54eab446dde?w=300"},
-            {de:"Das Pflaster", vi:"Băng dán cá nhân", bild:"https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=300"},
-            {de:"Die Mullbinde", vi:"Băng cuộn", bild:"https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=300"},
-            {de:"Das Desinfektionsmittel", vi:"Dung dịch sát khuẩn", bild:"https://images.unsplash.com/photo-1584036561566-baf8f5f1b144?w=300"},
-            {de:"Die Handschuhe (Einmalhandschuhe)", vi:"Găng tay dùng một lần", bild:"https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=300"}
-        ]
-    },
-    intensiv: {
-        titel: "🏥 Intensivmedizinische Ausstattung",
-        farbe: "#f3e5f5",
-        woerter: [
-            {de:"Das Infusionsgerät / Der Infusionsständer", vi:"Máy truyền dịch / Cây treo dịch", bild:"https://images.unsplash.com/photo-1516549655169-df83a0774514?w=300"},
-            {de:"Die Magensonde", vi:"Ống thông dạ dày", bild:"https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=300"},
-            {de:"Der Blasenkatheter (DK)", vi:"Ống thông tiểu", bild:"https://images.unsplash.com/photo-1559757175-5700dde675bc?w=300"},
-            {de:"Die Sauerstoffmaske", vi:"Mặt nạ thở oxy", bild:"https://images.unsplash.com/photo-1584515933487-779824d29309?w=300"},
-            {de:"Der Beatmungsschlauch", vi:"Ống nội khí quản", bild:"https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=300"},
-            {de:"Das EKG-Gerät", vi:"Máy điện tâm đồ", bild:"https://images.unsplash.com/photo-1551190822-a9333d879b1f?w=300"}
-        ]
-    }
-};
-
-let currentGruppe = "";
-let currentVokabelIndex = 0;
-
-function showVokabelGruppe(gruppe) {
-    currentGruppe = gruppe;
-    currentVokabelIndex = 0;
-    showVokabel();
-}
-
-function showVokabel() {
-    const gruppe = vokabelGruppen[currentGruppe];
-    const wort = gruppe.woerter[currentVokabelIndex];
-    const total = gruppe.woerter.length;
-
-    document.getElementById("message").innerHTML = `
-        <span style="font-size:16px;color:#666;">${gruppe.titel} | ${currentVokabelIndex + 1}/${total}</span><br><br>
-        <img src="${wort.bild}" style="width:250px;height:180px;object-fit:cover;border-radius:12px;margin:10px;" onerror="this.src='https://via.placeholder.com/250x180?text=Kein+Bild'"><br>
-        <b style="font-size:26px;">${wort.de}</b><br>
-        <span style="font-size:22px;color:#555;">${wort.vi}</span>
-    `;
-
-    const prevBtn = currentVokabelIndex > 0 ? `<button onclick="prevVokabel()" style="font-size:20px;padding:12px 22px;margin:8px;border-radius:15px;border:none;cursor:pointer;background:#eee;">⬅️ Trước</button>` : '';
-    const nextBtn = currentVokabelIndex < total - 1
-        ? `<button onclick="nextVokabel()" style="font-size:20px;padding:12px 22px;margin:8px;border-radius:15px;border:none;cursor:pointer;background:#4CAF50;color:white;">➡️ Tiếp</button>`
-        : `<button onclick="startMinigame()" style="font-size:20px;padding:12px 22px;margin:8px;border-radius:15px;border:none;cursor:pointer;background:#ff9800;color:white;">🎮 Minigame!</button>`;
-
-    document.getElementById("buttons").innerHTML = `
-        ${prevBtn}
-        ${nextBtn}
-        <button onclick="showMedizinMenu()" style="font-size:18px;padding:10px 20px;margin:8px;border-radius:15px;border:none;cursor:pointer;background:#eee;">🏠 Menu</button>
-    `;
-}
-
-function nextVokabel() { currentVokabelIndex++; showVokabel(); }
-function prevVokabel() { currentVokabelIndex--; showVokabel(); }
-
-// ===== MINIGAME =====
-let minigameQuestions = [];
-let minigameIndex = 0;
-let minigameScore = 0;
-
-function startMinigame() {
-    const gruppe = vokabelGruppen[currentGruppe];
-    minigameScore = 0;
-    minigameIndex = 0;
-    minigameQuestions = [...gruppe.woerter].sort(() => Math.random() - 0.5);
-    showMinigameQuestion();
-}
-
-function showMinigameQuestion() {
-    const gruppe = vokabelGruppen[currentGruppe];
-    if (minigameIndex >= minigameQuestions.length) {
-        showMinigameResult();
-        return;
-    }
-
-    const current = minigameQuestions[minigameIndex];
-    const allWords = gruppe.woerter;
-
-    // Tạo 4 đáp án: 1 đúng + 3 sai
-    let wrongAnswers = allWords
-        .filter(w => w.de !== current.de)
-        .sort(() => Math.random() - 0.5)
-        .slice(0, 3);
-    let answers = [...wrongAnswers, current].sort(() => Math.random() - 0.5);
-
-    document.getElementById("feedback-area").style.display = "none";
-    document.getElementById("message").innerHTML = `
-        <span style="font-size:16px;color:#666;">🎮 Minigame | Câu ${minigameIndex + 1}/${minigameQuestions.length} | Điểm: ${minigameScore}</span><br><br>
-        <img src="${current.bild}" style="width:250px;height:180px;object-fit:cover;border-radius:12px;margin:10px;" onerror="this.src='https://via.placeholder.com/250x180?text=?'"><br>
-        <b>Đây là gì? / Was ist das?</b>
-    `;
-
-    document.getElementById("buttons").innerHTML = answers.map(a => `
-        <button onclick="checkMinigame('${encodeURIComponent(a.de)}', '${encodeURIComponent(current.de)}', '${encodeURIComponent(current.vi)}')" style="font-size:18px;padding:12px 20px;margin:8px;border-radius:15px;border:2px solid #ddd;cursor:pointer;display:block;width:90%;max-width:500px;text-align:left;">
-            ${a.de}
-        </button>
-    `).join('');
-}
-
-function checkMinigame(chosenEncoded, correctEncoded, viEncoded) {
-    const chosen = decodeURIComponent(chosenEncoded);
-    const correct = decodeURIComponent(correctEncoded);
-    const vi = decodeURIComponent(viEncoded);
-    const isCorrect = chosen === correct;
-    if (isCorrect) minigameScore++;
-
-    const aiCorrection = document.getElementById("ai-correction");
-    const feedbackArea = document.getElementById("feedback-area");
-    feedbackArea.style.display = "block";
-    aiCorrection.style.display = "block";
-    aiCorrection.innerHTML = `
-        <p style="font-size:22px;">${isCorrect ? "✅ Richtig! / Đúng rồi!" : "❌ Falsch! / Sai rồi!"}</p>
-        ${!isCorrect ? `<p style="font-size:18px;color:green;">✔️ Đáp án đúng: <b>${correct}</b></p>` : ""}
-        <p style="font-size:16px;">${correct} = ${vi}</p>
-        <button onclick="nextMinigame()" style="font-size:20px;padding:10px 25px;border-radius:15px;border:none;cursor:pointer;background:#4CAF50;color:white;margin-top:10px;">
-            ${minigameIndex + 1 >= minigameQuestions.length ? "🏆 Kết quả" : "➡️ Tiếp"}
-        </button>
-    `;
-}
-
-function nextMinigame() {
-    minigameIndex++;
-    document.getElementById("feedback-area").style.display = "none";
-    showMinigameQuestion();
-}
-
-function showMinigameResult() {
-    const total = minigameQuestions.length;
-    const percent = Math.round((minigameScore / total) * 100);
-    const emoji = percent >= 80 ? "🏆" : percent >= 60 ? "👍" : "💪";
-    document.getElementById("message").innerHTML = `
-        ${emoji} <b>Kết quả Minigame!</b><br><br>
-        ${minigameScore}/${total} (${percent}%)<br><br>
-        ${percent >= 80 ? "Ausgezeichnet! 🌟" : percent >= 60 ? "Gut gemacht! 👏" : "Weiter üben! 💪"}
-    `;
-    document.getElementById("buttons").innerHTML = `
-        <button onclick="startMinigame()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#ff9800;color:white;">🔄 Nochmal</button>
-        <button onclick="showVokabelGruppe(currentGruppe)" style="font-size:20px;padding:12px 22px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#e3f2fd;">📖 Ôn lại từ</button>
-        <button onclick="showMedizinMenu()" style="font-size:18px;padding:10px 20px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#eee;">⬅️ Menu</button>
+        <button onclick="showMedizinMenu()" style="font-size:20px;padding:10px 20px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#eee;">⬅️ Zurück</button>
     `;
     document.getElementById("feedback-area").style.display = "none";
 }
