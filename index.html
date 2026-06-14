@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
 </head>
-<body style="margin:0;height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;background:white;">
+<body style="margin:0;min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;background:white;">
 
 <h1>Hallo! Ich bin Kapi 🦫</h1>
 <img src="capy.png" width="450">
@@ -26,7 +26,11 @@ let countdown;
 let mediaRecorder;
 let audioChunks = [];
 let isRecording = false;
+let currentQuestionIndex = 0;
+let score = 0;
+let shuffledQuestions = [];
 
+// ===== GHI ÂM =====
 async function toggleRecording() {
     let recordBtn = document.getElementById("record-btn");
     let feedbackArea = document.getElementById("feedback-area");
@@ -48,49 +52,60 @@ async function toggleRecording() {
         isRecording = false;
         recordBtn.innerHTML = "🎤 Aufnehmen";
         document.getElementById("transcript-text").innerHTML = "<i>Kapi denkt nach... 🧠</i>";
-
         mediaRecorder.onstop = async () => {
             mediaRecorder.stream.getTracks().forEach(t => t.stop());
             const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
             const formData = new FormData();
             formData.append('audio', audioBlob, 'audio.webm');
-
             aiCorrection.innerHTML = "<p style='color:#0984e3;'><i>Kapi đang nghe và suy nghĩ... 🧠🦫</i></p>";
             aiCorrection.style.display = "block";
-
             try {
-                const transcribeRes = await fetch('/api/transcribe', {
-                    method: 'POST',
-                    body: formData
-                });
+                const transcribeRes = await fetch('/api/transcribe', { method: 'POST', body: formData });
                 const transcribeData = await transcribeRes.json();
                 const text = transcribeData.text;
-
                 if (!text || !text.trim()) {
                     document.getElementById("transcript-text").innerHTML = "<b>Oops!</b>";
-                    aiCorrection.innerHTML = "<p style='color:red;'>Ich habe nichts gehört. (Kapi chưa nghe thấy gì)</p>";
+                    aiCorrection.innerHTML = "<p style='color:red;'>Ich habe nichts gehört.</p>";
                     return;
                 }
-
                 document.getElementById("transcript-text").innerHTML = "<b>Du sagst:</b> " + text;
-
                 const chatRes = await fetch('/api/chat', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ text: text })
                 });
                 const chatData = await chatRes.json();
-                if (chatData.result) {
-                    aiCorrection.innerHTML = chatData.result;
-                } else {
-                    aiCorrection.innerHTML = "<p style='color:red;'>" + (chatData.error || "Lỗi không xác định") + "</p>";
-                }
+                aiCorrection.innerHTML = chatData.result || "<p style='color:red;'>" + (chatData.error || "Lỗi") + "</p>";
             } catch (error) {
                 aiCorrection.innerHTML = "<p style='color:red;'>Lỗi: " + error.message + "</p>";
             }
         };
     }
 }
+
+// ===== TIMER =====
+function startTimer() {
+    clearInterval(countdown);
+    let time = 120;
+    countdown = setInterval(function() {
+        let m = Math.floor(time / 60);
+        let s = time % 60;
+        document.getElementById("timer").innerText = m + ":" + s.toString().padStart(2, "0");
+        time--;
+        if (time < 0) { clearInterval(countdown); document.getElementById("timer").innerText = "⏰ Zeit ist um!"; }
+    }, 1000);
+}
+
+// ===== HALLO =====
+function sayHallo() {
+    document.getElementById("message").innerText = "Hallo! Wie geht's dir? 😊";
+    document.getElementById("buttons").innerHTML = `
+        <button onclick="goodAnswer()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">😊 Mir geht's gut!</button>
+        <button onclick="badAnswer()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">😢 Nicht so gut.</button>
+    `;
+}
+function goodAnswer() { document.getElementById("message").innerText = "Das freut mich! 🌟"; showLevels(); }
+function badAnswer() { document.getElementById("message").innerText = "Oh nein! Hoffentlich wird dein Tag besser. 💛"; showLevels(); }
 
 // ===== LEVEL =====
 function showLevels() {
@@ -103,93 +118,13 @@ function showLevels() {
         <button onclick="chooseLevel('B2')" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">📙 B2</button>
     `;
 }
-
 function chooseLevel(level) {
     currentLevel = level;
     document.getElementById("message").innerText = "Super! Heute üben wir Deutsch auf Niveau " + level + " 🇩🇪";
     showLessons();
 }
 
-// ===== TEIL 1 - ĐỦ 38 CHỦ ĐỀ =====
-const teil1 = [
-    {thema:"Fremdsprachen lernen",punkte:["Vorteile für Beruf und Zukunft","Kognitive Fähigkeiten fördern","Kulturelles Verständnis erweitern","Zeitaufwand und Schwierigkeiten"]},
-    {thema:"Online Sprache lernen",punkte:["Flexibilität im Alltag","Kosten und Zugänglichkeit","Soziale Kontakte fördern oder einschränken","Lernqualität verbessern oder verschlechtern"]},
-    {thema:"Berufliche Fortbildung",punkte:["Neue Kenntnisse erwerben","Karrierechancen verbessern","Zeit- und Kostenaufwand","Motivation der Arbeitnehmer"]},
-    {thema:"Bewerbungsgespräch vorbereiten",punkte:["Selbstbewusstsein stärken","Informationen über die Firma sammeln","Typische Fragen üben","Kleidung und Auftreten"]},
-    {thema:"Berufserfahrung in der Studienzeit",punkte:["Vorteile für die Karriere","Verbindung von Theorie und Praxis","Zeitmanagement zwischen Studium und Arbeit","Belastung oder Motivation"]},
-    {thema:"Im Ausland arbeiten",punkte:["Berufliche Chancen erweitern","Kulturelle Erfahrungen bereichern","Sprachkenntnisse verbessern","Familie und Freunde vernachlässigen"]},
-    {thema:"Job online suchen",punkte:["Flexibilität und Zeitersparnis","Große Auswahl an Stellen","Gefahr von unseriösen Angeboten","Vergleich mit traditionellen Methoden"]},
-    {thema:"Sich beruflich neu orientieren",punkte:["Gründe für Neuorientierung","Chancen und Risiken","Weiterbildungsmöglichkeiten","Auswirkungen auf Privatleben"]},
-    {thema:"Umweltbewusst leben",punkte:["Müll vermeiden","Energie sparen","Nachhaltige Produkte kaufen","Verantwortung für die Zukunft"]},
-    {thema:"Umweltfreundliche Verkehrsmittel",punkte:["Kosten und Nutzen","Beitrag zum Klimaschutz","Alltagstauglichkeit","Vergleich mit Auto"]},
-    {thema:"Müll vermeiden",punkte:["Recycling fördern","Plastik reduzieren","Bewusstsein schaffen","Alltagstipps"]},
-    {thema:"Energie sparen",punkte:["Kosten senken","Umwelt schützen","Technik nutzen","Verhalten ändern"]},
-    {thema:"Gebrauchte Produkte kaufen",punkte:["Nachhaltigkeit fördern","Geld sparen","Qualität und Risiko","Konsumverhalten ändern"]},
-    {thema:"Stress vermeiden",punkte:["Ursachen erkennen","Methoden zur Entspannung","Auswirkungen auf Gesundheit","Balance zwischen Arbeit und Freizeit"]},
-    {thema:"Fit bleiben",punkte:["Sport treiben","Ernährung beachten","Motivation finden","Gesundheitliche Vorteile"]},
-    {thema:"Gesund werden ohne Chemie",punkte:["Naturheilmittel","Ernährung und Bewegung","Risiken und Grenzen","Vergleich mit Medikamenten"]},
-    {thema:"Bewegung im Alltag",punkte:["Treppen statt Aufzug","Fahrrad statt Auto","Kleine Übungen zwischendurch","Vorteile für Gesundheit"]},
-    {thema:"Neue Sportart treiben",punkte:["Motivation","Kosten und Ausrüstung","Soziale Kontakte","Gesundheitliche Aspekte"]},
-    {thema:"Gesundheitsförderung am Arbeitsplatz",punkte:["Programme und Angebote","Motivation der Mitarbeiter","Kosten für Unternehmen","Vorteile für Produktivität"]},
-    {thema:"Sich im Verein engagieren",punkte:["Soziale Kontakte","Verantwortung übernehmen","Freizeit sinnvoll nutzen","Beitrag für die Gesellschaft"]},
-    {thema:"Wohnsituation während des Studiums",punkte:["Kosten","WG oder allein wohnen","Nähe zur Uni","Soziale Kontakte"]},
-    {thema:"Harmonie in der Nachbarschaft",punkte:["Rücksicht nehmen","Konflikte vermeiden","Gemeinschaft fördern","Regeln beachten"]},
-    {thema:"Privatsphäre in sozialen Netzwerken",punkte:["Datenschutz","Vorteile und Risiken","Verantwortung der Nutzer","Einfluss auf Beziehungen"]},
-    {thema:"Geld sparen",punkte:["Budget planen","Angebote nutzen","Konsum einschränken","Vorteile für Zukunft"]},
-    {thema:"Die Wahl des Studiums",punkte:["Interessen","Berufschancen","Kosten und Dauer","Persönliche Entwicklung"]},
-    {thema:"Zu Hause fürs Studium lernen",punkte:["Vorteile der Flexibilität","Ablenkungen","Lernmethoden","Vergleich mit Bibliothek"]},
-   {thema:"Konflikte am Arbeitsplatz lösen",punkte:["Ursachen erkennen","Kommunikation verbessern","Lösungen finden","Zusammenarbeit stärken"]},
-    {thema:"Arbeitsatmosphäre verbessern",punkte:["Motivation der Mitarbeiter","Teamarbeit fördern","Konflikte vermeiden","Vorteile für Produktivität"]},
-    {thema:"Mitbestimmung im Unternehmen",punkte:["Rechte der Arbeitnehmer","Vorteile für Motivation","Risiken für Unternehmen","Beispiele"]},
-    {thema:"Höflichkeit am Arbeitsplatz",punkte:["Respekt zeigen","Kommunikation verbessern","Konflikte vermeiden","Vorteile für Zusammenarbeit"]},
-    {thema:"Öffentliche Verkehrsmittel",punkte:["Kosten","Umweltfreundlichkeit","Alltagstauglichkeit","Vergleich mit Auto"]},
-    {thema:"Kulturangebote nutzen",punkte:["Bildung fördern","Freizeitgestaltung","Kosten","Soziale Kontakte"]},
-    {thema:"Auf tierische Produkte verzichten",punkte:["Gesundheitliche Vorteile","Umwelt schützen","Kosten","Soziale Aspekte"]},
-    {thema:"4-Tage-Arbeitswoche",punkte:["Vorteile für Arbeitnehmer","Produktivität","Kosten für Unternehmen","Work-Life-Balance"]},
-    {thema:"Zeitmanagement",punkte:["Planung","Prioritäten setzen","Stress vermeiden","Vorteile für Alltag"]},
-    {thema:"Freunde kennenlernen",punkte:["Soziale Kontakte","Freizeitgestaltung","Vorteile für Psyche","Herausforderungen"]},
-    {thema:"Teamarbeit",punkte:["Zusammenarbeit fördern","Konflikte vermeiden","Motivation steigern","Vorteile für Produktivität"]},
-    {thema:"Ein neues Land kennenlernen",punkte:["Kultur erleben","Sprache lernen","Kosten","Persönliche Entwicklung"]},
-    {thema:"Politisch engagieren",punkte:["Verantwortung übernehmen","Gesellschaft beeinflussen","Vorteile für Demokratie","Risiken"]}
-];
-
-const teil2 = [
-    "Soll man die Arbeitszeit verkürzen?","Wie sinnvoll ist ein Großraumbüro für Angestellte?","Soll ein Angestellter von zu Hause aus arbeiten?","Flexible Arbeitszeiten","Online studieren oder Präsenzunterricht?","Sollen Studierende ihre Professoren beurteilen?","Umweltschutz an der Universität","Duales Studium","Soll man ein Eigenheim kaufen, statt zu mieten?","Soll man in einer Wohngemeinschaft (WG) leben?","Soll man in der Stadt oder auf dem Land wohnen?","Bargeld oder Kreditkarte?","Ist Markenkleidung wichtig?","Soll man im Internet kaufen?","Sollten Geschäfte jeden Tag geöffnet haben?","Online-Meeting","Gespräche online","Präsentationen bei Online-Meetings ersetzen?","Soll man in sozialen Medien aktiv sein?","Sollen junge Kinder Haustiere adoptieren?","Soll man mit Kindern reisen?","Sollen Kinder Fremdsprachen lernen?","Books oder E-Books?","Ausländische Filme in Originalsprache zeigen?","Nachrichten kostenpflichtig – sinnvoll?"
-];
-
-function startTimer() {
-    clearInterval(countdown);
-    let time = 120;
-    countdown = setInterval(function() {
-        let minutes = Math.floor(time / 60);
-        let seconds = time % 60;
-        document.getElementById("timer").innerText = minutes + ":" + seconds.toString().padStart(2, "0");
-        time--;
-        if (time < 0) {
-            clearInterval(countdown);
-            document.getElementById("timer").innerText = "⏰ Zeit ist um!";
-        }
-    }, 1000);
-}
-
-function sayHallo() {
-    document.getElementById("message").innerText = "Hallo! Wie geht's dir? 😊";
-    document.getElementById("buttons").innerHTML = `
-        <button onclick="goodAnswer()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">😊 Mir geht's gut!</button>
-        <button onclick="badAnswer()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">😢 Nicht so gut.</button>
-    `;
-}
-
-function goodAnswer() {
-    document.getElementById("message").innerText = "Das freut mich! 🌟";
-    showLevels();
-}
-
-function badAnswer() {
-    document.getElementById("message").innerText = "Oh nein! Hoffentlich wird dein Tag besser. 💛";
-    showLevels();
-}
-
+// ===== LESSONS =====
 function showLessons() {
     document.getElementById("feedback-area").style.display = "none";
     document.getElementById("buttons").innerHTML = `
@@ -219,16 +154,55 @@ function chooseLesson(lesson) {
         `;
         return;
     }
-    if (lesson === "Vokabeln") {
-        document.getElementById("message").innerHTML = "Welches Thema? 📝";
-        document.getElementById("buttons").innerHTML = `
-            <button onclick="startMedizin()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#e8f5e9;">🏥 Medizinische Fachbegriffe</button>
-            <button onclick="showLessons()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">🦫 Zurück</button>
-        `;
-        return;
-    }
     document.getElementById("message").innerText = "Super! Heute lernen wir " + lesson + "! 🎉";
 }
+
+// ===== SPRECHEN =====
+const teil1 = [
+    {thema:"Fremdsprachen lernen",punkte:["Vorteile für Beruf und Zukunft","Kognitive Fähigkeiten fördern","Kulturelles Verständnis erweitern","Zeitaufwand und Schwierigkeiten"]},
+    {thema:"Online Sprache lernen",punkte:["Flexibilität im Alltag","Kosten und Zugänglichkeit","Soziale Kontakte fördern oder einschränken","Lernqualität verbessern oder verschlechtern"]},
+    {thema:"Berufliche Fortbildung",punkte:["Neue Kenntnisse erwerben","Karrierechancen verbessern","Zeit- und Kostenaufwand","Motivation der Arbeitnehmer"]},
+    {thema:"Bewerbungsgespräch vorbereiten",punkte:["Selbstbewusstsein stärken","Informationen über die Firma sammeln","Typische Fragen üben","Kleidung und Auftreten"]},
+    {thema:"Berufserfahrung in der Studienzeit",punkte:["Vorteile für die Karriere","Verbindung von Theorie und Praxis","Zeitmanagement zwischen Studium und Arbeit","Belastung oder Motivation"]},
+    {thema:"Im Ausland arbeiten",punkte:["Berufliche Chancen erweitern","Kulturelle Erfahrungen bereichern","Sprachkenntnisse verbessern","Familie und Freunde vernachlässigen"]},
+    {thema:"Job online suchen",punkte:["Flexibilität und Zeitersparnis","Große Auswahl an Stellen","Gefahr von unseriösen Angeboten","Vergleich mit traditionellen Methoden"]},
+    {thema:"Sich beruflich neu orientieren",punkte:["Gründe für Neuorientierung","Chancen und Risiken","Weiterbildungsmöglichkeiten","Auswirkungen auf Privatleben"]},
+    {thema:"Umweltbewusst leben",punkte:["Müll vermeiden","Energie sparen","Nachhaltige Produkte kaufen","Verantwortung für die Zukunft"]},
+    {thema:"Umweltfreundliche Verkehrsmittel",punkte:["Kosten und Nutzen","Beitrag zum Klimaschutz","Alltagstauglichkeit","Vergleich mit Auto"]},
+    {thema:"Müll vermeiden",punkte:["Recycling fördern","Plastik reduzieren","Bewusstsein schaffen","Alltagstipps"]},
+    {thema:"Energie sparen",punkte:["Kosten senken","Umwelt schützen","Technik nutzen","Verhalten ändern"]},
+    {thema:"Gebrauchte Produkte kaufen",punkte:["Nachhaltigkeit fördern","Geld sparen","Qualität und Risiko","Konsumverhalten ändern"]},
+    {thema:"Stress vermeiden",punkte:["Ursachen erkennen","Methoden zur Entspannung","Auswirkungen auf Gesundheit","Balance zwischen Arbeit und Freizeit"]},
+    {thema:"Fit bleiben",punkte:["Sport treiben","Ernährung beachten","Motivation finden","Gesundheitliche Vorteile"]},
+    {thema:"Gesund werden ohne Chemie",punkte:["Naturheilmittel","Ernährung und Bewegung","Risiken und Grenzen","Vergleich mit Medikamenten"]},
+    {thema:"Bewegung im Alltag",punkte:["Treppen statt Aufzug","Fahrrad statt Auto","Kleine Übungen zwischendurch","Vorteile für Gesundheit"]},
+    {thema:"Neue Sportart treiben",punkte:["Motivation","Kosten und Ausrüstung","Soziale Kontakte","Gesundheitliche Aspekte"]},
+    {thema:"Gesundheitsförderung am Arbeitsplatz",punkte:["Programme und Angebote","Motivation der Mitarbeiter","Kosten für Unternehmen","Vorteile für Produktivität"]},
+    {thema:"Sich im Verein engagieren",punkte:["Soziale Kontakte","Verantwortung übernehmen","Freizeit sinnvoll nutzen","Beitrag für die Gesellschaft"]},
+    {thema:"Wohnsituation während des Studiums",punkte:["Kosten","WG oder allein wohnen","Nähe zur Uni","Soziale Kontakte"]},
+    {thema:"Harmonie in der Nachbarschaft",punkte:["Rücksicht nehmen","Konflikte vermeiden","Gemeinschaft fördern","Regeln beachten"]},
+    {thema:"Privatsphäre in sozialen Netzwerken",punkte:["Datenschutz","Vorteile und Risiken","Verantwortung der Nutzer","Einfluss auf Beziehungen"]},
+    {thema:"Geld sparen",punkte:["Budget planen","Angebote nutzen","Konsum einschränken","Vorteile für Zukunft"]},
+    {thema:"Die Wahl des Studiums",punkte:["Interessen","Berufschancen","Kosten und Dauer","Persönliche Entwicklung"]},
+    {thema:"Zu Hause fürs Studium lernen",punkte:["Vorteile der Flexibilität","Ablenkungen","Lernmethoden","Vergleich mit Bibliothek"]},
+    {thema:"Konflikte am Arbeitsplatz lösen",punkte:["Ursachen erkennen","Kommunikation verbessern","Lösungen finden","Zusammenarbeit stärken"]},
+    {thema:"Arbeitsatmosphäre verbessern",punkte:["Motivation der Mitarbeiter","Teamarbeit fördern","Konflikte vermeiden","Vorteile für Produktivität"]},
+    {thema:"Mitbestimmung im Unternehmen",punkte:["Rechte der Arbeitnehmer","Vorteile für Motivation","Risiken für Unternehmen","Beispiele"]},
+    {thema:"Höflichkeit am Arbeitsplatz",punkte:["Respekt zeigen","Kommunikation verbessern","Konflikte vermeiden","Vorteile für Zusammenarbeit"]},
+    {thema:"Öffentliche Verkehrsmittel",punkte:["Kosten","Umweltfreundlichkeit","Alltagstauglichkeit","Vergleich mit Auto"]},
+    {thema:"Kulturangebote nutzen",punkte:["Bildung fördern","Freizeitgestaltung","Kosten","Soziale Kontakte"]},
+    {thema:"Auf tierische Produkte verzichten",punkte:["Gesundheitliche Vorteile","Umwelt schützen","Kosten","Soziale Aspekte"]},
+    {thema:"4-Tage-Arbeitswoche",punkte:["Vorteile für Arbeitnehmer","Produktivität","Kosten für Unternehmen","Work-Life-Balance"]},
+    {thema:"Zeitmanagement",punkte:["Planung","Prioritäten setzen","Stress vermeiden","Vorteile für Alltag"]},
+    {thema:"Freunde kennenlernen",punkte:["Soziale Kontakte","Freizeitgestaltung","Vorteile für Psyche","Herausforderungen"]},
+    {thema:"Teamarbeit",punkte:["Zusammenarbeit fördern","Konflikte vermeiden","Motivation steigern","Vorteile für Produktivität"]},
+    {thema:"Ein neues Land kennenlernen",punkte:["Kultur erleben","Sprache lernen","Kosten","Persönliche Entwicklung"]},
+    {thema:"Politisch engagieren",punkte:["Verantwortung übernehmen","Gesellschaft beeinflussen","Vorteile für Demokratie","Risiken"]}
+];
+
+const teil2 = [
+    "Soll man die Arbeitszeit verkürzen?","Wie sinnvoll ist ein Großraumbüro für Angestellte?","Soll ein Angestellter von zu Hause aus arbeiten?","Flexible Arbeitszeiten","Online studieren oder Präsenzunterricht?","Sollen Studierende ihre Professoren beurteilen?","Umweltschutz an der Universität","Duales Studium","Soll man ein Eigenheim kaufen, statt zu mieten?","Soll man in einer Wohngemeinschaft (WG) leben?","Soll man in der Stadt oder auf dem Land wohnen?","Bargeld oder Kreditkarte?","Ist Markenkleidung wichtig?","Soll man im Internet kaufen?","Sollten Geschäfte jeden Tag geöffnet haben?","Online-Meeting","Gespräche online","Präsentationen bei Online-Meetings ersetzen?","Soll man in sozialen Medien aktiv sein?","Sollen junge Kinder Haustiere adoptieren?","Soll man mit Kindern reisen?","Sollen Kinder Fremdsprachen lernen?","Books oder E-Books?","Ausländische Filme in Originalsprache zeigen?","Nachrichten kostenpflichtig – sinnvoll?"
+];
 
 function showTeil1() {
     document.getElementById("feedback-area").style.display = "none";
@@ -258,10 +232,7 @@ function showTeil2() {
 
 function restart() {
     clearInterval(countdown);
-    if (isRecording && mediaRecorder) {
-        mediaRecorder.stop();
-        isRecording = false;
-    }
+    if (isRecording && mediaRecorder) { mediaRecorder.stop(); isRecording = false; }
     document.getElementById("timer").innerText = "";
     document.getElementById("feedback-area").style.display = "none";
     document.getElementById("message").innerText = "Guten Morgen! Schön, dich kennenzulernen! 🌟";
@@ -270,231 +241,39 @@ function restart() {
     `;
 }
 
+// ===== VOKABELN =====
 const medizinQuestions = [
-    {
-        type: "luecke",
-        frage: "Der Patient klagt über starken ___ an der Haut nach dem Kontakt mit Pflanzen.",
-        antworten: ["Juckreiz", "Schnupfen", "Heiserkeit", "Abwehr"],
-        richtig: 0,
-        erklaerung: "Juckreiz = ngứa (cảm giác ngứa trên da) / Juckreiz bedeutet das unangenehme Gefühl auf der Haut, das zum Kratzen reizt."
-    },
-    {
-        type: "bedeutung",
-        frage: "Was bedeutet 'Maßnahme' im medizinischen Kontext?",
-        antworten: ["biện pháp / Schritt zur Problemlösung", "triệu chứng / Krankheitszeichen", "thuốc / Medikament", "bệnh nhân / kranke Person"],
-        richtig: 0,
-        erklaerung: "Maßnahme = biện pháp / Eine Maßnahme ist ein konkreter Schritt, um ein Problem zu lösen oder zu verhindern."
-    },
-    {
-        type: "luecke",
-        frage: "Im Sommer ist ein ___ sehr wichtig, um Mückenstiche zu vermeiden.",
-        antworten: ["Mückenschutzmittel", "Hausmittel", "Impfstoff", "Abwehrmechanismus"],
-        richtig: 0,
-        erklaerung: "Mückenschutzmittel = thuốc chống muỗi / Ein Mittel, das Mücken fernhält."
-    },
-    {
-        type: "wahl",
-        frage: "Welches Wort passt? Das ___ schützt den Körper vor Viren und Bakterien.",
-        antworten: ["Immunsystem", "Vitalzeichen", "Erbgut", "Gesundheitswesen"],
-        richtig: 0,
-        erklaerung: "Immunsystem = hệ miễn dịch / Das Immunsystem ist die Abwehr des Körpers gegen Krankheitserreger."
-    },
-    {
-        type: "bedeutung",
-        frage: "Was bedeutet 'Gesundheitsbewusstsein'?",
-        antworten: ["ý thức sức khỏe / Bewusstsein für die eigene Gesundheit", "bảo hiểm y tế / Krankenversicherung", "chăm sóc sức khỏe / medizinische Versorgung", "kiến thức y khoa / medizinisches Wissen"],
-        richtig: 0,
-        erklaerung: "Gesundheitsbewusstsein = ý thức về sức khỏe / Das Bewusstsein dafür, wie wichtig ein gesunder Lebensstil ist."
-    },
-    {
-        type: "luecke",
-        frage: "Die ___ älterer Menschen erfordert viel Geduld und Einfühlungsvermögen.",
-        antworten: ["Betreuung", "Behandlung", "Abwehr", "Maßnahme"],
-        richtig: 0,
-        erklaerung: "Betreuung = chăm sóc / Die Fürsorge und Unterstützung für pflegebedürftige Personen."
-    },
-    {
-        type: "wahl",
-        frage: "Welches Wort passt? ___ wie Joggen oder Schwimmen ist gut für das Herz.",
-        antworten: ["Regelmäßige Bewegung", "Nährstoffarme Ernährung", "Schönheitsbehandlung", "Heiserkeit"],
-        richtig: 0,
-        erklaerung: "Regelmäßige Bewegung = vận động thường xuyên / Körperliche Aktivität, die regelmäßig ausgeübt wird."
-    },
-    {
-        type: "bedeutung",
-        frage: "Was bedeutet 'Lebewesen'?",
-        antworten: ["sinh vật / etwas, das lebt", "cuộc sống / das Leben", "môi trường / die Umwelt", "cơ thể / der Körper"],
-        richtig: 0,
-        erklaerung: "Lebewesen = sinh vật / Alles, was lebt: Menschen, Tiere, Pflanzen."
-    },
-    {
-        type: "luecke",
-        frage: "In der modernen Medizin spielen ___ eine wichtige Rolle bei der Vorbeugung von Krankheiten.",
-        antworten: ["Impfstoffe", "Hausmittel", "Beschwerden", "Infekte"],
-        richtig: 0,
-        erklaerung: "Impfstoffe = vắc-xin / Mittel zur Vorbeugung von Infektionskrankheiten."
-    },
-    {
-        type: "wahl",
-        frage: "Welches Wort passt? ___ wie Herzinfarkt und Schlaganfall sind häufige Todesursachen.",
-        antworten: ["Herz-Kreislauf-Erkrankungen", "Infekte", "Beschwerden", "Abwehrmechanismen"],
-        richtig: 0,
-        erklaerung: "Herz-Kreislauf-Erkrankungen = bệnh tim mạch / Erkrankungen des Herzens und der Blutgefäße."
-    },
-    {
-        type: "bedeutung",
-        frage: "Was bedeutet 'das menschliche Erbgut'?",
-        antworten: ["bộ gen người / genetische Information des Menschen", "cơ thể người / menschlicher Körper", "não bộ / das Gehirn", "hệ thần kinh / Nervensystem"],
-        richtig: 0,
-        erklaerung: "Erbgut = bộ gen / Die genetische Information, die von Eltern an Kinder weitergegeben wird."
-    },
-    {
-        type: "luecke",
-        frage: "Viele Menschen leiden im Winter unter ___ und verstopfter Nase.",
-        antworten: ["Schnupfen", "Juckreiz", "Heiserkeit", "Abwehr"],
-        richtig: 0,
-        erklaerung: "Schnupfen = sổ mũi / Eine Erkältung mit laufender oder verstopfter Nase."
-    },
-    {
-        type: "wahl",
-        frage: "Welches Wort passt? Nach der Operation überwacht die Krankenschwester regelmäßig die ___ des Patienten.",
-        antworten: ["Vitalzeichen", "Beschwerden", "Maßnahmen", "Infekte"],
-        richtig: 0,
-        erklaerung: "Vitalzeichen = dấu hiệu sinh tồn / Blutdruck, Puls, Temperatur und Atmung."
-    },
-    {
-        type: "bedeutung",
-        frage: "Was bedeutet 'nährstoffarm'?",
-        antworten: ["ít chất dinh dưỡng / wenig Nährstoffe enthaltend", "nhiều chất dinh dưỡng / viele Nährstoffe enthaltend", "không có calo / kalorienfrei", "tốt cho sức khỏe / gesund"],
-        richtig: 0,
-        erklaerung: "Nährstoffarm = ít chất dinh dưỡng / Lebensmittel mit wenig Vitaminen und Mineralstoffen."
-    },
-    {
-        type: "luecke",
-        frage: "Eine ___ Ernährung mit viel Obst und Gemüse stärkt das Immunsystem.",
-        antworten: ["nährstoffreiche", "nährstoffarme", "eiweißhaltige", "fettige"],
-        richtig: 0,
-        erklaerung: "Nährstoffreich = giàu chất dinh dưỡng / Lebensmittel mit vielen Vitaminen und Mineralstoffen."
-    },
-    {
-        type: "wahl",
-        frage: "Welches Wort passt? Sportler brauchen besonders viel ___, um Muskeln aufzubauen.",
-        antworten: ["eiweißhaltige Nahrung", "Schönheitsbehandlung", "Hausmittel", "Schnupfnase"],
-        richtig: 0,
-        erklaerung: "Eiweißhaltige Nahrung = thực phẩm giàu đạm / Nahrung mit hohem Proteingehalt wie Fleisch, Eier, Hülsenfrüchte."
-    },
-    {
-        type: "bedeutung",
-        frage: "Was bedeutet 'desinfizieren'?",
-        antworten: ["khử trùng / Keime abtöten", "băng bó / verbinden", "tiêm / injizieren", "phẫu thuật / operieren"],
-        richtig: 0,
-        erklaerung: "Desinfizieren = khử trùng / Krankheitserreger auf Oberflächen oder Wunden abtöten."
-    },
-    {
-        type: "luecke",
-        frage: "Der Körper hat verschiedene ___, um sich gegen Krankheitserreger zu schützen.",
-        antworten: ["Abwehrmechanismen", "Vitalzeichen", "Beschwerden", "Maßnahmen"],
-        richtig: 0,
-        erklaerung: "Abwehrmechanismus = cơ chế phòng vệ / Natürliche Methoden des Körpers zur Bekämpfung von Krankheiten."
-    },
-    {
-        type: "wahl",
-        frage: "Welches Wort passt? Der Patient schildert seine ___ dem Arzt genau.",
-        antworten: ["Beschwerden", "Maßnahmen", "Impfstoffe", "Lebewesen"],
-        richtig: 0,
-        erklaerung: "Beschwerden = triệu chứng, phàn nàn / Körperliche Probleme oder Schmerzen, die ein Patient hat."
-    },
-    {
-        type: "bedeutung",
-        frage: "Was bedeutet 'Heiserkeit'?",
-        antworten: ["khàn giọng / rauhe Stimme", "sổ mũi / laufende Nase", "ngứa / Juckreiz", "ho / Husten"],
-        richtig: 0,
-        erklaerung: "Heiserkeit = khàn tiếng / Eine rauhe oder heisere Stimme, oft bei Erkältung."
-    },
-    {
-        type: "luecke",
-        frage: "Viele Menschen bevorzugen ___ wie Honig und Ingwer bei leichten Erkältungen.",
-        antworten: ["Hausmittel", "Impfstoffe", "Abwehrmechanismen", "Maßnahmen"],
-        richtig: 0,
-        erklaerung: "Hausmittel = thuốc dân gian / Traditionelle Heilmittel aus dem Haushalt."
-    },
-    {
-        type: "wahl",
-        frage: "Welches Wort passt? Das ___ in Deutschland ist eines der besten der Welt.",
-        antworten: ["Gesundheitswesen", "Immunsystem", "Erbgut", "Vitalzeichen"],
-        richtig: 0,
-        erklaerung: "Gesundheitswesen = hệ thống y tế / Das gesamte System der medizinischen Versorgung in einem Land."
-    },
-    {
-        type: "bedeutung",
-        frage: "Was bedeutet 'Infekte'?",
-        antworten: ["nhiễm trùng / Infektionskrankheiten", "thuốc kháng sinh / Antibiotika", "vết thương / Wunden", "dị ứng / Allergien"],
-        richtig: 0,
-        erklaerung: "Infekte = nhiễm trùng / Krankheiten, die durch Viren oder Bakterien verursacht werden."
-    },
-    {
-        type: "luecke",
-        frage: "Die ___ der Wunde muss sofort nach dem Unfall erfolgen.",
-        antworten: ["Behandlung", "Abwehr", "Betreuung", "Maßnahme"],
-        richtig: 0,
-        erklaerung: "Behandlung = điều trị / Die medizinische Versorgung einer Verletzung oder Krankheit."
-    },
-    {
-        type: "wahl",
-        frage: "Welches Wort passt? Traditionelle ___ wie Botox sind heute sehr beliebt.",
-        antworten: ["Schönheitsbehandlungen", "Hausmittel", "Impfstoffe", "Maßnahmen"],
-        richtig: 0,
-        erklaerung: "Schönheitsbehandlungen = liệu pháp làm đẹp / Kosmetische Eingriffe zur Verbesserung des Aussehens."
-    },
-    {
-        type: "bedeutung",
-        frage: "Was bedeutet 'Abwehr' im medizinischen Kontext?",
-        antworten: ["sức đề kháng / Widerstand gegen Krankheiten", "điều trị / Behandlung", "chẩn đoán / Diagnose", "phục hồi / Erholung"],
-        richtig: 0,
-        erklaerung: "Abwehr = sức đề kháng / Die Fähigkeit des Körpers, sich gegen Krankheitserreger zu wehren."
-    },
-    {
-        type: "luecke",
-        frage: "Für eine ___ braucht man täglich ausreichend Schlaf und gesunde Ernährung.",
-        antworten: ["faltenfreie Haut", "nährstoffarme Ernährung", "starke Heiserkeit", "schnelle Behandlung"],
-        richtig: 0,
-        erklaerung: "Faltenfreie Haut = da không nếp nhăn / Haut ohne Falten, oft ein Zeichen von Jugendlichkeit."
-    },
-    {
-        type: "wahl",
-        frage: "Welches Wort passt? Die traditionelle ___ zwischen Mann und Frau verändert sich in der modernen Gesellschaft.",
-        antworten: ["Geschlechterrolle", "Betreuung", "Maßnahme", "Abwehr"],
-        richtig: 0,
-        erklaerung: "Geschlechterrolle = vai trò giới tính / Die gesellschaftlich erwarteten Verhaltensweisen für Männer und Frauen."
-    },
-    {
-        type: "bedeutung",
-        frage: "Was bedeutet 'effektiv'?",
-        antworten: ["hiệu quả / wirksam", "đắt tiền / teuer", "khó khăn / schwierig", "an toàn / sicher"],
-        richtig: 0,
-        erklaerung: "Effektiv = hiệu quả / Etwas, das das gewünschte Ergebnis erzielt."
-    },
-    {
-        type: "luecke",
-        frage: "Eine ___ Nase und Niesen sind typische Symptome einer Erkältung.",
-        antworten: ["Schnupf-", "heisere", "juckende", "infizierte"],
-        richtig: 0,
-        erklaerung: "Schnupfnase = mũi bị sổ / Eine laufende oder verstopfte Nase bei Erkältung."
-    }
+    {type:"luecke",frage:"Der Patient klagt über starken ___ an der Haut nach dem Kontakt mit Pflanzen.",antworten:["Juckreiz","Schnupfen","Heiserkeit","Abwehr"],richtig:0,erklaerung:"Juckreiz = ngứa (cảm giác ngứa trên da) / Juckreiz bedeutet das unangenehme Gefühl auf der Haut, das zum Kratzen reizt."},
+    {type:"bedeutung",frage:"Was bedeutet 'Maßnahme' im medizinischen Kontext?",antworten:["biện pháp / Schritt zur Problemlösung","triệu chứng / Krankheitszeichen","thuốc / Medikament","bệnh nhân / kranke Person"],richtig:0,erklaerung:"Maßnahme = biện pháp / Eine Maßnahme ist ein konkreter Schritt, um ein Problem zu lösen oder zu verhindern."},
+    {type:"luecke",frage:"Im Sommer ist ein ___ sehr wichtig, um Mückenstiche zu vermeiden.",antworten:["Mückenschutzmittel","Hausmittel","Impfstoff","Abwehrmechanismus"],richtig:0,erklaerung:"Mückenschutzmittel = thuốc chống muỗi / Ein Mittel, das Mücken fernhält."},
+    {type:"wahl",frage:"Welches Wort passt? Das ___ schützt den Körper vor Viren und Bakterien.",antworten:["Immunsystem","Vitalzeichen","Erbgut","Gesundheitswesen"],richtig:0,erklaerung:"Immunsystem = hệ miễn dịch / Das Immunsystem ist die Abwehr des Körpers gegen Krankheitserreger."},
+    {type:"bedeutung",frage:"Was bedeutet 'Gesundheitsbewusstsein'?",antworten:["ý thức sức khỏe / Bewusstsein für die eigene Gesundheit","bảo hiểm y tế / Krankenversicherung","chăm sóc sức khỏe / medizinische Versorgung","kiến thức y khoa / medizinisches Wissen"],richtig:0,erklaerung:"Gesundheitsbewusstsein = ý thức về sức khỏe / Das Bewusstsein dafür, wie wichtig ein gesunder Lebensstil ist."},
+    {type:"luecke",frage:"Die ___ älterer Menschen erfordert viel Geduld und Einfühlungsvermögen.",antworten:["Betreuung","Behandlung","Abwehr","Maßnahme"],richtig:0,erklaerung:"Betreuung = chăm sóc / Die Fürsorge und Unterstützung für pflegebedürftige Personen."},
+    {type:"wahl",frage:"Welches Wort passt? ___ wie Joggen oder Schwimmen ist gut für das Herz.",antworten:["Regelmäßige Bewegung","Nährstoffarme Ernährung","Schönheitsbehandlung","Heiserkeit"],richtig:0,erklaerung:"Regelmäßige Bewegung = vận động thường xuyên / Körperliche Aktivität, die regelmäßig ausgeübt wird."},
+    {type:"bedeutung",frage:"Was bedeutet 'Lebewesen'?",antworten:["sinh vật / etwas, das lebt","cuộc sống / das Leben","môi trường / die Umwelt","cơ thể / der Körper"],richtig:0,erklaerung:"Lebewesen = sinh vật / Alles, was lebt: Menschen, Tiere, Pflanzen."},
+    {type:"luecke",frage:"In der modernen Medizin spielen ___ eine wichtige Rolle bei der Vorbeugung von Krankheiten.",antworten:["Impfstoffe","Hausmittel","Beschwerden","Infekte"],richtig:0,erklaerung:"Impfstoffe = vắc-xin / Mittel zur Vorbeugung von Infektionskrankheiten."},
+    {type:"wahl",frage:"Welches Wort passt? ___ wie Herzinfarkt und Schlaganfall sind häufige Todesursachen.",antworten:["Herz-Kreislauf-Erkrankungen","Infekte","Beschwerden","Abwehrmechanismen"],richtig:0,erklaerung:"Herz-Kreislauf-Erkrankungen = bệnh tim mạch / Erkrankungen des Herzens und der Blutgefäße."},
+    {type:"bedeutung",frage:"Was bedeutet 'das menschliche Erbgut'?",antworten:["bộ gen người / genetische Information des Menschen","cơ thể người / menschlicher Körper","não bộ / das Gehirn","hệ thần kinh / Nervensystem"],richtig:0,erklaerung:"Erbgut = bộ gen / Die genetische Information, die von Eltern an Kinder weitergegeben wird."},
+    {type:"luecke",frage:"Viele Menschen leiden im Winter unter ___ und verstopfter Nase.",antworten:["Schnupfen","Juckreiz","Heiserkeit","Abwehr"],richtig:0,erklaerung:"Schnupfen = sổ mũi / Eine Erkältung mit laufender oder verstopfter Nase."},
+    {type:"wahl",frage:"Welches Wort passt? Nach der Operation überwacht die Krankenschwester regelmäßig die ___ des Patienten.",antworten:["Vitalzeichen","Beschwerden","Maßnahmen","Infekte"],richtig:0,erklaerung:"Vitalzeichen = dấu hiệu sinh tồn / Blutdruck, Puls, Temperatur und Atmung."},
+    {type:"bedeutung",frage:"Was bedeutet 'nährstoffarm'?",antworten:["ít chất dinh dưỡng / wenig Nährstoffe enthaltend","nhiều chất dinh dưỡng / viele Nährstoffe enthaltend","không có calo / kalorienfrei","tốt cho sức khỏe / gesund"],richtig:0,erklaerung:"Nährstoffarm = ít chất dinh dưỡng / Lebensmittel mit wenig Vitaminen und Mineralstoffen."},
+    {type:"luecke",frage:"Eine ___ Ernährung mit viel Obst und Gemüse stärkt das Immunsystem.",antworten:["nährstoffreiche","nährstoffarme","eiweißhaltige","fettige"],richtig:0,erklaerung:"Nährstoffreich = giàu chất dinh dưỡng / Lebensmittel mit vielen Vitaminen und Mineralstoffen."},
+    {type:"wahl",frage:"Welches Wort passt? Sportler brauchen besonders viel ___, um Muskeln aufzubauen.",antworten:["eiweißhaltige Nahrung","Schönheitsbehandlung","Hausmittel","Schnupfnase"],richtig:0,erklaerung:"Eiweißhaltige Nahrung = thực phẩm giàu đạm / Nahrung mit hohem Proteingehalt wie Fleisch, Eier, Hülsenfrüchte."},
+    {type:"bedeutung",frage:"Was bedeutet 'desinfizieren'?",antworten:["khử trùng / Keime abtöten","băng bó / verbinden","tiêm / injizieren","phẫu thuật / operieren"],richtig:0,erklaerung:"Desinfizieren = khử trùng / Krankheitserreger auf Oberflächen oder Wunden abtöten."},
+    {type:"luecke",frage:"Der Körper hat verschiedene ___, um sich gegen Krankheitserreger zu schützen.",antworten:["Abwehrmechanismen","Vitalzeichen","Beschwerden","Maßnahmen"],richtig:0,erklaerung:"Abwehrmechanismus = cơ chế phòng vệ / Natürliche Methoden des Körpers zur Bekämpfung von Krankheiten."},
+    {type:"wahl",frage:"Welches Wort passt? Der Patient schildert seine ___ dem Arzt genau.",antworten:["Beschwerden","Maßnahmen","Impfstoffe","Lebewesen"],richtig:0,erklaerung:"Beschwerden = triệu chứng, phàn nàn / Körperliche Probleme oder Schmerzen, die ein Patient hat."},
+    {type:"bedeutung",frage:"Was bedeutet 'Heiserkeit'?",antworten:["khàn giọng / rauhe Stimme","sổ mũi / laufende Nase","ngứa / Juckreiz","ho / Husten"],richtig:0,erklaerung:"Heiserkeit = khàn tiếng / Eine rauhe oder heisere Stimme, oft bei Erkältung."},
+    {type:"luecke",frage:"Viele Menschen bevorzugen ___ wie Honig und Ingwer bei leichten Erkältungen.",antworten:["Hausmittel","Impfstoffe","Abwehrmechanismen","Maßnahmen"],richtig:0,erklaerung:"Hausmittel = thuốc dân gian / Traditionelle Heilmittel aus dem Haushalt."},
+    {type:"wahl",frage:"Welches Wort passt? Das ___ in Deutschland ist eines der besten der Welt.",antworten:["Gesundheitswesen","Immunsystem","Erbgut","Vitalzeichen"],richtig:0,erklaerung:"Gesundheitswesen = hệ thống y tế / Das gesamte System der medizinischen Versorgung in einem Land."},
+    {type:"bedeutung",frage:"Was bedeutet 'Infekte'?",antworten:["nhiễm trùng / Infektionskrankheiten","thuốc kháng sinh / Antibiotika","vết thương / Wunden","dị ứng / Allergien"],richtig:0,erklaerung:"Infekte = nhiễm trùng / Krankheiten, die durch Viren oder Bakterien verursacht werden."},
+    {type:"luecke",frage:"Die ___ der Wunde muss sofort nach dem Unfall erfolgen.",antworten:["Behandlung","Abwehr","Betreuung","Maßnahme"],richtig:0,erklaerung:"Behandlung = điều trị / Die medizinische Versorgung einer Verletzung oder Krankheit."},
+    {type:"wahl",frage:"Welches Wort passt? Traditionelle ___ wie Botox sind heute sehr beliebt.",antworten:["Schönheitsbehandlungen","Hausmittel","Impfstoffe","Maßnahmen"],richtig:0,erklaerung:"Schönheitsbehandlungen = liệu pháp làm đẹp / Kosmetische Eingriffe zur Verbesserung des Aussehens."},
+    {type:"bedeutung",frage:"Was bedeutet 'Abwehr' im medizinischen Kontext?",antworten:["sức đề kháng / Widerstand gegen Krankheiten","điều trị / Behandlung","chẩn đoán / Diagnose","phục hồi / Erholung"],richtig:0,erklaerung:"Abwehr = sức đề kháng / Die Fähigkeit des Körpers, sich gegen Krankheitserreger zu wehren."},
+    {type:"luecke",frage:"Für eine ___ braucht man täglich ausreichend Schlaf und gesunde Ernährung.",antworten:["faltenfreie Haut","nährstoffarme Ernährung","starke Heiserkeit","schnelle Behandlung"],richtig:0,erklaerung:"Faltenfreie Haut = da không nếp nhăn / Haut ohne Falten, oft ein Zeichen von Jugendlichkeit."},
+    {type:"wahl",frage:"Welches Wort passt? Die traditionelle ___ zwischen Mann und Frau verändert sich in der modernen Gesellschaft.",antworten:["Geschlechterrolle","Betreuung","Maßnahme","Abwehr"],richtig:0,erklaerung:"Geschlechterrolle = vai trò giới tính / Die gesellschaftlich erwarteten Verhaltensweisen für Männer und Frauen."},
+    {type:"bedeutung",frage:"Was bedeutet 'effektiv'?",antworten:["hiệu quả / wirksam","đắt tiền / teuer","khó khăn / schwierig","an toàn / sicher"],richtig:0,erklaerung:"Effektiv = hiệu quả / Etwas, das das gewünschte Ergebnis erzielt."},
+    {type:"luecke",frage:"Eine ___ Nase und Niesen sind typische Symptome einer Erkältung.",antworten:["Schnupf-","heisere","juckende","infizierte"],richtig:0,erklaerung:"Schnupfnase = mũi bị sổ / Eine laufende oder verstopfte Nase bei Erkältung."}
 ];
-
-let currentQuestionIndex = 0;
-let score = 0;
-let shuffledQuestions = [];
-
-function showLesenMenu() {
-    document.getElementById("feedback-area").style.display = "none";
-    document.getElementById("message").innerHTML = "Wähle ein Thema! 📖";
-    document.getElementById("buttons").innerHTML = `
-        <button onclick="startMedizin()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#e8f5e9;">🏥 Medizinische Fachbegriffe</button>
-        <button onclick="showLessons()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">🦫 Zurück</button>
-    `;
-}
 
 function startMedizin() {
     score = 0;
@@ -504,46 +283,27 @@ function startMedizin() {
 }
 
 function showQuestion() {
-    if (currentQuestionIndex >= shuffledQuestions.length) {
-        showResult();
-        return;
-    }
-
+    if (currentQuestionIndex >= shuffledQuestions.length) { showResult(); return; }
     const q = shuffledQuestions[currentQuestionIndex];
     const typeLabel = q.type === "luecke" ? "🔤 Điền vào chỗ trống" : q.type === "bedeutung" ? "📚 Chọn nghĩa đúng" : "✏️ Chọn từ đúng";
-
     document.getElementById("message").innerHTML = `
         <span style="font-size:16px;color:#666;">${typeLabel} | Câu ${currentQuestionIndex + 1}/${shuffledQuestions.length} | Điểm: ${score}</span><br><br>
         <b>${q.frage}</b>
     `;
-
     const shuffledAnswers = q.antworten.map((a, i) => ({text: a, original: i})).sort(() => Math.random() - 0.5);
     const labels = ["A", "B", "C", "D"];
-
     document.getElementById("buttons").innerHTML = shuffledAnswers.map((a, i) => `
-        document.getElementById("buttons").innerHTML = shuffledAnswers.map((a, i) => `
-    <button onclick="checkAnswer(${a.original}, ${q.richtig}, '${encodeURIComponent(q.erklaerung)}', '${encodeURIComponent(q.antworten[q.richtig])}')" style="
-        font-size:18px;
-        padding:12px 20px;
-        margin:8px;
-        border-radius:15px;
-        border:2px solid #ddd;
-        cursor:pointer;
-        display:block;
-        width:90%;
-        max-width:600px;
-        text-align:left;
-    ">
-        <b>${labels[i]}.</b> ${a.text}
-    </button>
-`).join('');
+        <button onclick="checkAnswer(${a.original}, ${q.richtig}, '${encodeURIComponent(q.erklaerung)}', '${encodeURIComponent(q.antworten[q.richtig])}')" style="font-size:18px;padding:12px 20px;margin:8px;border-radius:15px;border:2px solid #ddd;cursor:pointer;display:block;width:90%;max-width:600px;text-align:left;">
+            <b>${labels[i]}.</b> ${a.text}
+        </button>
+    `).join('');
 }
+
 function checkAnswer(chosen, correct, erklaerungEncoded, correctAnswerEncoded) {
     const erklaerung = decodeURIComponent(erklaerungEncoded);
     const correctAnswer = decodeURIComponent(correctAnswerEncoded);
     const isCorrect = chosen === correct;
     if (isCorrect) score++;
-
     const feedbackArea = document.getElementById("feedback-area");
     const aiCorrection = document.getElementById("ai-correction");
     feedbackArea.style.display = "block";
@@ -557,7 +317,7 @@ function checkAnswer(chosen, correct, erklaerungEncoded, correctAnswerEncoded) {
         </button>
     `;
 }
-    
+
 function nextQuestion() {
     currentQuestionIndex++;
     document.getElementById("feedback-area").style.display = "none";
@@ -574,7 +334,7 @@ function showResult() {
     `;
     document.getElementById("buttons").innerHTML = `
         <button onclick="startMedizin()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#e8f5e9;">🔄 Nochmal / Thử lại</button>
-        <button onclick="showLesenMenu()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">📖 Zurück</button>
+        <button onclick="showLessons()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">🦫 Zurück</button>
     `;
     document.getElementById("feedback-area").style.display = "none";
 }
