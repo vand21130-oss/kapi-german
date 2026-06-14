@@ -29,6 +29,7 @@ let isRecording = false;
 let currentQuestionIndex = 0;
 let score = 0;
 let shuffledQuestions = [];
+let questionHistory = []; // Lưu lịch sử câu hỏi để quay lại
 
 // ===== GHI ÂM =====
 async function toggleRecording() {
@@ -102,10 +103,22 @@ function sayHallo() {
     document.getElementById("buttons").innerHTML = `
         <button onclick="goodAnswer()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">😊 Mir geht's gut!</button>
         <button onclick="badAnswer()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">😢 Nicht so gut.</button>
+        <button onclick="goHome()" style="font-size:20px;padding:10px 20px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#eee;">🏠 Zurück</button>
     `;
 }
 function goodAnswer() { document.getElementById("message").innerText = "Das freut mich! 🌟"; showLevels(); }
 function badAnswer() { document.getElementById("message").innerText = "Oh nein! Hoffentlich wird dein Tag besser. 💛"; showLevels(); }
+
+function goHome() {
+    clearInterval(countdown);
+    if (isRecording && mediaRecorder) { mediaRecorder.stop(); isRecording = false; }
+    document.getElementById("timer").innerText = "";
+    document.getElementById("feedback-area").style.display = "none";
+    document.getElementById("message").innerText = "Guten Morgen! Schön, dich kennenzulernen! 🌟";
+    document.getElementById("buttons").innerHTML = `
+        <button style="font-size:24px;padding:12px 24px;border-radius:12px;cursor:pointer;" onclick="sayHallo()">👋 Hallo Kapi</button>
+    `;
+}
 
 // ===== LEVEL =====
 function showLevels() {
@@ -116,8 +129,10 @@ function showLevels() {
         <button onclick="chooseLevel('A2')" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">📘 A2</button>
         <button onclick="chooseLevel('B1')" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">📒 B1</button>
         <button onclick="chooseLevel('B2')" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">📙 B2</button>
+        <button onclick="sayHallo()" style="font-size:20px;padding:10px 20px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#eee;">⬅️ Zurück</button>
     `;
 }
+
 function chooseLevel(level) {
     currentLevel = level;
     document.getElementById("message").innerText = "Super! Heute üben wir Deutsch auf Niveau " + level + " 🇩🇪";
@@ -133,6 +148,7 @@ function showLessons() {
         <button onclick="chooseLesson('Lesen')" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">📖 Lesen</button>
         <button onclick="chooseLesson('Schreiben')" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">✍️ Schreiben</button>
         <button onclick="chooseLesson('Vokabeln')" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#fff3e0;">📝 Vokabeln</button>
+        <button onclick="showLevels()" style="font-size:20px;padding:10px 20px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#eee;">⬅️ Zurück</button>
     `;
 }
 
@@ -142,7 +158,7 @@ function chooseLesson(lesson) {
         document.getElementById("buttons").innerHTML = `
             <button onclick="showTeil1()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">🎤 Teil 1</button>
             <button onclick="showTeil2()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">🎤 Teil 2</button>
-            <button onclick="showLessons()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">🦫 Zurück</button>
+            <button onclick="showLessons()" style="font-size:20px;padding:10px 20px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#eee;">⬅️ Zurück</button>
         `;
         return;
     }
@@ -150,7 +166,7 @@ function chooseLesson(lesson) {
         document.getElementById("message").innerHTML = "Welches Thema? 📝";
         document.getElementById("buttons").innerHTML = `
             <button onclick="startMedizin()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#e8f5e9;">🏥 Medizinische Fachbegriffe</button>
-            <button onclick="showLessons()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">🦫 Zurück</button>
+            <button onclick="showLessons()" style="font-size:20px;padding:10px 20px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#eee;">⬅️ Zurück</button>
         `;
         return;
     }
@@ -212,7 +228,7 @@ function showTeil1() {
     document.getElementById("buttons").innerHTML = `
         <button id="record-btn" onclick="toggleRecording()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;background-color:#e2e8f0;">🎤 Aufnehmen</button>
         <button onclick="showTeil1()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">🔄 Neues Thema</button>
-        <button onclick="restart()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">🦫 Zurück</button>
+        <button onclick="chooseLesson('Sprechen')" style="font-size:20px;padding:10px 20px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#eee;">⬅️ Zurück</button>
     `;
     startTimer();
 }
@@ -225,7 +241,7 @@ function showTeil2() {
     document.getElementById("buttons").innerHTML = `
         <button id="record-btn" onclick="toggleRecording()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;background-color:#e2e8f0;">🎤 Aufnehmen</button>
         <button onclick="showTeil2()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">🔄 Neues Thema</button>
-        <button onclick="restart()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">🦫 Zurück</button>
+        <button onclick="chooseLesson('Sprechen')" style="font-size:20px;padding:10px 20px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#eee;">⬅️ Zurück</button>
     `;
     startTimer();
 }
@@ -235,13 +251,10 @@ function restart() {
     if (isRecording && mediaRecorder) { mediaRecorder.stop(); isRecording = false; }
     document.getElementById("timer").innerText = "";
     document.getElementById("feedback-area").style.display = "none";
-    document.getElementById("message").innerText = "Guten Morgen! Schön, dich kennenzulernen! 🌟";
-    document.getElementById("buttons").innerHTML = `
-        <button style="font-size:24px;padding:12px 24px;border-radius:12px;cursor:pointer;" onclick="sayHallo()">👋 Hallo Kapi</button>
-    `;
+    goHome();
 }
 
-// ===== VOKABELN =====
+// ===== VOKABELN QUIZ =====
 const medizinQuestions = [
     {type:"luecke",frage:"Der Patient klagt über starken ___ an der Haut nach dem Kontakt mit Pflanzen.",antworten:["Juckreiz","Schnupfen","Heiserkeit","Abwehr"],richtig:0,erklaerung:"Juckreiz = ngứa (cảm giác ngứa trên da) / Juckreiz bedeutet das unangenehme Gefühl auf der Haut, das zum Kratzen reizt."},
     {type:"bedeutung",frage:"Was bedeutet 'Maßnahme' im medizinischen Kontext?",antworten:["biện pháp / Schritt zur Problemlösung","triệu chứng / Krankheitszeichen","thuốc / Medikament","bệnh nhân / kranke Person"],richtig:0,erklaerung:"Maßnahme = biện pháp / Eine Maßnahme ist ein konkreter Schritt, um ein Problem zu lösen oder zu verhindern."},
@@ -278,6 +291,7 @@ const medizinQuestions = [
 function startMedizin() {
     score = 0;
     currentQuestionIndex = 0;
+    questionHistory = [];
     shuffledQuestions = [...medizinQuestions].sort(() => Math.random() - 0.5);
     showQuestion();
 }
@@ -286,23 +300,37 @@ function showQuestion() {
     if (currentQuestionIndex >= shuffledQuestions.length) { showResult(); return; }
     const q = shuffledQuestions[currentQuestionIndex];
     const typeLabel = q.type === "luecke" ? "🔤 Điền vào chỗ trống" : q.type === "bedeutung" ? "📚 Chọn nghĩa đúng" : "✏️ Chọn từ đúng";
+    document.getElementById("feedback-area").style.display = "none";
     document.getElementById("message").innerHTML = `
         <span style="font-size:16px;color:#666;">${typeLabel} | Câu ${currentQuestionIndex + 1}/${shuffledQuestions.length} | Điểm: ${score}</span><br><br>
         <b>${q.frage}</b>
     `;
     const shuffledAnswers = q.antworten.map((a, i) => ({text: a, original: i})).sort(() => Math.random() - 0.5);
     const labels = ["A", "B", "C", "D"];
+    const backBtn = currentQuestionIndex > 0 ? `<button onclick="prevQuestion()" style="font-size:18px;padding:10px 20px;margin:8px;border-radius:15px;border:2px solid #ddd;cursor:pointer;background:#eee;">⬅️ Câu trước</button>` : '';
     document.getElementById("buttons").innerHTML = shuffledAnswers.map((a, i) => `
         <button onclick="checkAnswer(${a.original}, ${q.richtig}, '${encodeURIComponent(q.erklaerung)}', '${encodeURIComponent(q.antworten[q.richtig])}')" style="font-size:18px;padding:12px 20px;margin:8px;border-radius:15px;border:2px solid #ddd;cursor:pointer;display:block;width:90%;max-width:600px;text-align:left;">
             <b>${labels[i]}.</b> ${a.text}
         </button>
-    `).join('');
+    `).join('') + backBtn + `<button onclick="chooseLesson('Vokabeln')" style="font-size:18px;padding:10px 20px;margin:8px;border-radius:15px;border:none;cursor:pointer;background:#eee;">🏠 Thema wechseln</button>`;
+}
+
+function prevQuestion() {
+    if (currentQuestionIndex > 0) {
+        currentQuestionIndex--;
+        if (questionHistory.length > 0) {
+            score = questionHistory[questionHistory.length - 1].score;
+            questionHistory.pop();
+        }
+        showQuestion();
+    }
 }
 
 function checkAnswer(chosen, correct, erklaerungEncoded, correctAnswerEncoded) {
     const erklaerung = decodeURIComponent(erklaerungEncoded);
     const correctAnswer = decodeURIComponent(correctAnswerEncoded);
     const isCorrect = chosen === correct;
+    questionHistory.push({ index: currentQuestionIndex, score: score });
     if (isCorrect) score++;
     const feedbackArea = document.getElementById("feedback-area");
     const aiCorrection = document.getElementById("ai-correction");
@@ -334,7 +362,7 @@ function showResult() {
     `;
     document.getElementById("buttons").innerHTML = `
         <button onclick="startMedizin()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#e8f5e9;">🔄 Nochmal / Thử lại</button>
-        <button onclick="showLessons()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">🦫 Zurück</button>
+        <button onclick="chooseLesson('Vokabeln')" style="font-size:20px;padding:10px 20px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#eee;">⬅️ Zurück</button>
     `;
     document.getElementById("feedback-area").style.display = "none";
 }
