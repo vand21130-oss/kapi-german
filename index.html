@@ -538,9 +538,9 @@ function showQuestion() {
     </button>
 `).join('');
 }
-
-function checkAnswer(chosen, correct, erklaerungEncoded) {
+function checkAnswer(chosen, correct, erklaerungEncoded, correctAnswerEncoded) {
     const erklaerung = decodeURIComponent(erklaerungEncoded);
+    const correctAnswer = decodeURIComponent(correctAnswerEncoded);
     const isCorrect = chosen === correct;
     if (isCorrect) score++;
 
@@ -550,13 +550,14 @@ function checkAnswer(chosen, correct, erklaerungEncoded) {
     aiCorrection.style.display = "block";
     aiCorrection.innerHTML = `
         <p style="font-size:22px;">${isCorrect ? "✅ Richtig! / Đúng rồi!" : "❌ Falsch! / Sai rồi!"}</p>
-        <p style="font-size:16px;">${erklaerung}</p>
+        ${!isCorrect ? `<p style="font-size:18px;color:green;">✔️ Đáp án đúng: <b>${correctAnswer}</b></p>` : ""}
+        <p style="font-size:16px;background:#f0f0f0;padding:10px;border-radius:8px;">${erklaerung}</p>
         <button onclick="nextQuestion()" style="font-size:20px;padding:10px 25px;border-radius:15px;border:none;cursor:pointer;background:#4CAF50;color:white;margin-top:10px;">
             ${currentQuestionIndex + 1 >= shuffledQuestions.length ? "🏆 Ergebnis sehen" : "➡️ Nächste Frage"}
         </button>
     `;
 }
-
+    
 function nextQuestion() {
     currentQuestionIndex++;
     document.getElementById("feedback-area").style.display = "none";
