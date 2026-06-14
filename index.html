@@ -2,39 +2,84 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: white;
+            font-family: 'Segoe UI', sans-serif;
+            padding: 10px;
+        }
+        h1 { margin-bottom: 5px; }
+        #message {
+            font-size: 26px;
+            max-width: 800px;
+            margin: 10px auto;
+            line-height: 1.5;
+        }
+        #timer { font-size: 36px; color: #e67e22; min-height: 44px; }
+        .menu-btn {
+            font-size: 20px;
+            padding: 14px 22px;
+            margin: 8px;
+            border-radius: 20px;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.15s;
+        }
+        .menu-btn:hover { transform: scale(1.05); }
+        #feedback-area {
+            display: none;
+            max-width: 800px;
+            margin: 10px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+            border-radius: 12px;
+            text-align: left;
+        }
+        #transcript-text { font-size: 20px; }
+        #ai-correction {
+            display: none;
+            margin-top: 15px;
+            border-top: 1px solid #ccc;
+            padding-top: 15px;
+        }
+        #buttons { margin-top: 10px; }
+        #buttons button { font-size: 20px; padding: 14px 22px; margin: 8px; border-radius: 20px; border: none; cursor: pointer; transition: transform 0.15s; }
+        #buttons button:hover { transform: scale(1.05); }
+    </style>
 </head>
-<body style="margin:0;min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;background:white;">
+<body>
 
 <h1>Hallo! Ich bin Kapi 🦫</h1>
-<img src="capy.png" width="450">
-<p id="message" style="font-size:30px;">Guten Morgen! Schön, dich kennenzulernen! 🌟</p>
-<p id="timer" style="font-size:40px;"></p>
+<img src="capy.png" width="300">
+<p id="message" style="font-size:26px;">Guten Morgen! Was machen wir heute? 🌟</p>
+<p id="timer"></p>
 
-<div id="feedback-area" style="display:none;max-width:800px;margin:10px auto;padding:20px;background-color:#f5f5f5;border-radius:12px;text-align:left;">
-    <p id="transcript-text" style="font-size:20px;"><i>Dein Text erscheint hier...</i></p>
-    <div id="ai-correction" style="display:none;margin-top:15px;border-top:1px solid #ccc;padding-top:15px;"></div>
+<div id="feedback-area">
+    <p id="transcript-text"><i>Dein Text erscheint hier...</i></p>
+    <div id="ai-correction"></div>
 </div>
 
 <div id="buttons">
-<button style="font-size:24px;padding:12px 24px;border-radius:12px;cursor:pointer;" onclick="sayHallo()">👋 Hallo Kapi</button>
+    <button style="background:#e3f2fd;" onclick="showMedizinMenu()">🏥 Fachbegriffe</button>
+    <button style="background:#fff3e0;" onclick="startMedizin()">🎯 Luyện tập (All)</button>
+    <button style="background:#f1f1f1;" onclick="sayHallo()">👋 Hallo Kapi</button>
 </div>
 
 <script>
-let currentTeil = "";
-let currentLevel = "";
-let countdown;
-let mediaRecorder;
-let audioChunks = [];
-let isRecording = false;
-let currentQuestionIndex = 0;
-let score = 0;
-let shuffledQuestions = [];
-let questionHistory = [];
-let currentGruppe = "";
-let currentVokabelIndex = 0;
-let minigameQuestions = [];
-let minigameIndex = 0;
-let minigameScore = 0;
+// ===== BIẾN TRẠNG THÁI =====
+let currentTeil = "", currentLevel = "", countdown;
+let mediaRecorder, audioChunks = [], isRecording = false;
+let currentQuestionIndex = 0, score = 0, shuffledQuestions = [], questionHistory = [];
+let currentGruppe = "", currentVokabelIndex = 0;
+let minigameQuestions = [], minigameIndex = 0, minigameScore = 0;
 
 // ===== GHI ÂM =====
 async function toggleRecording() {
@@ -105,9 +150,9 @@ function startTimer() {
 function sayHallo() {
     document.getElementById("message").innerText = "Hallo! Wie geht's dir? 😊";
     document.getElementById("buttons").innerHTML = `
-        <button onclick="goodAnswer()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">😊 Mir geht's gut!</button>
-        <button onclick="badAnswer()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">😢 Nicht so gut.</button>
-        <button onclick="goHome()" style="font-size:20px;padding:10px 20px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#eee;">🏠 Zurück</button>
+        <button onclick="goodAnswer()" style="background:#e8f5e9;">😊 Mir geht's gut!</button>
+        <button onclick="badAnswer()" style="background:#fce4ec;">😢 Nicht so gut.</button>
+        <button onclick="goHome()" style="background:#eee;">🏠 Zurück</button>
     `;
 }
 function goodAnswer() { document.getElementById("message").innerText = "Das freut mich! 🌟"; showLevels(); }
@@ -118,9 +163,11 @@ function goHome() {
     if (isRecording && mediaRecorder) { mediaRecorder.stop(); isRecording = false; }
     document.getElementById("timer").innerText = "";
     document.getElementById("feedback-area").style.display = "none";
-    document.getElementById("message").innerText = "Guten Morgen! Schön, dich kennenzulernen! 🌟";
+    document.getElementById("message").innerText = "Guten Morgen! Was machen wir heute? 🌟";
     document.getElementById("buttons").innerHTML = `
-        <button style="font-size:24px;padding:12px 24px;border-radius:12px;cursor:pointer;" onclick="sayHallo()">👋 Hallo Kapi</button>
+        <button style="background:#e3f2fd;" onclick="showMedizinMenu()">🏥 Fachbegriffe</button>
+        <button style="background:#fff3e0;" onclick="startMedizin()">🎯 Luyện tập (All)</button>
+        <button style="background:#f1f1f1;" onclick="sayHallo()">👋 Hallo Kapi</button>
     `;
 }
 
@@ -129,11 +176,11 @@ function showLevels() {
     document.getElementById("feedback-area").style.display = "none";
     document.getElementById("message").innerText = "Welches Niveau möchtest du heute üben? 📚";
     document.getElementById("buttons").innerHTML = `
-        <button onclick="chooseLevel('A1')" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">📗 A1</button>
-        <button onclick="chooseLevel('A2')" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">📘 A2</button>
-        <button onclick="chooseLevel('B1')" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">📒 B1</button>
-        <button onclick="chooseLevel('B2')" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">📙 B2</button>
-        <button onclick="sayHallo()" style="font-size:20px;padding:10px 20px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#eee;">⬅️ Zurück</button>
+        <button onclick="chooseLevel('A1')" style="background:#e8f5e9;">📗 A1</button>
+        <button onclick="chooseLevel('A2')" style="background:#e3f2fd;">📘 A2</button>
+        <button onclick="chooseLevel('B1')" style="background:#fffde7;">📒 B1</button>
+        <button onclick="chooseLevel('B2')" style="background:#fff3e0;">📙 B2</button>
+        <button onclick="sayHallo()" style="background:#eee;">⬅️ Zurück</button>
     `;
 }
 
@@ -147,12 +194,12 @@ function chooseLevel(level) {
 function showLessons() {
     document.getElementById("feedback-area").style.display = "none";
     document.getElementById("buttons").innerHTML = `
-        <button onclick="chooseLesson('Hören')" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">👂 Hören</button>
-        <button onclick="chooseLesson('Sprechen')" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">🗣️ Sprechen</button>
-        <button onclick="chooseLesson('Lesen')" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">📖 Lesen</button>
-        <button onclick="chooseLesson('Schreiben')" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">✍️ Schreiben</button>
-        <button onclick="chooseLesson('Vokabeln')" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#fff3e0;">📝 Vokabeln</button>
-        <button onclick="showLevels()" style="font-size:20px;padding:10px 20px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#eee;">⬅️ Zurück</button>
+        <button onclick="chooseLesson('Hören')" style="background:#e3f2fd;">👂 Hören</button>
+        <button onclick="chooseLesson('Sprechen')" style="background:#f3e5f5;">🗣️ Sprechen</button>
+        <button onclick="chooseLesson('Lesen')" style="background:#e8f5e9;">📖 Lesen</button>
+        <button onclick="chooseLesson('Schreiben')" style="background:#fff9c4;">✍️ Schreiben</button>
+        <button onclick="chooseLesson('Vokabeln')" style="background:#fff3e0;">📝 Vokabeln</button>
+        <button onclick="showLevels()" style="background:#eee;">⬅️ Zurück</button>
     `;
 }
 
@@ -160,24 +207,24 @@ function chooseLesson(lesson) {
     if (lesson === "Sprechen") {
         document.getElementById("message").innerHTML = "Welchen Teil möchtest du üben?";
         document.getElementById("buttons").innerHTML = `
-            <button onclick="showTeil1()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">🎤 Teil 1</button>
-            <button onclick="showTeil2()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">🎤 Teil 2</button>
-            <button onclick="showLessons()" style="font-size:20px;padding:10px 20px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#eee;">⬅️ Zurück</button>
+            <button onclick="showTeil1()" style="background:#f3e5f5;">🎤 Teil 1</button>
+            <button onclick="showTeil2()" style="background:#e8eaf6;">🎤 Teil 2</button>
+            <button onclick="showLessons()" style="background:#eee;">⬅️ Zurück</button>
         `;
         return;
     }
     if (lesson === "Vokabeln") {
         document.getElementById("message").innerHTML = "Welches Thema? 📝";
         document.getElementById("buttons").innerHTML = `
-            <button onclick="showMedizinMenu()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#e8f5e9;">🏥 Medizinische Fachbegriffe</button>
-            <button onclick="showLessons()" style="font-size:20px;padding:10px 20px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#eee;">⬅️ Zurück</button>
+            <button onclick="showMedizinMenu()" style="background:#e8f5e9;">🏥 Medizinische Fachbegriffe</button>
+            <button onclick="showLessons()" style="background:#eee;">⬅️ Zurück</button>
         `;
         return;
     }
     document.getElementById("message").innerText = "Super! Heute lernen wir " + lesson + "! 🎉";
 }
 
-// ===== SPRECHEN =====
+// ===== SPRECHEN DATEN =====
 const teil1 = [
     {thema:"Fremdsprachen lernen",punkte:["Vorteile für Beruf und Zukunft","Kognitive Fähigkeiten fördern","Kulturelles Verständnis erweitern","Zeitaufwand und Schwierigkeiten"]},
     {thema:"Online Sprache lernen",punkte:["Flexibilität im Alltag","Kosten und Zugänglichkeit","Soziale Kontakte fördern oder einschränken","Lernqualität verbessern oder verschlechtern"]},
@@ -230,9 +277,9 @@ function showTeil1() {
     let thema = teil1[Math.floor(Math.random() * teil1.length)];
     document.getElementById("message").innerHTML = "<b>🗣️ Goethe B2 - Teil 1</b><br><br>" + thema.thema + "<br><br>• " + thema.punkte.join("<br>• ");
     document.getElementById("buttons").innerHTML = `
-        <button id="record-btn" onclick="toggleRecording()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;background-color:#e2e8f0;">🎤 Aufnehmen</button>
-        <button onclick="showTeil1()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">🔄 Neues Thema</button>
-        <button onclick="chooseLesson('Sprechen')" style="font-size:20px;padding:10px 20px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#eee;">⬅️ Zurück</button>
+        <button id="record-btn" onclick="toggleRecording()" style="background:#e2e8f0;">🎤 Aufnehmen</button>
+        <button onclick="showTeil1()" style="background:#f3e5f5;">🔄 Neues Thema</button>
+        <button onclick="chooseLesson('Sprechen')" style="background:#eee;">⬅️ Zurück</button>
     `;
     startTimer();
 }
@@ -243,19 +290,11 @@ function showTeil2() {
     let thema = teil2[Math.floor(Math.random() * teil2.length)];
     document.getElementById("message").innerHTML = "<b>🗣️ Goethe B2 - Teil 2</b><br><br>" + thema;
     document.getElementById("buttons").innerHTML = `
-        <button id="record-btn" onclick="toggleRecording()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;background-color:#e2e8f0;">🎤 Aufnehmen</button>
-        <button onclick="showTeil2()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">🔄 Neues Thema</button>
-        <button onclick="chooseLesson('Sprechen')" style="font-size:20px;padding:10px 20px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#eee;">⬅️ Zurück</button>
+        <button id="record-btn" onclick="toggleRecording()" style="background:#e2e8f0;">🎤 Aufnehmen</button>
+        <button onclick="showTeil2()" style="background:#e8eaf6;">🔄 Neues Thema</button>
+        <button onclick="chooseLesson('Sprechen')" style="background:#eee;">⬅️ Zurück</button>
     `;
     startTimer();
-}
-
-function restart() {
-    clearInterval(countdown);
-    if (isRecording && mediaRecorder) { mediaRecorder.stop(); isRecording = false; }
-    document.getElementById("timer").innerText = "";
-    document.getElementById("feedback-area").style.display = "none";
-    goHome();
 }
 
 // ===== VOKABELN MENU =====
@@ -263,129 +302,49 @@ function showMedizinMenu() {
     document.getElementById("feedback-area").style.display = "none";
     document.getElementById("message").innerHTML = "🏥 Medizinische Fachbegriffe";
     document.getElementById("buttons").innerHTML = `
-        <button onclick="showVokabelGruppe('diagnostik')" style="font-size:20px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#e3f2fd;">🩺 Diagnostische Instrumente</button>
-        <button onclick="showVokabelGruppe('verbandmaterial')" style="font-size:20px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#fce4ec;">🩹 Verbandmaterial</button>
-        <button onclick="showVokabelGruppe('intensiv')" style="font-size:20px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#f3e5f5;">🏥 Intensivmedizin</button>
-        <button onclick="startMedizin()" style="font-size:20px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#fff3e0;">🎯 Luyện tập</button>
-        <button onclick="chooseLesson('Vokabeln')" style="font-size:18px;padding:10px 20px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#eee;">⬅️ Zurück</button>
+        <button onclick="showVokabelGruppe('diagnostik')" style="background:#e3f2fd;">🩺 Diagnostische Instrumente</button>
+        <button onclick="showVokabelGruppe('verbandmaterial')" style="background:#fce4ec;">🩹 Verbandmaterial</button>
+        <button onclick="showVokabelGruppe('intensiv')" style="background:#f3e5f5;">🏥 Intensivmedizin</button>
+        <button onclick="startMedizin()" style="background:#fff3e0;">🎯 Luyện tập</button>
+        <button onclick="goHome()" style="background:#eee;">⬅️ Zurück</button>
     `;
 }
 
-// ===== TỪ VỰNG THEO NHÓM MỚI (SVG NHÚNG TRỰC TIẾP - KHÔNG BAO GIỜ LỖI) =====
+// ===== TỪ VỰNG THEO NHÓM (SVG NHÚNG TRỰC TIẾP) =====
 const vokabelGruppen = {
     diagnostik: {
         titel: "🩺 Diagnostische Instrumente",
         woerter: [
-            {
-                de: "Das Stethoskop",
-                vi: "Ống nghe",
-                bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M30 20 Q30 50 50 50 Q70 50 70 20 M50 50 L50 80' stroke='%232c3e50' stroke-width='6' fill='none'/><circle cx='50' cy='85' r='10' fill='%237f8c8d'/><circle cx='30' cy='15' r='5' fill='%23e74c3c'/><circle cx='70' cy='15' r='5' fill='%23e74c3c'/></svg>"
-            },
-            {
-                de: "Das Blutdruckmessgerät",
-                vi: "Máy đo huyết áp",
-                bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='20' y='30' width='60' height='30' rx='3' fill='%2334495e'/><path d='M80 45 L90 45 L90 60 M50 60 L50 70' stroke='%232c3e50' stroke-width='3' fill='none'/><circle cx='50' cy='75' r='12' fill='%23fff' stroke='%23bdc3c7' stroke-width='2'/><path d='M50 75 L55 70' stroke='%23c0392b' stroke-width='2'/><ellipse cx='90' cy='65' rx='6' ry='10' fill='%2334495e'/></svg>"
-            },
-            {
-                de: "Das Thermometer",
-                vi: "Nhiệt kế",
-                bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='45' y='10' width='10' height='60' rx='5' fill='%23ecf0f1' stroke='%23bdc3c7' stroke-width='2'/><circle cx='50' cy='75' r='10' fill='%23e74c3c'/><rect x='48' y='30' width='4' height='40' fill='%23e74c3c'/><path d='M58 20 L65 20 M58 30 L65 30 M58 40 L65 40 M58 50 L65 50' stroke='%232c3e50' stroke-width='2'/></svg>"
-            },
-            {
-                de: "Die Taschenlampe (Pupillenleuchte)",
-                vi: "Đèn soi đồng tử",
-                bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='40' y='20' width='20' height='60' rx='2' fill='%2395a5a6'/><rect x='40' y='20' width='20' height='10' fill='%237f8c8d'/><path d='M45 20 L30 5 L70 5 L55 20' fill='%23f1c40f' opacity='0.5'/><circle cx='50' cy='50' r='3' fill='%23e74c3c'/></svg>"
-            },
-            {
-                de: "Der Pulsoximeter",
-                vi: "Máy đo SpO2",
-                bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='30' y='30' width='40' height='50' rx='10' fill='%2334495e'/><rect x='35' y='35' width='30' height='20' rx='3' fill='%23000'/><path d='M35 45 L45 45 L50 38 L55 52 L60 45 L65 45' stroke='%232ecc71' stroke-width='2' fill='none'/><text x='50' y='70' font-family='sans-serif' font-size='14' fill='%23e74c3c' text-anchor='middle'>98%</text></svg>"
-            },
-            {
-                de: "Der Reflexhammer",
-                vi: "Búa phản xạ",
-                bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M47 30 L47 90 L53 90 L53 30 Z' fill='%23bdc3c7'/><polygon points='30,30 70,30 50,10' fill='%23e74c3c'/></svg>"
-            }
+            {de:"Das Stethoskop",vi:"Ống nghe",bild:"data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M30 20 Q30 50 50 50 Q70 50 70 20 M50 50 L50 80' stroke='%232c3e50' stroke-width='6' fill='none'/><circle cx='50' cy='85' r='10' fill='%237f8c8d'/><circle cx='30' cy='15' r='5' fill='%23e74c3c'/><circle cx='70' cy='15' r='5' fill='%23e74c3c'/></svg>"},
+            {de:"Das Blutdruckmessgerät",vi:"Máy đo huyết áp",bild:"data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='20' y='30' width='60' height='30' rx='3' fill='%2334495e'/><path d='M80 45 L90 45 L90 60 M50 60 L50 70' stroke='%232c3e50' stroke-width='3' fill='none'/><circle cx='50' cy='75' r='12' fill='%23fff' stroke='%23bdc3c7' stroke-width='2'/><path d='M50 75 L55 70' stroke='%23c0392b' stroke-width='2'/><ellipse cx='90' cy='65' rx='6' ry='10' fill='%2334495e'/></svg>"},
+            {de:"Das Thermometer",vi:"Nhiệt kế",bild:"data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='45' y='10' width='10' height='60' rx='5' fill='%23ecf0f1' stroke='%23bdc3c7' stroke-width='2'/><circle cx='50' cy='75' r='10' fill='%23e74c3c'/><rect x='48' y='30' width='4' height='40' fill='%23e74c3c'/><path d='M58 20 L65 20 M58 30 L65 30 M58 40 L65 40 M58 50 L65 50' stroke='%232c3e50' stroke-width='2'/></svg>"},
+            {de:"Die Taschenlampe (Pupillenleuchte)",vi:"Đèn soi đồng tử",bild:"data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='40' y='20' width='20' height='60' rx='2' fill='%2395a5a6'/><rect x='40' y='20' width='20' height='10' fill='%237f8c8d'/><path d='M45 20 L30 5 L70 5 L55 20' fill='%23f1c40f' opacity='0.5'/><circle cx='50' cy='50' r='3' fill='%23e74c3c'/></svg>"},
+            {de:"Der Pulsoximeter",vi:"Máy đo SpO2",bild:"data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='30' y='30' width='40' height='50' rx='10' fill='%2334495e'/><rect x='35' y='35' width='30' height='20' rx='3' fill='%23000'/><path d='M35 45 L45 45 L50 38 L55 52 L60 45 L65 45' stroke='%232ecc71' stroke-width='2' fill='none'/><text x='50' y='70' font-family='sans-serif' font-size='14' fill='%23e74c3c' text-anchor='middle'>98%</text></svg>"},
+            {de:"Der Reflexhammer",vi:"Búa phản xạ",bild:"data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M47 30 L47 90 L53 90 L53 30 Z' fill='%23bdc3c7'/><polygon points='30,30 70,30 50,10' fill='%23e74c3c'/></svg>"}
         ]
     },
     verbandmaterial: {
         titel: "🩹 Verbandmaterial & Verbrauchsmaterial",
         woerter: [
-            {
-                de: "Die Spritze",
-                vi: "Bơm tiêm",
-                bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='40' y='30' width='20' height='40' fill='%23ecf0f1' stroke='%23bdc3c7' stroke-width='2'/><rect x='42' y='40' width='16' height='30' fill='%233498db' opacity='0.5'/><rect x='48' y='10' width='4' height='20' fill='%2395a5a6'/><path d='M35 30 L65 30 M35 70 L65 70 M45 70 L45 90 L55 90 L55 70 M40 90 L60 90' stroke='%23bdc3c7' stroke-width='2' fill='none'/></svg>"
-            },
-            {
-                de: "Die Kanüle (die Nadel)",
-                vi: "Kim tiêm",
-                bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='40' y='70' width='20' height='20' fill='%23e74c3c'/><path d='M48 70 L48 10 L52 10 L52 70 Z' fill='%23bdc3c7'/><polygon points='48,10 52,10 50,0' fill='%2395a5a6'/></svg>"
-            },
-            {
-                de: "Der Tupfer",
-                vi: "Gạc/bông thấm",
-                bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='50' r='25' fill='%23ecf0f1' stroke='%23bdc3c7' stroke-width='2'/><path d='M35 45 Q50 60 65 45 M40 55 Q50 40 60 55' stroke='%23bdc3c7' stroke-width='2' fill='none'/><path d='M10 20 L40 45 M90 20 L60 45' stroke='%237f8c8d' stroke-width='4'/></svg>"
-            },
-            {
-                de: "Die Kompresse",
-                vi: "Gạc đắp vết thương",
-                bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='25' y='25' width='50' height='50' fill='%23fff' stroke='%23bdc3c7' stroke-width='2'/><path d='M25 40 L75 40 M25 60 L75 60 M40 25 L40 75 M60 25 L60 75' stroke='%23ecf0f1' stroke-width='2'/></svg>"
-            },
-            {
-                de: "Das Pflaster",
-                vi: "Băng cá nhân",
-                bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><g transform='rotate(45 50 50)'><rect x='20' y='40' width='60' height='20' rx='10' fill='%23e67e22'/><rect x='40' y='40' width='20' height='20' fill='%23fff' opacity='0.7'/><circle cx='45' cy='45' r='1' fill='%23d35400'/><circle cx='55' cy='45' r='1' fill='%23d35400'/><circle cx='45' cy='55' r='1' fill='%23d35400'/><circle cx='55' cy='55' r='1' fill='%23d35400'/></g></svg>"
-            },
-            {
-                de: "Die Mullbinde",
-                vi: "Băng cuộn",
-                bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='50' r='30' fill='%23fff' stroke='%23bdc3c7' stroke-width='3'/><circle cx='50' cy='50' r='10' fill='%23ecf0f1' stroke='%23bdc3c7' stroke-width='2'/><path d='M50 20 Q65 20 80 50' stroke='%23bdc3c7' stroke-width='2' fill='none'/><path d='M50 80 L90 80 L90 90 L50 90 Z' fill='%23fff' stroke='%23bdc3c7' stroke-width='2'/></svg>"
-            },
-            {
-                de: "Das Desinfektionsmittel",
-                vi: "Dung dịch sát khuẩn",
-                bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='30' y='40' width='40' height='50' rx='5' fill='%233498db'/><rect x='40' y='30' width='20' height='10' fill='%23ecf0f1'/><path d='M45 30 L45 10 L60 10' stroke='%23ecf0f1' stroke-width='4' fill='none'/><rect x='40' y='55' width='20' height='20' fill='%23fff'/><path d='M46 65 L54 65 M50 61 L50 69' stroke='%23e74c3c' stroke-width='3'/></svg>"
-            },
-            {
-                de: "Die Handschuhe (Einmalhandschuhe)",
-                vi: "Găng tay dùng một lần",
-                bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M30 90 L30 50 Q30 30 20 30 Q15 30 15 40 L25 50 M40 90 L40 40 Q40 20 35 20 Q30 20 30 30 L35 45 M50 90 L50 40 Q50 15 45 15 Q40 15 40 25 L45 45 M60 90 L60 45 Q60 25 55 25 Q50 25 50 35 L55 50 M75 90 L75 60 Q75 40 70 40 Q65 40 65 50 L70 65' stroke='%233498db' stroke-width='8' fill='none' stroke-linecap='round'/><rect x='28' y='80' width='48' height='15' fill='%232980b9' rx='3'/></svg>"
-            }
+            {de:"Die Spritze",vi:"Bơm tiêm",bild:"data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='40' y='30' width='20' height='40' fill='%23ecf0f1' stroke='%23bdc3c7' stroke-width='2'/><rect x='42' y='40' width='16' height='30' fill='%233498db' opacity='0.5'/><rect x='48' y='10' width='4' height='20' fill='%2395a5a6'/><path d='M35 30 L65 30 M35 70 L65 70 M45 70 L45 90 L55 90 L55 70 M40 90 L60 90' stroke='%23bdc3c7' stroke-width='2' fill='none'/></svg>"},
+            {de:"Die Kanüle (die Nadel)",vi:"Kim tiêm",bild:"data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='40' y='70' width='20' height='20' fill='%23e74c3c'/><path d='M48 70 L48 10 L52 10 L52 70 Z' fill='%23bdc3c7'/><polygon points='48,10 52,10 50,0' fill='%2395a5a6'/></svg>"},
+            {de:"Der Tupfer",vi:"Gạc/bông thấm",bild:"data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='50' r='25' fill='%23ecf0f1' stroke='%23bdc3c7' stroke-width='2'/><path d='M35 45 Q50 60 65 45 M40 55 Q50 40 60 55' stroke='%23bdc3c7' stroke-width='2' fill='none'/><path d='M10 20 L40 45 M90 20 L60 45' stroke='%237f8c8d' stroke-width='4'/></svg>"},
+            {de:"Die Kompresse",vi:"Gạc đắp vết thương",bild:"data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='25' y='25' width='50' height='50' fill='%23fff' stroke='%23bdc3c7' stroke-width='2'/><path d='M25 40 L75 40 M25 60 L75 60 M40 25 L40 75 M60 25 L60 75' stroke='%23ecf0f1' stroke-width='2'/></svg>"},
+            {de:"Das Pflaster",vi:"Băng cá nhân",bild:"data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><g transform='rotate(45 50 50)'><rect x='20' y='40' width='60' height='20' rx='10' fill='%23e67e22'/><rect x='40' y='40' width='20' height='20' fill='%23fff' opacity='0.7'/><circle cx='45' cy='45' r='1' fill='%23d35400'/><circle cx='55' cy='45' r='1' fill='%23d35400'/><circle cx='45' cy='55' r='1' fill='%23d35400'/><circle cx='55' cy='55' r='1' fill='%23d35400'/></g></svg>"},
+            {de:"Die Mullbinde",vi:"Băng cuộn",bild:"data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='50' r='30' fill='%23fff' stroke='%23bdc3c7' stroke-width='3'/><circle cx='50' cy='50' r='10' fill='%23ecf0f1' stroke='%23bdc3c7' stroke-width='2'/><path d='M50 20 Q65 20 80 50' stroke='%23bdc3c7' stroke-width='2' fill='none'/><path d='M50 80 L90 80 L90 90 L50 90 Z' fill='%23fff' stroke='%23bdc3c7' stroke-width='2'/></svg>"},
+            {de:"Das Desinfektionsmittel",vi:"Dung dịch sát khuẩn",bild:"data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='30' y='40' width='40' height='50' rx='5' fill='%233498db'/><rect x='40' y='30' width='20' height='10' fill='%23ecf0f1'/><path d='M45 30 L45 10 L60 10' stroke='%23ecf0f1' stroke-width='4' fill='none'/><rect x='40' y='55' width='20' height='20' fill='%23fff'/><path d='M46 65 L54 65 M50 61 L50 69' stroke='%23e74c3c' stroke-width='3'/></svg>"},
+            {de:"Die Handschuhe (Einmalhandschuhe)",vi:"Găng tay dùng một lần",bild:"data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M30 90 L30 50 Q30 30 20 30 Q15 30 15 40 L25 50 M40 90 L40 40 Q40 20 35 20 Q30 20 30 30 L35 45 M50 90 L50 40 Q50 15 45 15 Q40 15 40 25 L45 45 M60 90 L60 45 Q60 25 55 25 Q50 25 50 35 L55 50 M75 90 L75 60 Q75 40 70 40 Q65 40 65 50 L70 65' stroke='%233498db' stroke-width='8' fill='none' stroke-linecap='round'/><rect x='28' y='80' width='48' height='15' fill='%232980b9' rx='3'/></svg>"}
         ]
     },
     intensiv: {
         titel: "🏥 Intensivmedizinische Ausstattung",
         woerter: [
-            {
-                de: "Das Infusionsgerät / Der Infusionsständer",
-                vi: "Máy truyền dịch / Cây treo dịch",
-                bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='35' y='20' width='30' height='40' rx='5' fill='%23ecf0f1' stroke='%23bdc3c7' stroke-width='3'/><path d='M50 10 L50 20 M50 60 L50 90 M45 70 L55 70 M45 80 L55 80' stroke='%237f8c8d' stroke-width='3'/><text x='50' y='45' font-family='sans-serif' font-size='12' fill='%23e74c3c' text-anchor='middle'>NaCl</text><path d='M10 90 L90 90 M20 90 L20 10 L50 10' stroke='%232c3e50' stroke-width='4' fill='none'/></svg>"
-            },
-            {
-                de: "Die Magensonde",
-                vi: "Ống thông dạ dày",
-                bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M40 70 Q20 90 50 90 Q80 90 70 70 Q60 50 60 40 L60 20' stroke='%23e74c3c' stroke-width='4' fill='%23ffbaba'/><path d='M60 10 L60 60 Q60 70 45 75' stroke='%233498db' stroke-width='3' fill='none'/></svg>"
-            },
-            {
-                de: "Der Blasenkatheter (DK)",
-                vi: "Ống thông tiểu",
-                bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M20 80 Q40 60 70 30' stroke='%23f1c40f' stroke-width='8' fill='none'/><circle cx='75' cy='25' r='12' fill='%23f39c12' opacity='0.8'/><path d='M20 80 L10 90 M20 80 L30 90' stroke='%23e67e22' stroke-width='6' fill='none'/></svg>"
-            },
-            {
-                de: "Die Sauerstoffmaske",
-                vi: "Mặt nạ oxy",
-                bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M30 30 L70 30 L85 70 L15 70 Z' fill='%23ecf0f1' stroke='%23bdc3c7' stroke-width='2'/><ellipse cx='50' cy='50' rx='10' ry='5' fill='%23bdc3c7'/><path d='M50 70 L50 90 M40 90 L60 90' stroke='%233498db' stroke-width='4' fill='none'/><path d='M15 40 Q5 10 50 10 Q95 10 85 40' stroke='%237f8c8d' stroke-width='3' fill='none'/></svg>"
-            },
-            {
-                de: "Der Beatmungsschlauch",
-                vi: "Ống nội khí quản",
-                bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M20 20 Q50 20 50 80' stroke='%23bdc3c7' stroke-width='10' fill='none'/><path d='M20 15 L20 25' stroke='%233498db' stroke-width='4'/><path d='M30 15 L30 25' stroke='%233498db' stroke-width='4'/><path d='M40 16 L40 24' stroke='%233498db' stroke-width='4'/><circle cx='50' cy='70' r='15' fill='%23ecf0f1' opacity='0.8' stroke='%23bdc3c7'/></svg>"
-            },
-            {
-                de: "Das EKG-Gerät",
-                vi: "Máy điện tâm đồ",
-                bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='10' y='20' width='80' height='60' rx='5' fill='%232c3e50'/><rect x='15' y='25' width='70' height='40' fill='%23000'/><path d='M15 45 L30 45 L35 30 L45 60 L55 25 L65 45 L85 45' stroke='%232ecc71' stroke-width='2' fill='none'/><circle cx='25' cy='73' r='3' fill='%23e74c3c'/><circle cx='35' cy='73' r='3' fill='%23f1c40f'/><circle cx='45' cy='73' r='3' fill='%233498db'/></svg>"
-            }
+            {de:"Das Infusionsgerät / Der Infusionsständer",vi:"Máy truyền dịch / Cây treo dịch",bild:"data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='35' y='20' width='30' height='40' rx='5' fill='%23ecf0f1' stroke='%23bdc3c7' stroke-width='3'/><path d='M50 10 L50 20 M50 60 L50 90 M45 70 L55 70 M45 80 L55 80' stroke='%237f8c8d' stroke-width='3'/><text x='50' y='45' font-family='sans-serif' font-size='12' fill='%23e74c3c' text-anchor='middle'>NaCl</text><path d='M10 90 L90 90 M20 90 L20 10 L50 10' stroke='%232c3e50' stroke-width='4' fill='none'/></svg>"},
+            {de:"Die Magensonde",vi:"Ống thông dạ dày",bild:"data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M40 70 Q20 90 50 90 Q80 90 70 70 Q60 50 60 40 L60 20' stroke='%23e74c3c' stroke-width='4' fill='%23ffbaba'/><path d='M60 10 L60 60 Q60 70 45 75' stroke='%233498db' stroke-width='3' fill='none'/></svg>"},
+            {de:"Der Blasenkatheter (DK)",vi:"Ống thông tiểu",bild:"data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M20 80 Q40 60 70 30' stroke='%23f1c40f' stroke-width='8' fill='none'/><circle cx='75' cy='25' r='12' fill='%23f39c12' opacity='0.8'/><path d='M20 80 L10 90 M20 80 L30 90' stroke='%23e67e22' stroke-width='6' fill='none'/></svg>"},
+            {de:"Die Sauerstoffmaske",vi:"Mặt nạ oxy",bild:"data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M30 30 L70 30 L85 70 L15 70 Z' fill='%23ecf0f1' stroke='%23bdc3c7' stroke-width='2'/><ellipse cx='50' cy='50' rx='10' ry='5' fill='%23bdc3c7'/><path d='M50 70 L50 90 M40 90 L60 90' stroke='%233498db' stroke-width='4' fill='none'/><path d='M15 40 Q5 10 50 10 Q95 10 85 40' stroke='%237f8c8d' stroke-width='3' fill='none'/></svg>"},
+            {de:"Der Beatmungsschlauch",vi:"Ống nội khí quản",bild:"data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M20 20 Q50 20 50 80' stroke='%23bdc3c7' stroke-width='10' fill='none'/><path d='M20 15 L20 25' stroke='%233498db' stroke-width='4'/><path d='M30 15 L30 25' stroke='%233498db' stroke-width='4'/><path d='M40 16 L40 24' stroke='%233498db' stroke-width='4'/><circle cx='50' cy='70' r='15' fill='%23ecf0f1' opacity='0.8' stroke='%23bdc3c7'/></svg>"},
+            {de:"Das EKG-Gerät",vi:"Máy điện tâm đồ",bild:"data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='10' y='20' width='80' height='60' rx='5' fill='%232c3e50'/><rect x='15' y='25' width='70' height='40' fill='%23000'/><path d='M15 45 L30 45 L35 30 L45 60 L55 25 L65 45 L85 45' stroke='%232ecc71' stroke-width='2' fill='none'/><circle cx='25' cy='73' r='3' fill='%23e74c3c'/><circle cx='35' cy='73' r='3' fill='%23f1c40f'/><circle cx='45' cy='73' r='3' fill='%233498db'/></svg>"}
         ]
     }
 };
@@ -403,18 +362,18 @@ function showVokabel() {
     document.getElementById("feedback-area").style.display = "none";
     document.getElementById("message").innerHTML = `
         <span style="font-size:16px;color:#666;">${gruppe.titel} | ${currentVokabelIndex + 1}/${total}</span><br><br>
-        <img src="${wort.bild}" alt="${wort.de}" style="width:200px;height:200px;object-fit:contain;border-radius:12px;margin:10px;" onerror="this.onerror=null; this.src='https://placehold.co/250x180/e3f2fd/1565c0?text=Bild+fehlt'"><br>
+        <img src="${wort.bild}" alt="${wort.de}" style="width:200px;height:200px;object-fit:contain;border-radius:12px;margin:10px;" onerror="this.onerror=null;this.src='https://placehold.co/200x200/e3f2fd/1565c0?text=Bild'"><br>
         <b style="font-size:26px;">${wort.de}</b><br>
         <span style="font-size:22px;color:#555;">${wort.vi}</span>
     `;
-    const prevBtn = currentVokabelIndex > 0 ? `<button onclick="prevVokabel()" style="font-size:20px;padding:12px 22px;margin:8px;border-radius:15px;border:none;cursor:pointer;background:#eee;">⬅️ Trước</button>` : '';
+    const prevBtn = currentVokabelIndex > 0
+        ? `<button onclick="prevVokabel()" style="background:#eee;">⬅️ Trước</button>` : '';
     const nextBtn = currentVokabelIndex < total - 1
-        ? `<button onclick="nextVokabel()" style="font-size:20px;padding:12px 22px;margin:8px;border-radius:15px;border:none;cursor:pointer;background:#4CAF50;color:white;">➡️ Tiếp</button>`
-        : `<button onclick="startMinigame()" style="font-size:20px;padding:12px 22px;margin:8px;border-radius:15px;border:none;cursor:pointer;background:#ff9800;color:white;">🎮 Minigame!</button>`;
+        ? `<button onclick="nextVokabel()" style="background:#4CAF50;color:white;">➡️ Tiếp</button>`
+        : `<button onclick="startMinigame()" style="background:#ff9800;color:white;">🎮 Minigame!</button>`;
     document.getElementById("buttons").innerHTML = `
-        ${prevBtn}
-        ${nextBtn}
-        <button onclick="showMedizinMenu()" style="font-size:18px;padding:10px 20px;margin:8px;border-radius:15px;border:none;cursor:pointer;background:#eee;">🏠 Menu</button>
+        ${prevBtn}${nextBtn}
+        <button onclick="showMedizinMenu()" style="background:#eee;">🏠 Menu</button>
     `;
 }
 
@@ -424,8 +383,7 @@ function prevVokabel() { currentVokabelIndex--; showVokabel(); }
 // ===== MINIGAME =====
 function startMinigame() {
     const gruppe = vokabelGruppen[currentGruppe];
-    minigameScore = 0;
-    minigameIndex = 0;
+    minigameScore = 0; minigameIndex = 0;
     minigameQuestions = [...gruppe.woerter].sort(() => Math.random() - 0.5);
     showMinigameQuestion();
 }
@@ -434,35 +392,30 @@ function showMinigameQuestion() {
     const gruppe = vokabelGruppen[currentGruppe];
     if (minigameIndex >= minigameQuestions.length) { showMinigameResult(); return; }
     const current = minigameQuestions[minigameIndex];
-    let wrongAnswers = gruppe.woerter.filter(w => w.de !== current.de).sort(() => Math.random() - 0.5).slice(0, 3);
-    let answers = [...wrongAnswers, current].sort(() => Math.random() - 0.5);
+    let answers = [...gruppe.woerter.filter(w => w.de !== current.de).sort(() => Math.random() - 0.5).slice(0, 3), current].sort(() => Math.random() - 0.5);
     document.getElementById("feedback-area").style.display = "none";
     document.getElementById("message").innerHTML = `
         <span style="font-size:16px;color:#666;">🎮 Minigame | Câu ${minigameIndex + 1}/${minigameQuestions.length} | Điểm: ${minigameScore}</span><br><br>
-        <img src="${current.bild}" alt="${current.de}" style="width:200px;height:200px;object-fit:contain;border-radius:12px;margin:10px;" onerror="this.onerror=null; this.src='https://placehold.co/250x180/e3f2fd/1565c0?text=?'"><br>
+        <img src="${current.bild}" style="width:200px;height:200px;object-fit:contain;border-radius:12px;margin:10px;"><br>
         <b>Đây là gì? / Was ist das?</b>
     `;
     document.getElementById("buttons").innerHTML = answers.map(a => `
-        <button onclick="checkMinigame('${encodeURIComponent(a.de)}', '${encodeURIComponent(current.de)}', '${encodeURIComponent(current.vi)}')" style="font-size:18px;padding:12px 20px;margin:8px;border-radius:15px;border:2px solid #ddd;cursor:pointer;display:block;width:90%;max-width:500px;text-align:left;">
-            ${a.de}
-        </button>
+        <button onclick="checkMinigame('${encodeURIComponent(a.de)}','${encodeURIComponent(current.de)}','${encodeURIComponent(current.vi)}')"
+            style="background:#f9f9f9;border:2px solid #ddd;display:block;width:90%;max-width:500px;text-align:left;">${a.de}</button>
     `).join('');
 }
 
 function checkMinigame(chosenEncoded, correctEncoded, viEncoded) {
-    const chosen = decodeURIComponent(chosenEncoded);
-    const correct = decodeURIComponent(correctEncoded);
-    const vi = decodeURIComponent(viEncoded);
+    const chosen = decodeURIComponent(chosenEncoded), correct = decodeURIComponent(correctEncoded), vi = decodeURIComponent(viEncoded);
     const isCorrect = chosen === correct;
     if (isCorrect) minigameScore++;
-    const feedbackArea = document.getElementById("feedback-area");
     const aiCorrection = document.getElementById("ai-correction");
-    feedbackArea.style.display = "block";
+    document.getElementById("feedback-area").style.display = "block";
     aiCorrection.style.display = "block";
     aiCorrection.innerHTML = `
-        <p style="font-size:22px;">${isCorrect ? "✅ Richtig! / Đúng rồi!" : "❌ Falsch! / Sai rồi!"}</p>
-        ${!isCorrect ? `<p style="font-size:18px;color:green;">✔️ Đáp án đúng: <b>${correct}</b></p>` : ""}
-        <p style="font-size:16px;">${correct} = ${vi}</p>
+        <p style="font-size:22px;">${isCorrect ? "✅ Richtig!" : "❌ Falsch!"}</p>
+        ${!isCorrect ? `<p style="color:green;">✔️ Đáp án đúng: <b>${correct}</b></p>` : ""}
+        <p>${correct} = ${vi}</p>
         <button onclick="nextMinigame()" style="font-size:20px;padding:10px 25px;border-radius:15px;border:none;cursor:pointer;background:#4CAF50;color:white;margin-top:10px;">
             ${minigameIndex + 1 >= minigameQuestions.length ? "🏆 Kết quả" : "➡️ Tiếp"}
         </button>
@@ -476,29 +429,27 @@ function nextMinigame() {
 }
 
 function showMinigameResult() {
-    const total = minigameQuestions.length;
-    const percent = Math.round((minigameScore / total) * 100);
-    const emoji = percent >= 80 ? "🏆" : percent >= 60 ? "👍" : "💪";
+    const total = minigameQuestions.length, percent = Math.round((minigameScore / total) * 100);
     document.getElementById("message").innerHTML = `
-        ${emoji} <b>Kết quả Minigame!</b><br><br>
+        ${percent >= 80 ? "🏆" : percent >= 60 ? "👍" : "💪"} <b>Kết quả Minigame!</b><br><br>
         ${minigameScore}/${total} (${percent}%)<br><br>
         ${percent >= 80 ? "Ausgezeichnet! 🌟" : percent >= 60 ? "Gut gemacht! 👏" : "Weiter üben! 💪"}
     `;
     document.getElementById("buttons").innerHTML = `
-        <button onclick="startMinigame()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#ff9800;color:white;">🔄 Nochmal</button>
-        <button onclick="showVokabelGruppe(currentGruppe)" style="font-size:20px;padding:12px 22px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#e3f2fd;">📖 Ôn lại từ</button>
-        <button onclick="showMedizinMenu()" style="font-size:18px;padding:10px 20px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#eee;">⬅️ Menu</button>
+        <button onclick="startMinigame()" style="background:#ff9800;color:white;">🔄 Nochmal</button>
+        <button onclick="showVokabelGruppe(currentGruppe)" style="background:#e3f2fd;">📖 Ôn lại từ</button>
+        <button onclick="showMedizinMenu()" style="background:#eee;">⬅️ Menu</button>
     `;
     document.getElementById("feedback-area").style.display = "none";
 }
 
-// ===== VOKABELN QUIZ =====
+// ===== VOKABELN QUIZ (ALL) =====
 const medizinQuestions = [
-    {type:"luecke",frage:"Der Patient klagt über starken ___ an der Haut nach dem Kontakt mit Pflanzen.",antworten:["Juckreiz","Schnupfen","Heiserkeit","Abwehr"],richtig:0,erklaerung:"Juckreiz = ngứa (cảm giác ngứa trên da) / Juckreiz bedeutet das unangenehme Gefühl auf der Haut, das zum Kratzen reizt."},
-    {type:"bedeutung",frage:"Was bedeutet 'Maßnahme' im medizinischen Kontext?",antworten:["biện pháp / Schritt zur Problemlösung","triệu chứng / Krankheitszeichen","thuốc / Medikament","bệnh nhân / kranke Person"],richtig:0,erklaerung:"Maßnahme = biện pháp / Eine Maßnahme ist ein konkreter Schritt, um ein Problem zu lösen oder zu verhindern."},
+    {type:"luecke",frage:"Der Patient klagt über starken ___ an der Haut nach dem Kontakt mit Pflanzen.",antworten:["Juckreiz","Schnupfen","Heiserkeit","Abwehr"],richtig:0,erklaerung:"Juckreiz = ngứa / Juckreiz bedeutet das unangenehme Gefühl auf der Haut, das zum Kratzen reizt."},
+    {type:"bedeutung",frage:"Was bedeutet 'Maßnahme' im medizinischen Kontext?",antworten:["biện pháp / Schritt zur Problemlösung","triệu chứng / Krankheitszeichen","thuốc / Medikament","bệnh nhân / kranke Person"],richtig:0,erklaerung:"Maßnahme = biện pháp / Ein konkreter Schritt, um ein Problem zu lösen oder zu verhindern."},
     {type:"luecke",frage:"Im Sommer ist ein ___ sehr wichtig, um Mückenstiche zu vermeiden.",antworten:["Mückenschutzmittel","Hausmittel","Impfstoff","Abwehrmechanismus"],richtig:0,erklaerung:"Mückenschutzmittel = thuốc chống muỗi / Ein Mittel, das Mücken fernhält."},
-    {type:"wahl",frage:"Welches Wort passt? Das ___ schützt den Körper vor Viren und Bakterien.",antworten:["Immunsystem","Vitalzeichen","Erbgut","Gesundheitswesen"],richtig:0,erklaerung:"Immunsystem = hệ miễn dịch / Das Immunsystem ist die Abwehr des Körpers gegen Krankheitserreger."},
-    {type:"bedeutung",frage:"Was bedeutet 'Gesundheitsbewusstsein'?",antworten:["ý thức sức khỏe / Bewusstsein für die eigene Gesundheit","bảo hiểm y tế / Krankenversicherung","chăm sóc sức khỏe / medizinische Versorgung","kiến thức y khoa / medizinisches Wissen"],richtig:0,erklaerung:"Gesundheitsbewusstsein = ý thức về sức khỏe / Das Bewusstsein dafür, wie wichtig ein gesunder Lebensstil ist."},
+    {type:"wahl",frage:"Welches Wort passt? Das ___ schützt den Körper vor Viren und Bakterien.",antworten:["Immunsystem","Vitalzeichen","Erbgut","Gesundheitswesen"],richtig:0,erklaerung:"Immunsystem = hệ miễn dịch / Die Abwehr des Körpers gegen Krankheitserreger."},
+    {type:"bedeutung",frage:"Was bedeutet 'Gesundheitsbewusstsein'?",antworten:["ý thức sức khỏe / Bewusstsein für die eigene Gesundheit","bảo hiểm y tế / Krankenversicherung","chăm sóc sức khỏe / medizinische Versorgung","kiến thức y khoa / medizinisches Wissen"],richtig:0,erklaerung:"Gesundheitsbewusstsein = ý thức về sức khỏe / Bewusstsein dafür, wie wichtig ein gesunder Lebensstil ist."},
     {type:"luecke",frage:"Die ___ älterer Menschen erfordert viel Geduld und Einfühlungsvermögen.",antworten:["Betreuung","Behandlung","Abwehr","Maßnahme"],richtig:0,erklaerung:"Betreuung = chăm sóc / Die Fürsorge und Unterstützung für pflegebedürftige Personen."},
     {type:"wahl",frage:"Welches Wort passt? ___ wie Joggen oder Schwimmen ist gut für das Herz.",antworten:["Regelmäßige Bewegung","Nährstoffarme Ernährung","Schönheitsbehandlung","Heiserkeit"],richtig:0,erklaerung:"Regelmäßige Bewegung = vận động thường xuyên / Körperliche Aktivität, die regelmäßig ausgeübt wird."},
     {type:"bedeutung",frage:"Was bedeutet 'Lebewesen'?",antworten:["sinh vật / etwas, das lebt","cuộc sống / das Leben","môi trường / die Umwelt","cơ thể / der Körper"],richtig:0,erklaerung:"Lebewesen = sinh vật / Alles, was lebt: Menschen, Tiere, Pflanzen."},
@@ -509,10 +460,10 @@ const medizinQuestions = [
     {type:"wahl",frage:"Welches Wort passt? Nach der Operation überwacht die Krankenschwester regelmäßig die ___ des Patienten.",antworten:["Vitalzeichen","Beschwerden","Maßnahmen","Infekte"],richtig:0,erklaerung:"Vitalzeichen = dấu hiệu sinh tồn / Blutdruck, Puls, Temperatur und Atmung."},
     {type:"bedeutung",frage:"Was bedeutet 'nährstoffarm'?",antworten:["ít chất dinh dưỡng / wenig Nährstoffe enthaltend","nhiều chất dinh dưỡng / viele Nährstoffe enthaltend","không có calo / kalorienfrei","tốt cho sức khỏe / gesund"],richtig:0,erklaerung:"Nährstoffarm = ít chất dinh dưỡng / Lebensmittel mit wenig Vitaminen und Mineralstoffen."},
     {type:"luecke",frage:"Eine ___ Ernährung mit viel Obst und Gemüse stärkt das Immunsystem.",antworten:["nährstoffreiche","nährstoffarme","eiweißhaltige","fettige"],richtig:0,erklaerung:"Nährstoffreich = giàu chất dinh dưỡng / Lebensmittel mit vielen Vitaminen und Mineralstoffen."},
-    {type:"wahl",frage:"Welches Wort passt? Sportler brauchen besonders viel ___, um Muskeln aufzubauen.",antworten:["eiweißhaltige Nahrung","Schönheitsbehandlung","Hausmittel","Schnupfnase"],richtig:0,erklaerung:"Eiweißhaltige Nahrung = thực phẩm giàu đạm / Nahrung mit hohem Proteingehalt wie Fleisch, Eier, Hülsenfrüchte."},
+    {type:"wahl",frage:"Welches Wort passt? Sportler brauchen besonders viel ___, um Muskeln aufzubauen.",antworten:["eiweißhaltige Nahrung","Schönheitsbehandlung","Hausmittel","Schnupfnase"],richtig:0,erklaerung:"Eiweißhaltige Nahrung = thực phẩm giàu đạm / Nahrung mit hohem Proteingehalt."},
     {type:"bedeutung",frage:"Was bedeutet 'desinfizieren'?",antworten:["khử trùng / Keime abtöten","băng bó / verbinden","tiêm / injizieren","phẫu thuật / operieren"],richtig:0,erklaerung:"Desinfizieren = khử trùng / Krankheitserreger auf Oberflächen oder Wunden abtöten."},
     {type:"luecke",frage:"Der Körper hat verschiedene ___, um sich gegen Krankheitserreger zu schützen.",antworten:["Abwehrmechanismen","Vitalzeichen","Beschwerden","Maßnahmen"],richtig:0,erklaerung:"Abwehrmechanismus = cơ chế phòng vệ / Natürliche Methoden des Körpers zur Bekämpfung von Krankheiten."},
-    {type:"wahl",frage:"Welches Wort passt? Der Patient schildert seine ___ dem Arzt genau.",antworten:["Beschwerden","Maßnahmen","Impfstoffe","Lebewesen"],richtig:0,erklaerung:"Beschwerden = triệu chứng, phàn nàn / Körperliche Probleme oder Schmerzen, die ein Patient hat."},
+    {type:"wahl",frage:"Welches Wort passt? Der Patient schildert seine ___ dem Arzt genau.",antworten:["Beschwerden","Maßnahmen","Impfstoffe","Lebewesen"],richtig:0,erklaerung:"Beschwerden = triệu chứng / Körperliche Probleme oder Schmerzen, die ein Patient hat."},
     {type:"bedeutung",frage:"Was bedeutet 'Heiserkeit'?",antworten:["khàn giọng / rauhe Stimme","sổ mũi / laufende Nase","ngứa / Juckreiz","ho / Husten"],richtig:0,erklaerung:"Heiserkeit = khàn tiếng / Eine rauhe oder heisere Stimme, oft bei Erkältung."},
     {type:"luecke",frage:"Viele Menschen bevorzugen ___ wie Honig und Ingwer bei leichten Erkältungen.",antworten:["Hausmittel","Impfstoffe","Abwehrmechanismen","Maßnahmen"],richtig:0,erklaerung:"Hausmittel = thuốc dân gian / Traditionelle Heilmittel aus dem Haushalt."},
     {type:"wahl",frage:"Welches Wort passt? Das ___ in Deutschland ist eines der besten der Welt.",antworten:["Gesundheitswesen","Immunsystem","Erbgut","Vitalzeichen"],richtig:0,erklaerung:"Gesundheitswesen = hệ thống y tế / Das gesamte System der medizinischen Versorgung in einem Land."},
@@ -527,9 +478,7 @@ const medizinQuestions = [
 ];
 
 function startMedizin() {
-    score = 0;
-    currentQuestionIndex = 0;
-    questionHistory = [];
+    score = 0; currentQuestionIndex = 0; questionHistory = [];
     shuffledQuestions = [...medizinQuestions].sort(() => Math.random() - 0.5);
     showQuestion();
 }
@@ -544,35 +493,32 @@ function showQuestion() {
         <b>${q.frage}</b>
     `;
     const shuffledAnswers = q.antworten.map((a, i) => ({text: a, original: i})).sort(() => Math.random() - 0.5);
-    const labels = ["A", "B", "C", "D"];
-    const backBtn = currentQuestionIndex > 0 ? `<button onclick="prevQuestion()" style="font-size:18px;padding:10px 20px;margin:8px;border-radius:15px;border:2px solid #ddd;cursor:pointer;background:#eee;">⬅️ Câu trước</button>` : '';
+    const labels = ["A","B","C","D"];
+    const backBtn = currentQuestionIndex > 0
+        ? `<button onclick="prevQuestion()" style="background:#eee;">⬅️ Câu trước</button>` : '';
     document.getElementById("buttons").innerHTML = shuffledAnswers.map((a, i) => `
-        <button onclick="checkAnswer(${a.original}, ${q.richtig}, '${encodeURIComponent(q.erklaerung)}', '${encodeURIComponent(q.antworten[q.richtig])}')" style="font-size:18px;padding:12px 20px;margin:8px;border-radius:15px;border:2px solid #ddd;cursor:pointer;display:block;width:90%;max-width:600px;text-align:left;">
+        <button onclick="checkAnswer(${a.original},${q.richtig},'${encodeURIComponent(q.erklaerung)}','${encodeURIComponent(q.antworten[q.richtig])}')"
+            style="background:#f9f9f9;border:2px solid #ddd;display:block;width:90%;max-width:600px;text-align:left;">
             <b>${labels[i]}.</b> ${a.text}
         </button>
-    `).join('') + backBtn + `<button onclick="showMedizinMenu()" style="font-size:18px;padding:10px 20px;margin:8px;border-radius:15px;border:none;cursor:pointer;background:#eee;">🏠 Menu</button>`;
+    `).join('') + backBtn + `<button onclick="showMedizinMenu()" style="background:#eee;">🏠 Menu</button>`;
 }
 
 function prevQuestion() {
     if (currentQuestionIndex > 0) {
         currentQuestionIndex--;
-        if (questionHistory.length > 0) {
-            score = questionHistory[questionHistory.length - 1].score;
-            questionHistory.pop();
-        }
+        if (questionHistory.length > 0) { score = questionHistory[questionHistory.length - 1].score; questionHistory.pop(); }
         showQuestion();
     }
 }
 
 function checkAnswer(chosen, correct, erklaerungEncoded, correctAnswerEncoded) {
-    const erklaerung = decodeURIComponent(erklaerungEncoded);
-    const correctAnswer = decodeURIComponent(correctAnswerEncoded);
+    const erklaerung = decodeURIComponent(erklaerungEncoded), correctAnswer = decodeURIComponent(correctAnswerEncoded);
     const isCorrect = chosen === correct;
     questionHistory.push({ index: currentQuestionIndex, score: score });
     if (isCorrect) score++;
-    const feedbackArea = document.getElementById("feedback-area");
     const aiCorrection = document.getElementById("ai-correction");
-    feedbackArea.style.display = "block";
+    document.getElementById("feedback-area").style.display = "block";
     aiCorrection.style.display = "block";
     aiCorrection.innerHTML = `
         <p style="font-size:22px;">${isCorrect ? "✅ Richtig! / Đúng rồi!" : "❌ Falsch! / Sai rồi!"}</p>
@@ -592,15 +538,14 @@ function nextQuestion() {
 
 function showResult() {
     const percent = Math.round((score / shuffledQuestions.length) * 100);
-    const emoji = percent >= 80 ? "🏆" : percent >= 60 ? "👍" : "💪";
     document.getElementById("message").innerHTML = `
-        ${emoji} <b>Ergebnis / Kết quả</b><br><br>
+        ${percent >= 80 ? "🏆" : percent >= 60 ? "👍" : "💪"} <b>Ergebnis / Kết quả</b><br><br>
         ${score}/${shuffledQuestions.length} Punkte (${percent}%)<br><br>
         ${percent >= 80 ? "Ausgezeichnet! Sehr gut gemacht! 🌟" : percent >= 60 ? "Gut gemacht! Weiter so! 👏" : "Nicht aufgeben! Übung macht den Meister! 💪"}
     `;
     document.getElementById("buttons").innerHTML = `
-        <button onclick="startMedizin()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#e8f5e9;">🔄 Nochmal / Thử lại</button>
-        <button onclick="showMedizinMenu()" style="font-size:20px;padding:10px 20px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#eee;">⬅️ Zurück</button>
+        <button onclick="startMedizin()" style="background:#e8f5e9;">🔄 Nochmal / Thử lại</button>
+        <button onclick="showMedizinMenu()" style="background:#eee;">⬅️ Zurück</button>
     `;
     document.getElementById("feedback-area").style.display = "none";
 }
