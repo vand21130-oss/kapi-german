@@ -274,40 +274,122 @@ function showMedizinMenu() {
 // ===== TỪ VỰNG THEO NHÓM =====
 const vokabelGruppen = {
     diagnostik: {
-        titel: "🩺 Diagnostische Instrumente",
-        woerter: [
-            {de:"Das Stethoskop", vi:"Ống nghe", bild:"https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=300"},
-            {de:"Das Blutdruckmessgerät", vi:"Máy đo huyết áp", bild:"https://images.unsplash.com/photo-1559757175-5700dde675bc?w=300"},
-            {de:"Das Thermometer", vi:"Nhiệt kế", bild:"https://images.unsplash.com/photo-1584515933487-779824d29309?w=300"},
-            {de:"Die Taschenlampe (Pupillenleuchte)", vi:"Đèn soi đồng tử", bild:"https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=300"},
-            {de:"Der Pulsoximeter", vi:"Máy đo SpO2", bild:"https://images.unsplash.com/photo-1585435557343-3b092031a831?w=300"},
-            {de:"Der Reflexhammer", vi:"Búa phản xạ", bild:"https://images.unsplash.com/photo-1581594693702-fbdc51b2763b?w=300"}
-        ]
-    },
-    verbandmaterial: {
-        titel: "🩹 Verbandmaterial & Verbrauchsmaterial",
-        woerter: [
-            {de:"Die Spritze", vi:"Bơm tiêm", bild:"https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=300"},
-            {de:"Die Kanüle (die Nadel)", vi:"Kim tiêm", bild:"https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=300"},
-            {de:"Der Tupfer", vi:"Gạc/bông thấm", bild:"https://images.unsplash.com/photo-1583947215259-38e31be8751f?w=300"},
-            {de:"Die Kompresse", vi:"Gạc đắp vết thương", bild:"https://images.unsplash.com/photo-1603398938378-e54eab446dde?w=300"},
-            {de:"Das Pflaster", vi:"Băng dán cá nhân", bild:"https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=300"},
-            {de:"Die Mullbinde", vi:"Băng cuộn", bild:"https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=300"},
-            {de:"Das Desinfektionsmittel", vi:"Dung dịch sát khuẩn", bild:"https://images.unsplash.com/photo-1584036561566-baf8f5f1b144?w=300"},
-            {de:"Die Handschuhe (Einmalhandschuhe)", vi:"Găng tay dùng một lần", bild:"https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=300"}
-        ]
+    titel: "🩺 Diagnostische Instrumente",
+    woerter: [
+        {
+            de:"Das Stethoskop",
+            vi:"Ống nghe",
+            bild:"https://cdn-icons-png.flaticon.com/512/2966/2966486.png"
+        },
+        {
+            de:"Das Blutdruckmessgerät",
+            vi:"Máy đo huyết áp",
+            bild:"https://cdn-icons-png.flaticon.com/512/4320/4320371.png"
+        },
+        {
+            de:"Das Thermometer",
+            vi:"Nhiệt kế",
+            bild:"https://cdn-icons-png.flaticon.com/512/2933/2933886.png"
+        },
+        {
+            de:"Die Taschenlampe (Pupillenleuchte)",
+            vi:"Đèn soi đồng tử",
+            bild:"https://cdn-icons-png.flaticon.com/512/3103/3103446.png"
+        },
+        {
+            de:"Der Pulsoximeter",
+            vi:"Máy đo SpO2",
+            bild:"https://cdn-icons-png.flaticon.com/512/2785/2785819.png"
+        },
+        {
+            de:"Der Reflexhammer",
+            vi:"Búa phản xạ",
+            bild:"https://cdn-icons-png.flaticon.com/512/2966/2966327.png"
+        }
+    ]
+
+   verbandmaterial: {
+    titel: "🩹 Verbandmaterial & Verbrauchsmaterial",
+    woerter: [
+        {
+            de:"Die Spritze",
+            vi:"Bơm tiêm",
+            bild:"https://cdn-icons-png.flaticon.com/512/2966/2966488.png"
+        },
+        {
+            de:"Die Kanüle (die Nadel)",
+            vi:"Kim tiêm",
+            bild:"https://cdn-icons-png.flaticon.com/512/2785/2785760.png"
+        },
+        {
+            de:"Der Tupfer",
+            vi:"Gạc/bông thấm",
+            bild:"https://cdn-icons-png.flaticon.com/512/3143/3143639.png"
+        },
+        {
+            de:"Die Kompresse",
+            vi:"Gạc đắp vết thương",
+            bild:"https://cdn-icons-png.flaticon.com/512/3143/3143658.png"
+        },
+        {
+            de:"Das Pflaster",
+            vi:"Băng cá nhân",
+            bild:"https://cdn-icons-png.flaticon.com/512/3143/3143643.png"
+        },
+        {
+            de:"Die Mullbinde",
+            vi:"Băng cuộn",
+            bild:"https://cdn-icons-png.flaticon.com/512/3143/3143652.png"
+        },
+        {
+            de:"Das Desinfektionsmittel",
+            vi:"Dung dịch sát khuẩn",
+            bild:"https://cdn-icons-png.flaticon.com/512/2785/2785818.png"
+        },
+        {
+            de:"Die Handschuhe (Einmalhandschuhe)",
+            vi:"Găng tay dùng một lần",
+            bild:"https://cdn-icons-png.flaticon.com/512/2966/2966485.png"
+        }
+    ]
+}
     },
     intensiv: {
-        titel: "🏥 Intensivmedizinische Ausstattung",
-        woerter: [
-            {de:"Das Infusionsgerät / Der Infusionsständer", vi:"Máy truyền dịch / Cây treo dịch", bild:"https://images.unsplash.com/photo-1516549655169-df83a0774514?w=300"},
-            {de:"Die Magensonde", vi:"Ống thông dạ dày", bild:"https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=300"},
-            {de:"Der Blasenkatheter (DK)", vi:"Ống thông tiểu", bild:"https://images.unsplash.com/photo-1559757175-5700dde675bc?w=300"},
-            {de:"Die Sauerstoffmaske", vi:"Mặt nạ thở oxy", bild:"https://images.unsplash.com/photo-1584515933487-779824d29309?w=300"},
-            {de:"Der Beatmungsschlauch", vi:"Ống nội khí quản", bild:"https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=300"},
-            {de:"Das EKG-Gerät", vi:"Máy điện tâm đồ", bild:"https://images.unsplash.com/photo-1551190822-a9333d879b1f?w=300"}
-        ]
-    }
+    titel: "🏥 Intensivmedizinische Ausstattung",
+    woerter: [
+        {
+            de:"Das Infusionsgerät / Der Infusionsständer",
+            vi:"Máy truyền dịch / Cây treo dịch",
+            bild:"https://cdn-icons-png.flaticon.com/512/2785/2785767.png"
+        },
+        {
+            de:"Die Magensonde",
+            vi:"Ống thông dạ dày",
+            bild:"https://cdn-icons-png.flaticon.com/512/2966/2966325.png"
+        },
+        {
+            de:"Der Blasenkatheter (DK)",
+            vi:"Ống thông tiểu",
+            bild:"https://cdn-icons-png.flaticon.com/512/2966/2966325.png"
+        },
+        {
+            de:"Die Sauerstoffmaske",
+            vi:"Mặt nạ oxy",
+            bild:"https://cdn-icons-png.flaticon.com/512/2785/2785793.png"
+        },
+        {
+            de:"Der Beatmungsschlauch",
+            vi:"Ống nội khí quản",
+            bild:"https://cdn-icons-png.flaticon.com/512/2785/2785793.png"
+        },
+        {
+            de:"Das EKG-Gerät",
+            vi:"Máy điện tâm đồ",
+            bild:"https://cdn-icons-png.flaticon.com/512/4320/4320337.png"
+        }
+    ]
+}
+        
 };
 
 function showVokabelGruppe(gruppe) {
