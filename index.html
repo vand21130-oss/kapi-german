@@ -16,12 +16,9 @@
 </div>
 
 <div id="buttons">
-<button onclick="sayHallo()">👋 Hallo Kapi</button>
-
-<button onclick="testGemini()">
-🧪 Test Gemini
-</button>
+<button style="font-size:24px;padding:12px 24px;border-radius:12px;cursor:pointer;" onclick="sayHallo()">👋 Hallo Kapi</button>
 </div>
+
 <script>
 let currentTeil = "";
 let currentLevel = "";
@@ -31,128 +28,67 @@ let audioChunks = [];
 let isRecording = false;
 
 async function toggleRecording() {
-    console.log("toggleRecording chạy");
-
-    const recordBtn = document.getElementById("record-btn");
-    const feedbackArea = document.getElementById("feedback-area");
-    const aiCorrection = document.getElementById("ai-correction");
+    let recordBtn = document.getElementById("record-btn");
+    let feedbackArea = document.getElementById("feedback-area");
+    let aiCorrection = document.getElementById("ai-correction");
 
     if (!isRecording) {
-
         audioChunks = [];
-
-        const stream = await navigator.mediaDevices.getUserMedia({
-            audio: true
-        });
-
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
         mediaRecorder = new MediaRecorder(stream);
-
-        mediaRecorder.ondataavailable = (event) => {
-            audioChunks.push(event.data);
-        };
+        mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+        mediaRecorder.start();
+        isRecording = true;
+        recordBtn.innerHTML = "🛑 Stopp";
+        feedbackArea.style.display = "block";
+        aiCorrection.style.display = "none";
+        document.getElementById("transcript-text").innerHTML = "<i>Kapi hört zu... 🦫🎤</i>";
+    } else {
+        mediaRecorder.stop();
+        isRecording = false;
+        recordBtn.innerHTML = "🎤 Aufnehmen";
+        document.getElementById("transcript-text").innerHTML = "<i>Kapi denkt nach... 🧠</i>";
 
         mediaRecorder.onstop = async () => {
-
-            mediaRecorder.stream.getTracks().forEach(track => track.stop());
-
-            const audioBlob = new Blob(audioChunks, {
-                type: "audio/webm"
-            });
-
-            console.log("Audio size:", audioBlob.size);
-
-            if (audioBlob.size === 0) {
-                aiCorrection.innerHTML =
-                    "<p style='color:red;'>Kein Audio aufgenommen.</p>";
-                return;
-            }
-
+            mediaRecorder.stream.getTracks().forEach(t => t.stop());
+            const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
             const formData = new FormData();
-            formData.append("audio", audioBlob, "audio.webm");
+            formData.append('audio', audioBlob, 'audio.webm');
 
-            aiCorrection.innerHTML =
-                "<p><i>Kapi hört zu und denkt nach... 🦫🧠</i></p>";
-
+            aiCorrection.innerHTML = "<p style='color:#0984e3;'><i>Kapi đang nghe và suy nghĩ... 🧠🦫</i></p>";
             aiCorrection.style.display = "block";
 
             try {
-
-                const transcribeRes = await fetch("/api/transcribe", {
-                    method: "POST",
+                const transcribeRes = await fetch('/api/transcribe', {
+                    method: 'POST',
                     body: formData
                 });
-
                 const transcribeData = await transcribeRes.json();
-
-                console.log("Transcribe:", transcribeData);
-
                 const text = transcribeData.text;
 
                 if (!text || !text.trim()) {
-
-                    document.getElementById("transcript-text").innerHTML =
-                        "<b>Ich habe nichts gehört.</b>";
-
-                    aiCorrection.innerHTML =
-                        "<p style='color:red;'>Kapi konnte nichts hören 😢</p>";
-
+                    document.getElementById("transcript-text").innerHTML = "<b>Oops!</b>";
+                    aiCorrection.innerHTML = "<p style='color:red;'>Ich habe nichts gehört. (Kapi chưa nghe thấy gì)</p>";
                     return;
                 }
 
-                document.getElementById("transcript-text").innerHTML =
-                    "<b>Du sagst:</b> " + text;
+                document.getElementById("transcript-text").innerHTML = "<b>Du sagst:</b> " + text;
 
-                const chatRes = await fetch("/api/chat", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        text: text
-                    })
+                const chatRes = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: text })
                 });
-
                 const chatData = await chatRes.json();
-
                 if (chatData.result) {
                     aiCorrection.innerHTML = chatData.result;
                 } else {
-                    aiCorrection.innerHTML =
-                        "<p style='color:red;'>Fehler bei Gemini.</p>";
+                    aiCorrection.innerHTML = "<p style='color:red;'>" + (chatData.error || "Lỗi không xác định") + "</p>";
                 }
-
             } catch (error) {
-
-                console.error(error);
-
-                aiCorrection.innerHTML =
-                    "<p style='color:red;'>Fehler: " +
-                    error.message +
-                    "</p>";
+                aiCorrection.innerHTML = "<p style='color:red;'>Lỗi: " + error.message + "</p>";
             }
         };
-
-        mediaRecorder.start();
-
-        isRecording = true;
-
-        recordBtn.innerHTML = "🛑 Stopp";
-
-        feedbackArea.style.display = "block";
-
-        document.getElementById("transcript-text").innerHTML =
-            "<i>Kapi hört zu... 🎤</i>";
-
-    } else {
-
-        mediaRecorder.stop();
-
-        isRecording = false;
-
-        recordBtn.innerHTML = "🎤 Aufnehmen";
-
-        document.getElementById("transcript-text").innerHTML =
-            "<i>Kapi denkt nach... 🧠</i>";
     }
 }
 
@@ -202,7 +138,7 @@ const teil1 = [
     {thema:"Geld sparen",punkte:["Budget planen","Angebote nutzen","Konsum einschränken","Vorteile für Zukunft"]},
     {thema:"Die Wahl des Studiums",punkte:["Interessen","Berufschancen","Kosten und Dauer","Persönliche Entwicklung"]},
     {thema:"Zu Hause fürs Studium lernen",punkte:["Vorteile der Flexibilität","Ablenkungen","Lernmethoden","Vergleich mit Bibliothek"]},
-    {thema:"Konflikte am Arbeitsplatz lösen",punkte:["Ursachen erkennen","Kommunikation verbessern","Lösungen finden","Zusammenarbeit stärken"]},
+   {thema:"Konflikte am Arbeitsplatz lösen",punkte:["Ursachen erkennen","Kommunikation verbessern","Lösungen finden","Zusammenarbeit stärken"]},
     {thema:"Arbeitsatmosphäre verbessern",punkte:["Motivation der Mitarbeiter","Teamarbeit fördern","Konflikte vermeiden","Vorteile für Produktivität"]},
     {thema:"Mitbestimmung im Unternehmen",punkte:["Rechte der Arbeitnehmer","Vorteile für Motivation","Risiken für Unternehmen","Beispiele"]},
     {thema:"Höflichkeit am Arbeitsplatz",punkte:["Respekt zeigen","Kommunikation verbessern","Konflikte vermeiden","Vorteile für Zusammenarbeit"]},
@@ -302,26 +238,7 @@ function showTeil2() {
     `;
     startTimer();
 }
-async function testGemini() {
 
-    console.log("Test Gemini chạy");
-
-    const res = await fetch('/api/chat', {
-        method:'POST',
-        headers:{
-            'Content-Type':'application/json'
-        },
-        body: JSON.stringify({
-            text:"Ich bin gestern nach Supermarkt gegangen."
-        })
-    });
-
-    const data = await res.json();
-
-    console.log(data);
-
-    alert(JSON.stringify(data));
-}
 function restart() {
     clearInterval(countdown);
     if (isRecording && mediaRecorder) {
