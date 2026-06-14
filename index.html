@@ -521,21 +521,22 @@ function showQuestion() {
     const labels = ["A", "B", "C", "D"];
 
     document.getElementById("buttons").innerHTML = shuffledAnswers.map((a, i) => `
-        <button onclick="checkAnswer(${a.original}, ${q.richtig}, '${encodeURIComponent(q.erklaerung)}')" style="
-            font-size:18px;
-            padding:12px 20px;
-            margin:8px;
-            border-radius:15px;
-            border:2px solid #ddd;
-            cursor:pointer;
-            display:block;
-            width:90%;
-            max-width:600px;
-            text-align:left;
-        ">
-            <b>${labels[i]}.</b> ${a.text}
-        </button>
-    `).join('');
+        document.getElementById("buttons").innerHTML = shuffledAnswers.map((a, i) => `
+    <button onclick="checkAnswer(${a.original}, ${q.richtig}, '${encodeURIComponent(q.erklaerung)}', '${encodeURIComponent(q.antworten[q.richtig])}')" style="
+        font-size:18px;
+        padding:12px 20px;
+        margin:8px;
+        border-radius:15px;
+        border:2px solid #ddd;
+        cursor:pointer;
+        display:block;
+        width:90%;
+        max-width:600px;
+        text-align:left;
+    ">
+        <b>${labels[i]}.</b> ${a.text}
+    </button>
+`).join('');
 }
 
 function checkAnswer(chosen, correct, erklaerungEncoded) {
