@@ -302,7 +302,26 @@ function showTeil2() {
     `;
     startTimer();
 }
+async function testGemini() {
 
+    console.log("Test Gemini chạy");
+
+    const res = await fetch('/api/chat', {
+        method:'POST',
+        headers:{
+            'Content-Type':'application/json'
+        },
+        body: JSON.stringify({
+            text:"Ich bin gestern nach Supermarkt gegangen."
+        })
+    });
+
+    const data = await res.json();
+
+    console.log(data);
+
+    alert(JSON.stringify(data));
+}
 function restart() {
     clearInterval(countdown);
     if (isRecording && mediaRecorder) {
