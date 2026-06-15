@@ -263,10 +263,14 @@ function showMedizinMenu() {
     document.getElementById("feedback-area").style.display = "none";
     document.getElementById("message").innerHTML = "🏥 Medizinische Fachbegriffe";
     document.getElementById("buttons").innerHTML = `
-        <button onclick="showVokabelGruppe('diagnostik')" style="font-size:20px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#e3f2fd;">🩺 Diagnostische Instrumente</button>
-        <button onclick="showVokabelGruppe('verbandmaterial')" style="font-size:20px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#fce4ec;">🩹 Verbandmaterial</button>
-        <button onclick="showVokabelGruppe('intensiv')" style="font-size:20px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#f3e5f5;">🏥 Intensivmedizin</button>
-        <button onclick="startMedizin()" style="font-size:20px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#fff3e0;">🎯 Luyện tập</button>
+        <div style="max-width:600px;margin:0 auto;text-align:left;">
+            <p style="font-size:18px;color:#666;margin:10px 0 5px;">📖 Từ vựng theo chủ đề</p>
+            <button onclick="showVokabelGruppe('diagnostik')" style="font-size:18px;padding:12px 20px;margin:5px;border-radius:15px;border:none;cursor:pointer;background:#e3f2fd;display:block;width:100%;text-align:left;">🩺 Diagnostische Instrumente <span style="color:#999;font-size:14px;">(6 từ)</span></button>
+            <button onclick="showVokabelGruppe('verbandmaterial')" style="font-size:18px;padding:12px 20px;margin:5px;border-radius:15px;border:none;cursor:pointer;background:#fce4ec;display:block;width:100%;text-align:left;">🩹 Verbandmaterial <span style="color:#999;font-size:14px;">(8 từ)</span></button>
+            <button onclick="showVokabelGruppe('intensiv')" style="font-size:18px;padding:12px 20px;margin:5px;border-radius:15px;border:none;cursor:pointer;background:#f3e5f5;display:block;width:100%;text-align:left;">🏥 Intensivmedizinische Ausstattung <span style="color:#999;font-size:14px;">(6 từ)</span></button>
+            <hr style="margin:15px 0;border:1px solid #eee;">
+            <button onclick="startMedizin()" style="font-size:18px;padding:12px 20px;margin:5px;border-radius:15px;border:none;cursor:pointer;background:#fff3e0;display:block;width:100%;text-align:left;">🎯 Luyện tập tổng hợp <span style="color:#999;font-size:14px;">(quiz A/B/C/D)</span></button>
+        </div>
         <button onclick="chooseLesson('Vokabeln')" style="font-size:18px;padding:10px 20px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#eee;">⬅️ Zurück</button>
     `;
 }
