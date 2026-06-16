@@ -1,22 +1,37 @@
-module.exports = async function handler(req, res) {
+export default async function handler(req, res) {
     if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
     
     const { tuViet, tuDuc, cauVidu } = req.body;
     const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-    
+
+    // Prompt B2 "Khó tính": Ép AI tập trung vào lỗi cấu trúc câu (Satzbau)
     const prompt = cauVidu 
-        ? `Bạn là giáo viên tiếng Đức B2. Học sinh đặt câu ví dụ với từ "${tuDuc}" như sau: "${cauVidu}". Hãy kiểm tra câu có đúng ngữ pháp không, có dùng từ "${tuDuc}" không, và cho phản hồi ngắn gọn bằng tiếng Việt + tiếng Đức. Trả về CHỈ HTML thuần túy: <p>✅/❌ [nhận xét]</p><p><b>Korrektur:</b> [câu đúng nếu sai]</p><p><b>Tipp:</b> [mẹo nhỏ]</p>`
-        : `Bạn là giáo viên tiếng Đức B2. Học sinh dịch từ "${tuViet}" thành "${tuDuc}". Hãy kiểm tra xem có đúng không và cho phản hồi ngắn gọn. Trả về CHỈ HTML thuần túy: <p>✅/❌ [nhận xét tiếng Việt]</p>${tuDuc ? '<p><b>Đáp án đúng:</b> [từ tiếng Đức đúng]</p>' : ''}`;
+        ? `Bạn là gia sư tiếng Đức trình độ B2/C1. Học sinh đặt câu: "${cauVidu}" với từ "${tuDuc}".
+           Hãy:
+           1. Phân tích ngữ pháp (đặc biệt là chia đuôi tính từ, mạo từ và vị trí động từ).
+           2. Nếu sai, viết lại thành câu B2 hoàn chỉnh.
+           3. Đưa ra 1 mẹo ngữ pháp (Grammatik-Tipp) liên quan đến lỗi này.
+           Trả lời ngắn gọn bằng tiếng Việt kèm câu tiếng Đức đúng. Trả về dạng HTML sạch.`
+        : `Bạn là gia sư tiếng Đức. Từ "${tuViet}" có nghĩa là "${tuDuc}" không? Hãy kiểm tra và xác nhận, kèm ví dụ B2. Trả về dạng HTML sạch.`;
 
     try {
-        const response = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`;
+        // Sửa lỗi cú pháp: Phải có 'await' và gọi fetch đúng cách
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
         });
+
         const data = await response.json();
-        if (!data.candidates?.[0]) return res.status(500).json({ error: JSON.stringify(data) });
-        let html = data.candidates[0].content.parts[0].text.replace(/```html/g,'').replace(/```/g,'');
+        
+        if (!data.candidates || !data.candidates[0].content) {
+            return res.status(500).json({ error: "Gemini không phản hồi: " + JSON.stringify(data) });
+        }
+
+        let html = data.candidates[0].content.parts[0].text
+            .replace(/```html/g, '').replace(/```/g, '')
+            .trim();
+            
         res.status(200).json({ result: html });
     } catch (error) {
         res.status(500).json({ error: error.message });
