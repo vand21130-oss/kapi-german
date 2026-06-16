@@ -32,11 +32,11 @@ let shuffledQuestions = [];
 let questionHistory = [];
 let currentGruppe = "";
 let currentVokabelIndex = 0;
+let currentShuffledWoerter = [];
 let minigameQuestions = [];
 let minigameIndex = 0;
 let minigameScore = 0;
 
-// ===== GHI ÂM =====
 async function toggleRecording() {
     let recordBtn = document.getElementById("record-btn");
     let feedbackArea = document.getElementById("feedback-area");
@@ -88,7 +88,6 @@ async function toggleRecording() {
     }
 }
 
-// ===== TIMER =====
 function startTimer() {
     clearInterval(countdown);
     let time = 120;
@@ -101,7 +100,6 @@ function startTimer() {
     }, 1000);
 }
 
-// ===== HALLO =====
 function sayHallo() {
     document.getElementById("message").innerText = "Hallo! Wie geht's dir? 😊";
     document.getElementById("buttons").innerHTML = `
@@ -124,7 +122,6 @@ function goHome() {
     `;
 }
 
-// ===== LEVEL =====
 function showLevels() {
     document.getElementById("feedback-area").style.display = "none";
     document.getElementById("message").innerText = "Welches Niveau möchtest du heute üben? 📚";
@@ -143,7 +140,6 @@ function chooseLevel(level) {
     showLessons();
 }
 
-// ===== LESSONS =====
 function showLessons() {
     document.getElementById("feedback-area").style.display = "none";
     document.getElementById("buttons").innerHTML = `
@@ -166,18 +162,10 @@ function chooseLesson(lesson) {
         `;
         return;
     }
-    if (lesson === "Vokabeln") {
-        document.getElementById("message").innerHTML = "Welches Thema? 📝";
-        document.getElementById("buttons").innerHTML = `
-            <button onclick="showMedizinMenu()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#e8f5e9;">🏥 Medizinische Fachbegriffe</button>
-            <button onclick="showLessons()" style="font-size:20px;padding:10px 20px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#eee;">⬅️ Zurück</button>
-        `;
-        return;
-    }
+    if (lesson === "Vokabeln") { showVokabelHauptmenu(); return; }
     document.getElementById("message").innerText = "Super! Heute lernen wir " + lesson + "! 🎉";
 }
 
-// ===== SPRECHEN =====
 const teil1 = [
     {thema:"Fremdsprachen lernen",punkte:["Vorteile für Beruf und Zukunft","Kognitive Fähigkeiten fördern","Kulturelles Verständnis erweitern","Zeitaufwand und Schwierigkeiten"]},
     {thema:"Online Sprache lernen",punkte:["Flexibilität im Alltag","Kosten und Zugänglichkeit","Soziale Kontakte fördern oder einschränken","Lernqualität verbessern oder verschlechtern"]},
@@ -257,248 +245,150 @@ function restart() {
     document.getElementById("feedback-area").style.display = "none";
     goHome();
 }
-
-// ===== VOKABELN MENU =====
-function showMedizinMenu() {
-    document.getElementById("feedback-area").style.display = "none";
-    document.getElementById("message").innerHTML = "🏥 Medizinische Fachbegriffe";
-    document.getElementById("buttons").innerHTML = `
-        <div style="max-width:600px;margin:0 auto;text-align:left;">
-            <p style="font-size:18px;color:#666;margin:10px 0 5px;">📖 Từ vựng theo chủ đề</p>
-            <button onclick="showVokabelGruppe('diagnostik')" style="font-size:18px;padding:12px 20px;margin:5px;border-radius:15px;border:none;cursor:pointer;background:#e3f2fd;display:block;width:100%;text-align:left;">🩺 Diagnostische Instrumente <span style="color:#999;font-size:14px;">(6 từ)</span></button>
-            <button onclick="showVokabelGruppe('verbandmaterial')" style="font-size:18px;padding:12px 20px;margin:5px;border-radius:15px;border:none;cursor:pointer;background:#fce4ec;display:block;width:100%;text-align:left;">🩹 Verbandmaterial <span style="color:#999;font-size:14px;">(8 từ)</span></button>
-            <button onclick="showVokabelGruppe('intensiv')" style="font-size:18px;padding:12px 20px;margin:5px;border-radius:15px;border:none;cursor:pointer;background:#f3e5f5;display:block;width:100%;text-align:left;">🏥 Intensivmedizinische Ausstattung <span style="color:#999;font-size:14px;">(6 từ)</span></button>
-            <hr style="margin:15px 0;border:1px solid #eee;">
-            <button onclick="startMedizin()" style="font-size:18px;padding:12px 20px;margin:5px;border-radius:15px;border:none;cursor:pointer;background:#fff3e0;display:block;width:100%;text-align:left;">🎯 Luyện tập tổng hợp <span style="color:#999;font-size:14px;">(quiz A/B/C/D)</span></button>
-        </div>
-        <button onclick="chooseLesson('Vokabeln')" style="font-size:18px;padding:10px 20px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#eee;">⬅️ Zurück</button>
-    `;
-}
-
-// ===== TỪ VỰNG THEO NHÓM MỚI (SVG NHÚNG TRỰC TIẾP - KHÔNG BAO GIỜ LỖI) =====
-const vokabelGruppen = {
+    const vokabelGruppen = {
     diagnostik: {
         titel: "🩺 Diagnostische Instrumente",
         woerter: [
-            {
-                de: "Das Stethoskop",
-                vi: "Ống nghe",
-                bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M30 20 Q30 50 50 50 Q70 50 70 20 M50 50 L50 80' stroke='%232c3e50' stroke-width='6' fill='none'/><circle cx='50' cy='85' r='10' fill='%237f8c8d'/><circle cx='30' cy='15' r='5' fill='%23e74c3c'/><circle cx='70' cy='15' r='5' fill='%23e74c3c'/></svg>"
-            },
-            {
-                de: "Das Blutdruckmessgerät",
-                vi: "Máy đo huyết áp",
-                bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='20' y='30' width='60' height='30' rx='3' fill='%2334495e'/><path d='M80 45 L90 45 L90 60 M50 60 L50 70' stroke='%232c3e50' stroke-width='3' fill='none'/><circle cx='50' cy='75' r='12' fill='%23fff' stroke='%23bdc3c7' stroke-width='2'/><path d='M50 75 L55 70' stroke='%23c0392b' stroke-width='2'/><ellipse cx='90' cy='65' rx='6' ry='10' fill='%2334495e'/></svg>"
-            },
-            {
-                de: "Das Thermometer",
-                vi: "Nhiệt kế",
-                bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='45' y='10' width='10' height='60' rx='5' fill='%23ecf0f1' stroke='%23bdc3c7' stroke-width='2'/><circle cx='50' cy='75' r='10' fill='%23e74c3c'/><rect x='48' y='30' width='4' height='40' fill='%23e74c3c'/><path d='M58 20 L65 20 M58 30 L65 30 M58 40 L65 40 M58 50 L65 50' stroke='%232c3e50' stroke-width='2'/></svg>"
-            },
-            {
-                de: "Die Taschenlampe (Pupillenleuchte)",
-                vi: "Đèn soi đồng tử",
-                bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='40' y='20' width='20' height='60' rx='2' fill='%2395a5a6'/><rect x='40' y='20' width='20' height='10' fill='%237f8c8d'/><path d='M45 20 L30 5 L70 5 L55 20' fill='%23f1c40f' opacity='0.5'/><circle cx='50' cy='50' r='3' fill='%23e74c3c'/></svg>"
-            },
-            {
-                de: "Der Pulsoximeter",
-                vi: "Máy đo SpO2",
-                bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='30' y='30' width='40' height='50' rx='10' fill='%2334495e'/><rect x='35' y='35' width='30' height='20' rx='3' fill='%23000'/><path d='M35 45 L45 45 L50 38 L55 52 L60 45 L65 45' stroke='%232ecc71' stroke-width='2' fill='none'/><text x='50' y='70' font-family='sans-serif' font-size='14' fill='%23e74c3c' text-anchor='middle'>98%</text></svg>"
-            },
-            {
-                de: "Der Reflexhammer",
-                vi: "Búa phản xạ",
-                bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M47 30 L47 90 L53 90 L53 30 Z' fill='%23bdc3c7'/><polygon points='30,30 70,30 50,10' fill='%23e74c3c'/></svg>"
-            }
+            { de: "Das Stethoskop", vi: "Ống nghe", beispiel: "Der Arzt legt das Stethoskop auf die Brust des Patienten.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M30 20 Q30 50 50 50 Q70 50 70 20 M50 50 L50 80' stroke='%232c3e50' stroke-width='6' fill='none'/><circle cx='50' cy='85' r='10' fill='%237f8c8d'/><circle cx='30' cy='15' r='5' fill='%23e74c3c'/><circle cx='70' cy='15' r='5' fill='%23e74c3c'/></svg>" },
+            { de: "Das Blutdruckmessgerät", vi: "Máy đo huyết áp", beispiel: "Die Krankenschwester misst den Blutdruck mit dem Blutdruckmessgerät.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='20' y='30' width='60' height='30' rx='3' fill='%2334495e'/><path d='M80 45 L90 45 L90 60 M50 60 L50 70' stroke='%232c3e50' stroke-width='3' fill='none'/><circle cx='50' cy='75' r='12' fill='%23fff' stroke='%23bdc3c7' stroke-width='2'/><path d='M50 75 L55 70' stroke='%23c0392b' stroke-width='2'/><ellipse cx='90' cy='65' rx='6' ry='10' fill='%2334495e'/></svg>" },
+            { de: "Das Thermometer", vi: "Nhiệt kế", beispiel: "Das Thermometer zeigt 38,5 Grad – der Patient hat Fieber.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='45' y='10' width='10' height='60' rx='5' fill='%23ecf0f1' stroke='%23bdc3c7' stroke-width='2'/><circle cx='50' cy='75' r='10' fill='%23e74c3c'/><rect x='48' y='30' width='4' height='40' fill='%23e74c3c'/><path d='M58 20 L65 20 M58 30 L65 30 M58 40 L65 40 M58 50 L65 50' stroke='%232c3e50' stroke-width='2'/></svg>" },
+            { de: "Die Taschenlampe (Pupillenleuchte)", vi: "Đèn soi đồng tử", beispiel: "Der Arzt leuchtet mit der Taschenlampe in die Augen des Patienten.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='40' y='20' width='20' height='60' rx='2' fill='%2395a5a6'/><rect x='40' y='20' width='20' height='10' fill='%237f8c8d'/><path d='M45 20 L30 5 L70 5 L55 20' fill='%23f1c40f' opacity='0.5'/><circle cx='50' cy='50' r='3' fill='%23e74c3c'/></svg>" },
+            { de: "Der Pulsoximeter", vi: "Máy đo SpO2", beispiel: "Der Pulsoximeter zeigt eine Sauerstoffsättigung von 98 Prozent.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='30' y='30' width='40' height='50' rx='10' fill='%2334495e'/><rect x='35' y='35' width='30' height='20' rx='3' fill='%23000'/><path d='M35 45 L45 45 L50 38 L55 52 L60 45 L65 45' stroke='%232ecc71' stroke-width='2' fill='none'/><text x='50' y='70' font-family='sans-serif' font-size='14' fill='%23e74c3c' text-anchor='middle'>98%</text></svg>" },
+            { de: "Der Reflexhammer", vi: "Búa phản xạ", beispiel: "Mit dem Reflexhammer prüft der Arzt die Kniereflexe.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M47 30 L47 90 L53 90 L53 30 Z' fill='%23bdc3c7'/><polygon points='30,30 70,30 50,10' fill='%23e74c3c'/></svg>" }
         ]
     },
     verbandmaterial: {
         titel: "🩹 Verbandmaterial & Verbrauchsmaterial",
         woerter: [
-            {
-                de: "Die Spritze",
-                vi: "Bơm tiêm",
-                bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='40' y='30' width='20' height='40' fill='%23ecf0f1' stroke='%23bdc3c7' stroke-width='2'/><rect x='42' y='40' width='16' height='30' fill='%233498db' opacity='0.5'/><rect x='48' y='10' width='4' height='20' fill='%2395a5a6'/><path d='M35 30 L65 30 M35 70 L65 70 M45 70 L45 90 L55 90 L55 70 M40 90 L60 90' stroke='%23bdc3c7' stroke-width='2' fill='none'/></svg>"
-            },
-            {
-                de: "Die Kanüle (die Nadel)",
-                vi: "Kim tiêm",
-                bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='40' y='70' width='20' height='20' fill='%23e74c3c'/><path d='M48 70 L48 10 L52 10 L52 70 Z' fill='%23bdc3c7'/><polygon points='48,10 52,10 50,0' fill='%2395a5a6'/></svg>"
-            },
-            {
-                de: "Der Tupfer",
-                vi: "Gạc/bông thấm",
-                bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='50' r='25' fill='%23ecf0f1' stroke='%23bdc3c7' stroke-width='2'/><path d='M35 45 Q50 60 65 45 M40 55 Q50 40 60 55' stroke='%23bdc3c7' stroke-width='2' fill='none'/><path d='M10 20 L40 45 M90 20 L60 45' stroke='%237f8c8d' stroke-width='4'/></svg>"
-            },
-            {
-                de: "Die Kompresse",
-                vi: "Gạc đắp vết thương",
-                bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='25' y='25' width='50' height='50' fill='%23fff' stroke='%23bdc3c7' stroke-width='2'/><path d='M25 40 L75 40 M25 60 L75 60 M40 25 L40 75 M60 25 L60 75' stroke='%23ecf0f1' stroke-width='2'/></svg>"
-            },
-            {
-                de: "Das Pflaster",
-                vi: "Băng cá nhân",
-                bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><g transform='rotate(45 50 50)'><rect x='20' y='40' width='60' height='20' rx='10' fill='%23e67e22'/><rect x='40' y='40' width='20' height='20' fill='%23fff' opacity='0.7'/><circle cx='45' cy='45' r='1' fill='%23d35400'/><circle cx='55' cy='45' r='1' fill='%23d35400'/><circle cx='45' cy='55' r='1' fill='%23d35400'/><circle cx='55' cy='55' r='1' fill='%23d35400'/></g></svg>"
-            },
-            {
-                de: "Die Mullbinde",
-                vi: "Băng cuộn",
-                bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='50' r='30' fill='%23fff' stroke='%23bdc3c7' stroke-width='3'/><circle cx='50' cy='50' r='10' fill='%23ecf0f1' stroke='%23bdc3c7' stroke-width='2'/><path d='M50 20 Q65 20 80 50' stroke='%23bdc3c7' stroke-width='2' fill='none'/><path d='M50 80 L90 80 L90 90 L50 90 Z' fill='%23fff' stroke='%23bdc3c7' stroke-width='2'/></svg>"
-            },
-            {
-                de: "Das Desinfektionsmittel",
-                vi: "Dung dịch sát khuẩn",
-                bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='30' y='40' width='40' height='50' rx='5' fill='%233498db'/><rect x='40' y='30' width='20' height='10' fill='%23ecf0f1'/><path d='M45 30 L45 10 L60 10' stroke='%23ecf0f1' stroke-width='4' fill='none'/><rect x='40' y='55' width='20' height='20' fill='%23fff'/><path d='M46 65 L54 65 M50 61 L50 69' stroke='%23e74c3c' stroke-width='3'/></svg>"
-            },
-            {
-                de: "Die Handschuhe (Einmalhandschuhe)",
-                vi: "Găng tay dùng một lần",
-                bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M30 90 L30 50 Q30 30 20 30 Q15 30 15 40 L25 50 M40 90 L40 40 Q40 20 35 20 Q30 20 30 30 L35 45 M50 90 L50 40 Q50 15 45 15 Q40 15 40 25 L45 45 M60 90 L60 45 Q60 25 55 25 Q50 25 50 35 L55 50 M75 90 L75 60 Q75 40 70 40 Q65 40 65 50 L70 65' stroke='%233498db' stroke-width='8' fill='none' stroke-linecap='round'/><rect x='28' y='80' width='48' height='15' fill='%232980b9' rx='3'/></svg>"
-            }
+            { de: "Die Spritze", vi: "Bơm tiêm", beispiel: "Die Krankenschwester zieht das Medikament in die Spritze auf.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='40' y='30' width='20' height='40' fill='%23ecf0f1' stroke='%23bdc3c7' stroke-width='2'/><rect x='42' y='40' width='16' height='30' fill='%233498db' opacity='0.5'/><rect x='48' y='10' width='4' height='20' fill='%2395a5a6'/><path d='M35 30 L65 30 M35 70 L65 70 M45 70 L45 90 L55 90 L55 70 M40 90 L60 90' stroke='%23bdc3c7' stroke-width='2' fill='none'/></svg>" },
+            { de: "Die Kanüle (die Nadel)", vi: "Kim tiêm", beispiel: "Die Kanüle wird nach einmaliger Verwendung entsorgt.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='40' y='70' width='20' height='20' fill='%23e74c3c'/><path d='M48 70 L48 10 L52 10 L52 70 Z' fill='%23bdc3c7'/><polygon points='48,10 52,10 50,0' fill='%2395a5a6'/></svg>" },
+            { de: "Der Tupfer", vi: "Gạc/bông thấm", beispiel: "Die Wunde wird mit einem sterilen Tupfer gereinigt.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='50' r='25' fill='%23ecf0f1' stroke='%23bdc3c7' stroke-width='2'/><path d='M35 45 Q50 60 65 45 M40 55 Q50 40 60 55' stroke='%23bdc3c7' stroke-width='2' fill='none'/><path d='M10 20 L40 45 M90 20 L60 45' stroke='%237f8c8d' stroke-width='4'/></svg>" },
+            { de: "Die Kompresse", vi: "Gạc đắp vết thương", beispiel: "Eine feuchte Kompresse wird auf die Wunde gelegt.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='25' y='25' width='50' height='50' fill='%23fff' stroke='%23bdc3c7' stroke-width='2'/><path d='M25 40 L75 40 M25 60 L75 60 M40 25 L40 75 M60 25 L60 75' stroke='%23ecf0f1' stroke-width='2'/></svg>" },
+            { de: "Das Pflaster", vi: "Băng cá nhân", beispiel: "Auf die kleine Schnittwunde klebt man ein Pflaster.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><g transform='rotate(45 50 50)'><rect x='20' y='40' width='60' height='20' rx='10' fill='%23e67e22'/><rect x='40' y='40' width='20' height='20' fill='%23fff' opacity='0.7'/></g></svg>" },
+            { de: "Die Mullbinde", vi: "Băng cuộn", beispiel: "Der Verband wird mit einer Mullbinde fixiert.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='50' r='30' fill='%23fff' stroke='%23bdc3c7' stroke-width='3'/><circle cx='50' cy='50' r='10' fill='%23ecf0f1' stroke='%23bdc3c7' stroke-width='2'/><path d='M50 20 Q65 20 80 50' stroke='%23bdc3c7' stroke-width='2' fill='none'/></svg>" },
+            { de: "Das Desinfektionsmittel", vi: "Dung dịch sát khuẩn", beispiel: "Vor der Injektion wird die Haut mit Desinfektionsmittel gereinigt.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='30' y='40' width='40' height='50' rx='5' fill='%233498db'/><rect x='40' y='30' width='20' height='10' fill='%23ecf0f1'/><path d='M45 30 L45 10 L60 10' stroke='%23ecf0f1' stroke-width='4' fill='none'/><rect x='40' y='55' width='20' height='20' fill='%23fff'/><path d='M46 65 L54 65 M50 61 L50 69' stroke='%23e74c3c' stroke-width='3'/></svg>" },
+            { de: "Die Handschuhe (Einmalhandschuhe)", vi: "Găng tay dùng một lần", beispiel: "Das Pflegepersonal trägt beim Verbandwechsel Einmalhandschuhe.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M30 90 L30 50 Q30 30 20 30 Q15 30 15 40 L25 50 M40 90 L40 40 Q40 20 35 20 Q30 20 30 30 L35 45 M50 90 L50 40 Q50 15 45 15 Q40 15 40 25 L45 45 M60 90 L60 45 Q60 25 55 25 Q50 25 50 35 L55 50 M75 90 L75 60 Q75 40 70 40 Q65 40 65 50 L70 65' stroke='%233498db' stroke-width='8' fill='none' stroke-linecap='round'/><rect x='28' y='80' width='48' height='15' fill='%232980b9' rx='3'/></svg>" }
         ]
     },
     intensiv: {
         titel: "🏥 Intensivmedizinische Ausstattung",
         woerter: [
-            {
-                de: "Das Infusionsgerät / Der Infusionsständer",
-                vi: "Máy truyền dịch / Cây treo dịch",
-                bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='35' y='20' width='30' height='40' rx='5' fill='%23ecf0f1' stroke='%23bdc3c7' stroke-width='3'/><path d='M50 10 L50 20 M50 60 L50 90 M45 70 L55 70 M45 80 L55 80' stroke='%237f8c8d' stroke-width='3'/><text x='50' y='45' font-family='sans-serif' font-size='12' fill='%23e74c3c' text-anchor='middle'>NaCl</text><path d='M10 90 L90 90 M20 90 L20 10 L50 10' stroke='%232c3e50' stroke-width='4' fill='none'/></svg>"
-            },
-            {
-                de: "Die Magensonde",
-                vi: "Ống thông dạ dày",
-                bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M40 70 Q20 90 50 90 Q80 90 70 70 Q60 50 60 40 L60 20' stroke='%23e74c3c' stroke-width='4' fill='%23ffbaba'/><path d='M60 10 L60 60 Q60 70 45 75' stroke='%233498db' stroke-width='3' fill='none'/></svg>"
-            },
-            {
-                de: "Der Blasenkatheter (DK)",
-                vi: "Ống thông tiểu",
-                bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M20 80 Q40 60 70 30' stroke='%23f1c40f' stroke-width='8' fill='none'/><circle cx='75' cy='25' r='12' fill='%23f39c12' opacity='0.8'/><path d='M20 80 L10 90 M20 80 L30 90' stroke='%23e67e22' stroke-width='6' fill='none'/></svg>"
-            },
-            {
-                de: "Die Sauerstoffmaske",
-                vi: "Mặt nạ oxy",
-                bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M30 30 L70 30 L80 70 L20 70 Z' fill='%23ecf0f1' opacity='0.7' stroke='%23bdc3c7' stroke-width='2'/><path d='M50 70 L50 95 M50 95 L80 95' stroke='%233498db' stroke-width='4' fill='none'/><path d='M20 50 Q10 20 50 10 Q90 20 80 50' stroke='%232ecc71' stroke-width='2' fill='none' stroke-dasharray='4'/></svg>"
-            },
-            {
-                de: "Der Beatmungsschlauch",
-                vi: "Ống nội khí quản",
-                bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M20 20 Q50 20 50 80' stroke='%23bdc3c7' stroke-width='10' fill='none'/><path d='M20 15 L20 25' stroke='%233498db' stroke-width='4'/><path d='M30 15 L30 25' stroke='%233498db' stroke-width='4'/><path d='M40 16 L40 24' stroke='%233498db' stroke-width='4'/><circle cx='50' cy='70' r='15' fill='%23ecf0f1' opacity='0.8' stroke='%23bdc3c7'/></svg>"
-            },
-            {
-                de: "Das EKG-Gerät",
-                vi: "Máy điện tâm đồ",
-                bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='10' y='20' width='80' height='60' rx='5' fill='%232c3e50'/><rect x='15' y='25' width='70' height='40' fill='%23000'/><path d='M15 45 L30 45 L35 30 L45 60 L55 25 L65 45 L85 45' stroke='%232ecc71' stroke-width='2' fill='none'/><circle cx='25' cy='73' r='3' fill='%23e74c3c'/><circle cx='35' cy='73' r='3' fill='%23f1c40f'/><circle cx='45' cy='73' r='3' fill='%233498db'/></svg>"
-            }
+            { de: "Das Infusionsgerät / Der Infusionsständer", vi: "Máy truyền dịch / Cây treo dịch", beispiel: "Die Infusion hängt am Infusionsständer neben dem Bett.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='35' y='20' width='30' height='40' rx='5' fill='%23ecf0f1' stroke='%23bdc3c7' stroke-width='3'/><path d='M50 10 L50 20 M50 60 L50 90 M45 70 L55 70 M45 80 L55 80' stroke='%237f8c8d' stroke-width='3'/><text x='50' y='45' font-family='sans-serif' font-size='12' fill='%23e74c3c' text-anchor='middle'>NaCl</text><path d='M10 90 L90 90 M20 90 L20 10 L50 10' stroke='%232c3e50' stroke-width='4' fill='none'/></svg>" },
+            { de: "Die Magensonde", vi: "Ống thông dạ dày", beispiel: "Der bewusstlose Patient wird über eine Magensonde ernährt.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M40 70 Q20 90 50 90 Q80 90 70 70 Q60 50 60 40 L60 20' stroke='%23e74c3c' stroke-width='4' fill='%23ffbaba'/><path d='M60 10 L60 60 Q60 70 45 75' stroke='%233498db' stroke-width='3' fill='none'/></svg>" },
+            { de: "Der Blasenkatheter (DK)", vi: "Ống thông tiểu", beispiel: "Nach der Operation wird ein Blasenkatheter gelegt.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M20 80 Q40 60 70 30' stroke='%23f1c40f' stroke-width='8' fill='none'/><circle cx='75' cy='25' r='12' fill='%23f39c12' opacity='0.8'/><path d='M20 80 L10 90 M20 80 L30 90' stroke='%23e67e22' stroke-width='6' fill='none'/></svg>" },
+            { de: "Die Sauerstoffmaske", vi: "Mặt nạ oxy", beispiel: "Der Patient atmet durch eine Sauerstoffmaske.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M30 30 L70 30 L80 70 L20 70 Z' fill='%23ecf0f1' opacity='0.7' stroke='%23bdc3c7' stroke-width='2'/><path d='M50 70 L50 95 M50 95 L80 95' stroke='%233498db' stroke-width='4' fill='none'/></svg>" },
+            { de: "Der Beatmungsschlauch", vi: "Ống nội khí quản", beispiel: "Der Beatmungsschlauch wird in die Luftröhre eingeführt.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M20 20 Q50 20 50 80' stroke='%23bdc3c7' stroke-width='10' fill='none'/><path d='M20 15 L20 25' stroke='%233498db' stroke-width='4'/><path d='M30 15 L30 25' stroke='%233498db' stroke-width='4'/><circle cx='50' cy='70' r='15' fill='%23ecf0f1' opacity='0.8' stroke='%23bdc3c7'/></svg>" },
+            { de: "Das EKG-Gerät", vi: "Máy điện tâm đồ", beispiel: "Das EKG-Gerät überwacht kontinuierlich den Herzrhythmus.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='10' y='20' width='80' height='60' rx='5' fill='%232c3e50'/><rect x='15' y='25' width='70' height='40' fill='%23000'/><path d='M15 45 L30 45 L35 30 L45 60 L55 25 L65 45 L85 45' stroke='%232ecc71' stroke-width='2' fill='none'/></svg>" }
+        ]
+    },
+    umwelt: {
+        titel: "🌍 Umwelt & Nachhaltigkeit",
+        woerter: [
+            { de: "Die Mülltrennung", vi: "Phân loại rác", beispiel: "In Deutschland ist die Mülltrennung sehr wichtig.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='10' y='40' width='22' height='45' rx='3' fill='%23f1c40f'/><rect x='39' y='40' width='22' height='45' rx='3' fill='%232ecc71'/><rect x='68' y='40' width='22' height='45' rx='3' fill='%233498db'/><text x='21' y='70' font-size='10' fill='white' text-anchor='middle'>Bio</text><text x='50' y='70' font-size='10' fill='white' text-anchor='middle'>Glas</text><text x='79' y='70' font-size='10' fill='white' text-anchor='middle'>Papier</text></svg>" },
+            { de: "Die Solaranlage", vi: "Tấm pin mặt trời", beispiel: "Mit einer Solaranlage auf dem Dach kann man Strom sparen.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='10' y='30' width='80' height='50' rx='3' fill='%231a252f'/><line x1='10' y1='46' x2='90' y2='46' stroke='%23f1c40f' stroke-width='2'/><line x1='10' y1='62' x2='90' y2='62' stroke='%23f1c40f' stroke-width='2'/><line x1='37' y1='30' x2='37' y2='80' stroke='%23f1c40f' stroke-width='2'/><line x1='63' y1='30' x2='63' y2='80' stroke='%23f1c40f' stroke-width='2'/><circle cx='50' cy='18' r='8' fill='%23f1c40f'/></svg>" },
+            { de: "Die Plastikflasche", vi: "Chai nhựa", beispiel: "Plastikflaschen sollten recycelt werden.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='40' y='10' width='20' height='10' rx='3' fill='%2395a5a6'/><path d='M35 20 Q30 30 30 40 L30 85 Q30 90 50 90 Q70 90 70 85 L70 40 Q70 30 65 20 Z' fill='%233498db' opacity='0.6' stroke='%232980b9' stroke-width='2'/></svg>" },
+            { de: "Das Elektroauto", vi: "Xe điện", beispiel: "Das Elektroauto verursacht keine direkten CO₂-Emissionen.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='10' y='45' width='80' height='35' rx='8' fill='%232ecc71'/><path d='M25 45 Q35 20 65 20 Q80 20 85 45' fill='%2327ae60'/><circle cx='25' cy='80' r='10' fill='%232c3e50'/><circle cx='75' cy='80' r='10' fill='%232c3e50'/><text x='50' y='65' font-size='18' fill='%23f1c40f' text-anchor='middle'>⚡</text></svg>" },
+            { de: "Das Recycling", vi: "Tái chế", beispiel: "Durch Recycling werden wertvolle Rohstoffe wiedergewonnen.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M50 15 L65 40 L50 35 L50 55 L35 30 Z' fill='%232ecc71'/><path d='M75 55 L50 55 L57 70 L38 70 L55 90 L72 70 L53 70 Z' fill='%2327ae60'/><path d='M25 55 L38 30 L45 45 L60 20 L25 20 L32 35 Z' fill='%2322a85a'/></svg>" },
+            { de: "Der Kompost", vi: "Phân hữu cơ / ủ rác", beispiel: "Küchenabfälle kann man zu Kompost verarbeiten.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M15 70 Q50 40 85 70 L85 90 L15 90 Z' fill='%238B4513'/><circle cx='35' cy='60' r='8' fill='%232ecc71'/><circle cx='55' cy='55' r='6' fill='%2327ae60'/><circle cx='70' cy='62' r='7' fill='%2322a85a'/></svg>" },
+            { de: "Die Windenergie", vi: "Năng lượng gió", beispiel: "Windenergie ist eine der wichtigsten erneuerbaren Energiequellen.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><line x1='50' y1='20' x2='50' y2='90' stroke='%23bdc3c7' stroke-width='4'/><path d='M50 35 Q70 25 65 45 Z' fill='%233498db'/><path d='M50 35 Q30 25 35 45 Z' fill='%232980b9'/><path d='M50 35 Q50 10 60 30 Z' fill='%231a6ca8'/><circle cx='50' cy='35' r='4' fill='%232c3e50'/></svg>" },
+            { de: "Der Wasserverbrauch", vi: "Mức tiêu thụ nước", beispiel: "Ein langer Dusche erhöht den Wasserverbrauch stark.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M50 10 Q70 35 70 55 A20 20 0 0 1 30 55 Q30 35 50 10 Z' fill='%233498db'/><text x='50' y='72' font-size='12' fill='white' text-anchor='middle'>💧</text></svg>" }
+        ]
+    },
+    kulinarik: {
+        titel: "🍽️ Kulinarik & Essen",
+        woerter: [
+            { de: "Das Vollkornbrot", vi: "Bánh mì nguyên cám", beispiel: "Vollkornbrot ist gesünder als Weißbrot.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M15 50 Q15 25 50 25 Q85 25 85 50 L85 75 Q85 80 50 80 Q15 80 15 75 Z' fill='%23a0522d'/><path d='M20 50 Q20 35 50 35 Q80 35 80 50' fill='%23c8a06e'/></svg>" },
+            { de: "Die Zutat", vi: "Nguyên liệu", beispiel: "Die wichtigste Zutat für diesen Kuchen ist Butter.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='30' cy='35' r='12' fill='%23e74c3c'/><circle cx='60' cy='30' r='10' fill='%23f1c40f'/><circle cx='50' cy='60' r='14' fill='%232ecc71'/><circle cx='75' cy='55' r='8' fill='%23e67e22'/></svg>" },
+            { de: "Das Rezept", vi: "Công thức nấu ăn", beispiel: "Hast du ein gutes Rezept für Schwarzwälder Kirschtorte?", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='20' y='10' width='60' height='80' rx='4' fill='%23fff9e6' stroke='%23ddd' stroke-width='2'/><line x1='30' y1='30' x2='70' y2='30' stroke='%23ccc' stroke-width='2'/><line x1='30' y1='42' x2='70' y2='42' stroke='%23ccc' stroke-width='2'/><line x1='30' y1='54' x2='70' y2='54' stroke='%23ccc' stroke-width='2'/><text x='50' y='22' font-size='10' fill='%23e67e22' text-anchor='middle' font-weight='bold'>Rezept</text></svg>" },
+            { de: "Der Aufschnitt", vi: "Thịt nguội", beispiel: "Zum Frühstück gibt es Brot mit Aufschnitt und Käse.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><ellipse cx='50' cy='55' rx='35' ry='20' fill='%23e8a87c'/><ellipse cx='50' cy='48' rx='35' ry='20' fill='%23d4856a'/><ellipse cx='50' cy='42' rx='35' ry='20' fill='%23c0392b' opacity='0.8'/></svg>" },
+            { de: "Die Portion", vi: "Khẩu phần", beispiel: "Eine Portion Spaghetti reicht für zwei Personen.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><ellipse cx='50' cy='65' rx='38' ry='20' fill='%23ecf0f1' stroke='%23bdc3c7' stroke-width='2'/><ellipse cx='50' cy='55' rx='38' ry='20' fill='%23fff' stroke='%23bdc3c7' stroke-width='2'/><path d='M25 55 Q50 35 75 55' fill='%23f39c12' opacity='0.7'/></svg>" },
+            { de: "Das Gewürz", vi: "Gia vị", beispiel: "Salz und Pfeffer sind die häufigsten Gewürze in der deutschen Küche.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='30' y='30' width='18' height='50' rx='8' fill='%23ecf0f1' stroke='%23bdc3c7' stroke-width='2'/><rect x='52' y='30' width='18' height='50' rx='8' fill='%232c3e50'/><text x='39' y='60' font-size='10' fill='%23555' text-anchor='middle'>S</text><text x='61' y='60' font-size='10' fill='white' text-anchor='middle'>P</text></svg>" },
+            { de: "Die Speisekarte", vi: "Thực đơn", beispiel: "Darf ich bitte die Speisekarte sehen?", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='25' y='10' width='50' height='80' rx='4' fill='%23c0392b'/><rect x='28' y='13' width='44' height='74' rx='3' fill='%23fff9e6'/><text x='50' y='35' font-size='9' fill='%23c0392b' text-anchor='middle' font-weight='bold'>SPEISE-KARTE</text></svg>" },
+            { de: "Das Leitungswasser", vi: "Nước máy", beispiel: "In Deutschland kann man Leitungswasser bedenkenlos trinken.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='38' y='15' width='24' height='45' rx='4' fill='%23bdc3c7'/><path d='M50 60 Q40 70 40 80 Q40 92 50 92 Q60 92 60 80 Q60 70 50 60 Z' fill='%233498db' opacity='0.8'/><rect x='55' y='28' width='18' height='8' rx='3' fill='%237f8c8d'/></svg>" }
+        ]
+    },
+    arbeit: {
+        titel: "💼 Arbeit & Beruf",
+        woerter: [
+            { de: "Das Vorstellungsgespräch", vi: "Buổi phỏng vấn", beispiel: "Morgen habe ich ein Vorstellungsgespräch bei einer Firma.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='35' cy='30' r='12' fill='%23f39c12'/><circle cx='65' cy='30' r='12' fill='%233498db'/><rect x='15' y='50' width='30' height='35' rx='4' fill='%23e67e22'/><rect x='55' y='50' width='30' height='35' rx='4' fill='%232980b9'/><line x1='45' y1='50' x2='55' y2='50' stroke='%23555' stroke-width='2' stroke-dasharray='3'/></svg>" },
+            { de: "Der Lebenslauf", vi: "CV / Sơ yếu lý lịch", beispiel: "Bitte schicken Sie Ihren Lebenslauf per E-Mail.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='15' y='10' width='70' height='80' rx='4' fill='white' stroke='%23bdc3c7' stroke-width='2'/><circle cx='35' cy='30' r='10' fill='%23ecf0f1' stroke='%23bdc3c7' stroke-width='2'/><line x1='50' y1='25' x2='75' y2='25' stroke='%23bdc3c7' stroke-width='2'/><line x1='50' y1='33' x2='75' y2='33' stroke='%23bdc3c7' stroke-width='2'/><line x1='20' y1='50' x2='80' y2='50' stroke='%23bdc3c7' stroke-width='2'/><line x1='20' y1='62' x2='80' y2='62' stroke='%23bdc3c7' stroke-width='2'/></svg>" },
+            { de: "Die Überstunden", vi: "Giờ làm thêm", beispiel: "Diese Woche muss ich leider Überstunden machen.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='50' r='35' fill='none' stroke='%23bdc3c7' stroke-width='4'/><line x1='50' y1='50' x2='50' y2='22' stroke='%232c3e50' stroke-width='3'/><line x1='50' y1='50' x2='68' y2='60' stroke='%23e74c3c' stroke-width='3'/><text x='72' y='28' font-size='18' fill='%23e74c3c'>+</text></svg>" },
+            { de: "Das Gehalt", vi: "Lương", beispiel: "Über das Gehalt wird im Bewerbungsgespräch gesprochen.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='15' y='30' width='70' height='50' rx='5' fill='%232ecc71'/><circle cx='50' cy='55' r='12' fill='%23f1c40f'/><text x='50' y='60' font-size='14' fill='%23a0522d' text-anchor='middle' font-weight='bold'>€</text></svg>" },
+            { de: "Die Kündigung", vi: "Thông báo nghỉ việc", beispiel: "Er hat eine Kündigung vom Arbeitgeber erhalten.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='15' y='20' width='70' height='60' rx='4' fill='%23fff' stroke='%23e74c3c' stroke-width='3'/><line x1='25' y1='40' x2='75' y2='40' stroke='%23bdc3c7' stroke-width='2'/><line x1='25' y1='55' x2='75' y2='55' stroke='%23bdc3c7' stroke-width='2'/><path d='M60 58 L75 73 M75 58 L60 73' stroke='%23e74c3c' stroke-width='3'/></svg>" },
+            { de: "Die Fortbildung", vi: "Đào tạo nâng cao", beispiel: "Der Arbeitgeber bezahlt die Fortbildung seiner Mitarbeiter.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='15' y='15' width='70' height='55' rx='4' fill='%233498db'/><rect x='18' y='18' width='64' height='49' rx='3' fill='%23fff'/><line x1='25' y1='35' x2='75' y2='35' stroke='%23bdc3c7' stroke-width='2'/><line x1='25' y1='50' x2='75' y2='50' stroke='%23bdc3c7' stroke-width='2'/><path d='M40 75 L50 90 L60 75' fill='%233498db'/></svg>" },
+            { de: "Das Homeoffice", vi: "Làm việc tại nhà", beispiel: "Seit der Pandemie arbeiten viele Menschen im Homeoffice.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M50 15 L80 40 L80 85 L20 85 L20 40 Z' fill='%23ecf0f1' stroke='%23bdc3c7' stroke-width='2'/><rect x='35' y='55' width='30' height='20' rx='2' fill='%233498db'/><path d='M38 45 Q50 30 62 45' fill='%23f1c40f'/></svg>" },
+            { de: "Die Stellenanzeige", vi: "Tin tuyển dụng", beispiel: "Ich habe die Stellenanzeige online gesehen.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='10' y='15' width='80' height='70' rx='5' fill='%23fff9e6' stroke='%23f39c12' stroke-width='3'/><text x='50' y='38' font-size='10' fill='%23e67e22' text-anchor='middle' font-weight='bold'>STELLE GESUCHT</text><line x1='18' y1='55' x2='82' y2='55' stroke='%23eee' stroke-width='2'/><line x1='18' y1='68' x2='82' y2='68' stroke='%23eee' stroke-width='2'/></svg>" }
+        ]
+    },
+    gesundheit: {
+        titel: "💊 Gesundheit im Alltag",
+        woerter: [
+            { de: "Der Hausarzt", vi: "Bác sĩ gia đình", beispiel: "Ich gehe zum Hausarzt, wenn ich krank bin.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='28' r='15' fill='%23f39c12'/><rect x='30' y='48' width='40' height='40' rx='5' fill='%233498db'/><path d='M42 58 L42 78 M32 68 L52 68' stroke='white' stroke-width='4'/></svg>" },
+            { de: "Das Medikament", vi: "Thuốc", beispiel: "Das Medikament muss dreimal täglich eingenommen werden.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='30' y='20' width='40' height='60' rx='20' fill='%23e74c3c'/><rect x='30' y='50' width='40' height='30' rx='0' fill='white'/><rect x='30' y='65' width='40' height='15' rx='20' fill='white'/></svg>" },
+            { de: "Die Krankenversicherung", vi: "Bảo hiểm y tế", beispiel: "In Deutschland ist die Krankenversicherung Pflicht.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='15' y='20' width='70' height='60' rx='5' fill='%232ecc71'/><path d='M30 38 L46 38 L46 28 L54 28 L54 38 L70 38 L70 54 L54 54 L54 64 L46 64 L46 54 L30 54 Z' fill='white'/></svg>" },
+            { de: "Die Allergie", vi: "Dị ứng", beispiel: "Im Frühling leide ich unter einer Pollenallergie.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='40' r='20' fill='%23f1c40f' opacity='0.7'/><path d='M35 55 Q40 80 50 85 Q60 80 65 55' fill='%23ecf0f1' stroke='%23bdc3c7' stroke-width='2'/><circle cx='42' cy='62' r='3' fill='%23e74c3c'/><circle cx='58' cy='62' r='3' fill='%23e74c3c'/></svg>" },
+            { de: "Das Rezept (vom Arzt)", vi: "Đơn thuốc", beispiel: "Der Arzt hat mir ein Rezept für Antibiotika ausgestellt.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='20' y='15' width='60' height='70' rx='4' fill='white' stroke='%23bdc3c7' stroke-width='2'/><text x='50' y='38' font-size='22' fill='%233498db' text-anchor='middle' font-weight='bold'>℞</text><line x1='28' y1='52' x2='72' y2='52' stroke='%23bdc3c7' stroke-width='2'/><line x1='28' y1='65' x2='72' y2='65' stroke='%23bdc3c7' stroke-width='2'/></svg>" },
+            { de: "Die Erkältung", vi: "Cảm cúm", beispiel: "Im Winter bekommt man leicht eine Erkältung.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='42' r='25' fill='%23f8d7da'/><circle cx='42' cy='38' r='4' fill='%232c3e50'/><circle cx='58' cy='38' r='4' fill='%232c3e50'/><path d='M38 54 Q50 62 62 54' stroke='%23e74c3c' stroke-width='2' fill='none'/><path d='M44 68 Q50 76 56 68' stroke='%2395a5a6' stroke-width='3' fill='none'/></svg>" },
+            { de: "Die Apotheke", vi: "Hiệu thuốc", beispiel: "Die Apotheke ist um die Ecke.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='15' y='35' width='70' height='55' rx='3' fill='%23ecf0f1' stroke='%23bdc3c7' stroke-width='2'/><path d='M15 35 L50 10 L85 35' fill='%23e74c3c'/><rect x='38' y='48' width='24' height='24' rx='3' fill='%232ecc71'/><path d='M44 55 L56 55 M50 49 L50 61' stroke='white' stroke-width='3'/></svg>" },
+            { de: "Die Impfung", vi: "Tiêm chủng / Vắc-xin", beispiel: "Kinder bekommen viele Impfungen in den ersten Lebensjahren.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='38' y='25' width='24' height='45' rx='5' fill='%23ecf0f1' stroke='%23bdc3c7' stroke-width='2'/><rect x='40' y='38' width='20' height='28' fill='%233498db' opacity='0.5'/><rect x='46' y='18' width='8' height='10' fill='%2395a5a6'/><polygon points='50,8 46,18 54,18' fill='%237f8c8d'/></svg>" }
+        ]
+    },
+    technologie: {
+        titel: "💻 Technologie & Medien",
+        woerter: [
+            { de: "Das Smartphone", vi: "Điện thoại thông minh", beispiel: "Fast jeder Mensch besitzt heute ein Smartphone.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='28' y='10' width='44' height='80' rx='8' fill='%232c3e50'/><rect x='32' y='18' width='36' height='58' rx='3' fill='%233498db'/><circle cx='50' cy='83' r='4' fill='%237f8c8d'/></svg>" },
+            { de: "Die App", vi: "Ứng dụng", beispiel: "Es gibt eine App, mit der man Deutsch lernen kann.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='15' y='15' width='30' height='30' rx='8' fill='%23e74c3c'/><rect x='55' y='15' width='30' height='30' rx='8' fill='%233498db'/><rect x='15' y='55' width='30' height='30' rx='8' fill='%232ecc71'/><rect x='55' y='55' width='30' height='30' rx='8' fill='%23f39c12'/><text x='30' y='36' font-size='16' fill='white' text-anchor='middle'>A</text><text x='70' y='36' font-size='16' fill='white' text-anchor='middle'>B</text><text x='30' y='76' font-size='16' fill='white' text-anchor='middle'>C</text><text x='70' y='76' font-size='16' fill='white' text-anchor='middle'>D</text></svg>" },
+            { de: "Das soziale Netzwerk", vi: "Mạng xã hội", beispiel: "Viele Menschen verbringen viel Zeit in sozialen Netzwerken.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='50' r='8' fill='%233498db'/><circle cx='20' cy='30' r='6' fill='%23e74c3c'/><circle cx='80' cy='30' r='6' fill='%232ecc71'/><circle cx='20' cy='70' r='6' fill='%23f39c12'/><circle cx='80' cy='70' r='6' fill='%239b59b6'/><line x1='50' y1='50' x2='20' y2='30' stroke='%23bdc3c7' stroke-width='2'/><line x1='50' y1='50' x2='80' y2='30' stroke='%23bdc3c7' stroke-width='2'/><line x1='50' y1='50' x2='20' y2='70' stroke='%23bdc3c7' stroke-width='2'/><line x1='50' y1='50' x2='80' y2='70' stroke='%23bdc3c7' stroke-width='2'/></svg>" },
+            { de: "Der Datenschutz", vi: "Bảo vệ dữ liệu", beispiel: "In der EU gilt die Datenschutz-Grundverordnung (DSGVO).", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M50 10 Q70 20 80 40 Q80 70 50 90 Q20 70 20 40 Q30 20 50 10 Z' fill='%232c3e50'/><rect x='35' y='45' width='30' height='22' rx='3' fill='%23ecf0f1'/><circle cx='50' cy='42' r='10' fill='none' stroke='%23ecf0f1' stroke-width='4'/></svg>" },
+            { de: "Das Passwort", vi: "Mật khẩu", beispiel: "Ein sicheres Passwort sollte mindestens 8 Zeichen haben.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='20' y='45' width='60' height='40' rx='5' fill='%23f39c12'/><rect x='35' y='35' width='30' height='20' rx='0' fill='none' stroke='%23e67e22' stroke-width='6'/><circle cx='50' cy='62' r='6' fill='%23fff'/><line x1='50' y1='66' x2='50' y2='74' stroke='%23fff' stroke-width='3'/></svg>" },
+            { de: "Die künstliche Intelligenz", vi: "Trí tuệ nhân tạo", beispiel: "Künstliche Intelligenz verändert die Arbeitswelt.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='25' y='20' width='50' height='60' rx='10' fill='%232c3e50'/><circle cx='40' cy='40' r='5' fill='%232ecc71'/><circle cx='60' cy='40' r='5' fill='%232ecc71'/><path d='M35 60 Q50 70 65 60' stroke='%232ecc71' stroke-width='2' fill='none'/><path d='M25 35 L15 35 M25 50 L15 50 M75 35 L85 35 M75 50 L85 50' stroke='%232ecc71' stroke-width='3'/></svg>" },
+            { de: "Das Video-Streaming", vi: "Xem video trực tuyến", beispiel: "Video-Streaming hat das klassische Fernsehen verändert.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='10' y='20' width='80' height='55' rx='5' fill='%232c3e50'/><rect x='14' y='24' width='72' height='47' rx='3' fill='%23e74c3c'/><polygon points='42,38 42,58 65,48' fill='white'/></svg>" },
+            { de: "Die Suchmaschine", vi: "Công cụ tìm kiếm", beispiel: "Mit einer Suchmaschine findet man schnell Informationen.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='42' cy='42' r='25' fill='none' stroke='%234285f4' stroke-width='6'/><line x1='60' y1='60' x2='82' y2='82' stroke='%23555' stroke-width='8' stroke-linecap='round'/></svg>" }
+        ]
+    },
+    gesellschaft: {
+        titel: "🏘️ Gesellschaft & Alltag",
+        woerter: [
+            { de: "Das Ehrenamt", vi: "Công việc tình nguyện", beispiel: "Viele Menschen engagieren sich ehrenamtlich in Vereinen.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M50 80 Q20 60 20 40 A15 15 0 0 1 50 30 A15 15 0 0 1 80 40 Q80 60 50 80 Z' fill='%23e74c3c'/><path d='M35 45 L45 55 L65 35' stroke='white' stroke-width='5' fill='none' stroke-linecap='round'/></svg>" },
+            { de: "Die Nachbarschaft", vi: "Hàng xóm / khu phố", beispiel: "Eine gute Nachbarschaft ist wichtig für das Wohlbefinden.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M10 55 L30 30 L50 55' fill='%23e74c3c'/><path d='M50 55 L70 30 L90 55' fill='%23c0392b'/><rect x='15' y='55' width='30' height='35' fill='%23ecf0f1'/><rect x='55' y='55' width='30' height='35' fill='%23bdc3c7'/></svg>" },
+            { de: "Die Integration", vi: "Hội nhập", beispiel: "Die Integration von Migranten ist eine gesellschaftliche Aufgabe.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='30' cy='50' r='15' fill='%23e74c3c' opacity='0.7'/><circle cx='50' cy='50' r='15' fill='%23f39c12' opacity='0.7'/><circle cx='70' cy='50' r='15' fill='%232ecc71' opacity='0.7'/></svg>" },
+            { de: "Die Demokratie", vi: "Nền dân chủ", beispiel: "In einer Demokratie haben alle Bürger das Wahlrecht.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='20' y='40' width='60' height='45' rx='4' fill='%23ecf0f1' stroke='%23bdc3c7' stroke-width='2'/><path d='M20 40 Q50 10 80 40' fill='%232c3e50'/><circle cx='50' cy='30' r='8' fill='%23f1c40f'/></svg>" },
+            { de: "Die Gleichberechtigung", vi: "Bình đẳng", beispiel: "Gleichberechtigung zwischen Männern und Frauen ist ein Grundrecht.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='32' cy='30' r='12' fill='%23e74c3c' opacity='0.8'/><circle cx='68' cy='30' r='12' fill='%233498db' opacity='0.8'/><line x1='25' y1='57' x2='75' y2='57' stroke='%23555' stroke-width='3'/><rect x='45' y='45' width='10' height='20' rx='2' fill='%23555'/></svg>" },
+            { de: "Der Verein", vi: "Câu lạc bộ / hội", beispiel: "Ich bin Mitglied in einem Sportverein.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='35' r='12' fill='%23f39c12'/><circle cx='22' cy='50' r='10' fill='%23e74c3c'/><circle cx='78' cy='50' r='10' fill='%232ecc71'/><path d='M30 60 Q50 75 70 60' stroke='%232c3e50' stroke-width='3' fill='none'/></svg>" },
+            { de: "Das Gesetz", vi: "Luật pháp", beispiel: "Das Gesetz schützt die Rechte aller Bürger.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='43' y='10' width='14' height='75' rx='3' fill='%23a0522d'/><rect x='20' y='40' width='60' height='8' rx='3' fill='%23c8a06e'/><path d='M20 48 Q20 65 35 65 Q50 65 50 48' fill='none' stroke='%23bdc3c7' stroke-width='3'/><path d='M80 48 Q80 65 65 65 Q50 65 50 48' fill='none' stroke='%23bdc3c7' stroke-width='3'/></svg>" },
+            { de: "Die Tradition", vi: "Truyền thống", beispiel: "Das Oktoberfest ist eine bekannte bayerische Tradition.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M30 80 Q30 50 50 35 Q70 50 70 80 Z' fill='%23e67e22' opacity='0.7'/><path d='M38 80 Q38 55 50 44 Q62 55 62 80 Z' fill='%23f39c12' opacity='0.9'/><circle cx='50' cy='30' r='10' fill='%23f1c40f'/></svg>" }
+        ]
+    },
+    studium: {
+        titel: "🎓 Studium & Bildung",
+        woerter: [
+            { de: "Die Vorlesung", vi: "Bài giảng đại học", beispiel: "Die Vorlesung beginnt um 8 Uhr morgens.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='10' y='15' width='80' height='55' rx='4' fill='%232c3e50'/><rect x='13' y='18' width='74' height='49' rx='3' fill='%2334495e'/><circle cx='35' cy='40' r='8' fill='%23f39c12'/><line x1='48' y1='35' x2='78' y2='35' stroke='%23ecf0f1' stroke-width='2'/><line x1='48' y1='43' x2='78' y2='43' stroke='%23ecf0f1' stroke-width='2'/><rect x='10' y='70' width='80' height='20' rx='3' fill='%23bdc3c7'/></svg>" },
+            { de: "Das Semester", vi: "Học kỳ", beispiel: "Das Wintersemester beginnt im Oktober.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='15' y='20' width='70' height='65' rx='4' fill='white' stroke='%23bdc3c7' stroke-width='2'/><rect x='15' y='20' width='70' height='18' rx='4' fill='%233498db'/><text x='50' y='33' font-size='10' fill='white' text-anchor='middle'>Oktober</text><line x1='25' y1='50' x2='75' y2='50' stroke='%23eee' stroke-width='2'/><line x1='25' y1='63' x2='75' y2='63' stroke='%23eee' stroke-width='2'/></svg>" },
+            { de: "Die Hausarbeit", vi: "Tiểu luận / bài tập lớn", beispiel: "Die Hausarbeit muss bis Ende des Semesters abgegeben werden.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='20' y='10' width='60' height='80' rx='4' fill='%23fff9e6' stroke='%23f39c12' stroke-width='2'/><line x1='30' y1='30' x2='70' y2='30' stroke='%23bdc3c7' stroke-width='2'/><line x1='30' y1='45' x2='70' y2='45' stroke='%23bdc3c7' stroke-width='2'/><line x1='30' y1='60' x2='70' y2='60' stroke='%23bdc3c7' stroke-width='2'/></svg>" },
+            { de: "Die Prüfung", vi: "Kỳ thi", beispiel: "Nächste Woche schreibe ich eine wichtige Prüfung.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='15' y='15' width='70' height='80' rx='4' fill='white' stroke='%23bdc3c7' stroke-width='2'/><text x='50' y='38' font-size='12' fill='%23e74c3c' text-anchor='middle' font-weight='bold'>Prüfung</text><line x1='25' y1='50' x2='75' y2='50' stroke='%23eee' stroke-width='2'/><line x1='25' y1='65' x2='75' y2='65' stroke='%23eee' stroke-width='2'/></svg>" },
+            { de: "Der Studiengang", vi: "Ngành học", beispiel: "Sie studiert im Studiengang Informatik.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M50 15 L80 30 L80 50 Q80 75 50 85 Q20 75 20 50 L20 30 Z' fill='%23e74c3c' opacity='0.2' stroke='%23c0392b' stroke-width='2'/><text x='50' y='58' font-size='30' text-anchor='middle'>🎓</text></svg>" },
+            { de: "Die Bibliothek", vi: "Thư viện", beispiel: "In der Bibliothek kann man ruhig lernen.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='15' y='20' width='15' height='65' rx='3' fill='%23e74c3c'/><rect x='33' y='25' width='14' height='60' rx='3' fill='%233498db'/><rect x='50' y='18' width='16' height='67' rx='3' fill='%232ecc71'/><rect x='69' y='23' width='15' height='62' rx='3' fill='%23f39c12'/><rect x='10' y='85' width='80' height='5' rx='2' fill='%23a0522d'/></svg>" },
+            { de: "Das Stipendium", vi: "Học bổng", beispiel: "Sie hat ein Stipendium vom DAAD bekommen.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='40' r='25' fill='%23f1c40f' stroke='%23e67e22' stroke-width='3'/><text x='50' y='47' font-size='22' fill='%23a0522d' text-anchor='middle' font-weight='bold'>€</text><path d='M35 65 L30 90 L50 80 L70 90 L65 65' fill='%23f1c40f'/></svg>" },
+            { de: "Die Abschlussarbeit", vi: "Luận văn tốt nghiệp", beispiel: "Seine Abschlussarbeit hat er über klimaneutrales Bauen geschrieben.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='18' y='10' width='55' height='75' rx='4' fill='%232c3e50'/><rect x='22' y='14' width='47' height='67' rx='3' fill='%23ecf0f1'/><line x1='28' y1='28' x2='63' y2='28' stroke='%23bdc3c7' stroke-width='2'/><line x1='28' y1='42' x2='63' y2='42' stroke='%23bdc3c7' stroke-width='2'/><line x1='28' y1='56' x2='63' y2='56' stroke='%23bdc3c7' stroke-width='2'/></svg>" }
+        ]
+    },
+    saetze: {
+        titel: "💬 Nützliche Sätze & Redewendungen",
+        woerter: [
+            { de: "Es kommt darauf an...", vi: "Điều đó phụ thuộc vào...", beispiel: "Es kommt darauf an, wie viel Zeit man hat.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='50' r='35' fill='%23ecf0f1' stroke='%23bdc3c7' stroke-width='3'/><text x='50' y='58' font-size='35' text-anchor='middle'>🤔</text></svg>" },
+            { de: "Meiner Meinung nach...", vi: "Theo ý kiến của tôi...", beispiel: "Meiner Meinung nach ist das eine gute Idee.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M15 20 Q15 10 25 10 L75 10 Q85 10 85 20 L85 55 Q85 65 75 65 L55 65 L45 80 L40 65 L25 65 Q15 65 15 55 Z' fill='%233498db'/><line x1='28' y1='28' x2='72' y2='28' stroke='white' stroke-width='2'/><line x1='28' y1='40' x2='72' y2='40' stroke='white' stroke-width='2'/><line x1='28' y1='52' x2='55' y2='52' stroke='white' stroke-width='2'/></svg>" },
+            { de: "Auf der einen Seite... auf der anderen Seite...", vi: "Một mặt... mặt khác...", beispiel: "Auf der einen Seite spart man Geld, auf der anderen Seite verliert man Zeit.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='43' y='10' width='14' height='75' rx='3' fill='%23a0522d'/><rect x='20' y='40' width='60' height='8' rx='3' fill='%23c8a06e'/><circle cx='27' cy='60' r='12' fill='%232ecc71' opacity='0.8'/><circle cx='73' cy='60' r='12' fill='%23e74c3c' opacity='0.8'/><text x='27' y='64' font-size='10' fill='white' text-anchor='middle'>Pro</text><text x='73' y='64' font-size='10' fill='white' text-anchor='middle'>Con</text></svg>" },
+            { de: "Ich bin der Ansicht, dass...", vi: "Tôi có quan điểm rằng...", beispiel: "Ich bin der Ansicht, dass mehr Investitionen in Bildung nötig sind.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='35' r='18' fill='%23f39c12'/><circle cx='44' cy='31' r='3' fill='%232c3e50'/><circle cx='56' cy='31' r='3' fill='%232c3e50'/><path d='M40 42 Q50 48 60 42' stroke='%232c3e50' stroke-width='2' fill='none'/></svg>" },
+            { de: "Das hat Vor- und Nachteile.", vi: "Điều đó có ưu và nhược điểm.", beispiel: "Das Homeoffice hat Vor- und Nachteile für Arbeitnehmer.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='10' y='20' width='37' height='65' rx='5' fill='%232ecc71' opacity='0.8'/><rect x='53' y='20' width='37' height='65' rx='5' fill='%23e74c3c' opacity='0.8'/><text x='28' y='58' font-size='28' text-anchor='middle' fill='white'>+</text><text x='72' y='60' font-size='36' text-anchor='middle' fill='white'>−</text></svg>" },
+            { de: "Es ist wichtig, dass...", vi: "Điều quan trọng là...", beispiel: "Es ist wichtig, dass wir die Umwelt schützen.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='50' r='35' fill='%23e74c3c' opacity='0.2' stroke='%23e74c3c' stroke-width='3'/><text x='50' y='58' font-size='35' text-anchor='middle'>❗</text></svg>" },
+            { de: "Zusammenfassend kann man sagen...", vi: "Tóm lại có thể nói...", beispiel: "Zusammenfassend kann man sagen, dass Sport gesund ist.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><line x1='20' y1='25' x2='80' y2='25' stroke='%23bdc3c7' stroke-width='2'/><line x1='20' y1='38' x2='80' y2='38' stroke='%23bdc3c7' stroke-width='2'/><line x1='20' y1='51' x2='80' y2='51' stroke='%23bdc3c7' stroke-width='2'/><rect x='15' y='63' width='70' height='22' rx='4' fill='%233498db'/><line x1='23' y1='72' x2='77' y2='72' stroke='white' stroke-width='2'/></svg>" },
+            { de: "Ich stimme zu / Ich stimme nicht zu.", vi: "Tôi đồng ý / Tôi không đồng ý.", beispiel: "Ich stimme nicht zu, dass Homeoffice produktiver ist.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='28' cy='50' r='20' fill='%232ecc71' opacity='0.8'/><path d='M18 50 L25 58 L38 40' stroke='white' stroke-width='4' fill='none' stroke-linecap='round'/><circle cx='72' cy='50' r='20' fill='%23e74c3c' opacity='0.8'/><path d='M62 40 L82 60 M82 40 L62 60' stroke='white' stroke-width='4' stroke-linecap='round'/></svg>" }
         ]
     }
 };
 
-function showVokabelGruppe(gruppe) {
-    currentGruppe = gruppe;
-    currentVokabelIndex = 0;
-    showVokabel();
-}
-
-function showVokabel() {
-    const gruppe = vokabelGruppen[currentGruppe];
-    const wort = gruppe.woerter[currentVokabelIndex];
-    const total = gruppe.woerter.length;
-    document.getElementById("feedback-area").style.display = "none";
-    document.getElementById("message").innerHTML = `
-        <span style="font-size:16px;color:#666;">${gruppe.titel} | ${currentVokabelIndex + 1}/${total}</span><br><br>
-        <img src="${wort.bild}" alt="${wort.de}" style="width:200px;height:200px;object-fit:contain;border-radius:12px;margin:10px;" onerror="this.onerror=null; this.src='https://placehold.co/250x180/e3f2fd/1565c0?text=Bild+fehlt'"><br>
-        <b style="font-size:26px;">${wort.de}</b><br>
-        <span style="font-size:22px;color:#555;">${wort.vi}</span>
-    `;
-    const prevBtn = currentVokabelIndex > 0 ? `<button onclick="prevVokabel()" style="font-size:20px;padding:12px 22px;margin:8px;border-radius:15px;border:none;cursor:pointer;background:#eee;">⬅️ Trước</button>` : '';
-    const nextBtn = currentVokabelIndex < total - 1
-        ? `<button onclick="nextVokabel()" style="font-size:20px;padding:12px 22px;margin:8px;border-radius:15px;border:none;cursor:pointer;background:#4CAF50;color:white;">➡️ Tiếp</button>`
-        : `<button onclick="startMinigame()" style="font-size:20px;padding:12px 22px;margin:8px;border-radius:15px;border:none;cursor:pointer;background:#ff9800;color:white;">🎮 Minigame!</button>`;
-    document.getElementById("buttons").innerHTML = `
-        ${prevBtn}
-        ${nextBtn}
-        <button onclick="showMedizinMenu()" style="font-size:18px;padding:10px 20px;margin:8px;border-radius:15px;border:none;cursor:pointer;background:#eee;">🏠 Menu</button>
-    `;
-}
-
-function nextVokabel() { currentVokabelIndex++; showVokabel(); }
-function prevVokabel() { currentVokabelIndex--; showVokabel(); }
-
-// ===== MINIGAME =====
-function startMinigame() {
-    const gruppe = vokabelGruppen[currentGruppe];
-    minigameScore = 0;
-    minigameIndex = 0;
-    minigameQuestions = [...gruppe.woerter].sort(() => Math.random() - 0.5);
-    showMinigameQuestion();
-}
-
-function showMinigameQuestion() {
-    const gruppe = vokabelGruppen[currentGruppe];
-    if (minigameIndex >= minigameQuestions.length) { showMinigameResult(); return; }
-    const current = minigameQuestions[minigameIndex];
-    let wrongAnswers = gruppe.woerter.filter(w => w.de !== current.de).sort(() => Math.random() - 0.5).slice(0, 3);
-    let answers = [...wrongAnswers, current].sort(() => Math.random() - 0.5);
-    document.getElementById("feedback-area").style.display = "none";
-    document.getElementById("message").innerHTML = `
-        <span style="font-size:16px;color:#666;">🎮 Minigame | Câu ${minigameIndex + 1}/${minigameQuestions.length} | Điểm: ${minigameScore}</span><br><br>
-        <img src="${current.bild}" alt="${current.de}" style="width:200px;height:200px;object-fit:contain;border-radius:12px;margin:10px;" onerror="this.onerror=null; this.src='https://placehold.co/250x180/e3f2fd/1565c0?text=?'"><br>
-        <b>Đây là gì? / Was ist das?</b>
-    `;
-    document.getElementById("buttons").innerHTML = answers.map(a => `
-        <button onclick="checkMinigame('${encodeURIComponent(a.de)}', '${encodeURIComponent(current.de)}', '${encodeURIComponent(current.vi)}')" style="font-size:18px;padding:12px 20px;margin:8px;border-radius:15px;border:2px solid #ddd;cursor:pointer;display:block;width:90%;max-width:500px;text-align:left;">
-            ${a.de}
-        </button>
-    `).join('');
-}
-
-function checkMinigame(chosenEncoded, correctEncoded, viEncoded) {
-    const chosen = decodeURIComponent(chosenEncoded);
-    const correct = decodeURIComponent(correctEncoded);
-    const vi = decodeURIComponent(viEncoded);
-    const isCorrect = chosen === correct;
-    if (isCorrect) minigameScore++;
-    const feedbackArea = document.getElementById("feedback-area");
-    const aiCorrection = document.getElementById("ai-correction");
-    feedbackArea.style.display = "block";
-    aiCorrection.style.display = "block";
-    aiCorrection.innerHTML = `
-        <p style="font-size:22px;">${isCorrect ? "✅ Richtig! / Đúng rồi!" : "❌ Falsch! / Sai rồi!"}</p>
-        ${!isCorrect ? `<p style="font-size:18px;color:green;">✔️ Đáp án đúng: <b>${correct}</b></p>` : ""}
-        <p style="font-size:16px;">${correct} = ${vi}</p>
-        <button onclick="nextMinigame()" style="font-size:20px;padding:10px 25px;border-radius:15px;border:none;cursor:pointer;background:#4CAF50;color:white;margin-top:10px;">
-            ${minigameIndex + 1 >= minigameQuestions.length ? "🏆 Kết quả" : "➡️ Tiếp"}
-        </button>
-    `;
-}
-
-function nextMinigame() {
-    minigameIndex++;
-    document.getElementById("feedback-area").style.display = "none";
-    showMinigameQuestion();
-}
-
-function showMinigameResult() {
-    const total = minigameQuestions.length;
-    const percent = Math.round((minigameScore / total) * 100);
-    const emoji = percent >= 80 ? "🏆" : percent >= 60 ? "👍" : "💪";
-    document.getElementById("message").innerHTML = `
-        ${emoji} <b>Kết quả Minigame!</b><br><br>
-        ${minigameScore}/${total} (${percent}%)<br><br>
-        ${percent >= 80 ? "Ausgezeichnet! 🌟" : percent >= 60 ? "Gut gemacht! 👏" : "Weiter üben! 💪"}
-    `;
-    document.getElementById("buttons").innerHTML = `
-        <button onclick="startMinigame()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#ff9800;color:white;">🔄 Nochmal</button>
-        <button onclick="showVokabelGruppe(currentGruppe)" style="font-size:20px;padding:12px 22px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#e3f2fd;">📖 Ôn lại từ</button>
-        <button onclick="showMedizinMenu()" style="font-size:18px;padding:10px 20px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#eee;">⬅️ Menu</button>
-    `;
-    document.getElementById("feedback-area").style.display = "none";
-}
-
-// ===== VOKABELN QUIZ =====
 const medizinQuestions = [
-    {type:"luecke",frage:"Der Patient klagt über starken ___ an der Haut nach dem Kontakt mit Pflanzen.",antworten:["Juckreiz","Schnupfen","Heiserkeit","Abwehr"],richtig:0,erklaerung:"Juckreiz = ngứa (cảm giác ngứa trên da) / Juckreiz bedeutet das unangenehme Gefühl auf der Haut, das zum Kratzen reizt."},
+    {type:"luecke",frage:"Der Patient klagt über starken ___ an der Haut nach dem Kontakt mit Pflanzen.",antworten:["Juckreiz","Schnupfen","Heiserkeit","Abwehr"],richtig:0,erklaerung:"Juckreiz = ngứa / Juckreiz bedeutet das unangenehme Gefühl auf der Haut, das zum Kratzen reizt."},
     {type:"bedeutung",frage:"Was bedeutet 'Maßnahme' im medizinischen Kontext?",antworten:["biện pháp / Schritt zur Problemlösung","triệu chứng / Krankheitszeichen","thuốc / Medikament","bệnh nhân / kranke Person"],richtig:0,erklaerung:"Maßnahme = biện pháp / Eine Maßnahme ist ein konkreter Schritt, um ein Problem zu lösen oder zu verhindern."},
     {type:"luecke",frage:"Im Sommer ist ein ___ sehr wichtig, um Mückenstiche zu vermeiden.",antworten:["Mückenschutzmittel","Hausmittel","Impfstoff","Abwehrmechanismus"],richtig:0,erklaerung:"Mückenschutzmittel = thuốc chống muỗi / Ein Mittel, das Mücken fernhält."},
     {type:"wahl",frage:"Welches Wort passt? Das ___ schützt den Körper vor Viren und Bakterien.",antworten:["Immunsystem","Vitalzeichen","Erbgut","Gesundheitswesen"],richtig:0,erklaerung:"Immunsystem = hệ miễn dịch / Das Immunsystem ist die Abwehr des Körpers gegen Krankheitserreger."},
@@ -530,10 +420,157 @@ const medizinQuestions = [
     {type:"luecke",frage:"Eine ___ Nase und Niesen sind typische Symptome einer Erkältung.",antworten:["Schnupf-","heisere","juckende","infizierte"],richtig:0,erklaerung:"Schnupfnase = mũi bị sổ / Eine laufende oder verstopfte Nase bei Erkältung."}
 ];
 
+// ===== MENU FUNCTIONS =====
+function showVokabelHauptmenu() {
+    document.getElementById("feedback-area").style.display = "none";
+    document.getElementById("message").innerHTML = "📝 Welchen Bereich möchtest du üben?";
+    document.getElementById("buttons").innerHTML = `
+        <button onclick="showMedizinMenu()" style="font-size:22px;padding:15px 30px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#e3f2fd;">🏥 Fachbegriffe (Medizin)</button>
+        <button onclick="showAlltagMenu()" style="font-size:22px;padding:15px 30px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#dcedc8;">🏠 Alltag (Đời sống)</button>
+        <button onclick="showLessons()" style="font-size:20px;padding:10px 20px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#eee;">⬅️ Zurück</button>
+    `;
+}
+
+function showMedizinMenu() {
+    document.getElementById("feedback-area").style.display = "none";
+    document.getElementById("message").innerHTML = "🏥 Medizinische Fachbegriffe";
+    document.getElementById("buttons").innerHTML = `
+        <div style="max-width:600px;margin:0 auto;text-align:left;">
+            <p style="font-size:18px;color:#666;margin:10px 0 5px;">📖 Từ vựng theo chủ đề</p>
+            <button onclick="showVokabelGruppe('diagnostik')" style="font-size:18px;padding:12px 20px;margin:5px;border-radius:15px;border:none;cursor:pointer;background:#e3f2fd;display:block;width:100%;text-align:left;">🩺 Diagnostische Instrumente <span style="color:#999;font-size:14px;">(6 từ)</span></button>
+            <button onclick="showVokabelGruppe('verbandmaterial')" style="font-size:18px;padding:12px 20px;margin:5px;border-radius:15px;border:none;cursor:pointer;background:#fce4ec;display:block;width:100%;text-align:left;">🩹 Verbandmaterial <span style="color:#999;font-size:14px;">(8 từ)</span></button>
+            <button onclick="showVokabelGruppe('intensiv')" style="font-size:18px;padding:12px 20px;margin:5px;border-radius:15px;border:none;cursor:pointer;background:#f3e5f5;display:block;width:100%;text-align:left;">🏥 Intensivmedizinische Ausstattung <span style="color:#999;font-size:14px;">(6 từ)</span></button>
+            <hr style="margin:15px 0;border:1px solid #eee;">
+            <button onclick="startMedizin()" style="font-size:18px;padding:12px 20px;margin:5px;border-radius:15px;border:none;cursor:pointer;background:#fff3e0;display:block;width:100%;text-align:left;">🎯 Luyện tập tổng hợp <span style="color:#999;font-size:14px;">(quiz A/B/C/D)</span></button>
+        </div>
+        <button onclick="showVokabelHauptmenu()" style="font-size:18px;padding:10px 20px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#eee;">⬅️ Zurück</button>
+    `;
+}
+
+function showAlltagMenu() {
+    document.getElementById("feedback-area").style.display = "none";
+    document.getElementById("message").innerHTML = "🏠 Was möchtest du im Alltag üben? 🏠";
+    document.getElementById("buttons").innerHTML = `
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:600px;margin:0 auto;">
+            <button onclick="showVokabelGruppe('umwelt')" style="font-size:17px;padding:12px 16px;border-radius:15px;border:none;cursor:pointer;background:#e8f5e9;text-align:left;">🌍 Umwelt<br><span style="color:#999;font-size:13px;">8 từ</span></button>
+            <button onclick="showVokabelGruppe('kulinarik')" style="font-size:17px;padding:12px 16px;border-radius:15px;border:none;cursor:pointer;background:#fff8e1;text-align:left;">🍽️ Kulinarik<br><span style="color:#999;font-size:13px;">8 từ</span></button>
+            <button onclick="showVokabelGruppe('arbeit')" style="font-size:17px;padding:12px 16px;border-radius:15px;border:none;cursor:pointer;background:#e3f2fd;text-align:left;">💼 Arbeit<br><span style="color:#999;font-size:13px;">8 từ</span></button>
+            <button onclick="showVokabelGruppe('gesundheit')" style="font-size:17px;padding:12px 16px;border-radius:15px;border:none;cursor:pointer;background:#fce4ec;text-align:left;">💊 Gesundheit<br><span style="color:#999;font-size:13px;">8 từ</span></button>
+            <button onclick="showVokabelGruppe('technologie')" style="font-size:17px;padding:12px 16px;border-radius:15px;border:none;cursor:pointer;background:#f3e5f5;text-align:left;">💻 Technologie<br><span style="color:#999;font-size:13px;">8 từ</span></button>
+            <button onclick="showVokabelGruppe('gesellschaft')" style="font-size:17px;padding:12px 16px;border-radius:15px;border:none;cursor:pointer;background:#e8eaf6;text-align:left;">🏘️ Gesellschaft<br><span style="color:#999;font-size:13px;">8 từ</span></button>
+            <button onclick="showVokabelGruppe('studium')" style="font-size:17px;padding:12px 16px;border-radius:15px;border:none;cursor:pointer;background:#fff3e0;text-align:left;">🎓 Studium<br><span style="color:#999;font-size:13px;">8 từ</span></button>
+            <button onclick="showVokabelGruppe('saetze')" style="font-size:17px;padding:12px 16px;border-radius:15px;border:none;cursor:pointer;background:#e0f7fa;text-align:left;">💬 Sätze<br><span style="color:#999;font-size:13px;">8 từ</span></button>
+        </div>
+        <button onclick="showVokabelHauptmenu()" style="font-size:18px;padding:10px 20px;margin:15px 10px 5px;border-radius:20px;border:none;cursor:pointer;background:#eee;">⬅️ Zurück</button>
+    `;
+}
+
+function showVokabelGruppe(gruppe) {
+    currentGruppe = gruppe;
+    currentVokabelIndex = 0;
+    currentShuffledWoerter = [...vokabelGruppen[gruppe].woerter].sort(() => Math.random() - 0.5);
+    showVokabel();
+}
+
+function showVokabel() {
+    const gruppeTitel = vokabelGruppen[currentGruppe].titel;
+    const wort = currentShuffledWoerter[currentVokabelIndex];
+    const total = currentShuffledWoerter.length;
+    const isMedizin = ['diagnostik','verbandmaterial','intensiv'].includes(currentGruppe);
+    const backMenuFn = isMedizin ? "showMedizinMenu()" : "showAlltagMenu()";
+    document.getElementById("feedback-area").style.display = "none";
+    document.getElementById("message").innerHTML = `
+        <span style="font-size:16px;color:#666;">${gruppeTitel} | ${currentVokabelIndex + 1}/${total}</span><br><br>
+        <img src="${wort.bild}" alt="${wort.de}" style="width:200px;height:200px;object-fit:contain;border-radius:12px;margin:10px;" onerror="this.onerror=null;this.src='https://placehold.co/200x200/e3f2fd/1565c0?text=Bild'"><br>
+        <b style="font-size:26px;">${wort.de}</b><br>
+        <span style="font-size:22px;color:#555;">${wort.vi}</span><br>
+        ${wort.beispiel ? `<div style="margin-top:12px;padding:10px 16px;background:#f9f9f9;border-radius:10px;font-size:17px;color:#444;font-style:italic;max-width:500px;display:inline-block;text-align:left;">📝 <b>Beispiel:</b> ${wort.beispiel}</div>` : ''}
+    `;
+    const prevBtn = currentVokabelIndex > 0 ? `<button onclick="prevVokabel()" style="font-size:20px;padding:12px 22px;margin:8px;border-radius:15px;border:none;cursor:pointer;background:#eee;">⬅️ Trước</button>` : '';
+    const nextBtn = currentVokabelIndex < total - 1
+        ? `<button onclick="nextVokabel()" style="font-size:20px;padding:12px 22px;margin:8px;border-radius:15px;border:none;cursor:pointer;background:#4CAF50;color:white;">➡️ Tiếp</button>`
+        : `<button onclick="startMinigame()" style="font-size:20px;padding:12px 22px;margin:8px;border-radius:15px;border:none;cursor:pointer;background:#ff9800;color:white;">🎮 Minigame!</button>`;
+    document.getElementById("buttons").innerHTML = `
+        ${prevBtn}${nextBtn}
+        <button onclick="${backMenuFn}" style="font-size:18px;padding:10px 20px;margin:8px;border-radius:15px;border:none;cursor:pointer;background:#eee;">🏠 Menu</button>
+    `;
+}
+
+function nextVokabel() { currentVokabelIndex++; showVokabel(); }
+function prevVokabel() { currentVokabelIndex--; showVokabel(); }
+
+function startMinigame() {
+    minigameScore = 0;
+    minigameIndex = 0;
+    minigameQuestions = [...currentShuffledWoerter].sort(() => Math.random() - 0.5);
+    showMinigameQuestion();
+}
+
+function showMinigameQuestion() {
+    if (minigameIndex >= minigameQuestions.length) { showMinigameResult(); return; }
+    const current = minigameQuestions[minigameIndex];
+    const allWoerter = vokabelGruppen[currentGruppe].woerter;
+    const isMedizin = ['diagnostik','verbandmaterial','intensiv'].includes(currentGruppe);
+    const backMenuFn = isMedizin ? "showMedizinMenu()" : "showAlltagMenu()";
+    let wrongAnswers = allWoerter.filter(w => w.de !== current.de).sort(() => Math.random() - 0.5).slice(0, 3);
+    let answers = [...wrongAnswers, current].sort(() => Math.random() - 0.5);
+    document.getElementById("feedback-area").style.display = "none";
+    document.getElementById("message").innerHTML = `
+        <span style="font-size:16px;color:#666;">🎮 Minigame | Câu ${minigameIndex + 1}/${minigameQuestions.length} | Điểm: ${minigameScore}</span><br><br>
+        <img src="${current.bild}" alt="${current.de}" style="width:200px;height:200px;object-fit:contain;border-radius:12px;margin:10px;" onerror="this.onerror=null;this.src='https://placehold.co/200x200/e3f2fd/1565c0?text=?'"><br>
+        <b>Đây là gì? / Was ist das?</b>
+    `;
+    document.getElementById("buttons").innerHTML = answers.map(a => `
+        <button onclick="checkMinigame('${encodeURIComponent(a.de)}','${encodeURIComponent(current.de)}','${encodeURIComponent(current.vi)}')"
+            style="font-size:18px;padding:12px 20px;margin:8px;border-radius:15px;border:2px solid #ddd;cursor:pointer;display:block;width:90%;max-width:500px;text-align:left;">${a.de}</button>
+    `).join('') + `<button onclick="${backMenuFn}" style="font-size:16px;padding:8px 18px;margin:8px;border-radius:15px;border:none;cursor:pointer;background:#eee;">🏠 Menu</button>`;
+}
+
+function checkMinigame(chosenEncoded, correctEncoded, viEncoded) {
+    const chosen = decodeURIComponent(chosenEncoded);
+    const correct = decodeURIComponent(correctEncoded);
+    const vi = decodeURIComponent(viEncoded);
+    const isCorrect = chosen === correct;
+    if (isCorrect) minigameScore++;
+    document.getElementById("feedback-area").style.display = "block";
+    const aiCorrection = document.getElementById("ai-correction");
+    aiCorrection.style.display = "block";
+    aiCorrection.innerHTML = `
+        <p style="font-size:22px;">${isCorrect ? "✅ Richtig! / Đúng rồi!" : "❌ Falsch! / Sai rồi!"}</p>
+        ${!isCorrect ? `<p style="font-size:18px;color:green;">✔️ Đáp án đúng: <b>${correct}</b></p>` : ""}
+        <p style="font-size:16px;">${correct} = ${vi}</p>
+        <button onclick="nextMinigame()" style="font-size:20px;padding:10px 25px;border-radius:15px;border:none;cursor:pointer;background:#4CAF50;color:white;margin-top:10px;">
+            ${minigameIndex + 1 >= minigameQuestions.length ? "🏆 Kết quả" : "➡️ Tiếp"}
+        </button>
+    `;
+}
+
+function nextMinigame() {
+    minigameIndex++;
+    document.getElementById("feedback-area").style.display = "none";
+    showMinigameQuestion();
+}
+
+function showMinigameResult() {
+    const total = minigameQuestions.length;
+    const percent = Math.round((minigameScore / total) * 100);
+    const emoji = percent >= 80 ? "🏆" : percent >= 60 ? "👍" : "💪";
+    const isMedizin = ['diagnostik','verbandmaterial','intensiv'].includes(currentGruppe);
+    const backMenuFn = isMedizin ? "showMedizinMenu()" : "showAlltagMenu()";
+    document.getElementById("message").innerHTML = `
+        ${emoji} <b>Kết quả Minigame!</b><br><br>${minigameScore}/${total} (${percent}%)<br><br>
+        ${percent >= 80 ? "Ausgezeichnet! 🌟" : percent >= 60 ? "Gut gemacht! 👏" : "Weiter üben! 💪"}
+    `;
+    document.getElementById("buttons").innerHTML = `
+        <button onclick="startMinigame()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#ff9800;color:white;">🔄 Nochmal</button>
+        <button onclick="showVokabelGruppe(currentGruppe)" style="font-size:20px;padding:12px 22px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#e3f2fd;">📖 Ôn lại từ</button>
+        <button onclick="${backMenuFn}" style="font-size:18px;padding:10px 20px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#eee;">⬅️ Menu</button>
+    `;
+    document.getElementById("feedback-area").style.display = "none";
+}
+
 function startMedizin() {
-    score = 0;
-    currentQuestionIndex = 0;
-    questionHistory = [];
+    score = 0; currentQuestionIndex = 0; questionHistory = [];
     shuffledQuestions = [...medizinQuestions].sort(() => Math.random() - 0.5);
     showQuestion();
 }
@@ -548,10 +585,11 @@ function showQuestion() {
         <b>${q.frage}</b>
     `;
     const shuffledAnswers = q.antworten.map((a, i) => ({text: a, original: i})).sort(() => Math.random() - 0.5);
-    const labels = ["A", "B", "C", "D"];
+    const labels = ["A","B","C","D"];
     const backBtn = currentQuestionIndex > 0 ? `<button onclick="prevQuestion()" style="font-size:18px;padding:10px 20px;margin:8px;border-radius:15px;border:2px solid #ddd;cursor:pointer;background:#eee;">⬅️ Câu trước</button>` : '';
     document.getElementById("buttons").innerHTML = shuffledAnswers.map((a, i) => `
-        <button onclick="checkAnswer(${a.original}, ${q.richtig}, '${encodeURIComponent(q.erklaerung)}', '${encodeURIComponent(q.antworten[q.richtig])}')" style="font-size:18px;padding:12px 20px;margin:8px;border-radius:15px;border:2px solid #ddd;cursor:pointer;display:block;width:90%;max-width:600px;text-align:left;">
+        <button onclick="checkAnswer(${a.original},${q.richtig},'${encodeURIComponent(q.erklaerung)}','${encodeURIComponent(q.antworten[q.richtig])}')"
+            style="font-size:18px;padding:12px 20px;margin:8px;border-radius:15px;border:2px solid #ddd;cursor:pointer;display:block;width:90%;max-width:600px;text-align:left;">
             <b>${labels[i]}.</b> ${a.text}
         </button>
     `).join('') + backBtn + `<button onclick="showMedizinMenu()" style="font-size:18px;padding:10px 20px;margin:8px;border-radius:15px;border:none;cursor:pointer;background:#eee;">🏠 Menu</button>`;
@@ -560,10 +598,7 @@ function showQuestion() {
 function prevQuestion() {
     if (currentQuestionIndex > 0) {
         currentQuestionIndex--;
-        if (questionHistory.length > 0) {
-            score = questionHistory[questionHistory.length - 1].score;
-            questionHistory.pop();
-        }
+        if (questionHistory.length > 0) { score = questionHistory[questionHistory.length - 1].score; questionHistory.pop(); }
         showQuestion();
     }
 }
@@ -574,9 +609,8 @@ function checkAnswer(chosen, correct, erklaerungEncoded, correctAnswerEncoded) {
     const isCorrect = chosen === correct;
     questionHistory.push({ index: currentQuestionIndex, score: score });
     if (isCorrect) score++;
-    const feedbackArea = document.getElementById("feedback-area");
+    document.getElementById("feedback-area").style.display = "block";
     const aiCorrection = document.getElementById("ai-correction");
-    feedbackArea.style.display = "block";
     aiCorrection.style.display = "block";
     aiCorrection.innerHTML = `
         <p style="font-size:22px;">${isCorrect ? "✅ Richtig! / Đúng rồi!" : "❌ Falsch! / Sai rồi!"}</p>
