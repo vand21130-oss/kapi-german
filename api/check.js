@@ -9,7 +9,7 @@ module.exports = async function handler(req, res) {
         : `Bạn là giáo viên tiếng Đức B2. Học sinh dịch từ "${tuViet}" thành "${tuDuc}". Hãy kiểm tra xem có đúng không và cho phản hồi ngắn gọn. Trả về CHỈ HTML thuần túy: <p>✅/❌ [nhận xét tiếng Việt]</p>${tuDuc ? '<p><b>Đáp án đúng:</b> [từ tiếng Đức đúng]</p>' : ''}`;
 
     try {
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`, {
+        const response = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`;
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
