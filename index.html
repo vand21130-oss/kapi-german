@@ -548,7 +548,6 @@ function startTypingPractice() {
         <button onclick="showAlltagMenu()" style="font-size:18px;padding:10px 20px;margin:8px;border-radius:15px;border:none;cursor:pointer;background:#eee;">🏠 Menu</button>
     `;
 }
-
 async function checkGrammatikMitAI() {
     let userInput = document.getElementById("userInput").value.trim();
     let feedbackArea = document.getElementById("feedback-area");
@@ -559,13 +558,39 @@ async function checkGrammatikMitAI() {
     }
 
     let cleanDe = currentPracticeWord.de.replace(/^(Der|Die|Das)\s+/i, '').trim();
-    
-    if (!userInput.toLowerCase().includes(cleanDe.toLowerCase()) && !userInput.toLowerCase().includes(currentPracticeWord.de.toLowerCase())) {
+    if (!userInput.toLowerCase().includes(cleanDe.toLowerCase())) {
         feedbackArea.style.display = "block";
         aiCorrection.style.display = "block";
-        aiCorrection.innerHTML = `<p style='color:red; font-size:18px;'>❌ Khoan đã! Kapi thấy cậu chưa dùng từ <b>${currentPracticeWord.de}</b> trong câu kìa!</p>`;
+        aiCorrection.innerHTML = `<p style='color:red; font-size:18px;'>❌ Kapi thấy cậu chưa dùng từ <b>${currentPracticeWord.de}</b> trong câu kìa!</p>`;
         return;
     }
+
+    feedbackArea.style.display = "block";
+    aiCorrection.style.display = "block";
+    aiCorrection.innerHTML = `<div style="text-align:center;"><p style="font-size:22px; color:#e67e22;"><i>Kapi đang lôi từ điển ra soi... 🦫🔍</i></p></div>`;
+
+    try {
+        const response = await fetch('/api/check', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                tuViet: currentPracticeWord.vi,
+                tuDuc: currentPracticeWord.de,
+                cauVidu: userInput
+            })
+        });
+        const data = await response.json();
+        if (data.result) {
+            aiCorrection.innerHTML = data.result;
+        } else {
+            aiCorrection.innerHTML = `<p style='color:red;'>${data.error || "Lỗi không xác định"}</p>`;
+        }
+    } catch (error) {
+        aiCorrection.innerHTML = "<p style='color:red;'>Lỗi kết nối: " + error.message + "</p>";
+    }
+}
+
+    
 
     feedbackArea.style.display = "block";
     aiCorrection.style.display = "block";
