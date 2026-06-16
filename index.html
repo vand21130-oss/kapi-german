@@ -39,7 +39,7 @@ let minigameIndex = 0;
 let minigameScore = 0;
 let currentPracticeWord = null;
 
-// ===== GHI ÂM SPRECHEN =====
+// ===== GHI ÂM =====
 async function toggleRecording() {
     let recordBtn = document.getElementById("record-btn");
     let feedbackArea = document.getElementById("feedback-area");
@@ -69,7 +69,7 @@ async function toggleRecording() {
             const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
             const formData = new FormData();
             formData.append('audio', audioBlob, 'audio.webm');
-            aiCorrection.innerHTML = "<p style='color:#0984e3;'><i>Kapi đang nghe và suy nghĩ... 🧠🦫</i></p>";
+            aiCorrection.innerHTML = "<p style='color:#0984e3;'><i>Kapi đang nghe und suy nghĩ... 🧠🦫</i></p>";
             aiCorrection.style.display = "block";
             try {
                 const transcribeRes = await fetch('/api/transcribe', { method: 'POST', body: formData });
@@ -107,7 +107,7 @@ function startTimer() {
     }, 1000);
 }
 
-// ===== MENU CHÍNH =====
+// ===== MENU =====
 function sayHallo() {
     document.getElementById("message").innerText = "Hallo! Wie geht's dir? 😊";
     document.getElementById("buttons").innerHTML = `
@@ -174,7 +174,7 @@ function chooseLesson(lesson) {
     document.getElementById("message").innerText = "Super! Heute lernen wir " + lesson + "! 🎉";
 }
 
-// ===== DATA SPRECHEN =====
+// ===== SPRECHEN DATA =====
 const teil1 = [
     {thema:"Fremdsprachen lernen",punkte:["Vorteile für Beruf und Zukunft","Kognitive Fähigkeiten fördern","Kulturelles Verständnis erweitern","Zeitaufwand und Schwierigkeiten"]},
     {thema:"Online Sprache lernen",punkte:["Flexibilität im Alltag","Kosten und Zugänglichkeit","Soziale Kontakte fördern oder einschränken","Lernqualität verbessern oder verschlechtern"]},
@@ -255,34 +255,8 @@ function restart() {
     goHome();
 }
 
-// ===== DỮ LIỆU TỪ VỰNG =====
+// ===== VOKABELN DATA =====
 const vokabelGruppen = {
-    // Y TẾ CHUYÊN NGÀNH
-    krankheiten: {
-        titel: "🦠 Krankheiten & Symptome",
-        woerter: [
-            { de: "sich anstecken durch (+ Akk.)", vi: "lây nhiễm qua", beispiel: "Man kann sich durch eine Tröpfcheninfektion anstecken.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='30' cy='50' r='15' fill='%23e74c3c'/><circle cx='70' cy='50' r='15' fill='%233498db'/><path d='M45 50 L55 50' stroke='%23e74c3c' stroke-width='3' stroke-dasharray='4'/><text x='50' y='30' font-size='20' text-anchor='middle'>🦠</text></svg>" },
-            { de: "Die Symptome", vi: "Triệu chứng", beispiel: "Was sind die typischen Symptome dieser Krankheit?", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='30' y='20' width='40' height='60' rx='5' fill='%23ecf0f1' stroke='%23bdc3c7' stroke-width='2'/><circle cx='38' cy='35' r='3' fill='%23e74c3c'/><circle cx='38' cy='50' r='3' fill='%23f1c40f'/><circle cx='38' cy='65' r='3' fill='%232ecc71'/></svg>" },
-            { de: "Der Ausbruch der Krankheit", vi: "Sự bùng phát bệnh", beispiel: "Der Ausbruch der Krankheit überraschte die Ärzte.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='50' r='15' fill='%23e74c3c'/><path d='M50 20 L50 10 M50 80 L50 90 M20 50 L10 50 M80 50 L90 50 M29 29 L22 22 M71 71 L78 78 M71 29 L78 22 M29 71 L22 78' stroke='%23e74c3c' stroke-width='3'/></svg>" },
-            { de: "Die Akne", vi: "Mụn trứng cá", beispiel: "Sie pflegt ihre Haut intensiv gegen Akne.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='50' r='30' fill='%23f1c40f' opacity='0.4'/><circle cx='40' cy='40' r='4' fill='%23e74c3c'/><circle cx='55' cy='60' r='5' fill='%23e74c3c'/><circle cx='60' cy='35' r='3' fill='%23e74c3c'/></svg>" },
-            { de: "Das Asthma", vi: "Hen suyễn", beispiel: "Er braucht wegen seines Asthmas ein Spray.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M35 30 Q20 50 35 70 Z' fill='%233498db' opacity='0.5'/><path d='M65 30 Q80 50 65 70 Z' fill='%233498db' opacity='0.5'/><rect x='46' y='20' width='8' height='50' fill='%23bdc3c7'/></svg>" },
-            { de: "Der Ausschlag", vi: "Phát ban", beispiel: "Ein roter Ausschlag juckt oft auf der Haut.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='30' y='20' width='40' height='65' rx='10' fill='%23e8a87c'/><circle cx='40' cy='35' r='3' fill='%23e74c3c'/><circle cx='55' cy='45' r='4' fill='%23e74c3c'/><circle cx='45' cy='60' r='3' fill='%23e74c3c'/></svg>" },
-            { de: "Die Erkältung", vi: "Cảm lạnh", beispiel: "Eine Erkältung dauert meistens eine Woche.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='42' r='25' fill='%23f8d7da'/><circle cx='42' cy='38' r='4' fill='%232c3e50'/><circle cx='58' cy='38' r='4' fill='%232c3e50'/><path d='M38 54 Q50 62 62 54' stroke='%23e74c3c' stroke-width='2' fill='none'/></svg>" },
-            { de: "Der erhöhte Puls", vi: "Nhịp tim tăng cao", beispiel: "Der Kardiologe misst einen erhöhten Puls.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M10 50 L30 50 L40 15 L50 85 L60 45 L70 50 L90 50' stroke='%23e74c3c' stroke-width='4' fill='none'/></svg>" },
-            { de: "Die Grippe", vi: "Bệnh cúm", beispiel: "Bei Grippe hat man oft hohes Fieber und Gliederschmerzen.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='50' r='25' fill='%232ecc71' opacity='0.3'/><text x='50' y='62' font-size='30' text-anchor='middle'>🤢</text></svg>" },
-            { de: "Der Infarkt", vi: "Nhồi máu cơ tim", beispiel: "Er hatte Glück beim Infarkt, weil der Notarzt schnell kam.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M50 80 Q20 60 20 40 A15 15 0 0 1 50 30 A15 15 0 0 1 80 40 Q80 60 50 80 Z' fill='%23e74c3c'/><line x1='35' y1='50' x2='65' y2='50' stroke='white' stroke-width='4'/></svg>" },
-            { de: "Die Karies", vi: "Sâu răng", beispiel: "Regelmäßiges Zähneputzen verhindert Karies.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M35 30 Q50 15 65 30 L60 70 Q50 80 40 70 Z' fill='%23fff' stroke='%23bdc3c7' stroke-width='3'/><circle cx='48' cy='40' r='6' fill='%232c3e50'/></svg>" },
-            { de: "Die Migräne", vi: "Đau nửa đầu", beispiel: "Bei Migräne hilft meistens nur ein dunkler, ruhiger Raum.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='50' r='30' fill='%23ecf0f1' stroke='%23e74c3c' stroke-width='3'/><text x='50' y='62' font-size='28' text-anchor='middle'>😖</text></svg>" },
-            { de: "Der Schnupfen", vi: "Sổ mũi", beispiel: "Schnupfen ist ein lästiges Symptom einer Erkältung.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M50 30 Q35 60 50 70 Q65 60 50 30' fill='%233498db' opacity='0.6'/><path d='M48 70 Q50 85 52 70' stroke='%233498db' stroke-width='4' fill='none'/></svg>" },
-            { de: "Der verstauchte Fuß", vi: "Bong gân chân", beispiel: "Mit einem verstauchten Fuß sollte man keinen Sport treiben.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M40 20 L40 60 L70 75 L60 85 L30 65 L30 20 Z' fill='%2395a5a6'/><circle cx='55' cy='70' r='8' fill='%23e74c3c' opacity='0.8'/></svg>" },
-            { de: "Der Kardiologe", vi: "Bác sĩ tim mạch", beispiel: "Der Kardiologe überwacht das EKG des Patienten.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='30' r='15' fill='%23f39c12'/><rect x='30' y='50' width='40' height='35' rx='5' fill='%233498db'/><path d='M40 60 L46 60 L46 50 L54 50 L54 60 L60 60' stroke='white' stroke-width='3' fill='none'/></svg>" },
-            { de: "Der Orthopäde", vi: "Bác sĩ chỉnh hình", beispiel: "Der Orthopäde untersucht den verstauchten Fuß.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='30' r='14' fill='%232ecc71'/><path d='M30 80 L50 50 L70 80' stroke='%232c3e50' stroke-width='4' fill='none'/><rect x='40' y='75' width='20' height='8' fill='%232c3e50'/></svg>" },
-            { de: "Das digitale Zeitalter", vi: "Kỷ nguyên số", beispiel: "Im digitalen Zeitalter nutzt man Apps zur Gesundheitskontrolle.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='30' y='15' width='40' height='70' rx='5' fill='%232c3e50'/><rect x='35' y='22' width='30' height='50' fill='%233498db' opacity='0.5'/><text x='50' y='52' font-size='12' fill='white' text-anchor='middle'>0101</text></svg>" },
-            { de: "Die ärztliche Vorsorge-Untersuchung", vi: "Khám sức khỏe định kỳ", beispiel: "Man sollte regelmäßig zur ärztlichen Vorsorge-Untersuchung gehen.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='20' y='20' width='60' height='60' rx='5' fill='white' stroke='%232c3e50' stroke-width='3'/><path d='M35 50 L65 50 M50 35 L50 65' stroke='%23e74c3c' stroke-width='6'/></svg>" },
-            { de: "Das Heilfasten", vi: "Nhịn ăn chữa bệnh", beispiel: "Heilfasten kann den Blutdruck positiv beeinflussen.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='50' r='30' fill='none' stroke='%232ecc71' stroke-width='4'/><path d='M35 50 L45 60 L65 35' stroke='%232ecc71' stroke-width='4' fill='none'/></svg>" },
-            { de: "Die Mittelohrentzündung", vi: "Viêm tai giữa", beispiel: "Eine Mittelohrentzündung verursacht starke Ohrenschmerzen.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M30 30 Q10 50 30 70 L40 55 Z' fill='%23bdc3c7'/><circle cx='45' cy='52' r='10' fill='%23e74c3c'/></svg>" }
-        ]
-    },
     diagnostik: {
         titel: "🩺 Diagnostische Instrumente",
         woerter: [
@@ -302,8 +276,8 @@ const vokabelGruppen = {
             { de: "Der Tupfer", vi: "Gạc/bông thấm", beispiel: "Die Wunde wird mit einem sterilen Tupfer gereinigt.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='50' r='25' fill='%23ecf0f1' stroke='%23bdc3c7' stroke-width='2'/><path d='M35 45 Q50 60 65 45 M40 55 Q50 40 60 55' stroke='%23bdc3c7' stroke-width='2' fill='none'/><path d='M10 20 L40 45 M90 20 L60 45' stroke='%237f8c8d' stroke-width='4'/></svg>" },
             { de: "Die Kompresse", vi: "Gạc đắp vết thương", beispiel: "Eine feuchte Kompresse wird auf die Wunde gelegt.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='25' y='25' width='50' height='50' fill='%23fff' stroke='%23bdc3c7' stroke-width='2'/><path d='M25 40 L75 40 M25 60 L75 60 M40 25 L40 75 M60 25 L60 75' stroke='%23ecf0f1' stroke-width='2'/></svg>" },
             { de: "Das Pflaster", vi: "Băng cá nhân", beispiel: "Auf die kleine Schnittwunde klebt man ein Pflaster.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><g transform='rotate(45 50 50)'><rect x='20' y='40' width='60' height='20' rx='10' fill='%23e67e22'/><rect x='40' y='40' width='20' height='20' fill='%23fff' opacity='0.7'/></g></svg>" },
-            { de: "Die Mullbinde", vi: "Băng cuộn", beispiel: "Der Verband wird mit einer Mullbinde fixiert.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='50' r='30' fill='%23fff' stroke='%23bdc3c7' stroke-width='3'/><circle cx='50' cy='50' r='10' fill='%23ecf0f1' stroke='%23bdc3c7' stroke-width='2'/></svg>" },
-            { de: "Das Desinfektionsmittel", vi: "Dung dịch sát khuẩn", beispiel: "Vor der Injektion wird die Haut mit Desinfektionsmittel gereinigt.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='30' y='40' width='40' height='50' rx='5' fill='%233498db'/><rect x='40' y='30' width='20' height='10' fill='%23ecf0f1'/><rect x='40' y='55' width='20' height='20' fill='%23fff'/><path d='M46 65 L54 65 M50 61 L50 69' stroke='%23e74c3c' stroke-width='3'/></svg>" },
+            { de: "Die Mullbinde", vi: "Băng cuộn", beispiel: "Der Verband wird mit einer Mullbinde fixiert.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='50' r='30' fill='%23fff' stroke='%23bdc3c7' stroke-width='3'/><circle cx='50' cy='50' r='10' fill='%23ecf0f1' stroke='%23bdc3c7' stroke-width='2'/><path d='M50 20 Q65 20 80 50' stroke='%23bdc3c7' stroke-width='2' fill='none'/></svg>" },
+            { de: "Das Desinfektionsmittel", vi: "Dung dịch sát khuẩn", beispiel: "Vor der Injektion wird die Haut mit Desinfektionsmittel gereinigt.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='30' y='40' width='40' height='50' rx='5' fill='%233498db'/><rect x='40' y='30' width='20' height='10' fill='%23ecf0f1'/><path d='M45 30 L45 10 L60 10' stroke='%23ecf0f1' stroke-width='4' fill='none'/><rect x='40' y='55' width='20' height='20' fill='%23fff'/><path d='M46 65 L54 65 M50 61 L50 69' stroke='%23e74c3c' stroke-width='3'/></svg>" },
             { de: "Die Handschuhe (Einmalhandschuhe)", vi: "Găng tay dùng một lần", beispiel: "Das Pflegepersonal trägt beim Verbandwechsel Einmalhandschuhe.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M30 90 L30 50 Q30 30 20 30 Q15 30 15 40 L25 50 M40 90 L40 40 Q40 20 35 20 Q30 20 30 30 L35 45 M50 90 L50 40 Q50 15 45 15 Q40 15 40 25 L45 45 M60 90 L60 45 Q60 25 55 25 Q50 25 50 35 L55 50 M75 90 L75 60 Q75 40 70 40 Q65 40 65 50 L70 65' stroke='%233498db' stroke-width='8' fill='none' stroke-linecap='round'/><rect x='28' y='80' width='48' height='15' fill='%232980b9' rx='3'/></svg>" }
         ]
     },
@@ -312,24 +286,23 @@ const vokabelGruppen = {
         woerter: [
             { de: "Das Infusionsgerät / Der Infusionsständer", vi: "Máy truyền dịch / Cây treo dịch", beispiel: "Die Infusion hängt am Infusionsständer neben dem Bett.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='35' y='20' width='30' height='40' rx='5' fill='%23ecf0f1' stroke='%23bdc3c7' stroke-width='3'/><path d='M50 10 L50 20 M50 60 L50 90 M45 70 L55 70 M45 80 L55 80' stroke='%237f8c8d' stroke-width='3'/><text x='50' y='45' font-family='sans-serif' font-size='12' fill='%23e74c3c' text-anchor='middle'>NaCl</text><path d='M10 90 L90 90 M20 90 L20 10 L50 10' stroke='%232c3e50' stroke-width='4' fill='none'/></svg>" },
             { de: "Die Magensonde", vi: "Ống thông dạ dày", beispiel: "Der bewusstlose Patient wird über eine Magensonde ernährt.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M40 70 Q20 90 50 90 Q80 90 70 70 Q60 50 60 40 L60 20' stroke='%23e74c3c' stroke-width='4' fill='%23ffbaba'/><path d='M60 10 L60 60 Q60 70 45 75' stroke='%233498db' stroke-width='3' fill='none'/></svg>" },
-            { de: "Der Blasenkatheter (DK)", vi: "Ống thông tiểu", beispiel: "Nach der Operation wird ein Blasenkatheter gelegt.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M20 80 Q40 60 70 30' stroke='%23f1c40f' stroke-width='8' fill='none'/><circle cx='75' cy='25' r='12' fill='%23f39c12' opacity='0.8'/></svg>" },
+            { de: "Der Blasenkatheter (DK)", vi: "Ống thông tiểu", beispiel: "Nach der Operation wird ein Blasenkatheter gelegt.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M20 80 Q40 60 70 30' stroke='%23f1c40f' stroke-width='8' fill='none'/><circle cx='75' cy='25' r='12' fill='%23f39c12' opacity='0.8'/><path d='M20 80 L10 90 M20 80 L30 90' stroke='%23e67e22' stroke-width='6' fill='none'/></svg>" },
             { de: "Die Sauerstoffmaske", vi: "Mặt nạ oxy", beispiel: "Der Patient atmet durch eine Sauerstoffmaske.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M30 30 L70 30 L80 70 L20 70 Z' fill='%23ecf0f1' opacity='0.7' stroke='%23bdc3c7' stroke-width='2'/><path d='M50 70 L50 95 M50 95 L80 95' stroke='%233498db' stroke-width='4' fill='none'/></svg>" },
-            { de: "Der Beatmungsschlauch", vi: "Ống nội khí quản", beispiel: "Der Beatmungsschlauch wird in die Luftröhre eingeführt.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M20 20 Q50 20 50 80' stroke='%23bdc3c7' stroke-width='10' fill='none'/><path d='M20 15 L20 25 M30 15 L30 25' stroke='%233498db' stroke-width='4'/><circle cx='50' cy='70' r='15' fill='%23ecf0f1' opacity='0.8' stroke='%23bdc3c7'/></svg>" },
+            { de: "Der Beatmungsschlauch", vi: "Ống nội khí quản", beispiel: "Der Beatmungsschlauch wird in die Luftröhre eingeführt.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M20 20 Q50 20 50 80' stroke='%23bdc3c7' stroke-width='10' fill='none'/><path d='M20 15 L20 25' stroke='%233498db' stroke-width='4'/><path d='M30 15 L30 25' stroke='%233498db' stroke-width='4'/><circle cx='50' cy='70' r='15' fill='%23ecf0f1' opacity='0.8' stroke='%23bdc3c7'/></svg>" },
             { de: "Das EKG-Gerät", vi: "Máy điện tâm đồ", beispiel: "Das EKG-Gerät überwacht kontinuierlich den Herzrhythmus.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='10' y='20' width='80' height='60' rx='5' fill='%232c3e50'/><rect x='15' y='25' width='70' height='40' fill='%23000'/><path d='M15 45 L30 45 L35 30 L45 60 L55 25 L65 45 L85 45' stroke='%232ecc71' stroke-width='2' fill='none'/></svg>" }
         ]
     },
-    // ALLTAG
     umwelt: {
         titel: "🌍 Umwelt & Nachhaltigkeit",
         woerter: [
-            { de: "Die Mülltrennung", vi: "Phân loại rác", beispiel: "In Deutschland ist die Mülltrennung sehr wichtig.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='10' y='40' width='22' height='45' rx='3' fill='%23f1c40f'/><rect x='39' y='40' width='22' height='45' rx='3' fill='%232ecc71'/><rect x='68' y='40' width='22' height='45' rx='3' fill='%233498db'/><text x='21' y='70' font-size='10' fill='white' text-anchor='middle'>Bio</text><text x='50' y='70' font-size='10' fill='white' text-anchor='middle'>Glas</text><text x='79' y='70' font-size='10' fill='white' text-anchor='middle'>Pap.</text></svg>" },
+            { de: "Die Mülltrennung", vi: "Phân loại rác", beispiel: "In Deutschland ist die Mülltrennung sehr wichtig.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='10' y='40' width='22' height='45' rx='3' fill='%23f1c40f'/><rect x='39' y='40' width='22' height='45' rx='3' fill='%232ecc71'/><rect x='68' y='40' width='22' height='45' rx='3' fill='%233498db'/><text x='21' y='70' font-size='10' fill='white' text-anchor='middle'>Bio</text><text x='50' y='70' font-size='10' fill='white' text-anchor='middle'>Glas</text><text x='79' y='70' font-size='10' fill='white' text-anchor='middle'>Papier</text></svg>" },
             { de: "Die Solaranlage", vi: "Tấm pin mặt trời", beispiel: "Mit einer Solaranlage auf dem Dach kann man Strom sparen.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='10' y='30' width='80' height='50' rx='3' fill='%231a252f'/><line x1='10' y1='46' x2='90' y2='46' stroke='%23f1c40f' stroke-width='2'/><line x1='10' y1='62' x2='90' y2='62' stroke='%23f1c40f' stroke-width='2'/><line x1='37' y1='30' x2='37' y2='80' stroke='%23f1c40f' stroke-width='2'/><line x1='63' y1='30' x2='63' y2='80' stroke='%23f1c40f' stroke-width='2'/><circle cx='50' cy='18' r='8' fill='%23f1c40f'/></svg>" },
+            { de: "Die Plastikflasche", vi: "Chai nhựa", beispiel: "Plastikflaschen sollten recycelt werden.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='40' y='10' width='20' height='10' rx='3' fill='%2395a5a6'/><path d='M35 20 Q30 30 30 40 L30 85 Q30 90 50 90 Q70 90 70 85 L70 40 Q70 30 65 20 Z' fill='%233498db' opacity='0.6' stroke='%232980b9' stroke-width='2'/></svg>" },
             { de: "Das Elektroauto", vi: "Xe điện", beispiel: "Das Elektroauto verursacht keine direkten CO₂-Emissionen.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='10' y='45' width='80' height='35' rx='8' fill='%232ecc71'/><path d='M25 45 Q35 20 65 20 Q80 20 85 45' fill='%2327ae60'/><circle cx='25' cy='80' r='10' fill='%232c3e50'/><circle cx='75' cy='80' r='10' fill='%232c3e50'/><text x='50' y='65' font-size='18' fill='%23f1c40f' text-anchor='middle'>⚡</text></svg>" },
             { de: "Das Recycling", vi: "Tái chế", beispiel: "Durch Recycling werden wertvolle Rohstoffe wiedergewonnen.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M50 15 L65 40 L50 35 L50 55 L35 30 Z' fill='%232ecc71'/><path d='M75 55 L50 55 L57 70 L38 70 L55 90 L72 70 L53 70 Z' fill='%2327ae60'/><path d='M25 55 L38 30 L45 45 L60 20 L25 20 L32 35 Z' fill='%2322a85a'/></svg>" },
+            { de: "Der Kompost", vi: "Phân hữu cơ / ủ rác", beispiel: "Küchenabfälle kann man zu Kompost verarbeiten.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M15 70 Q50 40 85 70 L85 90 L15 90 Z' fill='%238B4513'/><circle cx='35' cy='60' r='8' fill='%232ecc71'/><circle cx='55' cy='55' r='6' fill='%2327ae60'/><circle cx='70' cy='62' r='7' fill='%2322a85a'/></svg>" },
             { de: "Die Windenergie", vi: "Năng lượng gió", beispiel: "Windenergie ist eine der wichtigsten erneuerbaren Energiequellen.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><line x1='50' y1='20' x2='50' y2='90' stroke='%23bdc3c7' stroke-width='4'/><path d='M50 35 Q70 25 65 45 Z' fill='%233498db'/><path d='M50 35 Q30 25 35 45 Z' fill='%232980b9'/><path d='M50 35 Q50 10 60 30 Z' fill='%231a6ca8'/><circle cx='50' cy='35' r='4' fill='%232c3e50'/></svg>" },
-            { de: "Der Wasserverbrauch", vi: "Mức tiêu thụ nước", beispiel: "Ein langer Dusche erhöht den Wasserverbrauch stark.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M50 10 Q70 35 70 55 A20 20 0 0 1 30 55 Q30 35 50 10 Z' fill='%233498db'/></svg>" },
-            { de: "Der Kompost", vi: "Phân hữu cơ / ủ rác", beispiel: "Küchenabfälle kann man zu Kompost verarbeiten.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M15 70 Q50 40 85 70 L85 90 L15 90 Z' fill='%238B4513'/><circle cx='35' cy='60' r='8' fill='%232ecc71'/><circle cx='55' cy='55' r='6' fill='%2327ae60'/></svg>" },
-            { de: "Die Plastikflasche", vi: "Chai nhựa", beispiel: "Plastikflaschen sollten recycelt werden.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='40' y='10' width='20' height='10' rx='3' fill='%2395a5a6'/><path d='M35 20 Q30 30 30 40 L30 85 Q30 90 50 90 Q70 90 70 85 L70 40 Q70 30 65 20 Z' fill='%233498db' opacity='0.6' stroke='%232980b9' stroke-width='2'/></svg>" }
+            { de: "Der Wasserverbrauch", vi: "Mức tiêu thụ nước", beispiel: "Ein langer Dusche erhöht den Wasserverbrauch stark.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M50 10 Q70 35 70 55 A20 20 0 0 1 30 55 Q30 35 50 10 Z' fill='%233498db'/><text x='50' y='72' font-size='12' fill='white' text-anchor='middle'>💧</text></svg>" }
         ]
     },
     kulinarik: {
@@ -338,24 +311,24 @@ const vokabelGruppen = {
             { de: "Das Vollkornbrot", vi: "Bánh mì nguyên cám", beispiel: "Vollkornbrot ist gesünder als Weißbrot.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M15 50 Q15 25 50 25 Q85 25 85 50 L85 75 Q85 80 50 80 Q15 80 15 75 Z' fill='%23a0522d'/><path d='M20 50 Q20 35 50 35 Q80 35 80 50' fill='%23c8a06e'/></svg>" },
             { de: "Die Zutat", vi: "Nguyên liệu", beispiel: "Die wichtigste Zutat für diesen Kuchen ist Butter.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='30' cy='35' r='12' fill='%23e74c3c'/><circle cx='60' cy='30' r='10' fill='%23f1c40f'/><circle cx='50' cy='60' r='14' fill='%232ecc71'/><circle cx='75' cy='55' r='8' fill='%23e67e22'/></svg>" },
             { de: "Das Rezept", vi: "Công thức nấu ăn", beispiel: "Hast du ein gutes Rezept für Schwarzwälder Kirschtorte?", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='20' y='10' width='60' height='80' rx='4' fill='%23fff9e6' stroke='%23ddd' stroke-width='2'/><line x1='30' y1='30' x2='70' y2='30' stroke='%23ccc' stroke-width='2'/><line x1='30' y1='42' x2='70' y2='42' stroke='%23ccc' stroke-width='2'/><line x1='30' y1='54' x2='70' y2='54' stroke='%23ccc' stroke-width='2'/><text x='50' y='22' font-size='10' fill='%23e67e22' text-anchor='middle' font-weight='bold'>Rezept</text></svg>" },
-            { de: "Die Portion", vi: "Khẩu phần", beispiel: "Eine Portion Spaghetti reicht für zwei Personen.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><ellipse cx='50' cy='65' rx='38' ry='20' fill='%23ecf0f1' stroke='%23bdc3c7' stroke-width='2'/><ellipse cx='50' cy='55' rx='38' ry='20' fill='%23fff' stroke='%23bdc3c7' stroke-width='2'/><path d='M25 55 Q50 35 75 55' fill='%23f39c12' opacity='0.7'/></svg>" },
-            { de: "Das Gewürz", vi: "Gia vị", beispiel: "Salz und Pfeffer sind die häufigsten Gewürze.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='30' y='30' width='18' height='50' rx='8' fill='%23ecf0f1' stroke='%23bdc3c7' stroke-width='2'/><rect x='52' y='30' width='18' height='50' rx='8' fill='%232c3e50'/><text x='39' y='60' font-size='10' fill='%23555' text-anchor='middle'>S</text><text x='61' y='60' font-size='10' fill='white' text-anchor='middle'>P</text></svg>" },
-            { de: "Die Speisekarte", vi: "Thực đơn", beispiel: "Darf ich bitte die Speisekarte sehen?", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='25' y='10' width='50' height='80' rx='4' fill='%23c0392b'/><rect x='28' y='13' width='44' height='74' rx='3' fill='%23fff9e6'/><text x='50' y='35' font-size='9' fill='%23c0392b' text-anchor='middle' font-weight='bold'>SPEISE-KARTE</text></svg>" },
             { de: "Der Aufschnitt", vi: "Thịt nguội", beispiel: "Zum Frühstück gibt es Brot mit Aufschnitt und Käse.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><ellipse cx='50' cy='55' rx='35' ry='20' fill='%23e8a87c'/><ellipse cx='50' cy='48' rx='35' ry='20' fill='%23d4856a'/><ellipse cx='50' cy='42' rx='35' ry='20' fill='%23c0392b' opacity='0.8'/></svg>" },
+            { de: "Die Portion", vi: "Khẩu phần", beispiel: "Eine Portion Spaghetti reicht für zwei Personen.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><ellipse cx='50' cy='65' rx='38' ry='20' fill='%23ecf0f1' stroke='%23bdc3c7' stroke-width='2'/><ellipse cx='50' cy='55' rx='38' ry='20' fill='%23fff' stroke='%23bdc3c7' stroke-width='2'/><path d='M25 55 Q50 35 75 55' fill='%23f39c12' opacity='0.7'/></svg>" },
+            { de: "Das Gewürz", vi: "Gia vị", beispiel: "Salz und Pfeffer sind die häufigsten Gewürze in der deutschen Küche.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='30' y='30' width='18' height='50' rx='8' fill='%23ecf0f1' stroke='%23bdc3c7' stroke-width='2'/><rect x='52' y='30' width='18' height='50' rx='8' fill='%232c3e50'/><text x='39' y='60' font-size='10' fill='%23555' text-anchor='middle'>S</text><text x='61' y='60' font-size='10' fill='white' text-anchor='middle'>P</text></svg>" },
+            { de: "Die Speisekarte", vi: "Thực đơn", beispiel: "Darf ich bitte die Speisekarte sehen?", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='25' y='10' width='50' height='80' rx='4' fill='%23c0392b'/><rect x='28' y='13' width='44' height='74' rx='3' fill='%23fff9e6'/><text x='50' y='35' font-size='9' fill='%23c0392b' text-anchor='middle' font-weight='bold'>SPEISE-KARTE</text></svg>" },
             { de: "Das Leitungswasser", vi: "Nước máy", beispiel: "In Deutschland kann man Leitungswasser bedenkenlos trinken.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='38' y='15' width='24' height='45' rx='4' fill='%23bdc3c7'/><path d='M50 60 Q40 70 40 80 Q40 92 50 92 Q60 92 60 80 Q60 70 50 60 Z' fill='%233498db' opacity='0.8'/><rect x='55' y='28' width='18' height='8' rx='3' fill='%237f8c8d'/></svg>" }
         ]
     },
     arbeit: {
         titel: "💼 Arbeit & Beruf",
         woerter: [
-            { de: "Das Vorstellungsgespräch", vi: "Buổi phỏng vấn", beispiel: "Morgen habe ich ein Vorstellungsgespräch bei einer Firma.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='35' cy='30' r='12' fill='%23f39c12'/><circle cx='65' cy='30' r='12' fill='%233498db'/><rect x='15' y='50' width='30' height='35' rx='4' fill='%23e67e22'/><rect x='55' y='50' width='30' height='35' rx='4' fill='%232980b9'/></svg>" },
-            { de: "Der Lebenslauf", vi: "CV / Sơ yếu lý lịch", beispiel: "Bitte schicken Sie Ihren Lebenslauf per E-Mail.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='15' y='10' width='70' height='80' rx='4' fill='white' stroke='%23bdc3c7' stroke-width='2'/><circle cx='35' cy='30' r='10' fill='%23ecf0f1' stroke='%23bdc3c7' stroke-width='2'/><line x1='50' y1='25' x2='75' y2='25' stroke='%23bdc3c7' stroke-width='2'/><line x1='20' y1='50' x2='80' y2='50' stroke='%23bdc3c7' stroke-width='2'/></svg>" },
+            { de: "Das Vorstellungsgespräch", vi: "Buổi phỏng vấn", beispiel: "Morgen habe ich ein Vorstellungsgespräch bei einer Firma.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='35' cy='30' r='12' fill='%23f39c12'/><circle cx='65' cy='30' r='12' fill='%233498db'/><rect x='15' y='50' width='30' height='35' rx='4' fill='%23e67e22'/><rect x='55' y='50' width='30' height='35' rx='4' fill='%232980b9'/><line x1='45' y1='50' x2='55' y2='50' stroke='%23555' stroke-width='2' stroke-dasharray='3'/></svg>" },
+            { de: "Der Lebenslauf", vi: "CV / Sơ yếu lý lịch", beispiel: "Bitte schicken Sie Ihren Lebenslauf per E-Mail.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='15' y='10' width='70' height='80' rx='4' fill='white' stroke='%23bdc3c7' stroke-width='2'/><circle cx='35' cy='30' r='10' fill='%23ecf0f1' stroke='%23bdc3c7' stroke-width='2'/><line x1='50' y1='25' x2='75' y2='25' stroke='%23bdc3c7' stroke-width='2'/><line x1='50' y1='33' x2='75' y2='33' stroke='%23bdc3c7' stroke-width='2'/><line x1='20' y1='50' x2='80' y2='50' stroke='%23bdc3c7' stroke-width='2'/><line x1='20' y1='62' x2='80' y2='62' stroke='%23bdc3c7' stroke-width='2'/></svg>" },
             { de: "Die Überstunden", vi: "Giờ làm thêm", beispiel: "Diese Woche muss ich leider Überstunden machen.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='50' r='35' fill='none' stroke='%23bdc3c7' stroke-width='4'/><line x1='50' y1='50' x2='50' y2='22' stroke='%232c3e50' stroke-width='3'/><line x1='50' y1='50' x2='68' y2='60' stroke='%23e74c3c' stroke-width='3'/><text x='72' y='28' font-size='18' fill='%23e74c3c'>+</text></svg>" },
             { de: "Das Gehalt", vi: "Lương", beispiel: "Über das Gehalt wird im Bewerbungsgespräch gesprochen.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='15' y='30' width='70' height='50' rx='5' fill='%232ecc71'/><circle cx='50' cy='55' r='12' fill='%23f1c40f'/><text x='50' y='60' font-size='14' fill='%23a0522d' text-anchor='middle' font-weight='bold'>€</text></svg>" },
-            { de: "Die Kündigung", vi: "Thông báo nghỉ việc", beispiel: "Er hat eine Kündigung vom Arbeitgeber erhalten.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='15' y='20' width='70' height='60' rx='4' fill='%23fff' stroke='%23e74c3c' stroke-width='3'/><line x1='25' y1='40' x2='75' y2='40' stroke='%23bdc3c7' stroke-width='2'/><path d='M60 58 L75 73 M75 58 L60 73' stroke='%23e74c3c' stroke-width='3'/></svg>" },
-            { de: "Die Fortbildung", vi: "Đào tạo nâng cao", beispiel: "Der Arbeitgeber bezahlt die Fortbildung seiner Mitarbeiter.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='15' y='15' width='70' height='55' rx='4' fill='%233498db'/><rect x='18' y='18' width='64' height='49' rx='3' fill='%23fff'/><line x1='25' y1='35' x2='75' y2='35' stroke='%23bdc3c7' stroke-width='2'/><line x1='25' y1='50' x2='75' y2='50' stroke='%23bdc3c7' stroke-width='2'/></svg>" },
-            { de: "Das Homeoffice", vi: "Làm việc tại nhà", beispiel: "Seit der Pandemie arbeiten viele Menschen im Homeoffice.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M50 15 L80 40 L80 85 L20 85 L20 40 Z' fill='%23ecf0f1' stroke='%23bdc3c7' stroke-width='2'/><rect x='35' y='55' width='30' height='20' rx='2' fill='%233498db'/></svg>" },
-            { de: "Die Stellenanzeige", vi: "Tin tuyển dụng", beispiel: "Ich habe die Stellenanzeige online gesehen.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='10' y='15' width='80' height='70' rx='5' fill='%23fff9e6' stroke='%23f39c12' stroke-width='3'/><text x='50' y='38' font-size='10' fill='%23e67e22' text-anchor='middle' font-weight='bold'>STELLE GESUCHT</text></svg>" }
+            { de: "Die Kündigung", vi: "Thông báo nghỉ việc", beispiel: "Er hat eine Kündigung vom Arbeitgeber erhalten.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='15' y='20' width='70' height='60' rx='4' fill='%23fff' stroke='%23e74c3c' stroke-width='3'/><line x1='25' y1='40' x2='75' y2='40' stroke='%23bdc3c7' stroke-width='2'/><line x1='25' y1='55' x2='75' y2='55' stroke='%23bdc3c7' stroke-width='2'/><path d='M60 58 L75 73 M75 58 L60 73' stroke='%23e74c3c' stroke-width='3'/></svg>" },
+            { de: "Die Fortbildung", vi: "Đào tạo nâng cao", beispiel: "Der Arbeitgeber bezahlt die Fortbildung seiner Mitarbeiter.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='15' y='15' width='70' height='55' rx='4' fill='%233498db'/><rect x='18' y='18' width='64' height='49' rx='3' fill='%23fff'/><line x1='25' y1='35' x2='75' y2='35' stroke='%23bdc3c7' stroke-width='2'/><line x1='25' y1='50' x2='75' y2='50' stroke='%23bdc3c7' stroke-width='2'/><path d='M40 75 L50 90 L60 75' fill='%233498db'/></svg>" },
+            { de: "Das Homeoffice", vi: "Làm việc tại nhà", beispiel: "Seit der Pandemie arbeiten viele Menschen im Homeoffice.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M50 15 L80 40 L80 85 L20 85 L20 40 Z' fill='%23ecf0f1' stroke='%23bdc3c7' stroke-width='2'/><rect x='35' y='55' width='30' height='20' rx='2' fill='%233498db'/><path d='M38 45 Q50 30 62 45' fill='%23f1c40f'/></svg>" },
+            { de: "Die Stellenanzeige", vi: "Tin tuyển dụng", beispiel: "Ich habe die Stellenanzeige online gesehen.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='10' y='15' width='80' height='70' rx='5' fill='%23fff9e6' stroke='%23f39c12' stroke-width='3'/><text x='50' y='38' font-size='10' fill='%23e67e22' text-anchor='middle' font-weight='bold'>STELLE GESUCHT</text><line x1='18' y1='55' x2='82' y2='55' stroke='%23eee' stroke-width='2'/><line x1='18' y1='68' x2='82' y2='68' stroke='%23eee' stroke-width='2'/></svg>" }
         ]
     },
     gesundheit: {
@@ -364,22 +337,22 @@ const vokabelGruppen = {
             { de: "Der Hausarzt", vi: "Bác sĩ gia đình", beispiel: "Ich gehe zum Hausarzt, wenn ich krank bin.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='28' r='15' fill='%23f39c12'/><rect x='30' y='48' width='40' height='40' rx='5' fill='%233498db'/><path d='M42 58 L42 78 M32 68 L52 68' stroke='white' stroke-width='4'/></svg>" },
             { de: "Das Medikament", vi: "Thuốc", beispiel: "Das Medikament muss dreimal täglich eingenommen werden.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='30' y='20' width='40' height='60' rx='20' fill='%23e74c3c'/><rect x='30' y='50' width='40' height='30' rx='0' fill='white'/><rect x='30' y='65' width='40' height='15' rx='20' fill='white'/></svg>" },
             { de: "Die Krankenversicherung", vi: "Bảo hiểm y tế", beispiel: "In Deutschland ist die Krankenversicherung Pflicht.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='15' y='20' width='70' height='60' rx='5' fill='%232ecc71'/><path d='M30 38 L46 38 L46 28 L54 28 L54 38 L70 38 L70 54 L54 54 L54 64 L46 64 L46 54 L30 54 Z' fill='white'/></svg>" },
-            { de: "Die Allergie", vi: "Dị ứng", beispiel: "Im Frühling leide ich unter einer Pollenallergie.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='40' r='20' fill='%23f1c40f' opacity='0.7'/><path d='M35 55 Q40 80 50 85 Q60 80 65 55' fill='%23ecf0f1' stroke='%23bdc3c7' stroke-width='2'/></svg>" },
-            { de: "Die Erkältung", vi: "Cảm cúm", beispiel: "Im Winter bekommt man leicht eine Erkältung.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='42' r='25' fill='%23f8d7da'/><circle cx='42' cy='38' r='4' fill='%232c3e50'/><circle cx='58' cy='38' r='4' fill='%232c3e50'/><path d='M38 54 Q50 62 62 54' stroke='%23e74c3c' stroke-width='2' fill='none'/></svg>" },
+            { de: "Die Allergie", vi: "Dị ứng", beispiel: "Im Frühling leide ich unter einer Pollenallergie.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='40' r='20' fill='%23f1c40f' opacity='0.7'/><path d='M35 55 Q40 80 50 85 Q60 80 65 55' fill='%23ecf0f1' stroke='%23bdc3c7' stroke-width='2'/><circle cx='42' cy='62' r='3' fill='%23e74c3c'/><circle cx='58' cy='62' r='3' fill='%23e74c3c'/></svg>" },
+            { de: "Das Rezept (vom Arzt)", vi: "Đơn thuốc", beispiel: "Der Arzt hat mir ein Rezept für Antibiotika ausgestellt.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='20' y='15' width='60' height='70' rx='4' fill='white' stroke='%23bdc3c7' stroke-width='2'/><text x='50' y='38' font-size='22' fill='%233498db' text-anchor='middle' font-weight='bold'>℞</text><line x1='28' y1='52' x2='72' y2='52' stroke='%23bdc3c7' stroke-width='2'/><line x1='28' y1='65' x2='72' y2='65' stroke='%23bdc3c7' stroke-width='2'/></svg>" },
+            { de: "Die Erkältung", vi: "Cảm cúm", beispiel: "Im Winter bekommt man leicht eine Erkältung.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='42' r='25' fill='%23f8d7da'/><circle cx='42' cy='38' r='4' fill='%232c3e50'/><circle cx='58' cy='38' r='4' fill='%232c3e50'/><path d='M38 54 Q50 62 62 54' stroke='%23e74c3c' stroke-width='2' fill='none'/><path d='M44 68 Q50 76 56 68' stroke='%2395a5a6' stroke-width='3' fill='none'/></svg>" },
             { de: "Die Apotheke", vi: "Hiệu thuốc", beispiel: "Die Apotheke ist um die Ecke.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='15' y='35' width='70' height='55' rx='3' fill='%23ecf0f1' stroke='%23bdc3c7' stroke-width='2'/><path d='M15 35 L50 10 L85 35' fill='%23e74c3c'/><rect x='38' y='48' width='24' height='24' rx='3' fill='%232ecc71'/><path d='M44 55 L56 55 M50 49 L50 61' stroke='white' stroke-width='3'/></svg>" },
-            { de: "Die Impfung", vi: "Tiêm chủng / Vắc-xin", beispiel: "Kinder bekommen viele Impfungen in den ersten Lebensjahren.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='38' y='25' width='24' height='45' rx='5' fill='%23ecf0f1' stroke='%23bdc3c7' stroke-width='2'/><rect x='40' y='38' width='20' height='28' fill='%233498db' opacity='0.5'/><polygon points='50,8 46,18 54,18' fill='%237f8c8d'/></svg>" },
-            { de: "Das Rezept (vom Arzt)", vi: "Đơn thuốc", beispiel: "Der Arzt hat mir ein Rezept für Antibiotika ausgestellt.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='20' y='15' width='60' height='70' rx='4' fill='white' stroke='%23bdc3c7' stroke-width='2'/><text x='50' y='38' font-size='22' fill='%233498db' text-anchor='middle' font-weight='bold'>℞</text><line x1='28' y1='52' x2='72' y2='52' stroke='%23bdc3c7' stroke-width='2'/></svg>" }
+            { de: "Die Impfung", vi: "Tiêm chủng / Vắc-xin", beispiel: "Kinder bekommen viele Impfungen in den ersten Lebensjahren.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='38' y='25' width='24' height='45' rx='5' fill='%23ecf0f1' stroke='%23bdc3c7' stroke-width='2'/><rect x='40' y='38' width='20' height='28' fill='%233498db' opacity='0.5'/><rect x='46' y='18' width='8' height='10' fill='%2395a5a6'/><polygon points='50,8 46,18 54,18' fill='%237f8c8d'/></svg>" }
         ]
     },
     technologie: {
         titel: "💻 Technologie & Medien",
         woerter: [
             { de: "Das Smartphone", vi: "Điện thoại thông minh", beispiel: "Fast jeder Mensch besitzt heute ein Smartphone.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='28' y='10' width='44' height='80' rx='8' fill='%232c3e50'/><rect x='32' y='18' width='36' height='58' rx='3' fill='%233498db'/><circle cx='50' cy='83' r='4' fill='%237f8c8d'/></svg>" },
-            { de: "Die App", vi: "Ứng dụng", beispiel: "Es gibt eine App, mit der man Deutsch lernen kann.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='15' y='15' width='30' height='30' rx='8' fill='%23e74c3c'/><rect x='55' y='15' width='30' height='30' rx='8' fill='%233498db'/><rect x='15' y='55' width='30' height='30' rx='8' fill='%232ecc71'/><rect x='55' y='55' width='30' height='30' rx='8' fill='%23f39c12'/></svg>" },
+            { de: "Die App", vi: "Ứng dụng", beispiel: "Es gibt eine App, mit der man Deutsch lernen kann.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='15' y='15' width='30' height='30' rx='8' fill='%23e74c3c'/><rect x='55' y='15' width='30' height='30' rx='8' fill='%233498db'/><rect x='15' y='55' width='30' height='30' rx='8' fill='%232ecc71'/><rect x='55' y='55' width='30' height='30' rx='8' fill='%23f39c12'/><text x='30' y='36' font-size='16' fill='white' text-anchor='middle'>A</text><text x='70' y='36' font-size='16' fill='white' text-anchor='middle'>B</text><text x='30' y='76' font-size='16' fill='white' text-anchor='middle'>C</text><text x='70' y='76' font-size='16' fill='white' text-anchor='middle'>D</text></svg>" },
             { de: "Das soziale Netzwerk", vi: "Mạng xã hội", beispiel: "Viele Menschen verbringen viel Zeit in sozialen Netzwerken.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='50' r='8' fill='%233498db'/><circle cx='20' cy='30' r='6' fill='%23e74c3c'/><circle cx='80' cy='30' r='6' fill='%232ecc71'/><circle cx='20' cy='70' r='6' fill='%23f39c12'/><circle cx='80' cy='70' r='6' fill='%239b59b6'/><line x1='50' y1='50' x2='20' y2='30' stroke='%23bdc3c7' stroke-width='2'/><line x1='50' y1='50' x2='80' y2='30' stroke='%23bdc3c7' stroke-width='2'/><line x1='50' y1='50' x2='20' y2='70' stroke='%23bdc3c7' stroke-width='2'/><line x1='50' y1='50' x2='80' y2='70' stroke='%23bdc3c7' stroke-width='2'/></svg>" },
             { de: "Der Datenschutz", vi: "Bảo vệ dữ liệu", beispiel: "In der EU gilt die Datenschutz-Grundverordnung (DSGVO).", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M50 10 Q70 20 80 40 Q80 70 50 90 Q20 70 20 40 Q30 20 50 10 Z' fill='%232c3e50'/><rect x='35' y='45' width='30' height='22' rx='3' fill='%23ecf0f1'/><circle cx='50' cy='42' r='10' fill='none' stroke='%23ecf0f1' stroke-width='4'/></svg>" },
-            { de: "Das Passwort", vi: "Mật khẩu", beispiel: "Ein sicheres Passwort sollte mindestens 8 Zeichen haben.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='20' y='45' width='60' height='40' rx='5' fill='%23f39c12'/><rect x='35' y='35' width='30' height='20' fill='none' stroke='%23e67e22' stroke-width='6'/><circle cx='50' cy='62' r='6' fill='%23fff'/></svg>" },
-            { de: "Die künstliche Intelligenz", vi: "Trí tuệ nhân tạo", beispiel: "Künstliche Intelligenz verändert die Arbeitswelt.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='25' y='20' width='50' height='60' rx='10' fill='%232c3e50'/><circle cx='40' cy='40' r='5' fill='%232ecc71'/><circle cx='60' cy='40' r='5' fill='%232ecc71'/><path d='M35 60 Q50 70 65 60' stroke='%232ecc71' stroke-width='2' fill='none'/></svg>" },
+            { de: "Das Passwort", vi: "Mật khẩu", beispiel: "Ein sicheres Passwort sollte mindestens 8 Zeichen haben.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='20' y='45' width='60' height='40' rx='5' fill='%23f39c12'/><rect x='35' y='35' width='30' height='20' rx='0' fill='none' stroke='%23e67e22' stroke-width='6'/><circle cx='50' cy='62' r='6' fill='%23fff'/><line x1='50' y1='66' x2='50' y2='74' stroke='%23fff' stroke-width='3'/></svg>" },
+            { de: "Die künstliche Intelligenz", vi: "Trí tuệ nhân tạo", beispiel: "Künstliche Intelligenz verändert die Arbeitswelt.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='25' y='20' width='50' height='60' rx='10' fill='%232c3e50'/><circle cx='40' cy='40' r='5' fill='%232ecc71'/><circle cx='60' cy='40' r='5' fill='%232ecc71'/><path d='M35 60 Q50 70 65 60' stroke='%232ecc71' stroke-width='2' fill='none'/><path d='M25 35 L15 35 M25 50 L15 50 M75 35 L85 35 M75 50 L85 50' stroke='%232ecc71' stroke-width='3'/></svg>" },
             { de: "Das Video-Streaming", vi: "Xem video trực tuyến", beispiel: "Video-Streaming hat das klassische Fernsehen verändert.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='10' y='20' width='80' height='55' rx='5' fill='%232c3e50'/><rect x='14' y='24' width='72' height='47' rx='3' fill='%23e74c3c'/><polygon points='42,38 42,58 65,48' fill='white'/></svg>" },
             { de: "Die Suchmaschine", vi: "Công cụ tìm kiếm", beispiel: "Mit einer Suchmaschine findet man schnell Informationen.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='42' cy='42' r='25' fill='none' stroke='%234285f4' stroke-width='6'/><line x1='60' y1='60' x2='82' y2='82' stroke='%23555' stroke-width='8' stroke-linecap='round'/></svg>" }
         ]
@@ -394,32 +367,32 @@ const vokabelGruppen = {
             { de: "Die Gleichberechtigung", vi: "Bình đẳng", beispiel: "Gleichberechtigung zwischen Männern und Frauen ist ein Grundrecht.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='32' cy='30' r='12' fill='%23e74c3c' opacity='0.8'/><circle cx='68' cy='30' r='12' fill='%233498db' opacity='0.8'/><line x1='25' y1='57' x2='75' y2='57' stroke='%23555' stroke-width='3'/><rect x='45' y='45' width='10' height='20' rx='2' fill='%23555'/></svg>" },
             { de: "Der Verein", vi: "Câu lạc bộ / hội", beispiel: "Ich bin Mitglied in einem Sportverein.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='35' r='12' fill='%23f39c12'/><circle cx='22' cy='50' r='10' fill='%23e74c3c'/><circle cx='78' cy='50' r='10' fill='%232ecc71'/><path d='M30 60 Q50 75 70 60' stroke='%232c3e50' stroke-width='3' fill='none'/></svg>" },
             { de: "Das Gesetz", vi: "Luật pháp", beispiel: "Das Gesetz schützt die Rechte aller Bürger.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='43' y='10' width='14' height='75' rx='3' fill='%23a0522d'/><rect x='20' y='40' width='60' height='8' rx='3' fill='%23c8a06e'/><path d='M20 48 Q20 65 35 65 Q50 65 50 48' fill='none' stroke='%23bdc3c7' stroke-width='3'/><path d='M80 48 Q80 65 65 65 Q50 65 50 48' fill='none' stroke='%23bdc3c7' stroke-width='3'/></svg>" },
-            { de: "Die Tradition", vi: "Truyền thống", beispiel: "Das Oktoberfest ist eine bekannte bayerische Tradition.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M30 80 Q30 50 50 35 Q70 50 70 80 Z' fill='%23e67e22' opacity='0.7'/><circle cx='50' cy='30' r='10' fill='%23f1c40f'/></svg>" }
+            { de: "Die Tradition", vi: "Truyền thống", beispiel: "Das Oktoberfest ist eine bekannte bayerische Tradition.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M30 80 Q30 50 50 35 Q70 50 70 80 Z' fill='%23e67e22' opacity='0.7'/><path d='M38 80 Q38 55 50 44 Q62 55 62 80 Z' fill='%23f39c12' opacity='0.9'/><circle cx='50' cy='30' r='10' fill='%23f1c40f'/></svg>" }
         ]
     },
     studium: {
         titel: "🎓 Studium & Bildung",
         woerter: [
-            { de: "Die Vorlesung", vi: "Bài giảng đại học", beispiel: "Die Vorlesung beginnt um 8 Uhr morgens.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='10' y='15' width='80' height='55' rx='4' fill='%232c3e50'/><rect x='13' y='18' width='74' height='49' rx='3' fill='%2334495e'/><circle cx='35' cy='40' r='8' fill='%23f39c12'/><line x1='48' y1='35' x2='78' y2='35' stroke='%23ecf0f1' stroke-width='2'/><rect x='10' y='70' width='80' height='20' rx='3' fill='%23bdc3c7'/></svg>" },
-            { de: "Das Semester", vi: "Học kỳ", beispiel: "Das Wintersemester beginnt im Oktober.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='15' y='20' width='70' height='65' rx='4' fill='white' stroke='%23bdc3c7' stroke-width='2'/><rect x='15' y='20' width='70' height='18' rx='4' fill='%233498db'/><text x='50' y='33' font-size='10' fill='white' text-anchor='middle'>Oktober</text></svg>" },
+            { de: "Die Vorlesung", vi: "Bài giảng đại học", beispiel: "Die Vorlesung beginnt um 8 Uhr morgens.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='10' y='15' width='80' height='55' rx='4' fill='%232c3e50'/><rect x='13' y='18' width='74' height='49' rx='3' fill='%2334495e'/><circle cx='35' cy='40' r='8' fill='%23f39c12'/><line x1='48' y1='35' x2='78' y2='35' stroke='%23ecf0f1' stroke-width='2'/><line x1='48' y1='43' x2='78' y2='43' stroke='%23ecf0f1' stroke-width='2'/><rect x='10' y='70' width='80' height='20' rx='3' fill='%23bdc3c7'/></svg>" },
+            { de: "Das Semester", vi: "Học kỳ", beispiel: "Das Wintersemester beginnt im Oktober.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='15' y='20' width='70' height='65' rx='4' fill='white' stroke='%23bdc3c7' stroke-width='2'/><rect x='15' y='20' width='70' height='18' rx='4' fill='%233498db'/><text x='50' y='33' font-size='10' fill='white' text-anchor='middle'>Oktober</text><line x1='25' y1='50' x2='75' y2='50' stroke='%23eee' stroke-width='2'/><line x1='25' y1='63' x2='75' y2='63' stroke='%23eee' stroke-width='2'/></svg>" },
             { de: "Die Hausarbeit", vi: "Tiểu luận / bài tập lớn", beispiel: "Die Hausarbeit muss bis Ende des Semesters abgegeben werden.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='20' y='10' width='60' height='80' rx='4' fill='%23fff9e6' stroke='%23f39c12' stroke-width='2'/><line x1='30' y1='30' x2='70' y2='30' stroke='%23bdc3c7' stroke-width='2'/><line x1='30' y1='45' x2='70' y2='45' stroke='%23bdc3c7' stroke-width='2'/><line x1='30' y1='60' x2='70' y2='60' stroke='%23bdc3c7' stroke-width='2'/></svg>" },
-            { de: "Die Prüfung", vi: "Kỳ thi", beispiel: "Nächste Woche schreibe ich eine wichtige Prüfung.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='15' y='15' width='70' height='80' rx='4' fill='white' stroke='%23bdc3c7' stroke-width='2'/><text x='50' y='38' font-size='12' fill='%23e74c3c' text-anchor='middle' font-weight='bold'>Prüfung</text></svg>" },
+            { de: "Die Prüfung", vi: "Kỳ thi", beispiel: "Nächste Woche schreibe ich eine wichtige Prüfung.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='15' y='15' width='70' height='80' rx='4' fill='white' stroke='%23bdc3c7' stroke-width='2'/><text x='50' y='38' font-size='12' fill='%23e74c3c' text-anchor='middle' font-weight='bold'>Prüfung</text><line x1='25' y1='50' x2='75' y2='50' stroke='%23eee' stroke-width='2'/><line x1='25' y1='65' x2='75' y2='65' stroke='%23eee' stroke-width='2'/></svg>" },
+            { de: "Der Studiengang", vi: "Ngành học", beispiel: "Sie studiert im Studiengang Informatik.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M50 15 L80 30 L80 50 Q80 75 50 85 Q20 75 20 50 L20 30 Z' fill='%23e74c3c' opacity='0.2' stroke='%23c0392b' stroke-width='2'/><text x='50' y='58' font-size='30' text-anchor='middle'>🎓</text></svg>" },
             { de: "Die Bibliothek", vi: "Thư viện", beispiel: "In der Bibliothek kann man ruhig lernen.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='15' y='20' width='15' height='65' rx='3' fill='%23e74c3c'/><rect x='33' y='25' width='14' height='60' rx='3' fill='%233498db'/><rect x='50' y='18' width='16' height='67' rx='3' fill='%232ecc71'/><rect x='69' y='23' width='15' height='62' rx='3' fill='%23f39c12'/><rect x='10' y='85' width='80' height='5' rx='2' fill='%23a0522d'/></svg>" },
             { de: "Das Stipendium", vi: "Học bổng", beispiel: "Sie hat ein Stipendium vom DAAD bekommen.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='40' r='25' fill='%23f1c40f' stroke='%23e67e22' stroke-width='3'/><text x='50' y='47' font-size='22' fill='%23a0522d' text-anchor='middle' font-weight='bold'>€</text><path d='M35 65 L30 90 L50 80 L70 90 L65 65' fill='%23f1c40f'/></svg>" },
-            { de: "Der Studiengang", vi: "Ngành học", beispiel: "Sie studiert im Studiengang Informatik.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><text x='50' y='62' font-size='50' text-anchor='middle'>🎓</text></svg>" },
             { de: "Die Abschlussarbeit", vi: "Luận văn tốt nghiệp", beispiel: "Seine Abschlussarbeit hat er über klimaneutrales Bauen geschrieben.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='18' y='10' width='55' height='75' rx='4' fill='%232c3e50'/><rect x='22' y='14' width='47' height='67' rx='3' fill='%23ecf0f1'/><line x1='28' y1='28' x2='63' y2='28' stroke='%23bdc3c7' stroke-width='2'/><line x1='28' y1='42' x2='63' y2='42' stroke='%23bdc3c7' stroke-width='2'/><line x1='28' y1='56' x2='63' y2='56' stroke='%23bdc3c7' stroke-width='2'/></svg>" }
         ]
     },
     saetze: {
         titel: "💬 Nützliche Sätze & Redewendungen",
         woerter: [
-            { de: "Es kommt darauf an...", vi: "Điều đó phụ thuộc vào...", beispiel: "Es kommt darauf an, wie viel Zeit man hat.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='50' r='35' fill='%23ecf0f1' stroke='%23bdc3c7' stroke-width='3'/><text x='50' y='62' font-size='35' text-anchor='middle'>🤔</text></svg>" },
-            { de: "Meiner Meinung nach...", vi: "Theo ý kiến của tôi...", beispiel: "Meiner Meinung nach ist das eine gute Idee.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M15 20 Q15 10 25 10 L75 10 Q85 10 85 20 L85 55 Q85 65 75 65 L55 65 L45 80 L40 65 L25 65 Q15 65 15 55 Z' fill='%233498db'/></svg>" },
+            { de: "Es kommt darauf an...", vi: "Điều đó phụ thuộc vào...", beispiel: "Es kommt darauf an, wie viel Zeit man hat.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='50' r='35' fill='%23ecf0f1' stroke='%23bdc3c7' stroke-width='3'/><text x='50' y='58' font-size='35' text-anchor='middle'>🤔</text></svg>" },
+            { de: "Meiner Meinung nach...", vi: "Theo ý kiến của tôi...", beispiel: "Meiner Meinung nach ist das eine gute Idee.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M15 20 Q15 10 25 10 L75 10 Q85 10 85 20 L85 55 Q85 65 75 65 L55 65 L45 80 L40 65 L25 65 Q15 65 15 55 Z' fill='%233498db'/><line x1='28' y1='28' x2='72' y2='28' stroke='white' stroke-width='2'/><line x1='28' y1='40' x2='72' y2='40' stroke='white' stroke-width='2'/><line x1='28' y1='52' x2='55' y2='52' stroke='white' stroke-width='2'/></svg>" },
             { de: "Auf der einen Seite... auf der anderen Seite...", vi: "Một mặt... mặt khác...", beispiel: "Auf der einen Seite spart man Geld, auf der anderen Seite verliert man Zeit.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='43' y='10' width='14' height='75' rx='3' fill='%23a0522d'/><rect x='20' y='40' width='60' height='8' rx='3' fill='%23c8a06e'/><circle cx='27' cy='60' r='12' fill='%232ecc71' opacity='0.8'/><circle cx='73' cy='60' r='12' fill='%23e74c3c' opacity='0.8'/><text x='27' y='64' font-size='10' fill='white' text-anchor='middle'>Pro</text><text x='73' y='64' font-size='10' fill='white' text-anchor='middle'>Con</text></svg>" },
-            { de: "Das hat Vor- und Nachteile.", vi: "Điều đó có ưu và nhược điểm.", beispiel: "Das Homeoffice hat Vor- und Nachteile für Arbeitnehmer.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='10' y='20' width='37' height='65' rx='5' fill='%232ecc71' opacity='0.8'/><rect x='53' y='20' width='37' height='65' rx='5' fill='%23e74c3c' opacity='0.8'/><text x='28' y='58' font-size='28' text-anchor='middle' fill='white'>+</text><text x='72' y='60' font-size='36' text-anchor='middle' fill='white'>−</text></svg>" },
-            { de: "Es ist wichtig, dass...", vi: "Điều quan trọng là...", beispiel: "Es ist wichtig, dass wir die Umwelt schützen.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='50' r='35' fill='%23e74c3c' opacity='0.2' stroke='%23e74c3c' stroke-width='3'/><text x='50' y='62' font-size='35' text-anchor='middle'>❗</text></svg>" },
-            { de: "Zusammenfassend kann man sagen...", vi: "Tóm lại có thể nói...", beispiel: "Zusammenfassend kann man sagen, dass Sport gesund ist.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><line x1='20' y1='25' x2='80' y2='25' stroke='%23bdc3c7' stroke-width='2'/><line x1='20' y1='38' x2='80' y2='38' stroke='%23bdc3c7' stroke-width='2'/><line x1='20' y1='51' x2='80' y2='51' stroke='%23bdc3c7' stroke-width='2'/><rect x='15' y='63' width='70' height='22' rx='4' fill='%233498db'/></svg>" },
             { de: "Ich bin der Ansicht, dass...", vi: "Tôi có quan điểm rằng...", beispiel: "Ich bin der Ansicht, dass mehr Investitionen in Bildung nötig sind.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='35' r='18' fill='%23f39c12'/><circle cx='44' cy='31' r='3' fill='%232c3e50'/><circle cx='56' cy='31' r='3' fill='%232c3e50'/><path d='M40 42 Q50 48 60 42' stroke='%232c3e50' stroke-width='2' fill='none'/></svg>" },
+            { de: "Das hat Vor- und Nachteile.", vi: "Điều đó có ưu và nhược điểm.", beispiel: "Das Homeoffice hat Vor- und Nachteile für Arbeitnehmer.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='10' y='20' width='37' height='65' rx='5' fill='%232ecc71' opacity='0.8'/><rect x='53' y='20' width='37' height='65' rx='5' fill='%23e74c3c' opacity='0.8'/><text x='28' y='58' font-size='28' text-anchor='middle' fill='white'>+</text><text x='72' y='60' font-size='36' text-anchor='middle' fill='white'>−</text></svg>" },
+            { de: "Es ist wichtig, dass...", vi: "Điều quan trọng là...", beispiel: "Es ist wichtig, dass wir die Umwelt schützen.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='50' r='35' fill='%23e74c3c' opacity='0.2' stroke='%23e74c3c' stroke-width='3'/><text x='50' y='58' font-size='35' text-anchor='middle'>❗</text></svg>" },
+            { de: "Zusammenfassend kann man sagen...", vi: "Tóm lại có thể nói...", beispiel: "Zusammenfassend kann man sagen, dass Sport gesund ist.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><line x1='20' y1='25' x2='80' y2='25' stroke='%23bdc3c7' stroke-width='2'/><line x1='20' y1='38' x2='80' y2='38' stroke='%23bdc3c7' stroke-width='2'/><line x1='20' y1='51' x2='80' y2='51' stroke='%23bdc3c7' stroke-width='2'/><rect x='15' y='63' width='70' height='22' rx='4' fill='%233498db'/><line x1='23' y1='72' x2='77' y2='72' stroke='white' stroke-width='2'/></svg>" },
             { de: "Ich stimme zu / Ich stimme nicht zu.", vi: "Tôi đồng ý / Tôi không đồng ý.", beispiel: "Ich stimme nicht zu, dass Homeoffice produktiver ist.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='28' cy='50' r='20' fill='%232ecc71' opacity='0.8'/><path d='M18 50 L25 58 L38 40' stroke='white' stroke-width='4' fill='none' stroke-linecap='round'/><circle cx='72' cy='50' r='20' fill='%23e74c3c' opacity='0.8'/><path d='M62 40 L82 60 M82 40 L62 60' stroke='white' stroke-width='4' stroke-linecap='round'/></svg>" }
         ]
     }
@@ -427,38 +400,38 @@ const vokabelGruppen = {
 
 const medizinQuestions = [
     {type:"luecke",frage:"Der Patient klagt über starken ___ an der Haut nach dem Kontakt mit Pflanzen.",antworten:["Juckreiz","Schnupfen","Heiserkeit","Abwehr"],richtig:0,erklaerung:"Juckreiz = ngứa / Juckreiz bedeutet das unangenehme Gefühl auf der Haut, das zum Kratzen reizt."},
-    {type:"bedeutung",frage:"Was bedeutet 'Maßnahme' im medizinischen Kontext?",antworten:["biện pháp / Schritt zur Problemlösung","triệu chứng / Krankheitszeichen","thuốc / Medikament","bệnh nhân / kranke Person"],richtig:0,erklaerung:"Maßnahme = biện pháp / Ein konkreter Schritt, um ein Problem zu lösen."},
+    {type:"bedeutung",frage:"Was bedeutet 'Maßnahme' im medizinischen Kontext?",antworten:["biện pháp / Schritt zur Problemlösung","triệu chứng / Krankheitszeichen","thuốc / Medikament","bệnh nhân / kranke Person"],richtig:0,erklaerung:"Maßnahme = biện pháp / Eine Maßnahme ist ein konkreter Schritt, um ein Problem zu lösen oder zu verhindern."},
     {type:"luecke",frage:"Im Sommer ist ein ___ sehr wichtig, um Mückenstiche zu vermeiden.",antworten:["Mückenschutzmittel","Hausmittel","Impfstoff","Abwehrmechanismus"],richtig:0,erklaerung:"Mückenschutzmittel = thuốc chống muỗi / Ein Mittel, das Mücken fernhält."},
-    {type:"wahl",frage:"Welches Wort passt? Das ___ schützt den Körper vor Viren und Bakterien.",antworten:["Immunsystem","Vitalzeichen","Erbgut","Gesundheitswesen"],richtig:0,erklaerung:"Immunsystem = hệ miễn dịch / Die Abwehr des Körpers gegen Krankheitserreger."},
-    {type:"bedeutung",frage:"Was bedeutet 'Gesundheitsbewusstsein'?",antworten:["ý thức sức khỏe / Bewusstsein für die eigene Gesundheit","bảo hiểm y tế / Krankenversicherung","chăm sóc sức khỏe / medizinische Versorgung","kiến thức y khoa / medizinisches Wissen"],richtig:0,erklaerung:"Gesundheitsbewusstsein = ý thức về sức khỏe."},
-    {type:"luecke",frage:"Die ___ älterer Menschen erfordert viel Geduld und Einfühlungsvermögen.",antworten:["Betreuung","Behandlung","Abwehr","Maßnahme"],richtig:0,erklaerung:"Betreuung = chăm sóc / Fürsorge für pflegebedürftige Personen."},
-    {type:"wahl",frage:"Welches Wort passt? ___ wie Joggen oder Schwimmen ist gut für das Herz.",antworten:["Regelmäßige Bewegung","Nährstoffarme Ernährung","Schönheitsbehandlung","Heiserkeit"],richtig:0,erklaerung:"Regelmäßige Bewegung = vận động thường xuyên."},
-    {type:"bedeutung",frage:"Was bedeutet 'Lebewesen'?",antworten:["sinh vật / etwas, das lebt","cuộc sống / das Leben","môi trường / die Umwelt","cơ thể / der Körper"],richtig:0,erklaerung:"Lebewesen = sinh vật / Alles, was lebt."},
-    {type:"luecke",frage:"In der modernen Medizin spielen ___ eine wichtige Rolle bei der Vorbeugung.",antworten:["Impfstoffe","Hausmittel","Beschwerden","Infekte"],richtig:0,erklaerung:"Impfstoffe = vắc-xin / Mittel zur Vorbeugung von Infektionskrankheiten."},
-    {type:"wahl",frage:"Welches Wort passt? ___ wie Herzinfarkt und Schlaganfall sind häufige Todesursachen.",antworten:["Herz-Kreislauf-Erkrankungen","Infekte","Beschwerden","Abwehrmechanismen"],richtig:0,erklaerung:"Herz-Kreislauf-Erkrankungen = bệnh tim mạch."},
-    {type:"luecke",frage:"Viele Menschen leiden im Winter unter ___ und verstopfter Nase.",antworten:["Schnupfen","Juckreiz","Heiserkeit","Abwehr"],richtig:0,erklaerung:"Schnupfen = sổ mũi / Erkältung mit laufender oder verstopfter Nase."},
-    {type:"wahl",frage:"Welches Wort passt? Nach der Operation überwacht die Krankenschwester die ___ des Patienten.",antworten:["Vitalzeichen","Beschwerden","Maßnahmen","Infekte"],richtig:0,erklaerung:"Vitalzeichen = dấu hiệu sinh tồn / Blutdruck, Puls, Temperatur und Atmung."},
-    {type:"bedeutung",frage:"Was bedeutet 'desinfizieren'?",antworten:["khử trùng / Keime abtöten","băng bó / verbinden","tiêm / injizieren","phẫu thuật / operieren"],richtig:0,erklaerung:"Desinfizieren = khử trùng / Krankheitserreger abtöten."},
-    {type:"luecke",frage:"Der Körper hat verschiedene ___, um sich gegen Krankheitserreger zu schützen.",antworten:["Abwehrmechanismen","Vitalzeichen","Beschwerden","Maßnahmen"],richtig:0,erklaerung:"Abwehrmechanismus = cơ chế phòng vệ / Natürliche Methoden des Körpers."},
-    {type:"wahl",frage:"Welches Wort passt? Der Patient schildert seine ___ dem Arzt genau.",antworten:["Beschwerden","Maßnahmen","Impfstoffe","Lebewesen"],richtig:0,erklaerung:"Beschwerden = triệu chứng, phàn nàn / Körperliche Probleme des Patienten."},
-    {type:"bedeutung",frage:"Was bedeutet 'Heiserkeit'?",antworten:["khàn giọng / rauhe Stimme","sổ mũi / laufende Nase","ngứa / Juckreiz","ho / Husten"],richtig:0,erklaerung:"Heiserkeit = khàn tiếng / Rauhe oder heisere Stimme, oft bei Erkältung."},
-    {type:"luecke",frage:"Viele Menschen bevorzugen ___ wie Honig und Ingwer bei Erkältungen.",antworten:["Hausmittel","Impfstoffe","Abwehrmechanismen","Maßnahmen"],richtig:0,erklaerung:"Hausmittel = thuốc dân gian / Traditionelle Heilmittel aus dem Haushalt."},
-    {type:"wahl",frage:"Welches Wort passt? Das ___ in Deutschland ist eines der besten der Welt.",antworten:["Gesundheitswesen","Immunsystem","Erbgut","Vitalzeichen"],richtig:0,erklaerung:"Gesundheitswesen = hệ thống y tế / Das System der medizinischen Versorgung."},
-    {type:"bedeutung",frage:"Was bedeutet 'Infekte'?",antworten:["nhiễm trùng / Infektionskrankheiten","thuốc kháng sinh / Antibiotika","vết thương / Wunden","dị ứng / Allergien"],richtig:0,erklaerung:"Infekte = nhiễm trùng / Krankheiten durch Viren oder Bakterien."},
-    {type:"luecke",frage:"Die ___ der Wunde muss sofort nach dem Unfall erfolgen.",antworten:["Behandlung","Abwehr","Betreuung","Maßnahme"],richtig:0,erklaerung:"Behandlung = điều trị / Die medizinische Versorgung einer Verletzung."},
+    {type:"wahl",frage:"Welches Wort passt? Das ___ schützt den Körper vor Viren und Bakterien.",antworten:["Immunsystem","Vitalzeichen","Erbgut","Gesundheitswesen"],richtig:0,erklaerung:"Immunsystem = hệ miễn dịch / Das Immunsystem ist die Abwehr des Körpers gegen Krankheitserreger."},
+    {type:"bedeutung",frage:"Was bedeutet 'Gesundheitsbewusstsein'?",antworten:["ý thức sức khỏe / Bewusstsein für die eigene Gesundheit","bảo hiểm y tế / Krankenversicherung","chăm sóc sức khỏe / medizinische Versorgung","kiến thức y khoa / medizinisches Wissen"],richtig:0,erklaerung:"Gesundheitsbewusstsein = ý thức về sức khỏe / Das Bewusstsein dafür, wie wichtig ein gesunder Lebensstil ist."},
+    {type:"luecke",frage:"Die ___ älterer Menschen erfordert viel Geduld und Einfühlungsvermögen.",antworten:["Betreuung","Behandlung","Abwehr","Maßnahme"],richtig:0,erklaerung:"Betreuung = chăm sóc / Die Fürsorge und Unterstützung für pflegebedürftige Personen."},
+    {type:"wahl",frage:"Welches Wort passt? ___ wie Joggen oder Schwimmen ist gut für das Herz.",antworten:["Regelmäßige Bewegung","Nährstoffarme Ernährung","Schönheitsbehandlung","Heiserkeit"],richtig:0,erklaerung:"Regelmäßige Bewegung = vận động thường xuyên / Körperliche Aktivität, die regelmäßig ausgeübt wird."},
+    {type:"bedeutung",frage:"Was bedeutet 'Lebewesen'?",antworten:["sinh vật / etwas, das lebt","cuộc sống / das Leben","môi trường / die Umwelt","cơ thể / der Körper"],richtig:0,erklaerung:"Lebewesen = sinh vật / Alles, was lebt: Menschen, Tiere, Pflanzen."},
+    {type:"luecke",frage:"In der modernen Medizin spielen ___ eine wichtige Rolle bei der Vorbeugung von Krankheiten.",antworten:["Impfstoffe","Hausmittel","Beschwerden","Infekte"],richtig:0,erklaerung:"Impfstoffe = vắc-xin / Mittel zur Vorbeugung von Infektionskrankheiten."},
+    {type:"wahl",frage:"Welches Wort passt? ___ wie Herzinfarkt und Schlaganfall sind häufige Todesursachen.",antworten:["Herz-Kreislauf-Erkrankungen","Infekte","Beschwerden","Abwehrmechanismen"],richtig:0,erklaerung:"Herz-Kreislauf-Erkrankungen = bệnh tim mạch / Erkrankungen des Herzens und der Blutgefäße."},
+    {type:"bedeutung",frage:"Was bedeutet 'das menschliche Erbgut'?",antworten:["bộ gen người / genetische Information des Menschen","cơ thể người / menschlicher Körper","não bộ / das Gehirn","hệ thần kinh / Nervensystem"],richtig:0,erklaerung:"Erbgut = bộ gen / Die genetische Information, die von Eltern an Kinder weitergegeben wird."},
+    {type:"luecke",frage:"Viele Menschen leiden im Winter unter ___ und verstopfter Nase.",antworten:["Schnupfen","Juckreiz","Heiserkeit","Abwehr"],richtig:0,erklaerung:"Schnupfen = sổ mũi / Eine Erkältung mit laufender oder verstopfter Nase."},
+    {type:"wahl",frage:"Welches Wort passt? Nach der Operation überwacht die Krankenschwester regelmäßig die ___ des Patienten.",antworten:["Vitalzeichen","Beschwerden","Maßnahmen","Infekte"],richtig:0,erklaerung:"Vitalzeichen = dấu hiệu sinh tồn / Blutdruck, Puls, Temperatur und Atmung."},
+    {type:"bedeutung",frage:"Was bedeutet 'nährstoffarm'?",antworten:["ít chất dinh dưỡng / wenig Nährstoffe enthaltend","nhiều chất dinh dưỡng / viele Nährstoffe enthaltend","không có calo / kalorienfrei","tốt cho sức khỏe / gesund"],richtig:0,erklaerung:"Nährstoffarm = ít chất dinh dưỡng / Lebensmittel mit wenig Vitaminen und Mineralstoffen."},
+    {type:"luecke",frage:"Eine ___ Ernährung mit viel Obst und Gemüse stärkt das Immunsystem.",antworten:["nährstoffreiche","nährstoffarme","eiweißhaltige","fettige"],richtig:0,erklaerung:"Nährstoffreich = giàu chất dinh dưỡng / Lebensmittel mit vielen Vitaminen und Mineralstoffen."},
+    {type:"wahl",frage:"Welches Wort passt? Sportler brauchen besonders viel ___, um Muskeln aufzubauen.",antworten:["eiweißhaltige Nahrung","Schönheitsbehandlung","Hausmittel","Schnupfnase"],richtig:0,erklaerung:"Eiweißhaltige Nahrung = thực phẩm giàu đạm / Nahrung mit hohem Proteingehalt wie Fleisch, Eier, Hülsenfrüchte."},
+    {type:"bedeutung",frage:"Was bedeutet 'desinfizieren'?",antworten:["khử trùng / Keime abtöten","băng bó / verbinden","tiêm / injizieren","phẫu thuật / operieren"],richtig:0,erklaerung:"Desinfizieren = khử trùng / Krankheitserreger auf Oberflächen oder Wunden abtöten."},
+    {type:"luecke",frage:"Der Körper hat verschiedene ___, um sich gegen Krankheitserreger zu schützen.",antworten:["Abwehrmechanismen","Vitalzeichen","Beschwerden","Maßnahmen"],richtig:0,erklaerung:"Abwehrmechanismus = cơ chế phòng vệ / Natürliche Methoden des Körpers zur Bekämpfung von Krankheiten."},
+    {type:"wahl",frage:"Welches Wort passt? Der Patient schildert seine ___ dem Arzt genau.",antworten:["Beschwerden","Maßnahmen","Impfstoffe","Lebewesen"],richtig:0,erklaerung:"Beschwerden = triệu chứng, phàn nàn / Körperliche Probleme oder Schmerzen, die ein Patient hat."},
+    {type:"bedeutung",frage:"Was bedeutet 'Heiserkeit'?",antworten:["khàn giọng / rauhe Stimme","sổ mũi / laufende Nase","ngứa / Juckreiz","ho / Husten"],richtig:0,erklaerung:"Heiserkeit = khàn tiếng / Eine rauhe oder heisere Stimme, oft bei Erkältung."},
+    {type:"luecke",frage:"Viele Menschen bevorzugen ___ wie Honig und Ingwer bei leichten Erkältungen.",antworten:["Hausmittel","Impfstoffe","Abwehrmechanismen","Maßnahmen"],richtig:0,erklaerung:"Hausmittel = thuốc dân gian / Traditionelle Heilmittel aus dem Haushalt."},
+    {type:"wahl",frage:"Welches Wort passt? Das ___ in Deutschland ist eines der besten der Welt.",antworten:["Gesundheitswesen","Immunsystem","Erbgut","Vitalzeichen"],richtig:0,erklaerung:"Gesundheitswesen = hệ thống y tế / Das gesamte System der medizinischen Versorgung in einem Land."},
+    {type:"bedeutung",frage:"Was bedeutet 'Infekte'?",antworten:["nhiễm trùng / Infektionskrankheiten","thuốc kháng sinh / Antibiotika","vết thương / Wunden","dị ứng / Allergien"],richtig:0,erklaerung:"Infekte = nhiễm trùng / Krankheiten, die durch Viren oder Bakterien verursacht werden."},
+    {type:"luecke",frage:"Die ___ der Wunde muss sofort nach dem Unfall erfolgen.",antworten:["Behandlung","Abwehr","Betreuung","Maßnahme"],richtig:0,erklaerung:"Behandlung = điều trị / Die medizinische Versorgung einer Verletzung oder Krankheit."},
+    {type:"wahl",frage:"Welches Wort passt? Traditionelle ___ wie Botox sind heute sehr beliebt.",antworten:["Schönheitsbehandlungen","Hausmittel","Impfstoffe","Maßnahmen"],richtig:0,erklaerung:"Schönheitsbehandlungen = liệu pháp làm đẹp / Kosmetische Eingriffe zur Verbesserung des Aussehens."},
+    {type:"bedeutung",frage:"Was bedeutet 'Abwehr' im medizinischen Kontext?",antworten:["sức đề kháng / Widerstand gegen Krankheiten","điều trị / Behandlung","chẩn đoán / Diagnose","phục hồi / Erholung"],richtig:0,erklaerung:"Abwehr = sức đề kháng / Die Fähigkeit des Körpers, sich gegen Krankheitserreger zu wehren."},
+    {type:"luecke",frage:"Für eine ___ braucht man täglich ausreichend Schlaf und gesunde Ernährung.",antworten:["faltenfreie Haut","nährstoffarme Ernährung","starke Heiserkeit","schnelle Behandlung"],richtig:0,erklaerung:"Faltenfreie Haut = da không nếp nhăn / Haut ohne Falten, oft ein Zeichen von Jugendlichkeit."},
+    {type:"wahl",frage:"Welches Wort passt? Die traditionelle ___ zwischen Mann und Frau verändert sich in der modernen Gesellschaft.",antworten:["Geschlechterrolle","Betreuung","Maßnahme","Abwehr"],richtig:0,erklaerung:"Geschlechterrolle = vai trò giới tính / Die gesellschaftlich erwarteten Verhaltensweisen für Männer und Frauen."},
     {type:"bedeutung",frage:"Was bedeutet 'effektiv'?",antworten:["hiệu quả / wirksam","đắt tiền / teuer","khó khăn / schwierig","an toàn / sicher"],richtig:0,erklaerung:"Effektiv = hiệu quả / Etwas, das das gewünschte Ergebnis erzielt."},
-    {type:"luecke",frage:"Eine ___ Ernährung mit viel Obst und Gemüse stärkt das Immunsystem.",antworten:["nährstoffreiche","nährstoffarme","eiweißhaltige","fettige"],richtig:0,erklaerung:"Nährstoffreich = giàu chất dinh dưỡng / Viele Vitamine und Mineralstoffe."},
-    {type:"wahl",frage:"Welches Wort passt? Sportler brauchen besonders viel ___, um Muskeln aufzubauen.",antworten:["eiweißhaltige Nahrung","Schönheitsbehandlung","Hausmittel","Schnupfnase"],richtig:0,erklaerung:"Eiweißhaltige Nahrung = thực phẩm giàu đạm / Nahrung mit hohem Proteingehalt."},
-    {type:"bedeutung",frage:"Was bedeutet 'nährstoffarm'?",antworten:["ít chất dinh dưỡng / wenig Nährstoffe","nhiều chất dinh dưỡng / viele Nährstoffe","không có calo / kalorienfrei","tốt cho sức khỏe / gesund"],richtig:0,erklaerung:"Nährstoffarm = ít chất dinh dưỡng / Lebensmittel mit wenig Vitaminen."},
-    {type:"luecke",frage:"Für eine ___ braucht man täglich ausreichend Schlaf und gesunde Ernährung.",antworten:["faltenfreie Haut","nährstoffarme Ernährung","starke Heiserkeit","schnelle Behandlung"],richtig:0,erklaerung:"Faltenfreie Haut = da không nếp nhăn / Haut ohne Falten."},
-    {type:"wahl",frage:"Welches Wort passt? Die traditionelle ___ zwischen Mann und Frau verändert sich.",antworten:["Geschlechterrolle","Betreuung","Maßnahme","Abwehr"],richtig:0,erklaerung:"Geschlechterrolle = vai trò giới tính / Erwartete Verhaltensweisen für Männer und Frauen."},
-    {type:"bedeutung",frage:"Was bedeutet 'das menschliche Erbgut'?",antworten:["bộ gen người / genetische Information","cơ thể người / menschlicher Körper","não bộ / das Gehirn","hệ thần kinh / Nervensystem"],richtig:0,erklaerung:"Erbgut = bộ gen / Die genetische Information des Menschen."},
-    {type:"luecke",frage:"Wegen seines ___ muss er regelmäßig Medikamente einnehmen.",antworten:["Asthmas","Schnupfens","Juckreizes","Ausschlags"],richtig:0,erklaerung:"Asthma = hen suyễn / Eine chronische Erkrankung der Atemwege."},
-    {type:"bedeutung",frage:"Was bedeutet 'sich anstecken'?",antworten:["bị lây nhiễm / eine Krankheit bekommen","hồi phục / sich erholen","phẫu thuật / operiert werden","tiêm / geimpft werden"],richtig:0,erklaerung:"Sich anstecken = bị lây nhiễm / Eine Krankheit von jemand anderem bekommen."},
-    {type:"wahl",frage:"Welches Wort passt? Der ___ überwacht das EKG des Patienten.",antworten:["Kardiologe","Orthopäde","Hausarzt","Zahnarzt"],richtig:0,erklaerung:"Kardiologe = bác sĩ tim mạch / Arzt für Herzerkrankungen."}
+    {type:"luecke",frage:"Eine ___ Nase und Niesen sind typische Symptome einer Erkältung.",antworten:["Schnupf-","heisere","juckende","infizierte"],richtig:0,erklaerung:"Schnupfnase = mũi bị sổ / Eine laufende oder verstopfte Nase bei Erkältung."}
 ];
 
-// ===== MENU TỪ VỰNG =====
+// ===== VOKABELN MENU =====
 function showVokabelHauptmenu() {
     document.getElementById("feedback-area").style.display = "none";
     document.getElementById("message").innerHTML = "📝 Welchen Bereich möchtest du üben?";
@@ -475,7 +448,6 @@ function showMedizinMenu() {
     document.getElementById("buttons").innerHTML = `
         <div style="max-width:600px;margin:0 auto;text-align:left;">
             <p style="font-size:18px;color:#666;margin:10px 0 5px;">📖 Từ vựng theo chủ đề</p>
-            <button onclick="showVokabelGruppe('krankheiten')" style="font-size:18px;padding:12px 20px;margin:5px;border-radius:15px;border:none;cursor:pointer;background:#ffebee;display:block;width:100%;text-align:left;">🦠 Krankheiten & Symptome <span style="color:#999;font-size:14px;">(20 từ)</span></button>
             <button onclick="showVokabelGruppe('diagnostik')" style="font-size:18px;padding:12px 20px;margin:5px;border-radius:15px;border:none;cursor:pointer;background:#e3f2fd;display:block;width:100%;text-align:left;">🩺 Diagnostische Instrumente <span style="color:#999;font-size:14px;">(6 từ)</span></button>
             <button onclick="showVokabelGruppe('verbandmaterial')" style="font-size:18px;padding:12px 20px;margin:5px;border-radius:15px;border:none;cursor:pointer;background:#fce4ec;display:block;width:100%;text-align:left;">🩹 Verbandmaterial <span style="color:#999;font-size:14px;">(8 từ)</span></button>
             <button onclick="showVokabelGruppe('intensiv')" style="font-size:18px;padding:12px 20px;margin:5px;border-radius:15px;border:none;cursor:pointer;background:#f3e5f5;display:block;width:100%;text-align:left;">🏥 Intensivmedizinische Ausstattung <span style="color:#999;font-size:14px;">(6 từ)</span></button>
@@ -488,7 +460,7 @@ function showMedizinMenu() {
 
 function showAlltagMenu() {
     document.getElementById("feedback-area").style.display = "none";
-    document.getElementById("message").innerHTML = "🏠 Was möchtest du im Alltag üben?";
+    document.getElementById("message").innerHTML = "🏠 Was möchtest du im Alltag üben? 🏠";
     document.getElementById("buttons").innerHTML = `
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:600px;margin:0 auto;">
             <button onclick="showVokabelGruppe('umwelt')" style="font-size:17px;padding:12px 16px;border-radius:15px;border:none;cursor:pointer;background:#e8f5e9;text-align:left;">🌍 Umwelt<br><span style="color:#999;font-size:13px;">8 từ</span></button>
@@ -500,17 +472,19 @@ function showAlltagMenu() {
             <button onclick="showVokabelGruppe('studium')" style="font-size:17px;padding:12px 16px;border-radius:15px;border:none;cursor:pointer;background:#fff3e0;text-align:left;">🎓 Studium<br><span style="color:#999;font-size:13px;">8 từ</span></button>
             <button onclick="showVokabelGruppe('saetze')" style="font-size:17px;padding:12px 16px;border-radius:15px;border:none;cursor:pointer;background:#e0f7fa;text-align:left;">💬 Sätze<br><span style="color:#999;font-size:13px;">8 từ</span></button>
         </div>
-        <div style="margin-top:15px;max-width:600px;margin-left:auto;margin-right:auto;">
+        <div style="margin-top:20px;max-width:600px;margin-left:auto;margin-right:auto;">
             <hr style="border:1px solid #eee;margin-bottom:15px;">
-            <button onclick="startTypingPractice()" style="font-size:20px;padding:15px 20px;border-radius:15px;border:none;cursor:pointer;background:#ffb74d;color:white;width:100%;box-shadow:0 4px 6px rgba(0,0,0,0.1);">✍️ Đặt câu với Kapi (AI chấm bài)</button>
+            <button onclick="startTypingPractice()" style="font-size:20px;padding:15px 20px;border-radius:15px;border:none;cursor:pointer;background:#ffb74d;color:white;width:100%;box-shadow:0 4px 6px rgba(0,0,0,0.1);">✍️ Đặt câu với Kapi (Check Grammatik)</button>
         </div>
         <button onclick="showVokabelHauptmenu()" style="font-size:18px;padding:10px 20px;margin:15px 10px 5px;border-radius:20px;border:none;cursor:pointer;background:#eee;">⬅️ Zurück</button>
     `;
 }
 
-// ===== LOGIC TỪ VỰNG =====
+// ===== VOKABEL LOGIC =====
 function showVokabelGruppe(gruppe) {
-    if (!vokabelGruppen[gruppe]) { alert("Chủ đề này chưa có!"); return; }
+    if (!vokabelGruppen[gruppe] || !vokabelGruppen[gruppe].woerter.length) {
+        alert("Chủ đề này chưa có từ vựng!"); return;
+    }
     currentGruppe = gruppe;
     currentVokabelIndex = 0;
     currentShuffledWoerter = [...vokabelGruppen[gruppe].woerter].sort(() => Math.random() - 0.5);
@@ -521,9 +495,8 @@ function showVokabel() {
     const gruppeTitel = vokabelGruppen[currentGruppe].titel;
     const wort = currentShuffledWoerter[currentVokabelIndex];
     const total = currentShuffledWoerter.length;
-    const isMedizin = ['krankheiten','diagnostik','verbandmaterial','intensiv'].includes(currentGruppe);
+    const isMedizin = ['diagnostik','verbandmaterial','intensiv'].includes(currentGruppe);
     const backMenuFn = isMedizin ? "showMedizinMenu()" : "showAlltagMenu()";
-
     document.getElementById("feedback-area").style.display = "none";
     document.getElementById("message").innerHTML = `
         <span style="font-size:16px;color:#666;">${gruppeTitel} | ${currentVokabelIndex + 1}/${total}</span><br><br>
@@ -532,7 +505,6 @@ function showVokabel() {
         <span style="font-size:22px;color:#555;">${wort.vi}</span><br>
         ${wort.beispiel ? `<div style="margin-top:12px;padding:10px 16px;background:#f9f9f9;border-radius:10px;font-size:17px;color:#444;font-style:italic;max-width:500px;display:inline-block;text-align:left;">📝 <b>Beispiel:</b> ${wort.beispiel}</div>` : ''}
     `;
-
     const prevBtn = currentVokabelIndex > 0 ? `<button onclick="prevVokabel()" style="font-size:20px;padding:12px 22px;margin:8px;border-radius:15px;border:none;cursor:pointer;background:#eee;">⬅️ Trước</button>` : '';
     const nextBtn = currentVokabelIndex < total - 1
         ? `<button onclick="nextVokabel()" style="font-size:20px;padding:12px 22px;margin:8px;border-radius:15px;border:none;cursor:pointer;background:#4CAF50;color:white;">➡️ Tiếp</button>`
@@ -546,86 +518,37 @@ function showVokabel() {
 function nextVokabel() { currentVokabelIndex++; showVokabel(); }
 function prevVokabel() { currentVokabelIndex--; showVokabel(); }
 
+// ===== ĐẶT CÂU & CHẤM NGỮ PHÁP (GEMINI) =====
+function startTypingPractice() {
+    document.getElementById("feedback-area").style.display = "none";
+    let allWoerter = [];
+    Object.values(vokabelGruppen).forEach(gruppe => {
+        if (gruppe.woerter) allWoerter = allWoerter.concat(gruppe.woerter);
+    });
+    currentPracticeWord = allWoerter[Math.floor(Math.random() * allWoerter.length)];
+    document.getElementById("message").innerHTML = `
+        <div style="font-size:18px;color:#666;font-weight:normal;">Hãy đặt một câu tiếng Đức với từ này:</div>
+        <div style="font-size:32px;color:#e67e22;margin:10px;font-weight:bold;">${currentPracticeWord.de}</div>
+        <div style="font-size:20px;color:#555;margin-bottom:20px;">(${currentPracticeWord.vi})</div>
+        <textarea id="userInput" rows="3" style="width:90%;max-width:600px;font-size:20px;padding:15px;border-radius:12px;border:2px solid #ccc;font-family:inherit;" placeholder="Ví dụ: Ich brauche ein Stethoskop..."></textarea>
+    `;
+    document.getElementById("buttons").innerHTML = `
+        <button onclick="checkGrammatikMitAI()" style="font-size:20px;padding:12px 25px;margin:8px;border-radius:15px;border:none;cursor:pointer;background:#4CAF50;color:white;box-shadow:0 4px 6px rgba(0,0,0,0.1);">🚀 Kapi, chấm bài!</button>
+        <button onclick="startTypingPractice()" style="font-size:18px;padding:12px 20px;margin:8px;border-radius:15px;border:none;cursor:pointer;background:#e3f2fd;">🔄 Đổi từ khác</button>
+        <button onclick="showAlltagMenu()" style="font-size:18px;padding:10px 20px;margin:8px;border-radius:15px;border:none;cursor:pointer;background:#eee;">🏠 Menu</button>
+    `;
 }
-
-function handleChamtBai() {
-    let userInput = document.getElementById("userInput").value.trim();
-    if (!userInput) return alert("Cậu chưa viết gì kìa!");
-    checkCauTrucChung(userInput, currentPracticeWord.de, currentPracticeWord.vi);
-}
-
-// ========================================================
-// ===== LOGIC CHẤM BÀI KHÔNG LỖI (HYBRID CHECKER) ========
-// ========================================================
-async function checkCauTrucChung(textInput, targetWordDe, targetWordVi) {
-    let feedbackArea = document.getElementById("feedback-area");
-    let aiCorrection = document.getElementById("ai-correction");
-    
-    feedbackArea.style.display = "block";
-    aiCorrection.style.display = "block";
-    aiCorrection.innerHTML = `<p style="font-size:18px;color:#e67e22;"><i>Kapi đang đọc câu của cậu... 🦫🔍</i></p>`;
-
-    let activeKey = localStorage.getItem("gemini_vịt_key");
-
-    if (activeKey) {
-        // --- NẾU CÓ KEY: GỌI THẲNG GEMINI TỪ TRÌNH DUYỆT KHÔNG QUA PROXY VERCEL ---
-        let prompt = `Du bist ein strenger Deutschlehrer für das Niveau B2/C1.
-        Schüler schreibt: "${textInput}" (Vokabel: ${targetWordDe} - ${targetWordVi}).
-        Analyse die Grammatik (Adjektivendungen, Verbstellung, Artikel) genau.
-        Falls falsch, korrigiere es (Korrektur). Falls richtig, lobe den Schüler und zeige eine akademischere Variante auf.
-        Erkläre die Fehler kurz auf Vietnamesisch. Antworte NUR mit sauberem HTML-Code (nutze <p>, <b>, <i>, <ul>, <li>). Kein Markdown \`\`\`html!`;
-
-        try {
-            const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${activeKey}`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-            });
-            const data = await res.json();
-            if (data.candidates && data.candidates[0].content) {
-                let txt = data.candidates[0].content.parts[0].text;
-                aiCorrection.innerHTML = `<div style="font-size:18px;line-height:1.6;">${txt}</div>`;
-                return;
-            }
-        } catch (e) {
-            console.log("Lỗi Gemini, tự động chuyển sang LanguageTool:", e);
-        }
-
-    // --- NẾU KHÔNG CÓ KEY HOẶC KEY LỖI: CHUYỂN SANG LANGUAGE TOOL MIỄN PHÍ VÔ HẠN ---
-    try {
-        const response = await fetch('https://api.languagetool.org/v2/check', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: new URLSearchParams({ text: textInput, language: 'de-DE' })
-        });
-        const data = await response.json();
-        
-        if (data.matches.length === 0) {
-            aiCorrection.innerHTML = `
-                <h3 style="color:#2ecc71; margin-top:0;">✅ Chuẩn chính tả!</h3>
-                <p style="font-size:18px;">Câu của cậu chuẩn không sai lỗi chính tả cơ bản nào. (Hãy cắm API Key ở trên để Kapi sửa văn phong nâng cao B2 mượt hơn nhé Vịt!)</p>
-            `;
-        } else {
-            let fehlerHtml = `<h3 style="color:#e74c3c; margin-top:0;">❌ Lỗi chính tả & Ngữ pháp cơ bản:</h3><ul style="font-size:18px; padding-left:20px;">`;
-            data.matches.forEach(match => {
-                let s = match.replacements.slice(0, 2).map(r => r.value).join(" hoặc ");
-                fehlerHtml += `<li style="margin-bottom:10px;"><b>Lỗi:</b> ${match.message} ${s ? `<br><span style="color:#27ae60;">💡 Nên sửa thành: <b>${s}</b></span>` : ''}</li>`;
-            });
-            fehlerHtml += `</ul>`;
-            aiCorrection.innerHTML = fehlerHtml;
-        }
-    } catch (err) {
-        aiCorrection.innerHTML = `<p style="color:red;">Không thể kết nối tới bộ kiểm tra: ${err.message}</p>`;
-    }
 
 async function checkGrammatikMitAI() {
     let userInput = document.getElementById("userInput").value.trim();
     let feedbackArea = document.getElementById("feedback-area");
     let aiCorrection = document.getElementById("ai-correction");
 
-    if (!userInput) { alert("Cậu chưa viết gì kìa! Kapi không chấm giấy trắng đâu nha!"); return; }
+    if (!userInput) {
+        alert("Cậu chưa viết gì kìa! Kapi không chấm giấy trắng đâu nha!"); return;
+    }
 
-    let cleanDe = currentPracticeWord.de.replace(/^(Der|Die|Das|sich)\s+/i, '').trim();
+    let cleanDe = currentPracticeWord.de.replace(/^(Der|Die|Das)\s+/i, '').trim();
     if (!userInput.toLowerCase().includes(cleanDe.toLowerCase())) {
         feedbackArea.style.display = "block";
         aiCorrection.style.display = "block";
@@ -649,12 +572,12 @@ async function checkGrammatikMitAI() {
         });
         const data = await response.json();
         if (data.result) {
-            aiCorrection.innerHTML = `<div style="font-size:18px;line-height:1.6;">${data.result}</div>`;
+            aiCorrection.innerHTML = data.result;
         } else {
             aiCorrection.innerHTML = `<p style='color:red;'>${data.error || "Lỗi không xác định"}</p>`;
         }
     } catch (error) {
-        aiCorrection.innerHTML = `<p style='color:red;'>Lỗi kết nối: ${error.message}</p>`;
+        aiCorrection.innerHTML = "<p style='color:red;'>Lỗi kết nối: " + error.message + "</p>";
     }
 }
 
@@ -669,12 +592,10 @@ function showMinigameQuestion() {
     if (minigameIndex >= minigameQuestions.length) { showMinigameResult(); return; }
     const current = minigameQuestions[minigameIndex];
     const allWoerter = vokabelGruppen[currentGruppe].woerter;
-    const isMedizin = ['krankheiten','diagnostik','verbandmaterial','intensiv'].includes(currentGruppe);
+    const isMedizin = ['diagnostik','verbandmaterial','intensiv'].includes(currentGruppe);
     const backMenuFn = isMedizin ? "showMedizinMenu()" : "showAlltagMenu()";
-
     let wrongAnswers = allWoerter.filter(w => w.de !== current.de).sort(() => Math.random() - 0.5).slice(0, 3);
     let answers = [...wrongAnswers, current].sort(() => Math.random() - 0.5);
-
     document.getElementById("feedback-area").style.display = "none";
     document.getElementById("message").innerHTML = `
         <span style="font-size:16px;color:#666;">🎮 Minigame | Câu ${minigameIndex + 1}/${minigameQuestions.length} | Điểm: ${minigameScore}</span><br><br>
@@ -693,7 +614,6 @@ function checkMinigame(chosenEncoded, correctEncoded, viEncoded) {
     const vi = decodeURIComponent(viEncoded);
     const isCorrect = chosen === correct;
     if (isCorrect) minigameScore++;
-
     document.getElementById("feedback-area").style.display = "block";
     const aiCorrection = document.getElementById("ai-correction");
     aiCorrection.style.display = "block";
@@ -717,9 +637,8 @@ function showMinigameResult() {
     const total = minigameQuestions.length;
     const percent = Math.round((minigameScore / total) * 100);
     const emoji = percent >= 80 ? "🏆" : percent >= 60 ? "👍" : "💪";
-    const isMedizin = ['krankheiten','diagnostik','verbandmaterial','intensiv'].includes(currentGruppe);
+    const isMedizin = ['diagnostik','verbandmaterial','intensiv'].includes(currentGruppe);
     const backMenuFn = isMedizin ? "showMedizinMenu()" : "showAlltagMenu()";
-
     document.getElementById("message").innerHTML = `
         ${emoji} <b>Kết quả Minigame!</b><br><br>${minigameScore}/${total} (${percent}%)<br><br>
         ${percent >= 80 ? "Ausgezeichnet! 🌟" : percent >= 60 ? "Gut gemacht! 👏" : "Weiter üben! 💪"}
@@ -743,17 +662,14 @@ function showQuestion() {
     if (currentQuestionIndex >= shuffledQuestions.length) { showResult(); return; }
     const q = shuffledQuestions[currentQuestionIndex];
     const typeLabel = q.type === "luecke" ? "🔤 Điền vào chỗ trống" : q.type === "bedeutung" ? "📚 Chọn nghĩa đúng" : "✏️ Chọn từ đúng";
-
     document.getElementById("feedback-area").style.display = "none";
     document.getElementById("message").innerHTML = `
         <span style="font-size:16px;color:#666;">${typeLabel} | Câu ${currentQuestionIndex + 1}/${shuffledQuestions.length} | Điểm: ${score}</span><br><br>
         <b>${q.frage}</b>
     `;
-
     const shuffledAnswers = q.antworten.map((a, i) => ({text: a, original: i})).sort(() => Math.random() - 0.5);
     const labels = ["A","B","C","D"];
     const backBtn = currentQuestionIndex > 0 ? `<button onclick="prevQuestion()" style="font-size:18px;padding:10px 20px;margin:8px;border-radius:15px;border:2px solid #ddd;cursor:pointer;background:#eee;">⬅️ Câu trước</button>` : '';
-
     document.getElementById("buttons").innerHTML = shuffledAnswers.map((a, i) => `
         <button onclick="checkAnswer(${a.original},${q.richtig},'${encodeURIComponent(q.erklaerung)}','${encodeURIComponent(q.antworten[q.richtig])}')"
             style="font-size:18px;padding:12px 20px;margin:8px;border-radius:15px;border:2px solid #ddd;cursor:pointer;display:block;width:90%;max-width:600px;text-align:left;background:white;">
@@ -776,7 +692,6 @@ function checkAnswer(chosen, correct, erklaerungEncoded, correctAnswerEncoded) {
     const isCorrect = chosen === correct;
     questionHistory.push({ index: currentQuestionIndex, score: score });
     if (isCorrect) score++;
-
     document.getElementById("feedback-area").style.display = "block";
     const aiCorrection = document.getElementById("ai-correction");
     aiCorrection.style.display = "block";
