@@ -257,6 +257,32 @@ function restart() {
 
 // ===== DỮ LIỆU TỪ VỰNG TỔNG HỢP 100% =====
 const vokabelGruppen = {
+    krankheiten: {
+        titel: "🦠 Krankheiten & Symptome",
+        woerter: [
+            { de: "sich anstecken durch (+ Akk.)", vi: "lây nhiễm qua", beispiel: "Man kann sich durch Tröpfcheninfektion anstecken.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='30' cy='50' r='15' fill='%23e74c3c'/><circle cx='70' cy='50' r='15' fill='%233498db'/><path d='M45 50 L55 50' stroke='%23e74c3c' stroke-width='3' stroke-dasharray='4'/><text x='50' y='45' font-size='15' text-anchor='middle'>🦠</text></svg>" },
+            { de: "Die Symptome", vi: "Triệu chứng", beispiel: "Die häufigsten Symptome sind Fieber und Husten.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='30' y='20' width='40' height='60' rx='5' fill='%23ecf0f1' stroke='%23bdc3c7' stroke-width='2'/><line x1='40' y1='35' x2='60' y2='35' stroke='%2334495e' stroke-width='2'/><line x1='40' y1='45' x2='50' y2='45' stroke='%2334495e' stroke-width='2'/><circle cx='35' cy='35' r='2' fill='%23e74c3c'/><circle cx='35' cy='45' r='2' fill='%23e74c3c'/><circle cx='35' cy='55' r='2' fill='%23e74c3c'/></svg>" },
+            { de: "Der Ausbruch der Krankheit", vi: "Sự bùng phát bệnh", beispiel: "Der Ausbruch der Krankheit konnte schnell gestoppt werden.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='50' r='15' fill='%23e74c3c'/><path d='M50 25 L50 15 M50 75 L50 85 M25 50 L15 50 M75 50 L85 50 M32 32 L25 25 M68 68 L75 75 M32 68 L25 75 M68 32 L75 25' stroke='%23e74c3c' stroke-width='4'/></svg>" },
+            { de: "Die Akne", vi: "Mụn trứng cá", beispiel: "Viele Jugendliche leiden unter schwerer Akne.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='50' r='35' fill='%23f1c40f' opacity='0.5'/><circle cx='40' cy='40' r='4' fill='%23e74c3c'/><circle cx='60' cy='45' r='3' fill='%23e74c3c'/><circle cx='45' cy='60' r='5' fill='%23e74c3c'/><circle cx='55' cy='30' r='3' fill='%23e74c3c'/></svg>" },
+            { de: "Das Asthma", vi: "Hen suyễn", beispiel: "Bei Asthma verengen sich die Atemwege.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M35 40 Q20 50 35 70 Q50 60 45 40 Z' fill='%23e74c3c' opacity='0.7'/><path d='M65 40 Q80 50 65 70 Q50 60 55 40 Z' fill='%23e74c3c' opacity='0.7'/><rect x='45' y='20' width='10' height='30' fill='%23ecf0f1' stroke='%23bdc3c7' stroke-width='2'/><line x1='35' y1='55' x2='65' y2='55' stroke='%23c0392b' stroke-width='3'/></svg>" },
+            { de: "Der Ausschlag", vi: "Phát ban", beispiel: "Nach dem Essen bekam er einen roten Ausschlag.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M30 80 Q50 90 70 80 L60 20 Q50 10 40 20 Z' fill='%23f39c12' opacity='0.5'/><circle cx='45' cy='40' r='2' fill='%23e74c3c'/><circle cx='55' cy='50' r='3' fill='%23e74c3c'/><circle cx='40' cy='60' r='2' fill='%23e74c3c'/><circle cx='60' cy='70' r='3' fill='%23e74c3c'/><circle cx='50' cy='30' r='2' fill='%23e74c3c'/></svg>" },
+            { de: "Die Erkältung", vi: "Cảm lạnh", beispiel: "Im Winter fängt man sich leicht eine Erkältung ein.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='45' r='25' fill='%23ecf0f1' stroke='%23bdc3c7' stroke-width='3'/><circle cx='50' cy='45' r='5' fill='%23e74c3c'/><path d='M35 70 Q50 85 65 70' fill='none' stroke='%233498db' stroke-width='8'/></svg>" },
+            { de: "Der erhöhte Puls", vi: "Nhịp tim tăng cao", beispiel: "Stress kann zu einem erhöhten Puls führen.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M50 30 A 15 15 0 0 0 20 30 A 15 15 0 0 0 50 60 A 15 15 0 0 0 80 30 A 15 15 0 0 0 50 30 Z' fill='%23e74c3c'/><path d='M10 50 L30 50 L40 20 L60 80 L70 50 L90 50' stroke='%23fff' stroke-width='3' fill='none'/></svg>" },
+            { de: "Die Grippe", vi: "Bệnh cúm", beispiel: "Eine Grippe ist ansteckender als eine normale Erkältung.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='50' r='20' fill='%232ecc71' opacity='0.7'/><circle cx='50' cy='50' r='10' fill='%23e74c3c'/><path d='M50 20 L50 10 M50 80 L50 90 M20 50 L10 50 M80 50 L90 50' stroke='%232ecc71' stroke-width='4'/></svg>" },
+            { de: "Der Infarkt", vi: "Nhồi máu", beispiel: "Ein Herzinfarkt muss sofort medizinisch behandelt werden.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M50 30 A 15 15 0 0 0 20 30 A 15 15 0 0 0 50 60 A 15 15 0 0 0 80 30 A 15 15 0 0 0 50 30 Z' fill='%23e74c3c'/><path d='M60 20 L40 45 L55 45 L40 70' fill='none' stroke='%23f1c40f' stroke-width='5'/></svg>" },
+            { de: "Die Karies", vi: "Sâu răng", beispiel: "Zu viel Zucker verursacht Karies an den Zähnen.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M30 40 Q50 20 70 40 L60 80 Q50 90 40 80 Z' fill='%23ecf0f1' stroke='%23bdc3c7' stroke-width='3'/><circle cx='60' cy='45' r='8' fill='%232c3e50'/></svg>" },
+            { de: "Die Migräne", vi: "Bệnh đau nửa đầu", beispiel: "Patienten mit Migräne sind oft sehr lichtempfindlich.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='50' r='30' fill='%23ecf0f1' stroke='%23bdc3c7' stroke-width='3'/><path d='M60 30 L50 50 L65 50 L45 80' fill='none' stroke='%23e74c3c' stroke-width='4'/></svg>" },
+            { de: "Die Mittelohrentzündung", vi: "Viêm tai giữa", beispiel: "Kinder bekommen häufiger eine Mittelohrentzündung.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M40 20 Q70 20 70 50 Q70 80 40 80' fill='none' stroke='%23f39c12' stroke-width='6'/><circle cx='55' cy='50' r='10' fill='%23e74c3c'/></svg>" },
+            { de: "Der Schnupfen", vi: "Sổ mũi", beispiel: "Er hat Schnupfen und braucht viele Taschentücher.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M50 30 L40 60 L60 60 Z' fill='%23ecf0f1' stroke='%23bdc3c7' stroke-width='3'/><circle cx='45' cy='65' r='4' fill='%233498db'/><circle cx='55' cy='65' r='4' fill='%233498db'/></svg>" },
+            { de: "Der verstauchte Fuß", vi: "Bong gân chân", beispiel: "Ein verstauchter Fuß muss gekühlt und hochgelagert werden.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M40 20 L40 60 L70 80 L30 80 Z' fill='%23f39c12' opacity='0.5'/><line x1='35' y1='60' x2='65' y2='75' stroke='%23ecf0f1' stroke-width='5'/><line x1='65' y1='60' x2='35' y2='75' stroke='%23ecf0f1' stroke-width='5'/><circle cx='45' cy='70' r='5' fill='%23e74c3c'/></svg>" },
+            { de: "Der Kardiologe", vi: "Bác sĩ tim mạch", beispiel: "Der Kardiologe untersucht die Funktion des Herzens.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='30' r='15' fill='%233498db'/><rect x='35' y='50' width='30' height='40' fill='%23ecf0f1'/><path d='M50 65 A 5 5 0 0 0 40 65 A 5 5 0 0 0 50 75 A 5 5 0 0 0 60 65 A 5 5 0 0 0 50 65 Z' fill='%23e74c3c'/></svg>" },
+            { de: "Der Orthopäde", vi: "Bác sĩ chỉnh hình", beispiel: "Bei Gelenkschmerzen überweist der Hausarzt zum Orthopäden.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='30' cy='30' r='15' fill='%232ecc71'/><rect x='20' y='50' width='20' height='40' fill='%23ecf0f1'/><path d='M60 20 L60 80 M50 30 L70 30 M50 50 L70 50 M50 70 L70 70' stroke='%23bdc3c7' stroke-width='4'/></svg>" },
+            { de: "Die ärztliche Vorsorge-Untersuchung", vi: "Khám sức khỏe định kỳ", beispiel: "Die ärztliche Vorsorge-Untersuchung ist wichtig zur Früherkennung.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='20' y='20' width='60' height='60' rx='5' fill='%23fff' stroke='%23bdc3c7' stroke-width='3'/><line x1='20' y1='40' x2='80' y2='40' stroke='%23bdc3c7' stroke-width='3'/><path d='M40 60 L60 60 M50 50 L50 70' stroke='%232ecc71' stroke-width='5'/></svg>" },
+            { de: "Das Heilfasten", vi: "Nhịn ăn chữa bệnh", beispiel: "Heilfasten soll den Körper reinigen und entgiften.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='50' r='35' fill='none' stroke='%23bdc3c7' stroke-width='4'/><path d='M30 50 C 40 70, 60 70, 70 50' fill='none' stroke='%232ecc71' stroke-width='4'/><line x1='25' y1='25' x2='75' y2='75' stroke='%23e74c3c' stroke-width='4'/></svg>" },
+            { de: "Das digitale Zeitalter", vi: "Kỷ nguyên số", beispiel: "Im digitalen Zeitalter ist schnelle Kommunikation selbstverständlich.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='50' r='30' fill='%232c3e50'/><path d='M20 50 L80 50 M50 20 L50 80' stroke='%233498db' stroke-width='2'/><text x='35' y='40' font-size='10' fill='%232ecc71'>101</text><text x='55' y='60' font-size='10' fill='%232ecc71'>010</text></svg>" },
+            { de: "Die angemessene Kleidung", vi: "Trang phục phù hợp", beispiel: "Im Krankenhaus ist angemessene Kleidung Pflicht.", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M30 30 L70 30 L80 50 L65 50 L65 80 L35 80 L35 50 L20 50 Z' fill='%233498db'/><line x1='50' y1='30' x2='50' y2='80' stroke='%232980b9' stroke-width='2'/></svg>" }
+        ]
+    },
     diagnostik: {
         titel: "🩺 Diagnostische Instrumente",
         woerter: [
@@ -448,6 +474,7 @@ function showMedizinMenu() {
     document.getElementById("buttons").innerHTML = `
         <div style="max-width:600px;margin:0 auto;text-align:left;">
             <p style="font-size:18px;color:#666;margin:10px 0 5px;">📖 Từ vựng theo chủ đề</p>
+            <button onclick="showVokabelGruppe('krankheiten')" style="font-size:18px;padding:12px 20px;margin:5px;border-radius:15px;border:none;cursor:pointer;background:#ffebee;display:block;width:100%;text-align:left;">🦠 Krankheiten & Symptome <span style="color:#999;font-size:14px;">(21 từ)</span></button>
             <button onclick="showVokabelGruppe('diagnostik')" style="font-size:18px;padding:12px 20px;margin:5px;border-radius:15px;border:none;cursor:pointer;background:#e3f2fd;display:block;width:100%;text-align:left;">🩺 Diagnostische Instrumente <span style="color:#999;font-size:14px;">(6 từ)</span></button>
             <button onclick="showVokabelGruppe('verbandmaterial')" style="font-size:18px;padding:12px 20px;margin:5px;border-radius:15px;border:none;cursor:pointer;background:#fce4ec;display:block;width:100%;text-align:left;">🩹 Verbandmaterial <span style="color:#999;font-size:14px;">(8 từ)</span></button>
             <button onclick="showVokabelGruppe('intensiv')" style="font-size:18px;padding:12px 20px;margin:5px;border-radius:15px;border:none;cursor:pointer;background:#f3e5f5;display:block;width:100%;text-align:left;">🏥 Intensivmedizinische Ausstattung <span style="color:#999;font-size:14px;">(6 từ)</span></button>
@@ -476,14 +503,14 @@ function showAlltagMenu() {
         <!-- NÚT LÀM BÀI TẬP ĐẶT CÂU -->
         <div style="margin-top: 20px; max-width:600px; margin-left:auto; margin-right:auto;">
             <hr style="border:1px solid #eee; margin-bottom:15px;">
-            <button onclick="startTypingPractice()" style="font-size:20px;padding:15px 20px;border-radius:15px;border:none;cursor:pointer;background:#ffb74d;color:white;width:100%;box-shadow: 0 4px 6px rgba(0,0,0,0.1);">✍️ Đặt câu với Kapi (Check Grammatik)</button>
+            <button onclick="startTypingPractice()" style="font-size:20px;padding:15px 20px;border-radius:15px;border:none;cursor:pointer;background:#ffb74d;color:white;width:100%;box-shadow: 0 4px 6px rgba(0,0,0,0.1);">✍️ Đặt câu với Kapi (Check Grammatik B2)</button>
         </div>
 
         <button onclick="showVokabelHauptmenu()" style="font-size:18px;padding:10px 20px;margin:15px 10px 5px;border-radius:20px;border:none;cursor:pointer;background:#eee;">⬅️ Zurück</button>
     `;
 }
 
-// ===== LOGIC TỪ VỰNG =====
+// ===== LOGIC XEM TỪ VỰNG =====
 function showVokabelGruppe(gruppe) {
     if (!vokabelGruppen[gruppe] || !vokabelGruppen[gruppe].woerter.length) {
         alert("Chủ đề này chưa có từ vựng!"); return;
@@ -498,7 +525,7 @@ function showVokabel() {
     const gruppeTitel = vokabelGruppen[currentGruppe].titel;
     const wort = currentShuffledWoerter[currentVokabelIndex];
     const total = currentShuffledWoerter.length;
-    const isMedizin = ['diagnostik','verbandmaterial','intensiv'].includes(currentGruppe);
+    const isMedizin = ['diagnostik','verbandmaterial','intensiv','krankheiten'].includes(currentGruppe);
     const backMenuFn = isMedizin ? "showMedizinMenu()" : "showAlltagMenu()";
     
     document.getElementById("feedback-area").style.display = "none";
@@ -524,7 +551,10 @@ function showVokabel() {
 function nextVokabel() { currentVokabelIndex++; showVokabel(); }
 function prevVokabel() { currentVokabelIndex--; showVokabel(); }
 
-// ===== ĐẶT CÂU & CHẤM NGỮ PHÁP (SÄTZE BILDEN) =====
+
+// ==========================================
+// ===== ĐẶT CÂU & CHẤM NGỮ PHÁP (TỐI ƯU NHẤT) =====
+// ==========================================
 function startTypingPractice() {
     document.getElementById("feedback-area").style.display = "none";
     
@@ -539,7 +569,7 @@ function startTypingPractice() {
         <div style="font-size:18px; color:#666; font-weight:normal;">Hãy đặt một câu tiếng Đức với từ này:</div>
         <div style="font-size:32px; color:#e67e22; margin:10px; font-weight:bold;">${currentPracticeWord.de}</div>
         <div style="font-size:20px; color:#555; margin-bottom:20px;">(${currentPracticeWord.vi})</div>
-        <textarea id="userInput" rows="3" style="width:90%; max-width:600px; font-size:20px; padding:15px; border-radius:12px; border:2px solid #ccc; font-family:inherit;" placeholder="Ví dụ: Ich brauche ein Stethoskop..."></textarea>
+        <textarea id="userInput" rows="3" style="width:90%; max-width:600px; font-size:20px; padding:15px; border-radius:12px; border:2px solid #ccc; font-family:inherit;" placeholder="Ví dụ: Ich brauche eine Kanüle für die Injektion..."></textarea>
     `;
     
     document.getElementById("buttons").innerHTML = `
@@ -558,48 +588,40 @@ async function checkGrammatikMitAI() {
         alert("Cậu chưa viết gì kìa! Kapi không chấm giấy trắng đâu nha!"); return;
     }
 
-    let cleanDe = currentPracticeWord.de.replace(/^(Der|Die|Das)\s+/i, '').trim();
-    
-    if (!userInput.toLowerCase().includes(cleanDe.toLowerCase()) && !userInput.toLowerCase().includes(currentPracticeWord.de.toLowerCase())) {
-        feedbackArea.style.display = "block";
-        aiCorrection.style.display = "block";
-        aiCorrection.innerHTML = `<p style='color:red; font-size:18px;'>❌ Khoan đã! Kapi thấy cậu chưa dùng từ <b>${currentPracticeWord.de}</b> trong câu kìa!</p>`;
-        return;
-    }
-
     feedbackArea.style.display = "block";
     aiCorrection.style.display = "block";
-    aiCorrection.innerHTML = `<div style="text-align:center;"><p style="font-size:22px; color:#e67e22;"><i>Kapi đang lôi từ điển ra soi... 🦫🔍</i></p></div>`;
+    aiCorrection.innerHTML = `
+        <div style="text-align:center;">
+            <p style="font-size:22px; color:#e67e22;"><i>Kapi đang gửi bài cho Giáo sư Gemini chấm... 🧠🦫</i></p>
+            <p style="font-size:16px; color:#666;">(Chờ tớ vài giây nhé! Tớ pha trà xanh cho cậu uống đợi nè 🍵)</p>
+        </div>
+    `;
 
     try {
-        const response = await fetch('https://api.languagetool.org/v2/check', {
+        const response = await fetch('/api/check', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: new URLSearchParams({ text: userInput, language: 'de-DE' })
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                tuViet: currentPracticeWord.vi, 
+                tuDuc: currentPracticeWord.de, 
+                cauVidu: userInput 
+            })
         });
+        
         const data = await response.json();
         
-        if (data.matches.length === 0) {
-            aiCorrection.innerHTML = `
-                <h3 style="color:#2ecc71; margin-top:0;">✅ Wunderbar!</h3>
-                <p style="font-size:18px;">Câu của cậu chuẩn không cần chỉnh! Ngữ pháp hoàn hảo. Kapi tặng cậu 1 củ cà rốt 🥕!</p>
-            `;
+        if (data.error) {
+            aiCorrection.innerHTML = `<p style='color:red;'>Lỗi Vercel: ${data.error}</p>`;
         } else {
-            let fehlerHtml = `<h3 style="color:#e74c3c; margin-top:0;">❌ Kapi nhặt được vài hạt sạn này:</h3><ul style="font-size:18px; line-height:1.6; text-align:left; padding-left: 20px;">`;
-            data.matches.forEach(match => {
-                let suggestions = match.replacements.slice(0, 3).map(r => r.value).join(" <b>hoặc</b> ");
-                let suggestionText = suggestions ? `<br><span style="color:#27ae60;">💡 <i>Gợi ý sửa thành: <b>${suggestions}</b></i></span>` : "";
-                fehlerHtml += `<li style="margin-bottom:12px;"><b>Lỗi:</b> ${match.message} ${suggestionText}</li>`;
-            });
-            fehlerHtml += `</ul><p style="font-size:16px; color:#666; font-style:italic;">Cậu hãy thử sửa lại xem sao nhé!</p>`;
-            aiCorrection.innerHTML = fehlerHtml;
+            aiCorrection.innerHTML = `<div style="text-align:left; font-size:18px; line-height:1.6;">${data.result}</div>`;
         }
     } catch (error) {
-        aiCorrection.innerHTML = "<p style='color:red;'>Trời ơi, mạng nhà Kapi bị rớt rồi: " + error.message + "</p>";
+        aiCorrection.innerHTML = `<p style='color:red;'>Trời ơi, mạng nhà Kapi bị rớt rồi: ${error.message}</p>`;
     }
 }
 
-// ===== MINIGAME =====
+
+// ===== MINIGAME VÀ QUIZ (GIỮ NGUYÊN) =====
 function startMinigame() {
     minigameScore = 0; minigameIndex = 0;
     minigameQuestions = [...currentShuffledWoerter].sort(() => Math.random() - 0.5);
@@ -610,7 +632,7 @@ function showMinigameQuestion() {
     if (minigameIndex >= minigameQuestions.length) { showMinigameResult(); return; }
     const current = minigameQuestions[minigameIndex];
     const allWoerter = vokabelGruppen[currentGruppe].woerter;
-    const isMedizin = ['diagnostik','verbandmaterial','intensiv'].includes(currentGruppe);
+    const isMedizin = ['diagnostik','verbandmaterial','intensiv','krankheiten'].includes(currentGruppe);
     const backMenuFn = isMedizin ? "showMedizinMenu()" : "showAlltagMenu()";
     
     let wrongAnswers = allWoerter.filter(w => w.de !== current.de).sort(() => Math.random() - 0.5).slice(0, 3);
@@ -658,7 +680,7 @@ function showMinigameResult() {
     const total = minigameQuestions.length;
     const percent = Math.round((minigameScore / total) * 100);
     const emoji = percent >= 80 ? "🏆" : percent >= 60 ? "👍" : "💪";
-    const isMedizin = ['diagnostik','verbandmaterial','intensiv'].includes(currentGruppe);
+    const isMedizin = ['diagnostik','verbandmaterial','intensiv','krankheiten'].includes(currentGruppe);
     const backMenuFn = isMedizin ? "showMedizinMenu()" : "showAlltagMenu()";
     
     document.getElementById("message").innerHTML = `
@@ -673,7 +695,6 @@ function showMinigameResult() {
     document.getElementById("feedback-area").style.display = "none";
 }
 
-// ===== QUIZ Y KHOA =====
 function startMedizin() {
     score = 0; currentQuestionIndex = 0; questionHistory = [];
     shuffledQuestions = [...medizinQuestions].sort(() => Math.random() - 0.5);
