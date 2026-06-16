@@ -2,21 +2,22 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <title>Kapi - Deutsch B2</title>
 </head>
-<body style="margin:0;min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;background:white;">
+<body style="margin:0;min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;background:white;font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
 
 <h1>Hallo! Ich bin Kapi 🦫</h1>
-<img src="capy.png" width="450">
+<img src="capy.png" width="450" onerror="this.onerror=null;this.src='https://placehold.co/400x300/e3f2fd/1565c0?text=Kapi+Image'">
 <p id="message" style="font-size:30px;">Guten Morgen! Schön, dich kennenzulernen! 🌟</p>
-<p id="timer" style="font-size:40px;"></p>
+<p id="timer" style="font-size:40px; color:#e67e22; font-weight:bold;"></p>
 
-<div id="feedback-area" style="display:none;max-width:800px;margin:10px auto;padding:20px;background-color:#f5f5f5;border-radius:12px;text-align:left;">
-    <p id="transcript-text" style="font-size:20px;"><i>Dein Text erscheint hier...</i></p>
+<div id="feedback-area" style="display:none;max-width:800px;margin:10px auto;padding:20px;background-color:#f5f5f5;border-radius:12px;text-align:left; border: 1px solid #ddd;">
+    <p id="transcript-text" style="font-size:20px; margin-top:0;"><i>Dein Text erscheint hier...</i></p>
     <div id="ai-correction" style="display:none;margin-top:15px;border-top:1px solid #ccc;padding-top:15px;"></div>
 </div>
 
 <div id="buttons">
-<button style="font-size:24px;padding:12px 24px;border-radius:12px;cursor:pointer;" onclick="sayHallo()">👋 Hallo Kapi</button>
+    <button style="font-size:24px;padding:12px 24px;border-radius:12px;border:none;background:#4CAF50;color:white;cursor:pointer;box-shadow: 0 4px 6px rgba(0,0,0,0.1);" onclick="sayHallo()">👋 Hallo Kapi</button>
 </div>
 
 <script>
@@ -36,7 +37,9 @@ let currentShuffledWoerter = [];
 let minigameQuestions = [];
 let minigameIndex = 0;
 let minigameScore = 0;
+let currentPracticeWord = null;
 
+// ===== GHI ÂM SPRECHEN =====
 async function toggleRecording() {
     let recordBtn = document.getElementById("record-btn");
     let feedbackArea = document.getElementById("feedback-area");
@@ -49,6 +52,8 @@ async function toggleRecording() {
         mediaRecorder.start();
         isRecording = true;
         recordBtn.innerHTML = "🛑 Stopp";
+        recordBtn.style.backgroundColor = "#e74c3c";
+        recordBtn.style.color = "white";
         feedbackArea.style.display = "block";
         aiCorrection.style.display = "none";
         document.getElementById("transcript-text").innerHTML = "<i>Kapi hört zu... 🦫🎤</i>";
@@ -56,6 +61,8 @@ async function toggleRecording() {
         mediaRecorder.stop();
         isRecording = false;
         recordBtn.innerHTML = "🎤 Aufnehmen";
+        recordBtn.style.backgroundColor = "#e2e8f0";
+        recordBtn.style.color = "black";
         document.getElementById("transcript-text").innerHTML = "<i>Kapi denkt nach... 🧠</i>";
         mediaRecorder.onstop = async () => {
             mediaRecorder.stream.getTracks().forEach(t => t.stop());
@@ -80,9 +87,9 @@ async function toggleRecording() {
                     body: JSON.stringify({ text: text })
                 });
                 const chatData = await chatRes.json();
-                aiCorrection.innerHTML = chatData.result || "<p style='color:red;'>" + (chatData.error || "Lỗi") + "</p>";
+                aiCorrection.innerHTML = chatData.result || "<p style='color:red;'>" + (chatData.error || "Lỗi API") + "</p>";
             } catch (error) {
-                aiCorrection.innerHTML = "<p style='color:red;'>Lỗi: " + error.message + "</p>";
+                aiCorrection.innerHTML = "<p style='color:red;'>Lỗi kết nối API Server: " + error.message + "</p>";
             }
         };
     }
@@ -100,11 +107,12 @@ function startTimer() {
     }, 1000);
 }
 
+// ===== MENU CHÍNH =====
 function sayHallo() {
     document.getElementById("message").innerText = "Hallo! Wie geht's dir? 😊";
     document.getElementById("buttons").innerHTML = `
-        <button onclick="goodAnswer()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">😊 Mir geht's gut!</button>
-        <button onclick="badAnswer()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">😢 Nicht so gut.</button>
+        <button onclick="goodAnswer()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#dcedc8;">😊 Mir geht's gut!</button>
+        <button onclick="badAnswer()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#ffcdd2;">😢 Nicht so gut.</button>
         <button onclick="goHome()" style="font-size:20px;padding:10px 20px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#eee;">🏠 Zurück</button>
     `;
 }
@@ -118,7 +126,7 @@ function goHome() {
     document.getElementById("feedback-area").style.display = "none";
     document.getElementById("message").innerText = "Guten Morgen! Schön, dich kennenzulernen! 🌟";
     document.getElementById("buttons").innerHTML = `
-        <button style="font-size:24px;padding:12px 24px;border-radius:12px;cursor:pointer;" onclick="sayHallo()">👋 Hallo Kapi</button>
+        <button style="font-size:24px;padding:12px 24px;border-radius:12px;border:none;background:#4CAF50;color:white;cursor:pointer;" onclick="sayHallo()">👋 Hallo Kapi</button>
     `;
 }
 
@@ -126,10 +134,10 @@ function showLevels() {
     document.getElementById("feedback-area").style.display = "none";
     document.getElementById("message").innerText = "Welches Niveau möchtest du heute üben? 📚";
     document.getElementById("buttons").innerHTML = `
-        <button onclick="chooseLevel('A1')" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">📗 A1</button>
-        <button onclick="chooseLevel('A2')" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">📘 A2</button>
-        <button onclick="chooseLevel('B1')" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">📒 B1</button>
-        <button onclick="chooseLevel('B2')" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">📙 B2</button>
+        <button onclick="chooseLevel('A1')" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#e8f5e9;">📗 A1</button>
+        <button onclick="chooseLevel('A2')" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#e3f2fd;">📘 A2</button>
+        <button onclick="chooseLevel('B1')" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#fff9c4;">📒 B1</button>
+        <button onclick="chooseLevel('B2')" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#ffe0b2;">📙 B2</button>
         <button onclick="sayHallo()" style="font-size:20px;padding:10px 20px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#eee;">⬅️ Zurück</button>
     `;
 }
@@ -143,11 +151,11 @@ function chooseLevel(level) {
 function showLessons() {
     document.getElementById("feedback-area").style.display = "none";
     document.getElementById("buttons").innerHTML = `
-        <button onclick="chooseLesson('Hören')" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">👂 Hören</button>
-        <button onclick="chooseLesson('Sprechen')" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">🗣️ Sprechen</button>
-        <button onclick="chooseLesson('Lesen')" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">📖 Lesen</button>
-        <button onclick="chooseLesson('Schreiben')" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">✍️ Schreiben</button>
-        <button onclick="chooseLesson('Vokabeln')" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#fff3e0;">📝 Vokabeln</button>
+        <button onclick="chooseLesson('Hören')" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#f3e5f5;">👂 Hören</button>
+        <button onclick="chooseLesson('Sprechen')" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#e1f5fe;">🗣️ Sprechen</button>
+        <button onclick="chooseLesson('Lesen')" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#e8f5e9;">📖 Lesen</button>
+        <button onclick="chooseLesson('Schreiben')" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#fff3e0;">✍️ Schreiben</button>
+        <button onclick="chooseLesson('Vokabeln')" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#ffecb3;">📝 Vokabeln</button>
         <button onclick="showLevels()" style="font-size:20px;padding:10px 20px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#eee;">⬅️ Zurück</button>
     `;
 }
@@ -156,8 +164,8 @@ function chooseLesson(lesson) {
     if (lesson === "Sprechen") {
         document.getElementById("message").innerHTML = "Welchen Teil möchtest du üben?";
         document.getElementById("buttons").innerHTML = `
-            <button onclick="showTeil1()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">🎤 Teil 1</button>
-            <button onclick="showTeil2()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">🎤 Teil 2</button>
+            <button onclick="showTeil1()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#e1f5fe;">🎤 Teil 1</button>
+            <button onclick="showTeil2()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#b3e5fc;">🎤 Teil 2</button>
             <button onclick="showLessons()" style="font-size:20px;padding:10px 20px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#eee;">⬅️ Zurück</button>
         `;
         return;
@@ -166,6 +174,7 @@ function chooseLesson(lesson) {
     document.getElementById("message").innerText = "Super! Heute lernen wir " + lesson + "! 🎉";
 }
 
+// ===== DATA SPRECHEN 100% =====
 const teil1 = [
     {thema:"Fremdsprachen lernen",punkte:["Vorteile für Beruf und Zukunft","Kognitive Fähigkeiten fördern","Kulturelles Verständnis erweitern","Zeitaufwand und Schwierigkeiten"]},
     {thema:"Online Sprache lernen",punkte:["Flexibilität im Alltag","Kosten und Zugänglichkeit","Soziale Kontakte fördern oder einschränken","Lernqualität verbessern oder verschlechtern"]},
@@ -219,7 +228,7 @@ function showTeil1() {
     document.getElementById("message").innerHTML = "<b>🗣️ Goethe B2 - Teil 1</b><br><br>" + thema.thema + "<br><br>• " + thema.punkte.join("<br>• ");
     document.getElementById("buttons").innerHTML = `
         <button id="record-btn" onclick="toggleRecording()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;background-color:#e2e8f0;">🎤 Aufnehmen</button>
-        <button onclick="showTeil1()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">🔄 Neues Thema</button>
+        <button onclick="showTeil1()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#f5f5f5;">🔄 Neues Thema</button>
         <button onclick="chooseLesson('Sprechen')" style="font-size:20px;padding:10px 20px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#eee;">⬅️ Zurück</button>
     `;
     startTimer();
@@ -232,7 +241,7 @@ function showTeil2() {
     document.getElementById("message").innerHTML = "<b>🗣️ Goethe B2 - Teil 2</b><br><br>" + thema;
     document.getElementById("buttons").innerHTML = `
         <button id="record-btn" onclick="toggleRecording()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;background-color:#e2e8f0;">🎤 Aufnehmen</button>
-        <button onclick="showTeil2()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;">🔄 Neues Thema</button>
+        <button onclick="showTeil2()" style="font-size:22px;padding:15px 25px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#f5f5f5;">🔄 Neues Thema</button>
         <button onclick="chooseLesson('Sprechen')" style="font-size:20px;padding:10px 20px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#eee;">⬅️ Zurück</button>
     `;
     startTimer();
@@ -245,7 +254,9 @@ function restart() {
     document.getElementById("feedback-area").style.display = "none";
     goHome();
 }
-    const vokabelGruppen = {
+
+// ===== DỮ LIỆU TỪ VỰNG TỔNG HỢP 100% =====
+const vokabelGruppen = {
     diagnostik: {
         titel: "🩺 Diagnostische Instrumente",
         woerter: [
@@ -420,13 +431,13 @@ const medizinQuestions = [
     {type:"luecke",frage:"Eine ___ Nase und Niesen sind typische Symptome einer Erkältung.",antworten:["Schnupf-","heisere","juckende","infizierte"],richtig:0,erklaerung:"Schnupfnase = mũi bị sổ / Eine laufende oder verstopfte Nase bei Erkältung."}
 ];
 
-// ===== MENU FUNCTIONS =====
+// ===== MENU TỪ VỰNG & ALLTAG =====
 function showVokabelHauptmenu() {
     document.getElementById("feedback-area").style.display = "none";
     document.getElementById("message").innerHTML = "📝 Welchen Bereich möchtest du üben?";
     document.getElementById("buttons").innerHTML = `
-        <button onclick="showMedizinMenu()" style="font-size:22px;padding:15px 30px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#e3f2fd;">🏥 Fachbegriffe (Medizin)</button>
-        <button onclick="showAlltagMenu()" style="font-size:22px;padding:15px 30px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#dcedc8;">🏠 Alltag (Đời sống)</button>
+        <button onclick="showMedizinMenu()" style="font-size:22px;padding:15px 30px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#e3f2fd;box-shadow:0 2px 5px rgba(0,0,0,0.1);">🏥 Fachbegriffe (Medizin)</button>
+        <button onclick="showAlltagMenu()" style="font-size:22px;padding:15px 30px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#dcedc8;box-shadow:0 2px 5px rgba(0,0,0,0.1);">🏠 Alltag (Đời sống)</button>
         <button onclick="showLessons()" style="font-size:20px;padding:10px 20px;margin:10px;border-radius:20px;border:none;cursor:pointer;background:#eee;">⬅️ Zurück</button>
     `;
 }
@@ -461,11 +472,22 @@ function showAlltagMenu() {
             <button onclick="showVokabelGruppe('studium')" style="font-size:17px;padding:12px 16px;border-radius:15px;border:none;cursor:pointer;background:#fff3e0;text-align:left;">🎓 Studium<br><span style="color:#999;font-size:13px;">8 từ</span></button>
             <button onclick="showVokabelGruppe('saetze')" style="font-size:17px;padding:12px 16px;border-radius:15px;border:none;cursor:pointer;background:#e0f7fa;text-align:left;">💬 Sätze<br><span style="color:#999;font-size:13px;">8 từ</span></button>
         </div>
+        
+        <!-- NÚT LÀM BÀI TẬP ĐẶT CÂU -->
+        <div style="margin-top: 20px; max-width:600px; margin-left:auto; margin-right:auto;">
+            <hr style="border:1px solid #eee; margin-bottom:15px;">
+            <button onclick="startTypingPractice()" style="font-size:20px;padding:15px 20px;border-radius:15px;border:none;cursor:pointer;background:#ffb74d;color:white;width:100%;box-shadow: 0 4px 6px rgba(0,0,0,0.1);">✍️ Đặt câu với Kapi (Check Grammatik)</button>
+        </div>
+
         <button onclick="showVokabelHauptmenu()" style="font-size:18px;padding:10px 20px;margin:15px 10px 5px;border-radius:20px;border:none;cursor:pointer;background:#eee;">⬅️ Zurück</button>
     `;
 }
 
+// ===== LOGIC TỪ VỰNG =====
 function showVokabelGruppe(gruppe) {
+    if (!vokabelGruppen[gruppe] || !vokabelGruppen[gruppe].woerter.length) {
+        alert("Chủ đề này chưa có từ vựng!"); return;
+    }
     currentGruppe = gruppe;
     currentVokabelIndex = 0;
     currentShuffledWoerter = [...vokabelGruppen[gruppe].woerter].sort(() => Math.random() - 0.5);
@@ -478,6 +500,7 @@ function showVokabel() {
     const total = currentShuffledWoerter.length;
     const isMedizin = ['diagnostik','verbandmaterial','intensiv'].includes(currentGruppe);
     const backMenuFn = isMedizin ? "showMedizinMenu()" : "showAlltagMenu()";
+    
     document.getElementById("feedback-area").style.display = "none";
     document.getElementById("message").innerHTML = `
         <span style="font-size:16px;color:#666;">${gruppeTitel} | ${currentVokabelIndex + 1}/${total}</span><br><br>
@@ -486,10 +509,12 @@ function showVokabel() {
         <span style="font-size:22px;color:#555;">${wort.vi}</span><br>
         ${wort.beispiel ? `<div style="margin-top:12px;padding:10px 16px;background:#f9f9f9;border-radius:10px;font-size:17px;color:#444;font-style:italic;max-width:500px;display:inline-block;text-align:left;">📝 <b>Beispiel:</b> ${wort.beispiel}</div>` : ''}
     `;
+    
     const prevBtn = currentVokabelIndex > 0 ? `<button onclick="prevVokabel()" style="font-size:20px;padding:12px 22px;margin:8px;border-radius:15px;border:none;cursor:pointer;background:#eee;">⬅️ Trước</button>` : '';
     const nextBtn = currentVokabelIndex < total - 1
         ? `<button onclick="nextVokabel()" style="font-size:20px;padding:12px 22px;margin:8px;border-radius:15px;border:none;cursor:pointer;background:#4CAF50;color:white;">➡️ Tiếp</button>`
         : `<button onclick="startMinigame()" style="font-size:20px;padding:12px 22px;margin:8px;border-radius:15px;border:none;cursor:pointer;background:#ff9800;color:white;">🎮 Minigame!</button>`;
+        
     document.getElementById("buttons").innerHTML = `
         ${prevBtn}${nextBtn}
         <button onclick="${backMenuFn}" style="font-size:18px;padding:10px 20px;margin:8px;border-radius:15px;border:none;cursor:pointer;background:#eee;">🏠 Menu</button>
@@ -499,9 +524,84 @@ function showVokabel() {
 function nextVokabel() { currentVokabelIndex++; showVokabel(); }
 function prevVokabel() { currentVokabelIndex--; showVokabel(); }
 
+// ===== ĐẶT CÂU & CHẤM NGỮ PHÁP (SÄTZE BILDEN) =====
+function startTypingPractice() {
+    document.getElementById("feedback-area").style.display = "none";
+    
+    let allWoerter = [];
+    Object.values(vokabelGruppen).forEach(gruppe => {
+        if(gruppe.woerter) allWoerter = allWoerter.concat(gruppe.woerter);
+    });
+    
+    currentPracticeWord = allWoerter[Math.floor(Math.random() * allWoerter.length)];
+    
+    document.getElementById("message").innerHTML = `
+        <div style="font-size:18px; color:#666; font-weight:normal;">Hãy đặt một câu tiếng Đức với từ này:</div>
+        <div style="font-size:32px; color:#e67e22; margin:10px; font-weight:bold;">${currentPracticeWord.de}</div>
+        <div style="font-size:20px; color:#555; margin-bottom:20px;">(${currentPracticeWord.vi})</div>
+        <textarea id="userInput" rows="3" style="width:90%; max-width:600px; font-size:20px; padding:15px; border-radius:12px; border:2px solid #ccc; font-family:inherit;" placeholder="Ví dụ: Ich brauche ein Stethoskop..."></textarea>
+    `;
+    
+    document.getElementById("buttons").innerHTML = `
+        <button onclick="checkGrammatikMitAI()" style="font-size:20px;padding:12px 25px;margin:8px;border-radius:15px;border:none;cursor:pointer;background:#4CAF50;color:white;box-shadow: 0 4px 6px rgba(0,0,0,0.1);">🚀 Kapi, chấm bài!</button>
+        <button onclick="startTypingPractice()" style="font-size:18px;padding:12px 20px;margin:8px;border-radius:15px;border:none;cursor:pointer;background:#e3f2fd;">🔄 Đổi từ khác</button>
+        <button onclick="showAlltagMenu()" style="font-size:18px;padding:10px 20px;margin:8px;border-radius:15px;border:none;cursor:pointer;background:#eee;">🏠 Menu</button>
+    `;
+}
+
+async function checkGrammatikMitAI() {
+    let userInput = document.getElementById("userInput").value.trim();
+    let feedbackArea = document.getElementById("feedback-area");
+    let aiCorrection = document.getElementById("ai-correction");
+    
+    if (!userInput) {
+        alert("Cậu chưa viết gì kìa! Kapi không chấm giấy trắng đâu nha!"); return;
+    }
+
+    let cleanDe = currentPracticeWord.de.replace(/^(Der|Die|Das)\s+/i, '').trim();
+    
+    if (!userInput.toLowerCase().includes(cleanDe.toLowerCase()) && !userInput.toLowerCase().includes(currentPracticeWord.de.toLowerCase())) {
+        feedbackArea.style.display = "block";
+        aiCorrection.style.display = "block";
+        aiCorrection.innerHTML = `<p style='color:red; font-size:18px;'>❌ Khoan đã! Kapi thấy cậu chưa dùng từ <b>${currentPracticeWord.de}</b> trong câu kìa!</p>`;
+        return;
+    }
+
+    feedbackArea.style.display = "block";
+    aiCorrection.style.display = "block";
+    aiCorrection.innerHTML = `<div style="text-align:center;"><p style="font-size:22px; color:#e67e22;"><i>Kapi đang lôi từ điển ra soi... 🦫🔍</i></p></div>`;
+
+    try {
+        const response = await fetch('https://api.languagetool.org/v2/check', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({ text: userInput, language: 'de-DE' })
+        });
+        const data = await response.json();
+        
+        if (data.matches.length === 0) {
+            aiCorrection.innerHTML = `
+                <h3 style="color:#2ecc71; margin-top:0;">✅ Wunderbar!</h3>
+                <p style="font-size:18px;">Câu của cậu chuẩn không cần chỉnh! Ngữ pháp hoàn hảo. Kapi tặng cậu 1 củ cà rốt 🥕!</p>
+            `;
+        } else {
+            let fehlerHtml = `<h3 style="color:#e74c3c; margin-top:0;">❌ Kapi nhặt được vài hạt sạn này:</h3><ul style="font-size:18px; line-height:1.6; text-align:left; padding-left: 20px;">`;
+            data.matches.forEach(match => {
+                let suggestions = match.replacements.slice(0, 3).map(r => r.value).join(" <b>hoặc</b> ");
+                let suggestionText = suggestions ? `<br><span style="color:#27ae60;">💡 <i>Gợi ý sửa thành: <b>${suggestions}</b></i></span>` : "";
+                fehlerHtml += `<li style="margin-bottom:12px;"><b>Lỗi:</b> ${match.message} ${suggestionText}</li>`;
+            });
+            fehlerHtml += `</ul><p style="font-size:16px; color:#666; font-style:italic;">Cậu hãy thử sửa lại xem sao nhé!</p>`;
+            aiCorrection.innerHTML = fehlerHtml;
+        }
+    } catch (error) {
+        aiCorrection.innerHTML = "<p style='color:red;'>Trời ơi, mạng nhà Kapi bị rớt rồi: " + error.message + "</p>";
+    }
+}
+
+// ===== MINIGAME =====
 function startMinigame() {
-    minigameScore = 0;
-    minigameIndex = 0;
+    minigameScore = 0; minigameIndex = 0;
     minigameQuestions = [...currentShuffledWoerter].sort(() => Math.random() - 0.5);
     showMinigameQuestion();
 }
@@ -512,17 +612,19 @@ function showMinigameQuestion() {
     const allWoerter = vokabelGruppen[currentGruppe].woerter;
     const isMedizin = ['diagnostik','verbandmaterial','intensiv'].includes(currentGruppe);
     const backMenuFn = isMedizin ? "showMedizinMenu()" : "showAlltagMenu()";
+    
     let wrongAnswers = allWoerter.filter(w => w.de !== current.de).sort(() => Math.random() - 0.5).slice(0, 3);
     let answers = [...wrongAnswers, current].sort(() => Math.random() - 0.5);
+    
     document.getElementById("feedback-area").style.display = "none";
     document.getElementById("message").innerHTML = `
         <span style="font-size:16px;color:#666;">🎮 Minigame | Câu ${minigameIndex + 1}/${minigameQuestions.length} | Điểm: ${minigameScore}</span><br><br>
         <img src="${current.bild}" alt="${current.de}" style="width:200px;height:200px;object-fit:contain;border-radius:12px;margin:10px;" onerror="this.onerror=null;this.src='https://placehold.co/200x200/e3f2fd/1565c0?text=?'"><br>
-        <b>Đây là gì? / Was ist das?</b>
+        <b style="font-size:22px;">Đây là gì? / Was ist das?</b>
     `;
     document.getElementById("buttons").innerHTML = answers.map(a => `
         <button onclick="checkMinigame('${encodeURIComponent(a.de)}','${encodeURIComponent(current.de)}','${encodeURIComponent(current.vi)}')"
-            style="font-size:18px;padding:12px 20px;margin:8px;border-radius:15px;border:2px solid #ddd;cursor:pointer;display:block;width:90%;max-width:500px;text-align:left;">${a.de}</button>
+            style="font-size:18px;padding:12px 20px;margin:8px;border-radius:15px;border:2px solid #ddd;cursor:pointer;display:block;width:90%;max-width:500px;text-align:left;background:white;">${a.de}</button>
     `).join('') + `<button onclick="${backMenuFn}" style="font-size:16px;padding:8px 18px;margin:8px;border-radius:15px;border:none;cursor:pointer;background:#eee;">🏠 Menu</button>`;
 }
 
@@ -532,11 +634,12 @@ function checkMinigame(chosenEncoded, correctEncoded, viEncoded) {
     const vi = decodeURIComponent(viEncoded);
     const isCorrect = chosen === correct;
     if (isCorrect) minigameScore++;
+    
     document.getElementById("feedback-area").style.display = "block";
     const aiCorrection = document.getElementById("ai-correction");
     aiCorrection.style.display = "block";
     aiCorrection.innerHTML = `
-        <p style="font-size:22px;">${isCorrect ? "✅ Richtig! / Đúng rồi!" : "❌ Falsch! / Sai rồi!"}</p>
+        <p style="font-size:22px; margin-top:0;">${isCorrect ? "✅ Richtig! / Đúng rồi!" : "❌ Falsch! / Sai rồi!"}</p>
         ${!isCorrect ? `<p style="font-size:18px;color:green;">✔️ Đáp án đúng: <b>${correct}</b></p>` : ""}
         <p style="font-size:16px;">${correct} = ${vi}</p>
         <button onclick="nextMinigame()" style="font-size:20px;padding:10px 25px;border-radius:15px;border:none;cursor:pointer;background:#4CAF50;color:white;margin-top:10px;">
@@ -557,6 +660,7 @@ function showMinigameResult() {
     const emoji = percent >= 80 ? "🏆" : percent >= 60 ? "👍" : "💪";
     const isMedizin = ['diagnostik','verbandmaterial','intensiv'].includes(currentGruppe);
     const backMenuFn = isMedizin ? "showMedizinMenu()" : "showAlltagMenu()";
+    
     document.getElementById("message").innerHTML = `
         ${emoji} <b>Kết quả Minigame!</b><br><br>${minigameScore}/${total} (${percent}%)<br><br>
         ${percent >= 80 ? "Ausgezeichnet! 🌟" : percent >= 60 ? "Gut gemacht! 👏" : "Weiter üben! 💪"}
@@ -569,6 +673,7 @@ function showMinigameResult() {
     document.getElementById("feedback-area").style.display = "none";
 }
 
+// ===== QUIZ Y KHOA =====
 function startMedizin() {
     score = 0; currentQuestionIndex = 0; questionHistory = [];
     shuffledQuestions = [...medizinQuestions].sort(() => Math.random() - 0.5);
@@ -579,17 +684,20 @@ function showQuestion() {
     if (currentQuestionIndex >= shuffledQuestions.length) { showResult(); return; }
     const q = shuffledQuestions[currentQuestionIndex];
     const typeLabel = q.type === "luecke" ? "🔤 Điền vào chỗ trống" : q.type === "bedeutung" ? "📚 Chọn nghĩa đúng" : "✏️ Chọn từ đúng";
+    
     document.getElementById("feedback-area").style.display = "none";
     document.getElementById("message").innerHTML = `
         <span style="font-size:16px;color:#666;">${typeLabel} | Câu ${currentQuestionIndex + 1}/${shuffledQuestions.length} | Điểm: ${score}</span><br><br>
         <b>${q.frage}</b>
     `;
+    
     const shuffledAnswers = q.antworten.map((a, i) => ({text: a, original: i})).sort(() => Math.random() - 0.5);
     const labels = ["A","B","C","D"];
     const backBtn = currentQuestionIndex > 0 ? `<button onclick="prevQuestion()" style="font-size:18px;padding:10px 20px;margin:8px;border-radius:15px;border:2px solid #ddd;cursor:pointer;background:#eee;">⬅️ Câu trước</button>` : '';
+    
     document.getElementById("buttons").innerHTML = shuffledAnswers.map((a, i) => `
         <button onclick="checkAnswer(${a.original},${q.richtig},'${encodeURIComponent(q.erklaerung)}','${encodeURIComponent(q.antworten[q.richtig])}')"
-            style="font-size:18px;padding:12px 20px;margin:8px;border-radius:15px;border:2px solid #ddd;cursor:pointer;display:block;width:90%;max-width:600px;text-align:left;">
+            style="font-size:18px;padding:12px 20px;margin:8px;border-radius:15px;border:2px solid #ddd;cursor:pointer;display:block;width:90%;max-width:600px;text-align:left;background:white;">
             <b>${labels[i]}.</b> ${a.text}
         </button>
     `).join('') + backBtn + `<button onclick="showMedizinMenu()" style="font-size:18px;padding:10px 20px;margin:8px;border-radius:15px;border:none;cursor:pointer;background:#eee;">🏠 Menu</button>`;
@@ -607,13 +715,15 @@ function checkAnswer(chosen, correct, erklaerungEncoded, correctAnswerEncoded) {
     const erklaerung = decodeURIComponent(erklaerungEncoded);
     const correctAnswer = decodeURIComponent(correctAnswerEncoded);
     const isCorrect = chosen === correct;
+    
     questionHistory.push({ index: currentQuestionIndex, score: score });
     if (isCorrect) score++;
+    
     document.getElementById("feedback-area").style.display = "block";
     const aiCorrection = document.getElementById("ai-correction");
     aiCorrection.style.display = "block";
     aiCorrection.innerHTML = `
-        <p style="font-size:22px;">${isCorrect ? "✅ Richtig! / Đúng rồi!" : "❌ Falsch! / Sai rồi!"}</p>
+        <p style="font-size:22px; margin-top:0;">${isCorrect ? "✅ Richtig! / Đúng rồi!" : "❌ Falsch! / Sai rồi!"}</p>
         ${!isCorrect ? `<p style="font-size:18px;color:green;">✔️ Đáp án đúng: <b>${correctAnswer}</b></p>` : ""}
         <p style="font-size:16px;background:#f0f0f0;padding:10px;border-radius:8px;">${erklaerung}</p>
         <button onclick="nextQuestion()" style="font-size:20px;padding:10px 25px;border-radius:15px;border:none;cursor:pointer;background:#4CAF50;color:white;margin-top:10px;">
@@ -631,6 +741,7 @@ function nextQuestion() {
 function showResult() {
     const percent = Math.round((score / shuffledQuestions.length) * 100);
     const emoji = percent >= 80 ? "🏆" : percent >= 60 ? "👍" : "💪";
+    
     document.getElementById("message").innerHTML = `
         ${emoji} <b>Ergebnis / Kết quả</b><br><br>
         ${score}/${shuffledQuestions.length} Punkte (${percent}%)<br><br>
