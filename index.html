@@ -590,7 +590,6 @@ async function checkCauTrucChung(textInput, targetWordDe, targetWordVi) {
         } catch (e) {
             console.log("Lỗi Gemini, tự động chuyển sang LanguageTool:", e);
         }
-    }
 
     // --- NẾU KHÔNG CÓ KEY HOẶC KEY LỖI: CHUYỂN SANG LANGUAGE TOOL MIỄN PHÍ VÔ HẠN ---
     try {
@@ -618,7 +617,6 @@ async function checkCauTrucChung(textInput, targetWordDe, targetWordVi) {
     } catch (err) {
         aiCorrection.innerHTML = `<p style="color:red;">Không thể kết nối tới bộ kiểm tra: ${err.message}</p>`;
     }
-}
 
 async function checkGrammatikMitAI() {
     let userInput = document.getElementById("userInput").value.trim();
