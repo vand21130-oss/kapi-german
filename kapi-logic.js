@@ -137,44 +137,95 @@ function showVokabelHauptmenu() {
 }
 
 // ==========================================
-// 3. MÀN HÌNH HỌC TỪ (MỚI) & QUIZ GÕ TỪ
+// 3. MÀN HÌNH HỌC TỪ (FLASHCARD) & QUIZ GÕ TỪ
 // ==========================================
+let flashcardWords = [];
+let currentFlashcardIndex = 0;
+let currentFlashcardGroup = '';
+let isFlipped = false;
+
 function showLernenScreen(gruppe) {
-    let wList = [];
-    let title = "";
+    currentFlashcardGroup = gruppe;
     if (gruppe === 'review') {
-        wList = getSavedMissed();
-        title = "⚠️ Ôn tập từ hay quên";
+        flashcardWords = getSavedMissed();
     } else {
-        wList = vokabelGruppen[gruppe].woerter;
-        title = vokabelGruppen[gruppe].titel;
+        flashcardWords = vokabelGruppen[gruppe].woerter;
     }
 
-    if(wList.length === 0) { alert("Chưa có từ vựng!"); return; }
-
-    document.getElementById("feedback-area").style.display = "none";
-    document.getElementById("message").innerHTML = `<b>📚 ${title}</b><br><span style="font-size:16px;color:#7f8c8d;">Hãy học kỹ ${wList.length} từ dưới đây trước khi làm Quiz nhé!</span>`;
-
-    let html = `<div style="text-align:left; max-width:600px; margin:0 auto; background:#fff; padding:20px; border-radius:12px; border: 1px solid #eee;">`;
+    if(flashcardWords.length === 0) { alert("Chưa có từ vựng!"); return; }
     
-    wList.forEach(w => {
-        let bildHtml = w.bild ? `<div style="margin-right:15px; width:60px; height:60px; flex-shrink:0;"><img src="${w.bild}" style="width:100%; height:100%; object-fit:contain;"></div>` : '';
-        html += `
-            <div style="display:flex; align-items:center; border-bottom:1px solid #eee; padding:15px 0;">
-                ${bildHtml}
-                <div>
-                    <b style="font-size:22px; color:#2980b9;">${w.de}</b><br>
-                    <span style="font-size:18px; color:#7f8c8d;">${w.vi}</span>
-                </div>
-            </div>
+    currentFlashcardIndex = 0;
+    isFlipped = false;
+    renderFlashcard();
+}
+
+function renderFlashcard() {
+    document.getElementById("feedback-area").style.display = "none";
+    let w = flashcardWords[currentFlashcardIndex];
+    
+    let cardContent = "";
+    if (!isFlipped) {
+        // Mặt trước: Tiếng Việt + Hình ảnh
+        let bildHtml = w.bild ? `<img src="${w.bild}" style="width:120px;height:120px;object-fit:contain;margin-bottom:10px;"><br>` : '';
+        cardContent = `
+            ${bildHtml}
+            <b style="font-size:28px; color:#2c3e50; text-align:center;">${w.vi}</b>
+            <p style="font-size:15px; color:#95a5a6; margin-top:20px; font-style:italic;">👆 Chạm để lật xem tiếng Đức</p>
         `;
-    });
+    } else {
+        // Mặt sau: Tiếng Đức
+        let bildHtml = w.bild ? `<img src="${w.bild}" style="width:120px;height:120px;object-fit:contain;margin-bottom:10px; opacity:0.5;"><br>` : '';
+        cardContent = `
+            ${bildHtml}
+            <b style="font-size:32px; color:#2980b9; text-align:center;">${w.de}</b>
+            <p style="font-size:15px; color:#95a5a6; margin-top:20px; font-style:italic;">👆 Chạm để lật lại</p>
+        `;
+    }
 
-    html += `</div>`;
-    html += `<br><button class="btn-kapi" style="background:#3498db; color:white; width:100%; max-width:600px;" onclick="startSpecificQuiz('${gruppe}')">🎯 Bắt đầu Quiz (${wList.length} câu)</button>`;
-    html += `<br><button class="btn-kapi btn-home" style="max-width:600px; width:100%;" onclick="showVokabelHauptmenu()">⬅️ Quay lại Menu</button>`;
+    // Giao diện Thẻ Flashcard
+    document.getElementById("message").innerHTML = `
+        <span style="font-size:16px;color:#7f8c8d; font-weight:bold;">Flashcard | Thẻ ${currentFlashcardIndex + 1}/${flashcardWords.length}</span><br><br>
+        <div onclick="flipCard()" style="cursor:pointer; background: #fff; border: 2px solid #bdc3c7; border-radius: 20px; padding: 40px 20px; box-shadow: 0 8px 16px rgba(0,0,0,0.08); max-width: 350px; margin: 0 auto; min-height: 220px; display: flex; flex-direction: column; justify-content: center; align-items: center; user-select: none; transition: 0.2s;">
+            ${cardContent}
+        </div>
+    `;
+    
+    // Hệ thống nút bấm điều hướng
+    let btnHtml = `<div style="display:flex; justify-content: center; gap: 15px; max-width: 350px; margin: 0 auto; margin-top: 25px;">`;
+    
+    // Nút "Trước"
+    if (currentFlashcardIndex > 0) {
+        btnHtml += `<button class="btn-kapi btn-home" style="margin:0; flex:1;" onclick="prevFlashcard()">⬅️ Trước</button>`;
+    } else {
+        btnHtml += `<div style="flex:1;"></div>`; // Ô trống để căn giữa nếu không có nút Trước
+    }
+    
+    // Nút "Tiếp" hoặc "Làm Quiz"
+    if (currentFlashcardIndex < flashcardWords.length - 1) {
+        btnHtml += `<button class="btn-kapi btn-green" style="margin:0; flex:1;" onclick="nextFlashcard()">Tiếp ➡️</button>`;
+    } else {
+        btnHtml += `<button class="btn-kapi" style="margin:0; flex:1; background:#f39c12; color:white; font-weight:bold; box-shadow: 0 4px 10px rgba(243, 156, 18, 0.4);" onclick="startSpecificQuiz('${currentFlashcardGroup}')">🎯 Làm Quiz</button>`;
+    }
+    
+    btnHtml += `</div><br><button class="btn-kapi btn-home" onclick="showVokabelHauptmenu()">🚪 Thoát</button>`;
+    document.getElementById("buttons").innerHTML = btnHtml;
+}
 
-    document.getElementById("buttons").innerHTML = html;
+function flipCard() {
+    isFlipped = !isFlipped;
+    renderFlashcard();
+}
+
+function nextFlashcard() {
+    currentFlashcardIndex++;
+    isFlipped = false; // Reset thẻ về mặt trước khi sang từ mới
+    renderFlashcard();
+}
+
+function prevFlashcard() {
+    currentFlashcardIndex--;
+    isFlipped = false; // Reset thẻ về mặt trước khi lùi lại
+    renderFlashcard();
 }
 
 function startSpecificQuiz(gruppe) {
@@ -184,7 +235,7 @@ function startSpecificQuiz(gruppe) {
         quizWords = [...vokabelGruppen[gruppe].woerter];
     }
     
-    // Xáo trộn thứ tự từ vựng ngẫu nhiên
+    // Xáo trộn thứ tự từ vựng ngẫu nhiên cho Quiz
     quizWords.sort(() => Math.random() - 0.5);
     
     currentQuizIndex = 0;
