@@ -95,33 +95,36 @@ function startTimer() {
     }, 1000);
 }
 
-// 2. VOKABELN MENU (Bao gồm Game và Quiz)
+// ==========================================
+// 2. VOKABELN MENU (HỌC TỪ & TRẮC NGHIỆM)
+// ==========================================
 function getSavedMissed() { return JSON.parse(localStorage.getItem('kapi_missed_vokabeln')) || []; }
 function saveMissed(arr) { localStorage.setItem('kapi_missed_vokabeln', JSON.stringify(arr)); }
 
 function showVokabelHauptmenu() {
     document.getElementById("feedback-area").style.display = "none";
     let missed = getSavedMissed();
-    let warningHtml = missed.length > 0 ? `<button class="btn-grid btn-full" style="background:#ffb74d; color:white; justify-content:center; display:flex;" onclick="startQuiz('review')">⚠️ Ôn ${missed.length} từ hay quên!</button>` : '';
+    let warningHtml = missed.length > 0 ? `<button class="btn-grid btn-full" style="background:#ffb74d; color:white; justify-content:center; display:flex;" onclick="showLernenScreen('review')">⚠️ Ôn ${missed.length} từ hay quên!</button>` : '';
     
     document.getElementById("message").innerText = "Was möchtest du im Alltag üben?";
     document.getElementById("buttons").innerHTML = `
         <div class="grid-container">
             ${warningHtml}
-            <button class="btn-grid" onclick="startQuiz('arbeit')">💼 Arbeit</button>
-            <button class="btn-grid" style="background:#e8f5e9;" onclick="startQuiz('umwelt')">🌍 Umwelt</button>
-            <button class="btn-grid" style="background:#fff8e1;" onclick="startQuiz('kulinarik')">🍽️ Kulinarik</button>
-            <button class="btn-grid" style="background:#fce4ec;" onclick="startQuiz('gesundheit')">💊 Gesundheit</button>
-            <button class="btn-grid" style="background:#f3e5f5;" onclick="startQuiz('technologie')">💻 Technologie</button>
-            <button class="btn-grid" style="background:#e8eaf6;" onclick="startQuiz('gesellschaft')">🏘️ Gesellschaft</button>
-            <button class="btn-grid" style="background:#fff3e0;" onclick="startQuiz('studium')">🎓 Studium</button>
-            <button class="btn-grid" style="background:#e0f7fa;" onclick="startQuiz('saetze')">💬 Sätze</button>
+            <button class="btn-grid" onclick="showLernenScreen('arbeit')">💼 Arbeit</button>
+            <button class="btn-grid" style="background:#e8f5e9;" onclick="showLernenScreen('umwelt')">🌍 Umwelt</button>
+            <button class="btn-grid" style="background:#fff8e1;" onclick="showLernenScreen('kulinarik')">🍽️ Kulinarik</button>
+            <button class="btn-grid" style="background:#fce4ec;" onclick="showLernenScreen('gesundheit')">💊 Gesundheit</button>
+            <button class="btn-grid" style="background:#f3e5f5;" onclick="showLernenScreen('technologie')">💻 Technologie</button>
+            <button class="btn-grid" style="background:#e8eaf6;" onclick="showLernenScreen('gesellschaft')">🏘️ Gesellschaft</button>
+            <button class="btn-grid" style="background:#fff3e0;" onclick="showLernenScreen('studium')">🎓 Studium</button>
+            <button class="btn-grid" style="background:#e0f7fa;" onclick="showLernenScreen('saetze')">💬 Sätze</button>
+            
             <div style="grid-column: span 2; border-top: 1px solid #eee; margin-top: 10px; padding-top: 10px;">
                 <p style="font-size:18px; color:#666; margin:0 0 10px 0; text-align:left;">🏥 Y Khoa</p>
             </div>
-            <button class="btn-grid" style="background:#ffebee;" onclick="startQuiz('krankheiten')">🦠 Krankheiten</button>
-            <button class="btn-grid" style="background:#e3f2fd;" onclick="startQuiz('diagnostik')">🩺 Diagnostik</button>
-            <button class="btn-grid btn-full" style="background:#fce4ec; text-align:center;" onclick="startQuiz('verbandmaterial')">🩹 Verbandmaterial</button>
+            <button class="btn-grid" style="background:#ffebee;" onclick="showLernenScreen('krankheiten')">🦠 Krankheiten</button>
+            <button class="btn-grid" style="background:#e3f2fd;" onclick="showLernenScreen('diagnostik')">🩺 Diagnostik</button>
+            <button class="btn-grid btn-full" style="background:#fce4ec; text-align:center;" onclick="showLernenScreen('verbandmaterial')">🩹 Verbandmaterial</button>
             
             <div style="grid-column: span 2; border-top: 1px solid #eee; margin-top: 10px; padding-top: 10px;">
                 <p style="font-size:18px; color:#666; margin:0 0 10px 0; text-align:left;">🎮 Minigames</p>
@@ -133,15 +136,57 @@ function showVokabelHauptmenu() {
     `;
 }
 
-// 3. QUIZ GÕ TỪ (Nhập Text - Spaced Repetition)
-function startQuiz(gruppe) {
+// ==========================================
+// 3. MÀN HÌNH HỌC TỪ (MỚI) & QUIZ GÕ TỪ
+// ==========================================
+function showLernenScreen(gruppe) {
+    let wList = [];
+    let title = "";
+    if (gruppe === 'review') {
+        wList = getSavedMissed();
+        title = "⚠️ Ôn tập từ hay quên";
+    } else {
+        wList = vokabelGruppen[gruppe].woerter;
+        title = vokabelGruppen[gruppe].titel;
+    }
+
+    if(wList.length === 0) { alert("Chưa có từ vựng!"); return; }
+
+    document.getElementById("feedback-area").style.display = "none";
+    document.getElementById("message").innerHTML = `<b>📚 ${title}</b><br><span style="font-size:16px;color:#7f8c8d;">Hãy học kỹ ${wList.length} từ dưới đây trước khi làm Quiz nhé!</span>`;
+
+    let html = `<div style="text-align:left; max-width:600px; margin:0 auto; background:#fff; padding:20px; border-radius:12px; border: 1px solid #eee;">`;
+    
+    wList.forEach(w => {
+        let bildHtml = w.bild ? `<div style="margin-right:15px; width:60px; height:60px; flex-shrink:0;"><img src="${w.bild}" style="width:100%; height:100%; object-fit:contain;"></div>` : '';
+        html += `
+            <div style="display:flex; align-items:center; border-bottom:1px solid #eee; padding:15px 0;">
+                ${bildHtml}
+                <div>
+                    <b style="font-size:22px; color:#2980b9;">${w.de}</b><br>
+                    <span style="font-size:18px; color:#7f8c8d;">${w.vi}</span>
+                </div>
+            </div>
+        `;
+    });
+
+    html += `</div>`;
+    html += `<br><button class="btn-kapi" style="background:#3498db; color:white; width:100%; max-width:600px;" onclick="startSpecificQuiz('${gruppe}')">🎯 Bắt đầu Quiz (${wList.length} câu)</button>`;
+    html += `<br><button class="btn-kapi btn-home" style="max-width:600px; width:100%;" onclick="showVokabelHauptmenu()">⬅️ Quay lại Menu</button>`;
+
+    document.getElementById("buttons").innerHTML = html;
+}
+
+function startSpecificQuiz(gruppe) {
     if (gruppe === 'review') {
         quizWords = getSavedMissed();
     } else {
         quizWords = [...vokabelGruppen[gruppe].woerter];
     }
-    if(quizWords.length === 0) { alert("Chưa có từ vựng!"); return; }
+    
+    // Xáo trộn thứ tự từ vựng ngẫu nhiên
     quizWords.sort(() => Math.random() - 0.5);
+    
     currentQuizIndex = 0;
     quizScore = 0;
     currentMissedWords = [];
@@ -181,10 +226,12 @@ function checkVokabelAnswer() {
     
     if (isCorrect) {
         quizScore++;
+        // Nếu trả lời đúng, xóa từ này khỏi danh sách hay quên (nếu có)
         savedMissed = savedMissed.filter(item => item.de !== w.de);
         resultHtml = `<h3 style="color:#27ae60; margin:0;">✅ Chính xác!</h3><p style="font-size:18px;"><b>${w.de}</b> = ${w.vi}</p>`;
     } else {
         currentMissedWords.push(w);
+        // Nếu trả lời sai, thêm vào danh sách hay quên
         if (!savedMissed.find(item => item.de === w.de)) savedMissed.push(w);
         resultHtml = `<h3 style="color:#c0392b; margin:0;">❌ Sai rồi Vịt ơi!</h3><p style="font-size:16px;">Cậu gõ: <s>${input || "(trống)"}</s></p><p style="font-size:20px; color:#27ae60;">Phải là: <b>${w.de}</b></p>`;
     }
