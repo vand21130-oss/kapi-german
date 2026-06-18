@@ -577,3 +577,66 @@ function submitHoeren() {
     `;
     document.getElementById("feedback-area").innerHTML = resultHtml;
 }
+// ==========================================
+// ====== PHẦN LOGIC CHO TRUYỆN CỦA KAPI ====
+// ==========================================
+
+function openStoryMenu() {
+    // 1. Ẩn/xóa phần từ vựng cũ nếu đang mở
+    const feedbackArea = document.getElementById("feedback-area");
+    if (feedbackArea) feedbackArea.innerHTML = ""; 
+    
+    // 2. Lấy khu vực hiển thị truyện và bật nó lên
+    const storyArea = document.getElementById("story-area");
+    storyArea.style.display = "block";
+
+    // 3. Hiển thị Lời chào của Kapi và Menu chọn Level
+    storyArea.innerHTML = `
+        <div style="background-color: #fff3e0; padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 2px dashed #ffb74d;">
+            <p style="font-size: 18px; color: #d35400; font-weight: bold; margin: 0 0 5px 0;">
+                "Hallo zusammen! Ich bin Kapi und ich komme aus Vietnam. Möchtest du mich auf meiner Reise begleiten?"
+            </p>
+            <p style="font-size: 16px; color: #555; font-style: italic; margin: 0;">
+                (Xin chào! Tớ là Kapi và tớ đến từ Việt Nam. Cậu có muốn tham gia hành trình của tớ không? 🦫🎒)
+            </p>
+        </div>
+
+        <h2>📚 Chọn cấp độ truyện để gặm nào!</h2>
+        <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-bottom: 20px;">
+            <button class="btn-kapi" onclick="checkStoryLevel('A1')">A1</button>
+            <button class="btn-kapi" onclick="checkStoryLevel('A2')">A2</button>
+            <button class="btn-kapi" onclick="checkStoryLevel('B1')">B1</button>
+            <button class="btn-kapi" onclick="checkStoryLevel('B2')" style="background-color: #e67e22; color: white;">B2</button>
+        </div>
+        
+        <!-- Chỗ chứa nội dung tập truyện cụ thể -->
+        <div id="story-content"></div>
+    `;
+}
+
+function checkStoryLevel(level) {
+    const storyContent = document.getElementById("story-content");
+    
+    if (level === "A1" || level === "A2" || level === "B1") {
+        // Nếu chọn A1-B1 -> Báo chưa có
+        storyContent.innerHTML = `
+            <div style="padding: 20px; background-color: #f8d7da; color: #721c24; border-radius: 10px; margin-top: 20px;">
+                <h3 style="margin: 0;">Ôi, Kapi chưa gặm tới phần ${level} này, Vịt đợi nhé! 🦫💦</h3>
+            </div>
+        `;
+    } else if (level === "B2") {
+        // Nếu chọn B2 -> Load ảnh và từ vựng
+        // LƯU Ý: Vịt nhớ đổi tên file ảnh 'Dein Abschnittstext.jpg' thành 'tap1.jpg' 
+        // và up vào folder 'stories' trên GitHub cho chuẩn với đường dẫn src dưới đây nhé!
+        storyContent.innerHTML = `
+            <h3 style="color: #2980b9; margin-top: 30px;">Tập 1: Kapis erster Tag im Krankenhaus</h3>
+            
+            <img src="stories/tap1.jpg" style="width: 100%; max-width: 800px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); margin-bottom: 20px; display: block; margin-left: auto; margin-right: auto;">
+            
+            <div style="background-color: #e8f6f3; padding: 20px; border-radius: 15px; text-align: left; max-width: 800px; margin: 0 auto; line-height: 1.8;">
+                <p style="margin-top: 0;"><b>💡 Từ vựng B2 đáng chú ý trong tập này (Di chuột vào từ in đậm nhé):</b></p>
+                <p>Kapi hat endlich die Zusage für sein <span class="vocab-highlight" data-vi="Kỳ thực tập">Praktikum</span> erhalten. Der <span class="vocab-highlight" data-vi="Áo blouse bác sĩ">Arztkittel</span> sieht total professionell aus! Danach packt Kapi sorgfältig das <span class="vocab-highlight" data-vi="Ống nghe y tế">Stethoskop</span> ein. Die Überraschung war so groß, Kapi muss das Ganze erst mal <span class="vocab-highlight" data-vi="Bình tĩnh lại để tiêu hóa thông tin/cảm xúc (Idiom B2)">sacken lassen</span>.</p>
+            </div>
+        `;
+    }
+}
