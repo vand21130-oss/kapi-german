@@ -6,7 +6,7 @@ const alleHoerenPruefungen = [
         teile: [
             {
                 teilName: "Teil 1 - Text 1: Die Renaissance des Handwerks",
-                audioSrc: "de1-teil1-text1.mp3",
+                audioSrc: "audio/de1-teil1-text1.mp3",
                 fragen: [
                     { frage: "1. Warum entscheiden sich wieder mehr Menschen für eine handwerkliche Ausbildung?", antworten: ["A. Weil ein Studium heute keine Garantie mehr für eine stabile Anstellung ist.", "B. Weil die Arbeit im Handwerk körperlich weniger anstrengend geworden ist als früher.", "C. Weil die Hörsäle an den Universitäten aus Sicherheitsgründen geschlossen wurden."], richtig: 0, begruendung: "Text: 'Angesichts überfüllter Hörsäle und Absolventen, die prekäre Beschäftigungsverhältnisse vorfinden, rückt das Handwerk wieder in den Fokus.'" },
                     { frage: "2. Was sagt der Text über die Bezahlung im Handwerk aus?", antworten: ["A. Sie ist immer noch niedriger als in akademischen Berufen.", "B. Spezialisierte Handwerker verdienen oft mehr als Berufseinsteiger mit Universitätsabschluss.", "C. Die Löhne sind nur gestiegen, weil die Digitalisierung Kosten spart."], richtig: 1, begruendung: "Text: 'Die Vergütung für spezialisierte Fachkräfte übersteigt mittlerweile oft das Einstiegsgehalt von Master-Absolventen.'" },
@@ -15,7 +15,7 @@ const alleHoerenPruefungen = [
             },
             {
                 teilName: "Teil 1 - Text 2: Greenwashing",
-                audioSrc: "de1-teil1-text2.mp3",
+                audioSrc: "audio/de1-teil1-text2.mp3",
                 fragen: [
                     { frage: "4. Was kritisiert der Text am Begriff „klimaneutral“?", antworten: ["A. Nur für Schwerindustrie verwendet.", "B. Dass die gesetzlichen Regelungen für seine Verwendung unzureichend sind.", "C. Verbraucher ignorieren den Begriff."], richtig: 1, begruendung: "Text: 'Der Begriff klimaneutral ist gesetzlich kaum geschützt.'" },
                     { frage: "5. Wie gehen viele Konzerne mit dem Thema Nachhaltigkeit um?", antworten: ["A. Sie verändern ihre gesamte Produktion.", "B. Sie setzen auf Werbung und Ausgleichszahlungen statt auf reale Veränderungen.", "C. Arbeiten mit staatlichen Organen zusammen."], richtig: 1, begruendung: "Text: 'Viele Konzerne investieren lieber in Marketingkampagnen und den Kauf von zweifelhaften CO2-Zertifikaten...'" },
@@ -24,7 +24,7 @@ const alleHoerenPruefungen = [
             },
             {
                 teilName: "Teil 1 - Text 3: Das Ende des Bargelds?",
-                audioSrc: "de1-teil1-text3.mp3",
+                audioSrc: "audio/de1-teil1-text3.mp3",
                 fragen: [
                     { frage: "7. Welchen Vorteil nennen die Befürworter der bargeldlosen Gesellschaft?", antworten: ["A. Förderung der Anonymität.", "B. Eine effektivere Kontrolle von illegalen Beschäftigungsverhältnissen.", "C. Einfacher für ältere Menschen."], richtig: 1, begruendung: "Text: 'Befürworter verweisen auf die Effizienz und die Bekämpfung von Schwarzarbeit.'" },
                     { frage: "8. Was ist die größte Sorge der Kritiker?", antworten: ["A. Zu hohe Gebühren.", "B. Dass der Datenschutz verloren geht und das Finanzverhalten überwachbar wird.", "C. Technik bei Stromausfall."], richtig: 1, begruendung: "Text: 'Kritiker jedoch sehen im Verschwinden von Münzen und Scheinen den Weg in den gläsernen Bürger.'" },
@@ -33,16 +33,16 @@ const alleHoerenPruefungen = [
             },
             {
                 teilName: "Teil 1 - Text 4: Urban Farming",
-                audioSrc: "de1-teil1-text4.mp3",
+                audioSrc: "audio/de1-teil1-text4.mp3",
                 fragen: [
                     { frage: "10. Warum ist die Energiebilanz von Urban Farming oft negativ?", antworten: ["A. Transport verbraucht Treibstoff.", "B. Weil die technische Instandhaltung der Anlagen extrem viel Energie benötigt.", "C. Bauern nutzen effizientere Traktoren."], richtig: 1, begruendung: "Text: '...ist der Ressourcenverbrauch für Bewässerungssysteme und künstliche Beleuchtung in geschlossenen Räumen enorm.'" },
                     { frage: "11. Für welche Produkte eignet sich Vertical Farming momentan am ehesten?", antworten: ["A. Preisgünstige Grundnahrungsmittel.", "B. Für spezielle Produkte, die zu einem hohen Preis verkauft werden können.", "C. Obstsorten."], richtig: 1, begruendung: "Text: '...derzeit nur für hochpreisige Nischenprodukte wie exotische Kräuter rentabel ist.'" },
-                    { frage: "12. Was ist das größte Hindernis für den großflächigen Anbau in Städten?", antworten: ["A. Mangel an Fachkräften.", "B. Die hohen finanziellen Belastungen durch die Immobilienpreise in der Stadt.", "C. Widerstand der Landwirte."], richtig: 1, begruendung: "Text: '...da die Kosten pro Quadratmeter in der Innenstadt schlichtweg zu hoch kalkuliert sind.'" }
+                    { frage: "12. Was ist das größte Hindernis für großflächigen Anbau in Städten?", antworten: ["A. Mangel an Fachkräften.", "B. Die hohen finanziellen Belastungen durch die Immobilienpreise in der Stadt.", "C. Widerstand der Landwirte."], richtig: 1, begruendung: "Text: '...da die Kosten pro Quadratmeter in der Innenstadt schlichtweg zu hoch kalkuliert sind.'" }
                 ]
             },
             {
                 teilName: "Teil 1 - Text 5: Lebenslanges Lernen",
-                audioSrc: "de1-teil1-text5.mp3",
+                audioSrc: "audio/de1-teil1-text5.mp3",
                 fragen: [
                     { frage: "13. Wie hat sich die Bedeutung von Bildungsabschlüssen verändert?", antworten: ["A. Ein Diplom garantiert lebenslange Sicherheit.", "B. Das Wissen aus der Ausbildung veraltet heute wesentlich schneller als früher.", "C. Universitätsabschlüsse sind wertvoller."], richtig: 1, begruendung: "Text: 'In einer sich rasant wandelnden Arbeitswelt verliert das einmal erworbene Diplom immer schneller an Wert.'" },
                     { frage: "14. Was wird an der aktuellen Praxis der Weiterbildung kritisiert?", antworten: ["A. Zu viele Fortbildungen.", "B. Dass die Kosten und der Zeitaufwand immer häufiger bei den Angestellten liegen.", "C. Keine staatlichen Angebote."], richtig: 1, begruendung: "Text: '...wird heute oft erwartet, dass Arbeitnehmer sich in ihrer Freizeit und auf eigene Kosten qualifizieren.'" },
@@ -51,7 +51,7 @@ const alleHoerenPruefungen = [
             },
             {
                 teilName: "Teil 2: Der Experten-Vortrag (Präsentation)",
-                audioSrc: "de1-teil2.mp3",
+                audioSrc: "audio/de1-teil2.mp3",
                 fragen: [
                     { frage: "16. Warum ist die „Fear of Failure“ in Europa ausgeprägter als in den USA?", antworten: ["A. Weniger staatliche Unterstützung.", "B. Weil das soziale Ansehen in Europa stärker an beruflichen Erfolg gekoppelt ist.", "C. Schwerere Kreditvergabe."], richtig: 1, begruendung: "Vortrag: '...die Tatsache, dass der gesellschaftliche Status extrem eng mit einer lückenlosen Erfolgsbiografie verknüpft ist.'" },
                     { frage: "17. Was versteht der Redner unter einer „positiven Fehlerkultur“?", antworten: ["A. Fehler absichtlich machen.", "B. Dass Misserfolge offen kommuniziert werden, um systemische Schwachstellen zu finden.", "C. Mitarbeiter nicht haftbar machen."], richtig: 1, begruendung: "Vortrag: '...eine Umgebung zu schaffen, in der Missgeschicke nicht vertuscht, sondern transparent analysiert werden.'" },
@@ -63,7 +63,7 @@ const alleHoerenPruefungen = [
             },
             {
                 teilName: "Teil 3: Erweiterte Diskussion (Wer sagt was?)",
-                audioSrc: "de1-teil3.mp3",
+                audioSrc: "audio/de1-teil3.mp3",
                 fragen: [
                     { frage: "22. Die soziale Isolierung im Homeoffice schadet der Identifikation mit dem Betrieb.", antworten: ["Frau Weber", "Dr. Schmidt", "Frau Lange"], richtig: 1, begruendung: "Dr. Schmidt: 'Wir beobachten eine massive Erosion der Firmenkultur... Diese soziale Vereinsamung führt dazu, dass Mitarbeiter viel schneller kündigen...'" },
                     { frage: "23. Kreative Prozesse lassen sich nicht erfolgreich in digitale Formate pressen.", antworten: ["Frau Weber", "Dr. Schmidt", "Frau Lange"], richtig: 1, begruendung: "Dr. Schmidt: 'Kreativität ist ein chaotischer, physischer Prozess. Zoom-Meetings sind zu strukturiert für echte Innovation.'" },
@@ -78,7 +78,7 @@ const alleHoerenPruefungen = [
             },
             {
                 teilName: "Teil 4: Der Experten-Vortrag (Attention Economy)",
-                audioSrc: "de1-teil4.mp3",
+                audioSrc: "audio/de1-teil4.mp3",
                 fragen: [
                     { frage: "31. Was ist die Kernaussage von Prof. Veith zu Beginn seines Vortrags?", antworten: ["A. Informationen sind das kostbarste Gut.", "B. In einer Welt des Informationsüberflusses ist menschliche Aufmerksamkeit die knappste Ressource.", "C. Schnelleres Lernen."], richtig: 1, begruendung: "Vortrag: 'In unserer voll vernetzten Welt ist es die menschliche Aufmerksamkeit. Wir sprechen von der Attention Economy.'" },
                     { frage: "32. Warum nutzen Plattformen „algorithmische Belohnungssysteme“?", antworten: ["A. Relevante Bildungsinhalte.", "B. Um die Verweildauer der Nutzer durch psychologische Reize künstlich zu verlängern.", "C. Gegen Falschinformationen."], richtig: 1, begruendung: "Vortrag: 'Durch algorithmische Belohnungssysteme wird in unserem Gehirn Dopamin ausgeschüttet...'" },
@@ -94,7 +94,7 @@ const alleHoerenPruefungen = [
             },
             {
                 teilName: "Teil 5: Wissenschaftlicher Diskurs",
-                audioSrc: "de1-teil5.mp3",
+                audioSrc: "audio/de1-teil5.mp3",
                 fragen: [
                     { frage: "41. Welches Paradoxon beschreibt Prof. von Hagens zu Beginn?", antworten: ["A. Menschen konsumieren weniger.", "B. Wachstum steigt, Lebenszufriedenheit stagniert.", "C. Dass technische Innovationen den Ressourcenverbrauch nicht senken, sondern steigern."], richtig: 2, begruendung: "Prof. von Hagens: 'Das Paradoxon... ist der Rebound-Effekt. Wir bauen Autos, die weniger Benzin verbrauchen... am Ende ist der absolute Ressourcenverbrauch höher als zuvor.'" },
                     { frage: "42. Was ist die Hauptkritik am „Grünen Wachstum“?", antworten: ["A. Zu teuer.", "B. Es ist eine Illusion, da die Effizienzgewinne durch Mehrkonsum aufgefressen werden.", "C. Technik nicht weit genug."], richtig: 1, begruendung: "Prof. von Hagens: 'Doch das ist... eine Beruhigungspille für das schlechte Gewissen... Wir können die Produktion nicht unendlich entkoppeln.'" },
