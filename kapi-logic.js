@@ -583,7 +583,6 @@ function submitHoeren() {
 // =========================================================
 
 function showKapiStory(level) {
-    // Lệnh này giúp bật cái bảng đen lên để nhét truyện vào
     document.getElementById("feedback-area").style.display = "block";
     
     let resultHtml = "";
@@ -594,6 +593,9 @@ function showKapiStory(level) {
                 <h3 style="margin: 0;">Ôi, Kapi chưa gặm tới truyện của ${level}, Vịt đợi nhé! 🦫💦</h3>
             </div>
         `;
+        // Nút khi chưa có truyện
+        document.getElementById("buttons").innerHTML = `<button class="btn-kapi btn-home" onclick="showLessons()">⬅️ Zurück</button>`;
+
     } else if (level === "B2") {
         resultHtml = `
             <div style="text-align: center; animation: fadeIn 0.5s;">
@@ -608,17 +610,21 @@ function showKapiStory(level) {
 
                 <h3 style="color: #2980b9; margin-top: 10px;">Tập 1: Kapis erster Tag im Krankenhaus</h3>
                 
-                <!-- ẢNH ĐƯỢC CHỈNH VỪA KHÍT KHUNG (MAX 900PX), KHÔNG PHÁ MENU CỦA VỊT -->
                 <img src="stories/tap1.jpg" style="width: 100%; max-width: 900px; height: auto; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); margin: 20px auto; display: block;">
                 
                 <div style="background-color: #e8f6f3; padding: 20px; border-radius: 15px; text-align: left; max-width: 900px; margin: 0 auto; line-height: 1.8;">
                     <p style="margin-top: 0;"><b>💡 Từ vựng B2 đáng chú ý trong tập này (Di chuột vào từ in đậm nhé):</b></p>
-                    <p>Kapi hat endlich die Zusage für sein <span class="vocab-highlight" data-vi="Kỳ thực tập">Praktikum</span> erhalten. Der <span class="vocab-highlight" data-vi="Áo blouse bác sĩ">Arztkittel</span> sieht total professionell aus! Danach packt Kapi sorgfältig das <span class="vocab-highlight" data-vi="Ống nghe y tế">Stethoskop</span> ein. Die Überraschung war so groß, Kapi muss das Ganze erst mal <span class="vocab-highlight" data-vi="Bình tĩnh lại để tiêu hóa thông tin/cảm xúc (Idiom B2)">sacken lassen</span>.</p>
+                    <p>Kapi hat heute einen Brief mit einem echten <span class="vocab-highlight" data-vi="Ấn sáp">Wachssiegel</span> bekommen. Was für eine <span class="vocab-highlight" data-vi="Sự bất ngờ">Überraschung</span>! Es ist die <span class="vocab-highlight" data-vi="Thư xác nhận / Lời đồng ý">Zusage</span> für sein <span class="vocab-highlight" data-vi="Kỳ thực tập">Praktikum</span>. Die Freude ist so groß, Kapi muss das Ganze erst mal <span class="vocab-highlight" data-vi="Bình tĩnh lại để tiêu hóa thông tin (Idiom B2)">sacken lassen</span>.</p>
                 </div>
             </div>
         `;
+
+        // DỌN SẠCH CÁC NÚT BÀI HỌC, CHỈ ĐỂ LẠI "ZURÜCK" VÀ "NEXT"
+        document.getElementById("buttons").innerHTML = `
+            <button class="btn-kapi btn-home" onclick="showLessons()">⬅️ Zurück</button>
+            <button class="btn-kapi btn-green" onclick="alert('Tập 2 Kapi đang sửa soạn đồ đạc đi thực tập rồi, Vịt chờ xíu nha! 🦫🎒💨')">Tập 2 ➡️</button>
+        `;
     }
 
-    // Nhét thẳng vào khu vực hiển thị nội dung chính
     document.getElementById("feedback-area").innerHTML = resultHtml;
 }
