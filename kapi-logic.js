@@ -583,6 +583,9 @@ function submitHoeren() {
 // =========================================================
 
 function showKapiStory(level) {
+    // 1. BẬT KHU VỰC HIỂN THỊ LÊN (Dòng phép thuật giải cứu Kapi đây rồi!)
+    document.getElementById("feedback-area").style.display = "block";
+    
     let resultHtml = "";
     
     if (level === "A1" || level === "A2" || level === "B1") {
