@@ -610,7 +610,7 @@ function showKapiStory(level) {
                 <h3 style="color: #2980b9; margin-top: 10px;">Tập 1: Kapis erster Tag im Krankenhaus</h3>
                 
                 <!-- ẢNH ĐÃ ĐƯỢC LÀM TO RA (max-width: 1200px) -->
-                <img src="stories/tap1.jpg" style="width: 100%; max-width: 1200px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); margin-bottom: 20px;">
+                <img src="stories/tap1.jpg" style="width: 100%; max-width: 900px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); margin: 20px auto; display: block;">
                 
                 <div style="background-color: #e8f6f3; padding: 20px; border-radius: 15px; text-align: left; max-width: 1000px; margin: 0 auto; line-height: 1.8;">
                     <p style="margin-top: 0;"><b>💡 Từ vựng B2 đáng chú ý trong tập này (Di chuột vào từ in đậm nhé):</b></p>
