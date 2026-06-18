@@ -39,6 +39,11 @@
         .btn-full { grid-column: span 2; font-weight: bold; text-align: center; }
         
         input[type="text"], textarea { width: 100%; box-sizing: border-box; font-family: inherit; font-size: 20px; padding: 15px; border-radius: 12px; border: 2px solid #ccc; outline: none; margin-bottom: 15px; }
+        /* Phép thuật cho điện thoại: Tự động xếp thành 1 cột nếu màn hình nhỏ */
+        @media (max-width: 500px) {
+            .grid-container { grid-template-columns: 1fr; }
+            .btn-kapi { font-size: 18px; padding: 12px 20px; }
+        }
     </style>
 </head>
 <body>
