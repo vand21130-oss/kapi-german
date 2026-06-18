@@ -48,6 +48,13 @@ function showLevels() {
 }
 
 function chooseLevel(level) {
+    // Kapi từ chối khéo nếu chọn A1, A2, B1
+    if (level === 'A1' || level === 'A2' || level === 'B1') {
+        document.getElementById("message").innerHTML = `<b>🐹 Ôi, Kapi chưa gặm tới phần ${level} này, Vịt đợi nhé!</b>`;
+        document.getElementById("buttons").innerHTML = `<button class="btn-kapi btn-home" onclick="showLevels()">⬅️ Quay lại chọn B2 đi!</button>`;
+        return; 
+    }
+    
     currentLevel = level;
     document.getElementById("message").innerText = "Super! Heute üben wir Deutsch auf Niveau " + level + " 🇩🇪";
     showLessons();
