@@ -69,8 +69,7 @@ function showLessons() {
         <button class="btn-kapi btn-lesson-2" onclick="chooseLesson('Sprechen')">🗣️ Sprechen</button>
         <button class="btn-kapi btn-lesson-3" onclick="chooseLesson('Schreiben')">✍️ Schreiben</button>
         <button class="btn-kapi btn-lesson-5" onclick="chooseLesson('Vokabeln')">📝 Vokabeln & Spiele</button>
-        <!-- ẢNH ĐÃ ĐƯỢC DÙNG PHÉP THUẬT "PHÁ KHUNG" ĐỂ TO TRÀN MÀN HÌNH -->
-<img src="stories/tap1.jpg" style="width: 95vw; max-width: 1000px; position: relative; left: 50%; transform: translateX(-50%); border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); margin-bottom: 20px;">
+        <button class="btn-kapi" style="background-color: #ff9800; color: white;" onclick="showKapiStory('B2')">📖 Geschichten</button>
         <br><button class="btn-kapi btn-home" onclick="showLevels()">⬅️ Zurück</button>
     `;
 }
@@ -584,7 +583,7 @@ function submitHoeren() {
 // =========================================================
 
 function showKapiStory(level) {
-    // 1. BẬT KHU VỰC HIỂN THỊ LÊN (Dòng phép thuật giải cứu Kapi đây rồi!)
+    // Lệnh này giúp bật cái bảng đen lên để nhét truyện vào
     document.getElementById("feedback-area").style.display = "block";
     
     let resultHtml = "";
@@ -609,10 +608,10 @@ function showKapiStory(level) {
 
                 <h3 style="color: #2980b9; margin-top: 10px;">Tập 1: Kapis erster Tag im Krankenhaus</h3>
                 
-                <!-- ẢNH ĐÃ ĐƯỢC LÀM TO RA (max-width: 1200px) -->
-                <img src="stories/tap1.jpg" style="width: 100%; max-width: 900px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); margin: 20px auto; display: block;">
+                <!-- ẢNH ĐƯỢC CHỈNH VỪA KHÍT KHUNG (MAX 900PX), KHÔNG PHÁ MENU CỦA VỊT -->
+                <img src="stories/tap1.jpg" style="width: 100%; max-width: 900px; height: auto; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); margin: 20px auto; display: block;">
                 
-                <div style="background-color: #e8f6f3; padding: 20px; border-radius: 15px; text-align: left; max-width: 1000px; margin: 0 auto; line-height: 1.8;">
+                <div style="background-color: #e8f6f3; padding: 20px; border-radius: 15px; text-align: left; max-width: 900px; margin: 0 auto; line-height: 1.8;">
                     <p style="margin-top: 0;"><b>💡 Từ vựng B2 đáng chú ý trong tập này (Di chuột vào từ in đậm nhé):</b></p>
                     <p>Kapi hat endlich die Zusage für sein <span class="vocab-highlight" data-vi="Kỳ thực tập">Praktikum</span> erhalten. Der <span class="vocab-highlight" data-vi="Áo blouse bác sĩ">Arztkittel</span> sieht total professionell aus! Danach packt Kapi sorgfältig das <span class="vocab-highlight" data-vi="Ống nghe y tế">Stethoskop</span> ein. Die Überraschung war so groß, Kapi muss das Ganze erst mal <span class="vocab-highlight" data-vi="Bình tĩnh lại để tiêu hóa thông tin/cảm xúc (Idiom B2)">sacken lassen</span>.</p>
                 </div>
@@ -620,6 +619,6 @@ function showKapiStory(level) {
         `;
     }
 
-    // Chèn thẳng vào khu vực hiển thị nội dung chính của Vịt
+    // Nhét thẳng vào khu vực hiển thị nội dung chính
     document.getElementById("feedback-area").innerHTML = resultHtml;
 }
