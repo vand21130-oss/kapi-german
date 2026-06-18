@@ -69,7 +69,8 @@ function showLessons() {
         <button class="btn-kapi btn-lesson-2" onclick="chooseLesson('Sprechen')">🗣️ Sprechen</button>
         <button class="btn-kapi btn-lesson-3" onclick="chooseLesson('Schreiben')">✍️ Schreiben</button>
         <button class="btn-kapi btn-lesson-5" onclick="chooseLesson('Vokabeln')">📝 Vokabeln & Spiele</button>
-        <button class="btn-kapi" style="background-color: #ff9800; color: white;" onclick="showKapiStory('B2')">📖 Geschichten</button>
+        <!-- ẢNH ĐÃ ĐƯỢC DÙNG PHÉP THUẬT "PHÁ KHUNG" ĐỂ TO TRÀN MÀN HÌNH -->
+<img src="stories/tap1.jpg" style="width: 95vw; max-width: 1000px; position: relative; left: 50%; transform: translateX(-50%); border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); margin-bottom: 20px;">
         <br><button class="btn-kapi btn-home" onclick="showLevels()">⬅️ Zurück</button>
     `;
 }
