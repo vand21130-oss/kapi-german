@@ -44,6 +44,9 @@ const teil2 = [
     "Soll man die Arbeitszeit verkürzen?","Wie sinnvoll ist ein Großraumbüro?","Soll ein Angestellter von zu Hause aus arbeiten?","Flexible Arbeitszeiten","Online studieren oder Präsenzunterricht?","Sollen Studierende ihre Professoren beurteilen?","Umweltschutz an der Universität","Duales Studium","Soll man ein Eigenheim kaufen, statt zu mieten?","Soll man in einer Wohngemeinschaft (WG) leben?","Soll man in der Stadt oder auf dem Land wohnen?","Bargeld oder Kreditkarte?","Ist Markenkleidung wichtig?","Soll man im Internet kaufen?","Sollen Geschäfte jeden Tag geöffnet haben?","Online-Meeting","Gespräche online","Präsentationen bei Online-Meetings ersetzen?","Soll man in sozialen Medien aktiv sein?","Sollen junge Kinder Haustiere adoptieren?","Soll man mit Kindern reisen?","Sollen Kinder Fremdsprachen lernen?","Books oder E-Books?","Ausländische Filme in Originalsprache zeigen?","Nachrichten kostenpflichtig – sinnvoll?"
 ];
 
+// ==========================================
+// 2. TỪ VỰNG FULL HÌNH ẢNH SVG CUTE (ĐÃ BỔ SUNG ALLTAG)
+// ==========================================
 const vokabelGruppen = {
     krankheiten: {
         titel: "🦠 Krankheiten & Symptome",
@@ -85,14 +88,64 @@ const vokabelGruppen = {
             { de: "das Pflaster", vi: "băng cá nhân", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><g transform='rotate(45 50 50)'><rect x='20' y='40' width='60' height='20' rx='10' fill='%23e67e22'/><rect x='40' y='40' width='20' height='20' fill='%23fff' opacity='0.7'/></g></svg>" }
         ]
     },
-    arbeit: { titel: "💼 Arbeit", woerter: [{ de: "das Gehalt", vi: "tiền lương" }, { de: "das Vorstellungsgespräch", vi: "buổi phỏng vấn" }, { de: "die Bewerbung", vi: "đơn xin việc" }] },
-    umwelt: { titel: "🌍 Umwelt", woerter: [{ de: "der Umweltschutz", vi: "bảo vệ môi trường" }, { de: "die Mülltrennung", vi: "phân loại rác" }, { de: "klimaneutral", vi: "trung hòa khí hậu" }] },
-    kulinarik: { titel: "🍽️ Kulinarik", woerter: [{ de: "die Ernährung", vi: "dinh dưỡng" }, { de: "das Rezept", vi: "công thức nấu ăn" }] },
-    gesundheit: { titel: "💊 Gesundheit", woerter: [{ de: "die Vorsorge", vi: "sự phòng ngừa" }, { de: "die Behandlung", vi: "sự điều trị" }] },
-    technologie: { titel: "💻 Technologie", woerter: [{ de: "die Digitalisierung", vi: "số hóa" }, { de: "die künstliche Intelligenz", vi: "trí tuệ nhân tạo" }] },
-    gesellschaft: { titel: "🏘️ Gesellschaft", woerter: [{ de: "die Bevölkerung", vi: "dân số" }, { de: "die Integration", vi: "sự hội nhập" }] },
-    studium: { titel: "🎓 Studium", woerter: [{ de: "das Semester", vi: "học kỳ" }, { de: "die Vorlesung", vi: "bài giảng" }] },
-    saetze: { titel: "💬 Sätze", woerter: [{ de: "Meiner Meinung nach", vi: "Theo ý kiến của tôi" }, { de: "Ich bin davon überzeugt, dass", vi: "Tôi tin chắc rằng" }] }
+    arbeit: {
+        titel: "💼 Arbeit",
+        woerter: [
+            { de: "das Gehalt", vi: "tiền lương", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='50' r='35' fill='%23f1c40f' stroke='%23f39c12' stroke-width='4'/><text x='50' y='60' font-size='30' font-family='sans-serif' fill='%23d35400' text-anchor='middle'>€</text></svg>" },
+            { de: "das Vorstellungsgespräch", vi: "buổi phỏng vấn", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='30' cy='40' r='15' fill='%233498db'/><circle cx='70' cy='40' r='15' fill='%232ecc71'/><path d='M 30 70 Q 50 90 70 70' stroke='%2334495e' stroke-width='5' fill='none'/><path d='M 40 30 Q 50 15 60 30' stroke='%23f1c40f' stroke-width='4' fill='none'/></svg>" },
+            { de: "die Bewerbung", vi: "đơn xin việc", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='25' y='15' width='50' height='70' rx='5' fill='%23ecf0f1' stroke='%23bdc3c7' stroke-width='4'/><circle cx='50' cy='35' r='10' fill='%2395a5a6'/><line x1='35' y1='55' x2='65' y2='55' stroke='%237f8c8d' stroke-width='4'/><line x1='35' y1='65' x2='55' y2='65' stroke='%237f8c8d' stroke-width='4'/></svg>" }
+        ]
+    },
+    umwelt: {
+        titel: "🌍 Umwelt",
+        woerter: [
+            { de: "der Umweltschutz", vi: "bảo vệ môi trường", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='50' r='35' fill='%233498db'/><path d='M30 40 Q50 20 60 40 Q70 60 50 70 Q30 60 30 40' fill='%232ecc71'/><path d='M50 85 Q70 100 90 85' stroke='%23f1c40f' stroke-width='5' fill='none'/><path d='M10 85 Q30 100 50 85' stroke='%23f1c40f' stroke-width='5' fill='none'/></svg>" },
+            { de: "die Mülltrennung", vi: "phân loại rác", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='15' y='40' width='20' height='45' rx='3' fill='%233498db'/><rect x='40' y='40' width='20' height='45' rx='3' fill='%23f1c40f'/><rect x='65' y='40' width='20' height='45' rx='3' fill='%232c3e50'/><path d='M15 40 L35 40 M40 40 L60 40 M65 40 L85 40' stroke='%23ecf0f1' stroke-width='4'/></svg>" },
+            { de: "klimaneutral", vi: "trung hòa khí hậu", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='50' r='35' fill='%23ecf0f1' stroke='%232ecc71' stroke-width='5'/><text x='50' y='58' font-size='22' font-weight='bold' fill='%232c3e50' text-anchor='middle'>CO2</text><path d='M40 70 L50 80 L75 45' fill='none' stroke='%232ecc71' stroke-width='6'/></svg>" }
+        ]
+    },
+    kulinarik: {
+        titel: "🍽️ Kulinarik",
+        woerter: [
+            { de: "die Ernährung", vi: "dinh dưỡng", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='40' cy='55' r='20' fill='%23e74c3c'/><path d='M40 35 Q45 25 50 35' fill='none' stroke='%232ecc71' stroke-width='4'/><path d='M60 40 L80 80 L70 90 Z' fill='%23e67e22'/><path d='M65 45 L50 30' stroke='%232ecc71' stroke-width='4'/></svg>" },
+            { de: "das Rezept", vi: "công thức nấu ăn", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='25' y='20' width='50' height='60' rx='5' fill='%23ecf0f1' stroke='%2395a5a6' stroke-width='4'/><line x1='35' y1='40' x2='65' y2='40' stroke='%237f8c8d' stroke-width='4'/><line x1='35' y1='55' x2='55' y2='55' stroke='%237f8c8d' stroke-width='4'/><circle cx='70' cy='30' r='8' fill='%23e74c3c'/></svg>" }
+        ]
+    },
+    gesundheit: {
+        titel: "💊 Gesundheit",
+        woerter: [
+            { de: "die Vorsorge", vi: "sự phòng ngừa", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M50 15 L85 30 L85 60 Q50 95 50 95 Q15 60 15 30 Z' fill='%233498db'/><path d='M40 45 L60 45 M50 35 L50 55' stroke='%23fff' stroke-width='8'/></svg>" },
+            { de: "die Behandlung", vi: "sự điều trị", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='20' y='40' width='40' height='20' rx='10' fill='%23e74c3c'/><rect x='40' y='40' width='20' height='20' rx='10' fill='%23fff'/><path d='M70 30 L90 50 L70 70' stroke='%232ecc71' stroke-width='5' fill='none'/></svg>" }
+        ]
+    },
+    technologie: {
+        titel: "💻 Technologie",
+        woerter: [
+            { de: "die Digitalisierung", vi: "số hóa", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='20' y='25' width='60' height='40' rx='4' fill='%2334495e'/><rect x='10' y='65' width='80' height='10' rx='2' fill='%23bdc3c7'/><text x='50' y='52' font-size='18' font-weight='bold' fill='%232ecc71' text-anchor='middle'>0101</text></svg>" },
+            { de: "die künstliche Intelligenz", vi: "trí tuệ nhân tạo", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='30' y='25' width='40' height='40' rx='8' fill='%23ecf0f1' stroke='%237f8c8d' stroke-width='4'/><circle cx='40' cy='40' r='5' fill='%23e74c3c'/><circle cx='60' cy='40' r='5' fill='%23e74c3c'/><path d='M 40 55 Q 50 65 60 55' stroke='%237f8c8d' stroke-width='4' fill='none'/><line x1='50' y1='15' x2='50' y2='25' stroke='%23f1c40f' stroke-width='4'/></svg>" }
+        ]
+    },
+    gesellschaft: {
+        titel: "🏘️ Gesellschaft",
+        woerter: [
+            { de: "die Bevölkerung", vi: "dân số", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='30' cy='35' r='10' fill='%23f39c12'/><circle cx='50' cy='25' r='12' fill='%233498db'/><circle cx='70' cy='35' r='10' fill='%23e74c3c'/><path d='M15 70 Q30 50 45 70 M35 70 Q50 40 65 70 M55 70 Q70 50 85 70' stroke='%232c3e50' stroke-width='5' fill='none'/></svg>" },
+            { de: "die Integration", vi: "sự hội nhập", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M30 30 L50 30 L50 50 L30 50 Z' fill='%233498db'/><path d='M50 30 L70 30 L70 50 L50 50 Z' fill='%23e74c3c'/><path d='M40 50 L60 50 L60 70 L40 70 Z' fill='%23f1c40f'/><circle cx='50' cy='50' r='8' fill='%232ecc71'/></svg>" }
+        ]
+    },
+    studium: {
+        titel: "🎓 Studium",
+        woerter: [
+            { de: "das Semester", vi: "học kỳ", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='25' y='25' width='50' height='50' rx='5' fill='%23ecf0f1' stroke='%2334495e' stroke-width='4'/><rect x='25' y='25' width='50' height='15' rx='5' fill='%23e74c3c'/><circle cx='40' cy='55' r='6' fill='%233498db'/><circle cx='60' cy='55' r='6' fill='%23bdc3c7'/></svg>" },
+            { de: "die Vorlesung", vi: "bài giảng", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='15' y='20' width='70' height='45' fill='%232c3e50' stroke='%237f8c8d' stroke-width='3'/><circle cx='50' cy='80' r='12' fill='%23f39c12'/><path d='M40 100 L60 100 L50 85 Z' fill='%233498db'/><line x1='25' y1='35' x2='55' y2='35' stroke='%23ecf0f1' stroke-width='3'/></svg>" }
+        ]
+    },
+    saetze: {
+        titel: "💬 Sätze",
+        woerter: [
+            { de: "Meiner Meinung nach", vi: "Theo ý kiến của tôi", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><ellipse cx='50' cy='40' rx='35' ry='25' fill='%23ecf0f1' stroke='%2395a5a6' stroke-width='3'/><circle cx='35' cy='75' r='8' fill='%23ecf0f1'/><circle cx='25' cy='88' r='4' fill='%23ecf0f1'/><text x='50' y='48' font-size='20' fill='%2334495e' text-anchor='middle'>💡</text></svg>" },
+            { de: "Ich bin davon überzeugt, dass", vi: "Tôi tin chắc rằng", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='50' r='35' fill='%232ecc71'/><path d='M35 50 L45 60 L65 35' fill='none' stroke='%23fff' stroke-width='8'/><circle cx='70' cy='25' r='5' fill='%23f1c40f'/><circle cx='85' cy='40' r='4' fill='%23f1c40f'/></svg>" }
+        ]
+    }
 };
 
 // Dữ liệu Game Điền Từ Trắc Nghiệm (Khôi phục kho Game của Vịt)
