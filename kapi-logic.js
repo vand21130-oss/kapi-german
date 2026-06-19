@@ -608,9 +608,15 @@ function showKapiStory(level) {
                     </p>
                 </div>
 
-                <h3 style="color: #2980b9; margin-top: 10px;">Tập 1: Kapis erster Tag im Krankenhaus</h3>
+                <h3 style="color: #2980b9; margin-top: 10px; margin-bottom: 5px;">Tập 1: Kapis erster Tag im Krankenhaus</h3>
                 
-                <img src="stories/tap1.jpg" style="width: 100%; max-width: 900px; height: auto; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); margin: 20px auto; display: block;">
+                <!-- DÒNG P/S SIÊU CUTE MỚI THÊM VÀO ĐÂY NÈ -->
+                <p style="font-size: 15px; color: #e67e22; font-style: italic; margin-top: 0; margin-bottom: 15px;">
+                    <b>P.S:</b> Vergiss nicht, das Bild zu vergrößern, um es besser lesen zu können! <br>
+                    <span style="color: #7f8c8d;">(Nhớ phóng to ảnh lên để đọc cho dễ nha khum! 🦫🔍)</span>
+                </p>
+                
+                <img src="stories/tap1.jpg" style="width: 100%; max-width: 900px; height: auto; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); margin: 0 auto 20px auto; display: block;">
                 
                 <div style="background-color: #e8f6f3; padding: 20px; border-radius: 15px; text-align: left; max-width: 900px; margin: 0 auto; line-height: 1.8;">
                     <p style="margin-top: 0;"><b>💡 Từ vựng B2 đáng chú ý trong tập này (Di chuột vào từ in đậm nhé):</b></p>
