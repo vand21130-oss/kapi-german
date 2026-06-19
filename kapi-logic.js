@@ -613,7 +613,7 @@ function showKapiStory(level) {
                 <!-- DÒNG P/S SIÊU CUTE MỚI THÊM VÀO ĐÂY NÈ -->
                 <p style="font-size: 15px; color: #e67e22; font-style: italic; margin-top: 0; margin-bottom: 15px;">
                     <b>P.S:</b> Vergiss nicht, das Bild zu vergrößern, um es besser lesen zu können! <br>
-                    <span style="color: #7f8c8d;">(Nhớ phóng to ảnh lên để đọc cho dễ nha khum! 🦫🔍)</span>
+                    <span style="color: #7f8c8d;">(Nhớ phóng to ảnh lên để đọc cho dễ nha! )</span>
                 </p>
                 
                 <img src="stories/tap1.jpg" style="width: 100%; max-width: 900px; height: auto; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); margin: 0 auto 20px auto; display: block;">
