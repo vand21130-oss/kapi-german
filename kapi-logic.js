@@ -48,13 +48,11 @@ function showLevels() {
 }
 
 function chooseLevel(level) {
-    // Kapi từ chối khéo nếu chọn A1, A2, B1
     if (level === 'A1' || level === 'A2' || level === 'B1') {
         document.getElementById("message").innerHTML = `<b>🐹 Ôi, Kapi chưa gặm tới phần ${level} này, Vịt đợi nhé!</b>`;
         document.getElementById("buttons").innerHTML = `<button class="btn-kapi btn-home" onclick="showLevels()">⬅️ Quay lại chọn B2 đi!</button>`;
         return; 
     }
-    
     currentLevel = level;
     document.getElementById("message").innerText = "Super! Heute üben wir Deutsch auf Niveau " + level + " 🇩🇪";
     showLessons();
@@ -173,7 +171,6 @@ function renderFlashcard() {
     
     let cardContent = "";
     if (!isFlipped) {
-        // Mặt trước: Tiếng Việt + Hình ảnh
         let bildHtml = w.bild ? `<img src="${w.bild}" style="width:120px;height:120px;object-fit:contain;margin-bottom:10px;"><br>` : '';
         cardContent = `
             ${bildHtml}
@@ -181,7 +178,6 @@ function renderFlashcard() {
             <p style="font-size:15px; color:#95a5a6; margin-top:20px; font-style:italic;">👆 Chạm để lật xem tiếng Đức</p>
         `;
     } else {
-        // Mặt sau: Tiếng Đức
         let bildHtml = w.bild ? `<img src="${w.bild}" style="width:120px;height:120px;object-fit:contain;margin-bottom:10px; opacity:0.5;"><br>` : '';
         cardContent = `
             ${bildHtml}
@@ -190,7 +186,6 @@ function renderFlashcard() {
         `;
     }
 
-    // Giao diện Thẻ Flashcard
     document.getElementById("message").innerHTML = `
         <span style="font-size:16px;color:#7f8c8d; font-weight:bold;">Flashcard | Thẻ ${currentFlashcardIndex + 1}/${flashcardWords.length}</span><br><br>
         <div onclick="flipCard()" style="cursor:pointer; background: #fff; border: 2px solid #bdc3c7; border-radius: 20px; padding: 40px 20px; box-shadow: 0 8px 16px rgba(0,0,0,0.08); max-width: 350px; margin: 0 auto; min-height: 220px; display: flex; flex-direction: column; justify-content: center; align-items: center; user-select: none; transition: 0.2s;">
@@ -198,43 +193,27 @@ function renderFlashcard() {
         </div>
     `;
     
-    // Hệ thống nút bấm điều hướng
     let btnHtml = `<div style="display:flex; justify-content: center; gap: 15px; max-width: 350px; margin: 0 auto; margin-top: 25px;">`;
     
-    // Nút "Trước"
     if (currentFlashcardIndex > 0) {
         btnHtml += `<button class="btn-kapi btn-home" style="margin:0; flex:1;" onclick="prevFlashcard()">⬅️ Trước</button>`;
     } else {
-        btnHtml += `<div style="flex:1;"></div>`; // Ô trống để căn giữa nếu không có nút Trước
+        btnHtml += `<div style="flex:1;"></div>`;
     }
     
-    // Nút "Tiếp" hoặc "Làm Quiz"
     if (currentFlashcardIndex < flashcardWords.length - 1) {
         btnHtml += `<button class="btn-kapi btn-green" style="margin:0; flex:1;" onclick="nextFlashcard()">Tiếp ➡️</button>`;
     } else {
-        btnHtml += `<button class="btn-kapi" style="margin:0; flex:1; background:#f39c12; color:white; font-weight:bold; box-shadow: 0 4px 10px rgba(243, 156, 18, 0.4);" onclick="startSpecificQuiz('${currentFlashcardGroup}')">🎯 Làm Quiz</button>`;
+        btnHtml += `<button class="btn-kapi" style="margin:0; flex:1; background:#f39c12; color:white; font-weight:bold;" onclick="startSpecificQuiz('${currentFlashcardGroup}')">🎯 Làm Quiz</button>`;
     }
     
     btnHtml += `</div><br><button class="btn-kapi btn-home" onclick="showVokabelHauptmenu()">🚪 Thoát</button>`;
     document.getElementById("buttons").innerHTML = btnHtml;
 }
 
-function flipCard() {
-    isFlipped = !isFlipped;
-    renderFlashcard();
-}
-
-function nextFlashcard() {
-    currentFlashcardIndex++;
-    isFlipped = false; // Reset thẻ về mặt trước khi sang từ mới
-    renderFlashcard();
-}
-
-function prevFlashcard() {
-    currentFlashcardIndex--;
-    isFlipped = false; // Reset thẻ về mặt trước khi lùi lại
-    renderFlashcard();
-}
+function flipCard() { isFlipped = !isFlipped; renderFlashcard(); }
+function nextFlashcard() { currentFlashcardIndex++; isFlipped = false; renderFlashcard(); }
+function prevFlashcard() { currentFlashcardIndex--; isFlipped = false; renderFlashcard(); }
 
 function startSpecificQuiz(gruppe) {
     if (gruppe === 'review') {
@@ -242,10 +221,7 @@ function startSpecificQuiz(gruppe) {
     } else {
         quizWords = [...vokabelGruppen[gruppe].woerter];
     }
-    
-    // Xáo trộn thứ tự từ vựng ngẫu nhiên cho Quiz
     quizWords.sort(() => Math.random() - 0.5);
-    
     currentQuizIndex = 0;
     quizScore = 0;
     currentMissedWords = [];
@@ -285,12 +261,10 @@ function checkVokabelAnswer() {
     
     if (isCorrect) {
         quizScore++;
-        // Nếu trả lời đúng, xóa từ này khỏi danh sách hay quên (nếu có)
         savedMissed = savedMissed.filter(item => item.de !== w.de);
         resultHtml = `<h3 style="color:#27ae60; margin:0;">✅ Chính xác!</h3><p style="font-size:18px;"><b>${w.de}</b> = ${w.vi}</p>`;
     } else {
         currentMissedWords.push(w);
-        // Nếu trả lời sai, thêm vào danh sách hay quên
         if (!savedMissed.find(item => item.de === w.de)) savedMissed.push(w);
         resultHtml = `<h3 style="color:#c0392b; margin:0;">❌ Sai rồi Vịt ơi!</h3><p style="font-size:16px;">Cậu gõ: <s>${input || "(trống)"}</s></p><p style="font-size:20px; color:#27ae60;">Phải là: <b>${w.de}</b></p>`;
     }
@@ -321,11 +295,10 @@ function finishQuiz() {
     document.getElementById("buttons").innerHTML = `<button class="btn-kapi btn-home" onclick="showVokabelHauptmenu()">⬅️ Về Menu Từ Vựng</button>`;
 }
 
-// 4. GAME TRẮC NGHIỆM ĐIỀN TỪ (Mới Khôi Phục)
+// 4. GAME TRẮC NGHIỆM ĐIỀN TỪ
 function startMultipleChoiceGame() {
     currentGameIndex = 0;
     gameScore = 0;
-    // Trộn câu hỏi ngẫu nhiên
     quizGameData.sort(() => Math.random() - 0.5);
     showMCQuestion();
 }
@@ -383,7 +356,6 @@ function nextMCQuestion() {
 
 // 5. GAME ĐẶT CÂU VỚI TỪ NGẪU NHIÊN
 function showSentenceGame() {
-    // Lấy ngẫu nhiên 1 từ trong kho
     let allWords = [];
     for(let key in vokabelGruppen) { allWords = allWords.concat(vokabelGruppen[key].woerter); }
     let randomWord = allWords[Math.floor(Math.random() * allWords.length)];
@@ -406,7 +378,7 @@ function showSentenceGame() {
     `;
 }
 
-// 6. SPRECHEN & SCHREIBEN (Grammar Check với LanguageTool)
+// 6. SPRECHEN & SCHREIBEN
 function showTeil1() {
     let thema = teil1[Math.floor(Math.random() * teil1.length)];
     setupSprechenUI("<b>🗣️ B2 Teil 1</b><br><br>" + thema.thema + "<br><br>• " + thema.punkte.join("<br>• "));
@@ -471,7 +443,7 @@ async function checkGrammar(inputId) {
     } catch(e) { aiCorrection.innerHTML = `<p style="color:red;">Lỗi kết nối máy chủ LanguageTool!</p>`; }
 }
 
-// 7. HÖREN LOGIC (CHẤM ĐIỂM & GIẢI THÍCH)
+// 7. HÖREN LOGIC
 function showHoerenMenu() {
     document.getElementById("feedback-area").style.display = "none";
     document.getElementById("message").innerHTML = `🎧 Kho đề Hören - Trình độ ${currentLevel}`;
@@ -578,30 +550,28 @@ function submitHoeren() {
     `;
     document.getElementById("feedback-area").innerHTML = resultHtml;
 }
-// =========================================================
-// ====== PHẦN LOGIC CHO TRUYỆN CỦA KAPI (TÍCH HỢP SÂU) ====
-// =========================================================
 
-// Thêm tham số chapter = 1 (mặc định là tập 1)
+// =========================================================
+// 8. TRUYỆN CỦA KAPI
+// =========================================================
 function showKapiStory(level, chapter = 1) {
     document.getElementById("feedback-area").style.display = "block";
     let resultHtml = "";
-    
+    let buttonContent = "";
+
     if (level === "A1" || level === "A2" || level === "B1") {
         resultHtml = `
             <div style="padding: 20px; background-color: #f8d7da; color: #721c24; border-radius: 10px; margin-top: 20px; text-align: center;">
                 <h3 style="margin: 0;">Ôi, Kapi chưa gặm tới truyện của ${level}, Vịt đợi nhé! 🦫💦</h3>
             </div>
         `;
-        document.getElementById("buttons").innerHTML = `<button class="btn-kapi btn-home" onclick="showLessons()">⬅️ Zurück</button>`;
+        buttonContent = `<button class="btn-kapi btn-home" onclick="showLessons()">⬅️ Zurück</button>`;
 
     } else if (level === "B2") {
-        let storyContent = "";
-        let buttonContent = "";
 
         // ================= TẬP 1 =================
         if (chapter === 1) {
-            storyContent = `
+            resultHtml = `
                 <div style="text-align: center; animation: fadeIn 0.5s;">
                     <div style="background-color: #fff3e0; padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 2px dashed #ffb74d; display: inline-block;">
                         <p style="font-size: 18px; color: #d35400; font-weight: bold; margin: 0 0 5px 0;">
@@ -630,10 +600,10 @@ function showKapiStory(level, chapter = 1) {
                 <button class="btn-kapi btn-home" onclick="showLessons()">⬅️ Zurück</button>
                 <button class="btn-kapi btn-green" onclick="showKapiStory('B2', 2)">Tập 2 ➡️</button>
             `;
-        } 
+
         // ================= TẬP 2 =================
-        else if (chapter === 2) {
-            storyContent = `
+        } else if (chapter === 2) {
+            resultHtml = `
                 <div style="text-align: center; animation: fadeIn 0.5s;">
                     <h3 style="color: #2980b9; margin-top: 10px; margin-bottom: 5px;">Tập 2: Vorbereitung auf das Praktikum</h3>
                     <p style="font-size: 15px; color: #e67e22; font-style: italic; margin-top: 0; margin-bottom: 15px;">
@@ -641,8 +611,7 @@ function showKapiStory(level, chapter = 1) {
                         <span style="color: #7f8c8d;">(Nhớ phóng to ảnh lên để đọc cho dễ nha khum! 🦫🔍)</span>
                     </p>
                     
-                    <!-- LƯU Ý: Nếu đuôi ảnh của Vịt là .jpg thì sửa chữ .png ở dòng dưới thành .jpg nhé! -->
-                    <img src="stories/tap2.jpg" style="width: 100%; max-width: 900px; ...">
+                    <img src="stories/tap2.jpg" style="width: 100%; max-width: 900px; height: auto; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); margin: 0 auto 20px auto; display: block;">
                     
                     <div style="background-color: #e8f6f3; padding: 20px; border-radius: 15px; text-align: left; max-width: 900px; margin: 0 auto; line-height: 1.8;">
                         <p style="margin-top: 0;"><b>💡 Từ vựng B2 đáng chú ý trong tập này (Di chuột vào từ in đậm nhé):</b></p>
@@ -653,17 +622,10 @@ function showKapiStory(level, chapter = 1) {
             buttonContent = `
                 <button class="btn-kapi btn-home" onclick="showKapiStory('B2', 1)">⬅️ Tập 1</button>
                 <button class="btn-kapi btn-home" onclick="showLessons()">🏠 Menu</button>
-                <button class="btn-kapi btn-green" onclick="alert('Tập 3 Kapi đi làm ngày đầu tiên nha, Vịt đợi xíu! 🦫🏥')">Tập 3 ➡️</button>
+                <button class="btn-kapi btn-green" onclick="showKapiStory('B2', 3)">Tập 3 ➡️</button>
             `;
-        }
 
-        resultHtml = storyContent;
-        document.getElementById("buttons").innerHTML = buttonContent;
-    }
-
-    document.getElementById("feedback-area").innerHTML = resultHtml;
-}
- // ================= TẬP 3 =================
+        // ================= TẬP 3 =================
         } else if (chapter === 3) {
             resultHtml = `
                 <div style="text-align: center; animation: fadeIn 0.5s;">
