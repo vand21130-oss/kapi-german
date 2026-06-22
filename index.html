@@ -11,6 +11,79 @@
     <script src="kapi-logic.js" defer></script>
     
     <style>
+        /* ========================================= */
+/* HIỆU ỨNG KAPI NHÚN NHẢY & BONG BÓNG THOẠI */
+/* ========================================= */
+
+.kapi-container {
+    position: relative;
+    display: inline-block;
+    cursor: pointer; /* Biến chuột thành hình bàn tay */
+    margin: 20px 0;
+}
+
+/* Kapi nhún nhảy */
+.kapi-img {
+    width: 450px;
+    max-width: 90%;
+    height: auto;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Mượt và nảy nhẹ */
+}
+
+.kapi-container:hover .kapi-img {
+    transform: translateY(-15px) scale(1.02); /* Nảy lên 15px và to ra một tẹo */
+}
+
+/* Bong bóng thoại "Hallo" */
+.kapi-bubble {
+    position: absolute;
+    top: 10px;
+    right: 20px; /* Căn nằm ngay cạnh đầu bé Kapi */
+    background-color: white;
+    border: 3px solid #ffb74d; /* Viền màu cam */
+    border-radius: 20px;
+    padding: 10px 20px;
+    font-size: 22px;
+    font-weight: bold;
+    color: #d35400;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+    z-index: 10;
+    
+    /* Trạng thái ẩn ban đầu */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px) scale(0.8);
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); /* Hiệu ứng "pop up" nảy nảy */
+}
+
+/* Cái đuôi nhọn của bong bóng */
+.kapi-bubble::after {
+    content: "";
+    position: absolute;
+    bottom: -12px;
+    right: 40px; /* Chỉnh cái đuôi trỏ xuống gần đầu Kapi */
+    border-width: 12px 12px 0;
+    border-style: solid;
+    border-color: #ffb74d transparent transparent transparent;
+}
+
+.kapi-bubble::before {
+    content: "";
+    position: absolute;
+    bottom: -8px;
+    right: 40px;
+    border-width: 12px 12px 0;
+    border-style: solid;
+    border-color: white transparent transparent transparent;
+    z-index: 1;
+}
+
+/* Hiển thị bong bóng khi di chuột vào vùng chứa */
+.kapi-container:hover .kapi-bubble {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+}
         body { margin:0; min-height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; background:white; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding-bottom: 50px; }
         
         .btn-kapi { font-size:22px; padding:15px 25px; margin:10px; border-radius:20px; border:none; cursor:pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.05); transition: 0.2s; color: #333; }
@@ -76,7 +149,11 @@
 <body>
 
 <h1>Hallo! Ich bin Kapi 🦫</h1>
-<img src="capy.png" style="width: 450px; max-width: 90%; height: auto;" onerror="this.src='https://placehold.co/400x300/e3f2fd/1565c0?text=Kapi+Image'">
+<!-- KAPI VÀ BONG BÓNG THOẠI -->
+<div class="kapi-container">
+    <div class="kapi-bubble">Hallo! 👋</div>
+    <img src="capy.png" class="kapi-img" alt="Bé Kapi dễ thương">
+</div>
 <p id="message" style="font-size:30px; margin:20px;">Guten Morgen! Schön, dich kennenzulernen! 🌟</p>
 <p id="timer" style="font-size:40px; color:#e67e22; font-weight:bold; margin: 0;"></p>
 
