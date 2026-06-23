@@ -708,12 +708,12 @@ highlighterUI.style.fontFamily = 'sans-serif';
 
 highlighterUI.innerHTML = `
     <div style="font-size: 12px; color: #7f8c8d; margin-bottom: 8px; line-height: 1.5;">
-        <i>💡 Mẹo dùng bút nhớ (Tipp):</i><br>
-        <b>💻 PC:</b> Giữ phím Alt + bôi đen chữ<br>
-        <b>📱 Điện thoại/iPad:</b> Bôi đen xong bấm nút
+        <i>💡 Highlighter Tip:</i><br>
+        <b>💻 PC:</b> Hold Alt + select text<br>
+        <b>📱 Mobile/iPad:</b> Select text then click button
     </div>
     <button onclick="applyPinkHighlight()" style="background:#FFD1DC; border:none; padding:8px 15px; border-radius:8px; cursor:pointer; font-weight:bold; color:#2c3e50; font-size:14px; box-shadow: 0 2px 4px rgba(255, 209, 220, 0.8);">
-        🖍️ Tô màu ngay!
+        🖍️ Highlight!
     </button>
 `;
 document.body.appendChild(highlighterUI);
