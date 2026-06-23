@@ -93,6 +93,7 @@ const alleHoerenPruefungen = [
                 ]
             },
             {
+              {
                 teilName: "Teil 5: Wissenschaftlicher Diskurs",
                 audioSrc: "audio/de1-teil5.mp3",
                 fragen: [
@@ -101,3 +102,6 @@ const alleHoerenPruefungen = [
                     { frage: "43. Welchen neuen Wohlstandsbegriff schlägt Dr. Martinez vor?", antworten: ["A. Luxusgüter.", "B. Die Souveränität über die eigene Zeit und soziale Bindungen.", "C. Grundeinkommen."], richtig: 1, begruendung: "Dr. Martinez: 'Echter Wohlstand ist Zeitsouveränität. Die Fähigkeit, weniger zu arbeiten, mehr Zeit für Bildung, Familie... zu haben.'" }
                 ]
             }
+        ]
+    }
+];
