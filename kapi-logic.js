@@ -750,3 +750,37 @@ document.addEventListener('mouseup', function(e) {
         applyPinkHighlight();
     }
 });
+// ==========================================
+// HÀM CHUYỂN TRANG TRANSCRIPT ĐỘC LẬP
+// ==========================================
+
+window.openTranscriptPage = function() {
+    // 1. Giấu toàn bộ khu vực làm bài đi 
+    // LƯU Ý: Vịt xem ID của khung to nhất chứa bài làm là gì thì thay chữ "container" bằng ID đó nhé. (Ví dụ: "app-container", "main-content"...)
+    document.getElementById("container").style.display = "none"; 
+    
+    // 2. Hiện trang Transcript lên
+    document.getElementById("transcript-page").style.display = "block";
+
+    // 3. Lấy dữ liệu của bài hiện tại
+    let teil = alleHoerenPruefungen[currentPruefungIndex].teile[currentTeilIndex];
+    
+    // 4. Đổ dữ liệu (Tên, Audio & Text) vào trang mới
+    document.getElementById("transcript-title").innerText = teil.teilName;
+    document.getElementById("transcript-audio").src = teil.audioSrc;
+    document.getElementById("transcript-text").innerHTML = teil.transcript || "<i>Kein Transkript verfügbar (Chưa có Transkript).</i>";
+};
+
+window.closeTranscriptPage = function() {
+    // 1. Tắt audio nếu nó đang chạy dở để không bị vang tiếng khi quay lại
+    let audioEl = document.getElementById("transcript-audio");
+    audioEl.pause();
+    audioEl.currentTime = 0; // Tua lại từ đầu
+    
+    // 2. Giấu trang Transcript đi
+    document.getElementById("transcript-page").style.display = "none";
+    
+    // 3. Hiện lại khu vực kết quả làm bài 
+    // (Nhớ dùng đúng ID giống hệt ở hàm openTranscriptPage ở trên nha)
+    document.getElementById("container").style.display = "block"; 
+};
