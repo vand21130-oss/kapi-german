@@ -545,7 +545,15 @@ function submitHoeren() {
     resultHtml += `
         <div style="text-align:center; margin-top:20px;">
             <h3 style="font-size:24px;">Điểm của cậu: <span style="color:#e67e22;">${score} / ${teil.fragen.length}</span></h3>
-            <button class="btn-kapi btn-green" onclick="startHoerenTeil(${currentTeilIndex})">🔄 Nghe lại phần này</button>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 15px; margin-top: 15px;">
+            <!-- Nút Nghe lại (giữ nguyên lệnh chuẩn của Vịt) -->
+            <button class="btn-kapi btn-green" onclick="startHoerenTeil(${currentTeilIndex})"> 🔄 Nghe lại phần này </button>
+            
+            <!-- Nút Transkript -->
+            <button onclick="openTranscriptPage()" style="background: #fdf2f8; border: 2px dashed #fbcfe8; padding: 10px 25px; border-radius: 12px; color: #db2777; font-weight: bold; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.05); font-size: 16px; transition: 0.2s;">
+                📖 Sang trang đọc Transkript
+            </button>
+        </div>
         </div></div>
     `;
     document.getElementById("feedback-area").innerHTML = resultHtml;
