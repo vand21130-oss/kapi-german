@@ -190,6 +190,25 @@ body::before {
     <p style="font-size: 14px; color: #7f8c8d; font-weight: bold; margin-bottom: 5px;">👀 Số lượt ghé thăm bé Kapi:</p>
     <img src="https://komarev.com/ghpvc/?username=kapi-deutsch-project-v2&color=orange&style=flat-square" alt="Visitor Count" style="border-radius: 5px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
 </div>
+    <!-- ================= GIAO DIỆN TRANG TRANSCRIPT RIÊNG ================= -->
+    <div id="transcript-page" style="display: none; padding: 20px; max-width: 800px; margin: 0 auto; background: #fffaf0; min-height: 100vh; font-family: sans-serif;">
+        
+        <!-- Nút quay lại -->
+        <button onclick="closeTranscriptPage()" style="background: #fdf2f8; border: 2px solid #fbcfe8; padding: 10px 20px; border-radius: 20px; color: #db2777; font-weight: bold; cursor: pointer; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+            ⬅️ Quay lại kết quả
+        </button>
+
+        <!-- Tiêu đề và Audio -->
+        <h2 id="transcript-title" style="color: #2c3e50; text-align: center; margin-bottom: 20px;"></h2>
+        <div style="text-align: center; margin-bottom: 30px;">
+            <audio id="transcript-audio" controls style="width: 100%; max-width: 500px;"></audio>
+        </div>
+
+        <!-- Khung chữ Transcript -->
+        <div id="transcript-text" style="background: #fff; padding: 30px; border-radius: 16px; border: 1px solid #ffe4e1; box-shadow: 0 4px 15px rgba(0,0,0,0.03); font-size: 16px; line-height: 1.8; color: #4b5563; text-align: justify; white-space: pre-line;">
+        </div>
+        
+    </div>
 </body>
 </html>
 
