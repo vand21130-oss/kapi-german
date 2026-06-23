@@ -659,3 +659,40 @@ function showKapiStory(level, chapter = 1) {
     document.getElementById("feedback-area").innerHTML = resultHtml;
     document.getElementById("buttons").innerHTML = buttonContent;
 }
+}
+        // ================= TẬP 4 =================
+        else if (chapter === 4) {
+            resultHtml = `
+                <div style="text-align: center; animation: fadeIn 0.5s;">
+                    <h3 style="color: #2980b9; margin-top: 10px; margin-bottom: 5px;">Tập 4: Gespräche mit Kollegen</h3>
+                    <p style="font-size: 15px; color: #e67e22; font-style: italic; margin-top: 0; margin-bottom: 15px;">
+                        <b>P.S:</b> Vergiss nicht, das Bild zu vergrößern, um es besser lesen zu können! <br>
+                        <span style="color: #7f8c8d;">(Nhớ phóng to ảnh lên để đọc cho dễ nha khum! 🦫🔍)</span>
+                    </p>
+                    
+                    <!-- Nhớ lưu ảnh tập 4 là tap4.jpg và để trong thư mục stories nhé! -->
+                    <img src="stories/tap4.jpg" style="width: 100%; max-width: 900px; height: auto; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); margin: 0 auto 20px auto; display: block;">
+                    
+                    <div style="background-color: #e8f6f3; padding: 20px; border-radius: 15px; text-align: left; max-width: 900px; margin: 0 auto; line-height: 1.8;">
+                        <p style="margin-top: 0;"><b>💡 Từ vựng B2 đáng chú ý trong tập này (Di chuột vào từ in đậm nhé):</b></p>
+                        <p>
+                            Kapi und sein Kollege schauen sich den <span class="vocab-highlight" data-vi="Lịch trực">Dienstplan</span> an und <span class="vocab-highlight" data-vi="Trao đổi thông tin với nhau">tauschen sich aus</span>. 
+                            Der Kollege ist sehr <span class="vocab-highlight" data-vi="Hay giúp đỡ, nhiệt tình">hilfsbereit</span> und teilt seine <span class="vocab-highlight" data-vi="Kinh nghiệm">Erfahrung</span>. 
+                            Kapi ist sehr dankbar für diesen guten <span class="vocab-highlight" data-vi="Lời khuyên">Rat</span>.
+                        </p>
+                    </div>
+                </div>
+            `;
+            buttonContent = `
+                <button class="btn-kapi btn-home" onclick="showKapiStory('B2', 3)">⬅️ Tập 3</button>
+                <button class="btn-kapi btn-home" onclick="showLessons()">🏠 Menu</button>
+                <button class="btn-kapi btn-green" onclick="alert('Tập 5 đang lên kịch bản, Vịt đợi xíu nha! 🦫🎬')">Tập 5 ➡️</button>
+            `;
+        }
+
+        // Đảm bảo 2 dòng này vẫn nằm TRONG dấu ngoặc của hàm B2 nhé
+        document.getElementById("buttons").innerHTML = buttonContent;
+    } 
+
+    document.getElementById("feedback-area").innerHTML = resultHtml;
+}
