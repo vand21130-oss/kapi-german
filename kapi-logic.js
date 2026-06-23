@@ -688,3 +688,65 @@ function showKapiStory(level, chapter = 1) {
     document.getElementById("feedback-area").innerHTML = resultHtml;
     document.getElementById("buttons").innerHTML = buttonContent;
 }
+// ==========================================
+// BÚT NHỚ HIGHLIGHT (HỖ TRỢ CẢ PC & MOBILE) 🍑✨
+// ==========================================
+
+// 1. Tạo nút bấm và hướng dẫn lơ lửng góc dưới màn hình
+let highlighterUI = document.createElement('div');
+highlighterUI.style.position = 'fixed';
+highlighterUI.style.bottom = '20px';
+highlighterUI.style.right = '20px';
+highlighterUI.style.zIndex = '9999';
+highlighterUI.style.background = 'rgba(255, 255, 255, 0.95)';
+highlighterUI.style.padding = '10px';
+highlighterUI.style.borderRadius = '12px';
+highlighterUI.style.boxShadow = '0 4px 15px rgba(0,0,0,0.1)';
+highlighterUI.style.border = '2px solid #FFD1DC';
+highlighterUI.style.textAlign = 'center';
+highlighterUI.style.fontFamily = 'sans-serif';
+
+highlighterUI.innerHTML = `
+    <div style="font-size: 12px; color: #7f8c8d; margin-bottom: 8px; line-height: 1.5;">
+        <i>💡 Mẹo dùng bút nhớ (Tipp):</i><br>
+        <b>💻 PC:</b> Giữ phím Alt + bôi đen chữ<br>
+        <b>📱 Điện thoại/iPad:</b> Bôi đen xong bấm nút
+    </div>
+    <button onclick="applyPinkHighlight()" style="background:#FFD1DC; border:none; padding:8px 15px; border-radius:8px; cursor:pointer; font-weight:bold; color:#2c3e50; font-size:14px; box-shadow: 0 2px 4px rgba(255, 209, 220, 0.8);">
+        🖍️ Tô màu ngay!
+    </button>
+`;
+document.body.appendChild(highlighterUI);
+
+// 2. Hàm tô màu hồng đào 🍑
+window.applyPinkHighlight = function() {
+    let selection = window.getSelection();
+    let selectedText = selection.toString().trim();
+    
+    if (selectedText.length > 0) {
+        try {
+            let range = selection.getRangeAt(0);
+            let span = document.createElement('span');
+            
+            // Màu hồng đào siêu xinh
+            span.style.backgroundColor = '#FFD1DC'; 
+            span.style.color = '#2c3e50'; 
+            span.style.borderRadius = '4px';
+            span.style.padding = '2px 4px';
+            
+            range.surroundContents(span);
+            
+            // Xóa vùng bôi đen mặc định để hiện màu hồng luôn
+            selection.removeAllRanges(); 
+        } catch (err) {
+            alert("Kapi nhắc nhẹ: Cậu highlight từng đoạn thôi nhé, bôi đen vắt ngang qua 2 dòng hoặc 2 thẻ là bút nhớ bị kẹt đó! 🦫💦");
+        }
+    }
+};
+
+// 3. Giữ nguyên tính năng phím tắt Alt siêu tốc cho PC
+document.addEventListener('mouseup', function(e) {
+    if (e.altKey) {
+        applyPinkHighlight();
+    }
+});
