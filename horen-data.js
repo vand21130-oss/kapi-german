@@ -61,7 +61,7 @@ const alleHoerenPruefungen = [
                     { frage: "21. Welches Fazit zieht der Redner am Ende seines Vortrags?", antworten: ["A. Dass Scheitern nur dann wertvoll ist, wenn eine tiefgreifende Analyse erfolgt.", "B. Jeder Gründer muss scheitern.", "C. Politik soll Risiken übernehmen."], richtig: 0, begruendung: "Vortrag: 'Es wird erst dann zu einem Mehrwert... wenn man die intellektuelle Disziplin besitzt, die Ursachen schonungslos aufzuarbeiten.'" }
                 ]
             },
-           {
+            {
                 teilName: "Teil 3: Erweiterte Diskussion (Wer sagt was?)",
                 audioSrc: "audio/de1-teil3.mp3",
                 fragen: [
@@ -87,13 +87,12 @@ const alleHoerenPruefungen = [
                     { frage: "35. Welche gesundheitlichen Folgen werden im Vortrag explizit genannt?", antworten: ["A. Rückenschmerzen.", "B. Chronische Konzentrationsstörungen und eine verminderte Fähigkeit zur Tiefenreflexion.", "C. Bessere Reaktion."], richtig: 1, begruendung: "Vortrag: 'Die Folge ist eine Erosion unserer Fähigkeit zur tiefen Kontemplation. Wir verlernen das Deep Reading...'" },
                     { frage: "36. Wie reagiert die Wirtschaft laut Prof. Veith auf diesen Trend?", antworten: ["A. Verzicht auf Werbung.", "B. Emotionale Schockmomente.", "C. Firmen investieren Milliarden, um Sekunden der menschlichen Konzentration zu „kaufen“."], richtig: 2, begruendung: "Vortrag: 'Plattformen... konkurrieren nicht nur um unser Geld, sondern um jede freie Sekunde unseres Bewusstseins.'" },
                     { frage: "37. Was kritisiert der Experte am Bildungssektor?", antworten: ["A. Zu wenig Computer.", "B. Dass Lehrpläne die Vermittlung von „Aufmerksamkeitsdisziplin“ bisher vernachlässigen.", "C. Lehrer im Social Media."], richtig: 1, begruendung: "Vortrag: 'Wir lehren unsere Kinder Mathematik... aber wir lehren sie nicht, wie man die eigene Aufmerksamkeit verteidigt.'" },
-                    { frage: "38. Welchen Lösungsvorschlag macht der Redner auf individueller Ebene?", antworten: ["A. Kompletter Verzicht.", "B. Die bewusste Gestaltung von „digitalen Fastenperioden“ und analogen Freiräumen.", "C. Apps blockieren."], richtig: 1, begruendung: "Vortrag: 'Wir müssen eine neue Souveränität entwickeln... Wir müssen eine neue Souveränität entwickeln...'" },
+                    { frage: "38. Welchen Lösungsvorschlag macht der Redner auf individueller Ebene?", antworten: ["A. Kompletter Verzicht.", "B. Die bewusste Gestaltung von „digitalen Fastenperioden“ und analogen Freiräumen.", "C. Apps blockieren."], richtig: 1, begruendung: "Vortrag: 'Wir müssen eine neue Souveränität entwickeln...'" },
                     { frage: "39. Welche Rolle sollte der Staat laut Prof. Veith einnehmen?", antworten: ["A. Netzwerke verbieten.", "B. Er muss strengere Richtlinien für manipulatives Design in der Softwareentwicklung vorgeben.", "C. Kostenloses Internet."], richtig: 1, begruendung: "Vortrag: '...ein Verbot von Sucht-erzeugenden Designelementen in Apps wäre ein erster Schritt.'" },
                     { frage: "40. Welches Fazit zieht der Redner am Ende?", antworten: ["A. Digitale Revolution gescheitert.", "B. Wir müssen die Kontrolle über unsere Wahrnehmung von den Algorithmen zurückerobern.", "C. Psyche passt sich an."], richtig: 1, begruendung: "Vortrag: 'Wir müssen begreifen, dass unsere Aufmerksamkeit unsere Freiheit ist.'" }
                 ]
             },
             {
-              {
                 teilName: "Teil 5: Wissenschaftlicher Diskurs",
                 audioSrc: "audio/de1-teil5.mp3",
                 fragen: [
