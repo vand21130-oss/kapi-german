@@ -42,13 +42,11 @@ module.exports = async function handler(req, res) {
             return res.status(500).json({ error: "OpenRouter không phản hồi: " + JSON.stringify(data) });
         }
 
-        // 6. Xóa các ký tự rác của Markdown nếu có
+        // 6. Xóa các ký tự rác của Markdown (Cách mới an toàn tuyệt đối)
         let html = data.choices[0].message.content
-            .replace(/```html/g, '')
-            .replace(/
-```/g, '')
+            .split('```html').join('')
+            .split('```').join('')
             .trim();
-            
         // 7. Trả kết quả về cho web
         res.status(200).json({ result: html });
     } catch (error) {
