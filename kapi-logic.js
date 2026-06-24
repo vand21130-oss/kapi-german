@@ -420,30 +420,33 @@ function showSchreibenMenu() {
 // ==========================================
 // HÀM CHẤM ĐIỂM SCHREIBEN BẰNG AI XỊN (OPENROUTER)
 // ==========================================
+// ==========================================
+// HÀM CHẤM ĐIỂM SCHREIBEN BẰNG AI XỊN (OPENROUTER)
+// ==========================================
 async function checkGrammar(inputId) {
     let element = document.getElementById(inputId);
     let text = element.tagName === "DIV" ? element.innerText.trim() : element.value.trim();
-    if(!text || text.includes("Windows + H")) return alert("Vịt chưa gõ/đọc gì cả!");
+    
+    if(!text || text.includes("Windows + H")) {
+        return alert("Vịt chưa gõ hay đọc gì cả kìa!");
+    }
     
     let aiCorrection = document.getElementById("ai-correction");
     aiCorrection.style.display = "block";
-    aiCorrection.innerHTML = "<p style='color:#e67e22;'><i>Kapi (Gemma 3) đang vận công soi lỗi ngữ pháp... 🦫🔍</i></p>";
+    aiCorrection.innerHTML = "<p style='color:#e67e22;'><i>Kapi đang vận công gọi Gemma 3 soi lỗi ngữ pháp... 🦫🔍</i></p>";
     
     try {
-        // Nối dây thần kinh sang API check.js của Vịt trên Vercel
         const response = await fetch('/api/check', { 
             method: 'POST', 
             headers: { 'Content-Type': 'application/json' }, 
             body: JSON.stringify({ 
-                cauVidu: text,
-                // Mẹo: Đánh lừa prompt trong check.js một chút để nó hiểu đây là bài viết
-                tuDuc: "bài viết này" 
+                cauVidu: text, 
+                tuDuc: "Schreiben Übung" // Gửi bùa để qua cổng kiểm duyệt flashcard
             }) 
         });
         
         const data = await response.json();
         
-        // Hiển thị kết quả siêu xịn từ AI
         if (data.result) {
             aiCorrection.innerHTML = `
                 <div style="background:#e8f4f8; padding:20px; border-radius:12px; border-left:5px solid #3498db; line-height: 1.7; font-size: 16px; color: #2c3e50; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
@@ -453,9 +456,8 @@ async function checkGrammar(inputId) {
         } else {
             aiCorrection.innerHTML = `<p style="color:#e74c3c; font-weight:bold;">Lỗi AI: ${data.error}</p>`;
         }
-        
     } catch(e) { 
-        aiCorrection.innerHTML = `<p style="color:red;">Lỗi kết nối máy chủ API của Vịt rồi!</p>`; 
+        aiCorrection.innerHTML = `<p style="color:red; font-weight:bold;">Lỗi kết nối máy chủ API của Vịt rồi! (Check lại Vercel nha)</p>`; 
     }
 }
 
