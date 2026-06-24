@@ -206,21 +206,38 @@
     <!-- ========================================================================= -->
     <!-- GIAO DIỆN TRANG TRANSCRIPT RIÊNG (Nằm độc lập, không bị container quản lý) -->
     <!-- ========================================================================= -->
-    <div id="transcript-page" style="display: none; padding: 20px; max-width: 800px; margin: 0 auto; background: #fffaf0; min-height: 100vh; font-family: sans-serif;">
+   <div id="transcript-page" style="display: none; padding: 20px; max-width: 800px; margin: 0 auto; background: #fffaf0; min-height: 100vh; font-family: sans-serif;">
         
         <!-- Nút quay lại -->
         <button onclick="closeTranscriptPage()" style="background: #fdf2f8; border: 2px solid #fbcfe8; padding: 10px 20px; border-radius: 20px; color: #db2777; font-weight: bold; cursor: pointer; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
             ⬅️ Quay lại kết quả
         </button>
 
-        <!-- Tiêu đề und Audio -->
+        <!-- Tiêu đề và Audio -->
         <h2 id="transcript-title" style="color: #2c3e50; text-align: center; margin-bottom: 20px;"></h2>
         <div style="text-align: center; margin-bottom: 30px;">
             <audio id="transcript-audio" controls style="width: 100%; max-width: 500px;"></audio>
         </div>
 
-        <!-- Khung chữ Transcript -->
-        <div id="transcript-text" style="background: #fff; padding: 30px; border-radius: 16px; border: 1px solid #ffe4e1; box-shadow: 0 4px 15px rgba(0,0,0,0.03); font-size: 16px; line-height: 1.8; color: #4b5563; text-align: justify; white-space: pre-line;">
+        <!-- Khung chữ Transcript (Ở trên) -->
+        <div id="transcript-text" style="background: #fff; padding: 30px; border-radius: 16px; border: 1px solid #ffe4e1; box-shadow: 0 4px 15px rgba(0,0,0,0.03); font-size: 16px; line-height: 1.8; color: #4b5563; text-align: justify; white-space: pre-line; margin-bottom: 20px;">
+        </div>
+
+        <!-- Khung Sổ tay Ghi chú (Nằm dưới, tự động lưu) -->
+        <div style="background: #fff; padding: 20px; border-radius: 16px; border: 2px dashed #fbcfe8; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);">
+            
+            <!-- Tiêu đề và Nút xóa nhanh -->
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed #fbcfe8; padding-bottom: 10px; margin-bottom: 10px;">
+                <h3 style="margin: 0; color: #db2777; font-size: 18px;">
+                    📝 Ghi chú từ vựng
+                </h3>
+                <button onclick="clearTranscriptNote()" style="background: #fee2e2; border: none; padding: 6px 12px; border-radius: 8px; color: #ef4444; cursor: pointer; font-size: 13px; font-weight: bold; transition: 0.2s;">
+                    🗑️ Xóa hết
+                </button>
+            </div>
+
+            <!-- Khung nhập liệu -->
+            <textarea id="transcript-note" oninput="saveTranscriptNote()" placeholder="Vịt gõ từ mới, cấu trúc hay vào đây nhé. Kapi sẽ tự động lưu lại, lần sau mở bài này ra vẫn còn nguyên! 🦫✨" style="width: 100%; min-height: 150px; border: none; outline: none; resize: vertical; font-family: inherit; font-size: 16px; color: #4b5563; background: transparent; line-height: 1.6;"></textarea>
         </div>
         
     </div>
