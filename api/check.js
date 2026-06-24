@@ -2,7 +2,9 @@ export default async function handler(req, res) {
     if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
     
     const { tuViet, tuDuc, cauVidu } = req.body;
-    const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+    
+    // ĐỔI TÊN BIẾN: Giờ tụi mình xài OpenRouter nha!
+    const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
 
     // Prompt B2 "Khó tính": Ép AI tập trung vào lỗi cấu trúc câu (Satzbau)
     const prompt = cauVidu 
@@ -15,21 +17,37 @@ export default async function handler(req, res) {
         : `Bạn là gia sư tiếng Đức. Từ "${tuViet}" có nghĩa là "${tuDuc}" không? Hãy kiểm tra và xác nhận, kèm ví dụ B2. Trả về dạng HTML sạch.`;
 
     try {
-        // Sửa lỗi cú pháp: Phải có 'await' và gọi fetch đúng cách
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+        // Cú pháp gọi API của OpenRouter (chuẩn OpenAI)
+        const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+            headers: {
+                "Authorization": `Bearer ${OPENROUTER_API_KEY}`,
+                "Content-Type": "application/json",
+                // 2 header này OpenRouter khuyến nghị để theo dõi, Vịt cứ để tên app vô tư
+                "HTTP-Referer": "https://kapi-deutsch.vercel.app", 
+                "X-Title": "Kapi Deutsch"
+            },
+            body: JSON.stringify({
+                // Đỉnh cao ở đây: Chọn model miễn phí siêu xịn (ví dụ Gemma 3 27B free)
+                "model": "google/gemma-3-27b-it:free",
+                "messages": [
+                    { "role": "system", "content": "Bạn là một gia sư tiếng Đức cực kỳ nghiêm khắc, giỏi giải thích ngữ pháp bằng tiếng Việt." },
+                    { "role": "user", "content": prompt }
+                ]
+            })
         });
 
         const data = await response.json();
         
-        if (!data.candidates || !data.candidates[0].content) {
-            return res.status(500).json({ error: "Gemini không phản hồi: " + JSON.stringify(data) });
+        // OpenRouter trả kết quả ở dạng choices[0].message.content
+        if (!data.choices || !data.choices[0].message) {
+            return res.status(500).json({ error: "OpenRouter không phản hồi: " + JSON.stringify(data) });
         }
 
-        let html = data.candidates[0].content.parts[0].text
-            .replace(/```html/g, '').replace(/```/g, '')
+        let html = data.choices[0].message.content
+            .replace(/```html/g, '')
+            .replace(/
+```/g, '')
             .trim();
             
         res.status(200).json({ result: html });
