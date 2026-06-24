@@ -27,7 +27,7 @@ module.exports = async function handler(req, res) {
                 "X-Title": "Kapi Deutsch"
             },
             body: JSON.stringify({
-                "model": "meta-llama/llama-3.3-70b-instruct:free",
+                "model": "google/gemma-4-31b-it:free",
                 "messages": [
                     { "role": "system", "content": "Bạn là một gia sư tiếng Đức cực kỳ nghiêm khắc, giỏi giải thích ngữ pháp bằng tiếng Việt." },
                     { "role": "user", "content": prompt }
