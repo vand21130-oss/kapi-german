@@ -27,7 +27,7 @@ module.exports = async function handler(req, res) {
                 "X-Title": "Kapi Deutsch"
             },
             body: JSON.stringify({
-                "model": "google/gemma-3-27b-it:free",
+                "model": "nvidia/nemotron-3-ultra-550b-a55b:free",
                 "messages": [
                     { "role": "system", "content": "Bạn là một gia sư tiếng Đức cực kỳ nghiêm khắc, giỏi giải thích ngữ pháp bằng tiếng Việt." },
                     { "role": "user", "content": prompt }
