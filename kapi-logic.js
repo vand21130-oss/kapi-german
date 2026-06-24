@@ -417,7 +417,9 @@ function showSchreibenMenu() {
         <button class="btn-kapi btn-home" onclick="showLessons()">⬅️ Zurück</button>
     `;
 }
-
+// ==========================================
+// HÀM CHẤM ĐIỂM SCHREIBEN BẰNG AI XỊN (OPENROUTER)
+// ==========================================
 async function checkGrammar(inputId) {
     let element = document.getElementById(inputId);
     let text = element.tagName === "DIV" ? element.innerText.trim() : element.value.trim();
@@ -425,23 +427,39 @@ async function checkGrammar(inputId) {
     
     let aiCorrection = document.getElementById("ai-correction");
     aiCorrection.style.display = "block";
-    aiCorrection.innerHTML = "<p style='color:#e67e22;'><i>Kapi đang soi lỗi mạo từ, đuôi tính từ... 🦫🔍</i></p>";
+    aiCorrection.innerHTML = "<p style='color:#e67e22;'><i>Kapi (Gemma 3) đang vận công soi lỗi ngữ pháp... 🦫🔍</i></p>";
     
     try {
-        const response = await fetch('https://api.languagetool.org/v2/check', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams({ text: text, language: 'de-DE' }) });
+        // Nối dây thần kinh sang API check.js của Vịt trên Vercel
+        const response = await fetch('/api/check', { 
+            method: 'POST', 
+            headers: { 'Content-Type': 'application/json' }, 
+            body: JSON.stringify({ 
+                cauVidu: text,
+                // Mẹo: Đánh lừa prompt trong check.js một chút để nó hiểu đây là bài viết
+                tuDuc: "bài viết này" 
+            }) 
+        });
+        
         const data = await response.json();
-        if (data.matches.length === 0) {
-            aiCorrection.innerHTML = `<div style="background:#e8f5e9; padding:15px; border-radius:8px; border-left:4px solid #2ecc71;"><h3 style="color:#27ae60; margin:0;">✅ Wunderbar!</h3><p style="margin:5px 0 0 0;">Không phát hiện lỗi ngữ pháp!</p></div>`;
+        
+        // Hiển thị kết quả siêu xịn từ AI
+        if (data.result) {
+            aiCorrection.innerHTML = `
+                <div style="background:#e8f4f8; padding:20px; border-radius:12px; border-left:5px solid #3498db; line-height: 1.7; font-size: 16px; color: #2c3e50; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+                    <h3 style="color:#2980b9; margin-top:0; border-bottom: 1px dashed #bdc3c7; padding-bottom: 10px;">📝 Nhận xét của Kapi:</h3>
+                    ${data.result}
+                </div>`;
         } else {
-            let html = `<h3 style="color:#e74c3c; margin-top:0;">❌ Kapi phát hiện ${data.matches.length} lỗi:</h3>`;
-            data.matches.forEach(m => {
-                let suggestions = m.replacements.slice(0, 3).map(r => r.value).join(" <b>hoặc</b> ");
-                html += `<div style="margin-bottom:15px; padding:12px; background:#fff5f5; border-left:4px solid #e74c3c; border-radius:4px;"><span style="font-weight:bold; color:#c0392b;">Lỗi:</span> ${m.message} <br>${suggestions ? `<span style="color:#27ae60;">💡 Thử sửa thành: <b>${suggestions}</b></span>` : ''}</div>`;
-            });
-            aiCorrection.innerHTML = html;
+            aiCorrection.innerHTML = `<p style="color:#e74c3c; font-weight:bold;">Lỗi AI: ${data.error}</p>`;
         }
-    } catch(e) { aiCorrection.innerHTML = `<p style="color:red;">Lỗi kết nối máy chủ LanguageTool!</p>`; }
+        
+    } catch(e) { 
+        aiCorrection.innerHTML = `<p style="color:red;">Lỗi kết nối máy chủ API của Vịt rồi!</p>`; 
+    }
 }
+
+
 
 // 7. HÖREN LOGIC
 function showHoerenMenu() {
