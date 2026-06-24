@@ -792,3 +792,40 @@ window.closeTranscriptPage = function() {
     // (Nhớ dùng đúng ID giống hệt ở hàm openTranscriptPage ở trên nha)
     document.getElementById("container").style.display = "block"; 
 };
+// ==========================================
+// HÀM CHUYỂN TRANG TRANSCRIPT & LƯU GHI CHÚ
+// ==========================================
+
+window.openTranscriptPage = function() {
+    document.getElementById("container").style.display = "none"; 
+    document.getElementById("transcript-page").style.display = "block";
+
+    let teil = alleHoerenPruefungen[currentPruefungIndex].teile[currentTeilIndex];
+    document.getElementById("transcript-title").innerText = teil.teilName;
+    document.getElementById("transcript-audio").src = teil.audioSrc;
+    document.getElementById("transcript-text").innerHTML = teil.transcript || "<i>Kein Transkript verfügbar.</i>";
+
+    // KAPI TỰ ĐỘNG TÌM LẠI GHI CHÚ CŨ (Nếu có)
+    let noteKey = `kapi_note_exam_${currentPruefungIndex}_teil_${currentTeilIndex}`;
+    let savedNote = localStorage.getItem(noteKey);
+    document.getElementById("transcript-note").value = savedNote ? savedNote : "";
+};
+
+window.closeTranscriptPage = function() {
+    let audioEl = document.getElementById("transcript-audio");
+    audioEl.pause();
+    audioEl.currentTime = 0; 
+    
+    document.getElementById("transcript-page").style.display = "none";
+    document.getElementById("container").style.display = "block"; 
+};
+
+// HÀM TỰ ĐỘNG LƯU KHI VỊT GÕ CHỮ
+window.saveTranscriptNote = function() {
+    // Tạo chìa khóa riêng cho từng bài (Ví dụ: Đề 1, Teil 2)
+    let noteKey = `kapi_note_exam_${currentPruefungIndex}_teil_${currentTeilIndex}`;
+    let currentNote = document.getElementById("transcript-note").value;
+    
+    // Lưu vào bộ nhớ trình duyệt
+    localStorage.setItem(noteKey, currentNote);
+};
