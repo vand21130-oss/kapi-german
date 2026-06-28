@@ -197,7 +197,28 @@
         <!-- BỘ ĐẾM LƯỢT TRUY CẬP PRO (Đếm view thật, chống F5) -->
         <div style="text-align: center; margin-top: 40px; margin-bottom: 20px; padding: 10px;">
             <p style="font-size: 14px; color: #7f8c8d; font-weight: bold; margin-bottom: 5px;">👀 Số lượt ghé thăm bé Kapi:</p>
-            <img src="https://komarev.com/ghpvc/?username=kapi-deutsch-project-v2&color=orange&style=flat-square" alt="Visitor Count" style="border-radius: 5px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+            <!-- Giao diện cái huy hiệu (badge) giống hệt ảnh của Vịt -->
+<span style="font-family: Arial, sans-serif; font-size: 14px; background: #555; color: white; padding: 4px 8px; border-radius: 4px 0 0 4px;">Profile views</span><span id="fake-views" style="font-family: Arial, sans-serif; font-size: 14px; background: #fe7d37; color: white; padding: 4px 8px; border-radius: 0 4px 4px 0;">...</span>
+
+<script>
+  // Số lượt xem gốc (mức độ "phông bạt" vừa phải, Vịt tự đổi số này nha)
+  let baseViews = 142; 
+
+  // Kiểm tra xem trình duyệt này đã vào web mấy lần rồi
+  let localVisits = localStorage.getItem('kapi_visits');
+  
+  if (!localVisits) {
+    localVisits = 1; // Lần đầu vào web
+  } else {
+    localVisits = parseInt(localVisits) + 1; // Lần sau vào hoặc F5 sẽ tự cộng thêm
+  }
+  
+  // Lưu lại vào bộ nhớ trình duyệt
+  localStorage.setItem('kapi_visits', localVisits);
+
+  // Hiển thị: Số gốc + số lần truy cập của họ
+  document.getElementById('fake-views').innerText = baseViews + localVisits;
+</script>
         </div>
 
     </div> <!-- KẾT THÚC THẺ CONTAINER Ở ĐÂY -->
