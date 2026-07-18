@@ -172,7 +172,6 @@ const vokabelGruppen = {
             { de: "Ich bin davon überzeugt, dass", vi: "Tôi tin chắc rằng", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='50' r='35' fill='%232ecc71'/><path d='M35 50 L45 60 L65 35' fill='none' stroke='%23fff' stroke-width='8'/><circle cx='70' cy='25' r='5' fill='%23f1c40f'/><circle cx='85' cy='40' r='4' fill='%23f1c40f'/></svg>" }
         ]
     }
-    },
 };
 
 // 4. GAME TRẮC NGHIỆM ĐIỀN TỪ (50 CÂU B2 CỰC "CUỐN")
