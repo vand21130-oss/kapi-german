@@ -1,4 +1,4 @@
-const alleHoerenPruefungen = [
+Sconst alleHoerenPruefungen = [
     {
         id: 1,
         niveau: "B2",
@@ -136,5 +136,231 @@ Wenn wir über 'Wohlstand' reden, müssen wir ihn neu definieren. Echter Wohlsta
                 ]
             }
         ]
+    },
+    {
+    id: "de-2",
+    title: "Đề 2: Alltag, Arbeitswelt & Gesellschaft (Goethe B2)",
+    teil1: [
+      {
+        textId: 1,
+        audioTranscript: "Viele melden sich im Januar voller Elan im Fitnessstudio an, doch schon im März herrscht gähnende Leere an den Geräten. Experten raten dazu, nicht sofort mit einem täglichen Hardcore-Training zu starten. Viel wichtiger als die Intensität zu Beginn ist die Regelmäßigkeit. Wer sich unrealistische Ziele setzt, verliert schnell die Lust. Stattdessen sollte man mit zwei festen Terminen pro Woche starten, die fest im Kalender stehen, als wären es wichtige Geschäftstermine.",
+        questions: [
+          {
+            id: 1,
+            question: "Was ist der häufigste Fehler bei Neujahrsvorsätzen im Sport?",
+            options: [
+              "a) Die Auswahl der falschen Sportart.",
+              "b) Ein zu hoher und damit unrealistischer Trainingsumfang am Anfang.",
+              "c) Dass man zu wenig Geld für ein gutes Fitnessstudio ausgibt."
+            ],
+            correctAnswer: "b"
+          },
+          {
+            id: 2,
+            question: "Was raten Experten für einen langfristigen Erfolg?",
+            options: [
+              "a) Dass man täglich trainieren muss, um eine Gewohnheit zu entwickeln.",
+              "b) Dass Sporttermine die gleiche Priorität wie berufliche Termine haben sollten.",
+              "c) Dass man die Intensität des Trainings ständig steigern muss."
+            ],
+            correctAnswer: "b"
+          },
+          {
+            id: 3,
+            question: "Warum geben viele Menschen im März wieder auf?",
+            options: [
+              "a) Weil sie ihre Motivation durch zu hohe Erwartungen verloren haben.",
+              "b) Weil die Fitnessstudios im Frühjahr oft zu voll sind.",
+              "c) Weil sie keine Zeit mehr für ihre Geschäftstermine haben."
+            ],
+            correctAnswer: "a"
+          }
+        ]
+      },
+      {
+        textId: 2,
+        audioTranscript: "Wird die gedruckte Zeitung verschwinden? Während die junge Generation Nachrichten fast ausschließlich über soziale Medien konsumiert, schätzen ältere Leser immer noch das haptische Erlebnis von Papier. Doch der Trend geht eindeutig zum digitalen Abonnement. Verlage investieren kaum noch in teure Druckmaschinen, sondern in interaktive Apps. Das bedeutet jedoch nicht das Ende des Qualitätsjournalismus, sondern lediglich einen Wechsel des Mediums.",
+        questions: [
+          {
+            id: 4,
+            question: "Wie konsumieren junge Menschen heute meistens Nachrichten?",
+            options: [
+              "a) Durch das Lesen von gedruckten Tageszeitungen.",
+              "b) Über digitale Plattformen und Netzwerke.",
+              "c) Gar nicht, da sie kein Interesse an Nachrichten haben."
+            ],
+            correctAnswer: "b"
+          },
+          {
+            id: 5,
+            question: "Was ist die aktuelle Strategie der Zeitungsverlage?",
+            options: [
+              "a) Sie versuchen, das haptische Erlebnis von Papier zu verbessern.",
+              "b) Sie konzentrieren ihre Investitionen auf digitale Angebote.",
+              "c) Sie stellen den Qualitätsjournalismus komplett ein."
+            ],
+            correctAnswer: "b"
+          },
+          {
+            id: 6,
+            question: "Was sagt der Sprecher über die Zukunft des Journalismus?",
+            options: [
+              "a) Mit dem Ende des Papiers endet auch die Qualität der Nachrichten.",
+              "b) Nur die Art und Weise der Verbreitung von Nachrichten ändert sich.",
+              "c) Digitale Abonnements sind für die Verlage nicht rentabel."
+            ],
+            correctAnswer: "b"
+          }
+        ]
+      },
+      {
+        textId: 3,
+        audioTranscript: "Haben Sie schon einmal von 'Workation' gehört? Das Wort setzt sich aus 'Work' und 'Vacation' zusammen. Immer mehr Arbeitgeber erlauben es ihren Angestellten, den Laptop für ein paar Wochen am Strand von Mallorca oder in einer Berghütte in den Alpen aufzuklappen. Klingt traumhaft, oder? Doch Vorsicht: Wer glaubt, man könne den ganzen Tag im Pool liegen und nebenbei ein paar E-Mails beantworten, der irrt sich gewaltig. Die Erwartungen der Firmen an die Erreichbarkeit und die Qualität der Ergebnisse bleiben identisch zum Büroalltag. Oft führt die fehlende Trennung von Arbeitsplatz und Erholungsort sogar dazu, dass Mitarbeiter abends länger sitzen bleiben, weil das schlechte Gewissen plagt, dass man ja eigentlich 'im Urlaub' ist. Experten raten daher zu einer strikten Zeiteinteilung, damit die Workation nicht im Burnout endet.",
+        questions: [
+          {
+            id: 7,
+            question: "Was ist das Hauptmerkmal einer „Workation“?",
+            options: [
+              "a) Dass man während des Urlaubs überhaupt nicht arbeiten muss.",
+              "b) Dass man seinen gewöhnlichen Arbeitsort vorübergehend an einen Urlaubsort verlegt.",
+              "c) Dass der Arbeitgeber die Reisekosten komplett übernimmt."
+            ],
+            correctAnswer: "b"
+          },
+          {
+            id: 8,
+            question: "Welches Problem wird im Text im Zusammenhang mit Workation genannt?",
+            options: [
+              "a) Die Internetverbindung an Urlaubsorten ist oft zu schwach für Videokonferenzen.",
+              "b) Die psychische Belastung steigt, da man Berufliches und Privates kaum noch trennen kann.",
+              "c) Die meisten Mitarbeiter sind am Strand weniger produktiv als im Homeoffice."
+            ],
+            correctAnswer: "b"
+          },
+          {
+            id: 9,
+            question: "Was empfiehlt der Text für eine gelungene Workation?",
+            options: [
+              "a) Dass man nur E-Mails bearbeitet und keine komplexen Aufgaben übernimmt.",
+              "b) Dass man den Aufenthalt auf maximal eine Woche begrenzt.",
+              "c) Dass man sich klare Arbeitszeiten setzt, um echte Erholung zu ermöglichen."
+            ],
+            correctAnswer: "c"
+          }
+        ]
+      },
+      {
+        textId: 4,
+        audioTranscript: "Früher galt gebrauchte Kleidung als etwas für Leute mit wenig Geld. Heute ist der Kauf von Second-Hand-Mode ein echtes Lifestyle-Statement geworden. Vor allem die junge Generation möchte sich vom 'Fast Fashion'-Trend distanzieren, bei dem billige Kleidung unter fragwürdigen Bedingungen produziert und nach dreimaligem Tragen weggeworfen wird. Doch der Boom hat auch Schattenseiten: Auf Online-Plattformen für gebrauchte Mode beobachten wir eine zunehmende Kommerzialisierung. Viele Nutzer kaufen billige Neuware bei Discountern auf, um sie dann als 'Vintage' teurer weiterzuverkaufen. Der eigentliche ökologische Gedanke – nämlich Ressourcen zu schonen, indem man Dingen ein zweites Leben schenkt – tritt dabei oft in den Hintergrund. Wer wirklich nachhaltig handeln will, sollte daher eher lokale Tauschbörsen oder klassische Flohmärkte besuchen.",
+        questions: [
+          {
+            id: 10,
+            question: "Warum ist Second-Hand-Mode heute so beliebt?",
+            options: [
+              "a) Weil neue Kleidung in den letzten Jahren extrem teuer geworden ist.",
+              "b) Weil viele Menschen ein Zeichen gegen die Wegwerfgesellschaft setzen wollen.",
+              "c) Weil Vintage-Kleidung qualitativ hochwertiger ist als moderne Kleidung."
+            ],
+            correctAnswer: "b"
+          },
+          {
+            id: 11,
+            question: "Welche negative Entwicklung wird auf Online-Plattformen beobachtet?",
+            options: [
+              "a) Es gibt dort kaum noch attraktive Kleidung für junge Menschen.",
+              "b) Die Preise für echte Vintage-Stücke sind drastisch gesunken.",
+              "c) Händler nutzen die Plattformen aus, um billige Neuware gewinnbringend zu verkaufen."
+            ],
+            correctAnswer: "c"
+          },
+          {
+            id: 12,
+            question: "Wo findet man laut Sprecher die ehrlichste Form der Nachhaltigkeit?",
+            options: [
+              "a) In exklusiven Boutiquen für ökologische Mode.",
+              "b) Bei regionalen Veranstaltungen, wo Kleidung direkt getauscht oder verkauft wird.",
+              "c) In den großen Online-Shops der bekannten Second-Hand-Ketten."
+            ],
+            correctAnswer: "b"
+          }
+        ]
+      },
+      {
+        textId: 5,
+        audioTranscript: "In vielen Kulturen gehören sie schon lange zum Speiseplan, bei uns rufen sie meistens noch Ekel hervor: Insekten. Dabei sind Grillen, Heuschrecken und Mehlwürmer wahre Superfoods. Sie enthalten fast so viel Protein wie Rindfleisch, benötigen aber bei der Zucht nur einen Bruchteil des Wassers und der Landfläche. Zudem stoßen sie kaum Treibhausgase aus. Die EU hat mittlerweile die ersten Insektenarten als Lebensmittel zugelassen. Doch die Lebensmittelindustrie weiß, dass die Hemmschwelle der Verbraucher groß ist. Deshalb werden Insekten oft nicht im Ganzen serviert, sondern zu Mehl verarbeitet, das man in Nudeln, Riegeln oder Brot verstecken kann. So merkt der Kunde gar nicht, dass er nachhaltiges Protein konsumiert. Experten sind sicher: In zehn Jahren wird der Anblick von Insektenprodukten im Supermarktregal so normal sein wie heute der von Tofu.",
+        questions: [
+          {
+            id: 13,
+            question: "Welchen ökologischen Vorteil haben Insekten gegenüber Rindfleisch?",
+            options: [
+              "a) Sie produzieren bei der Verarbeitung keine Abfälle.",
+              "b) Sie benötigen für die Aufzucht deutlich weniger natürliche Ressourcen wie Wasser.",
+              "c) Sie können überall auf der Welt ohne spezielle Ställe gezüchtet werden."
+            ],
+            correctAnswer: "b"
+          },
+          {
+            id: 14,
+            question: "Wie versucht die Industrie, die Vorurteile der Kunden zu überwinden?",
+            options: [
+              "a) Durch intensive Werbekampagnen, die lebende Insekten zeigen.",
+              "b) Indem sie Insektenprotein in bereits bekannten Lebensmitteln verarbeitet.",
+              "c) Indem sie Insektenprodukte besonders günstig anbietet."
+            ],
+            correctAnswer: "b"
+          },
+          {
+            id: 15,
+            question: "Was prognostiziert der Text für die Zukunft der Ernährung?",
+            options: [
+              "a) Insekten werden Fleisch als Hauptnahrungsmittel komplett ersetzen.",
+              "b) Insektenprodukte werden ein fester und gewöhnlicher Bestandteil unseres Sortiments sein.",
+              "c) Die EU wird bald alle Fleischprodukte zugunsten von Insekten verbieten."
+            ],
+            correctAnswer: "b"
+          }
+        ]
+      }
+    ],
+    teil2: {
+      audioTranscript: "Guten Tag! Haben Sie sich schon einmal gefragt, warum fünf Minuten an einer roten Ampel sich wie eine Ewigkeit anfühlen, während fünf Minuten bei einem guten Gespräch wie im Flug vergehen? In der Verhaltensökonomie wissen wir: Warten ist reine Kopfsache. Es ist nicht die Uhr, die uns stresst, sondern das Gefühl der verlorenen, ungenutzten Zeit. Ein berühmtes Beispiel aus der Architekturpsychologie zeigt dies deutlich: In einem New Yorker Hochhaus beschwerten sich die Mieter über die extrem langsamen Aufzüge. Anstatt Millionen in neue Motoren zu investieren, installierte man Spiegel neben den Türen. Das Ergebnis? Die Beschwerden hörten sofort auf. Nicht, weil die Aufzüge schneller wurden, sondern weil die Menschen beschäftigt waren, ihr Aussehen zu prüfen. Die Ablenkung veränderte die Zeitwahrnehmung. Ein weiteres Phänomen ist die 'Gerechtigkeit' in der Schlange. Wir hassen es, wenn die Nebenschlange schneller voranzukommen scheint. Statistisch gesehen ist das oft gar nicht der Fall, aber unser Gehirn ist auf das Negative programmiert. Wir erinnern uns an das eine Mal, wenn wir Pech hatten, aber vergessen die zehn Male, in denen wir die schnellste Kasse gewählt haben. Für Unternehmen ist heute die 'Transparenz' der Schlüssel. Nichts ist schlimmer als eine Warteschleife am Telefon ohne Information. Sobald man uns sagt: 'Es gibt eine technische Störung, wir sind in drei Minuten für Sie da', sinkt unser Blutdruck. Das Ungewisse ist der Feind der Geduld. Wenn wir verstehen, warum wir warten, akzeptieren wir es eher. Zusammenfassend lässt sich sagen: Ein intelligentes Wartemanagement geht nicht nur darum, mehr Kassen zu öffnen. Es geht darum, die psychische Leere des Wartens zu füllen. Ob durch Bildschirme, Informationen oder kleine Interaktionen – wer das Warten gestaltet, gewinnt die Zufriedenheit der Kunden, auch wenn die Uhr die gleiche Zeit anzeigt.",
+      questions: [
+        { id: 16, question: "Was ist laut Dr. Falk das Hauptproblem beim Warten?", options: ["a) Die tatsächliche Zeit, die wir mit Warten verbringen.", "b) Die subjektive Wahrnehmung der Zeit, die durch Langeweile negativ beeinflusst wird.", "c) Dass wir in der Schlange oft unfreundliche Menschen treffen."], correctAnswer: "b" },
+        { id: 17, question: "Welchen Effekt haben Spiegel in der Nähe von Aufzügen laut dem Experten?", options: ["a) Sie lassen den Raum größer und luxuriöser wirken.", "b) Sie lenken die Wartenden ab und lassen die Zeit gefühlt schneller vergehen.", "c) Sie dienen der Sicherheit, damit man sieht, wer hinter einem steht."], correctAnswer: "b" },
+        { id: 18, question: "Warum empfinden wir die Schlange neben uns oft als „schneller“?", options: ["a) Weil Supermärkte die effizientesten Mitarbeiter absichtlich an bestimmte Kassen setzen.", "b) Wegen einer psychologischen Verzerrung: Wir merken uns nur die Momente, in denen wir blockiert sind.", "c) Weil Menschen in anderen Schlangen meist weniger Produkte im Wagen haben."], correctAnswer: "b" },
+        { id: 19, question: "Was versteht man unter dem „Pionier-Effekt“ beim Warten?", options: ["a) Dass die erste Person in der Schlange den größten Stress empfindet.", "b) Dass das Gefühl, Fortschritte zu machen, wichtiger ist als die absolute Dauer.", "c) Dass Menschen lieber in einer völlig neuen, leeren Schlange warten."], correctAnswer: "b" },
+        { id: 20, question: "Wie beeinflusst die Transparenz den Wartprozess?", options: ["a) Wenn Kunden den Grund für eine Verzögerung kennen, steigt ihre Geduld.", "b) Zu viel Information über die Wartezeit führt zu Aggressionen bei den Kunden.", "c) Durch Glaswände in Ämtern fühlen sich die Mitarbeiter beobachtet und arbeiten langsamer."], correctAnswer: "a" },
+        { id: 21, question: "Welches Fazit zieht Dr. Falk für Unternehmen?", options: ["a) Sie sollten versuchen, die Wartezeit durch technische Innovationen auf Null zu reduzieren.", "b) Das Management der Erwartungen ist wichtiger als die physische Verkürzung der Schlange.", "c) Kunden sollten für langes Warten grundsätzlich finanziell entschädigt werden."], correctAnswer: "b" }
+      ]
+    },
+    teil3: {
+      audioTranscript: "Frau Wagner: Herzlich willkommen zu unserer heutigen Runde. Das Thema „Bürohunde“ spaltet die Gemüter. Frau Jung, Sie bringen Ihren Golden Retriever regelmäßig mit. Warum ist das Ihrer Meinung nach eine Bereicherung für die ganze Firma?\nFrau Jung: Nun, es ist wissenschaftlich belegt, dass die Interaktion mit Hunden den Cortisolspiegel senkt. Wenn Kollegen gestresst sind und mal kurz den Hund streicheln, entspannt sich die Atmosphäre sofort. Er ist quasi unser vierbeiniger Feel-Good-Manager. Außerdem bricht er das Eis: Leute aus verschiedenen Abteilungen, die sonst nie miteinander reden würden, kommen über den Hund ins Gespräch. Das stärkt den Zusammenhalt enorm.\nHerr Koch: Das mag für Hundefreunde stimmen, Frau Jung. Aber als Abteilungsleiter muss ich auch die andere Seite sehen. Wir haben Mitarbeiter, die panische Angst vor Hunden haben oder unter schweren Allergien leiden. Für die wird der Arbeitsplatz dann zur Qual. Zudem darf man den Zeitfaktor nicht vergessen: Jedes Mal, wenn der Hund bellt oder jemand mit ihm spielt, wird die Konzentration unterbrochen. Wir sind hier schließlich zum Arbeiten und nicht im Streichelzoo.\nFrau Wagner: Herr Koch spricht da wichtige Punkte an. Wie gehen Sie mit diesen Bedenken um?\nFrau Jung: Natürlich braucht es eine strikte „Hunde-Etikette“. Der Hund muss gut erzogen sein und darf nicht in die Küche oder in Meetingräume. Wenn man das vorher klärt, gibt es kaum Probleme. Für viele junge Bewerber ist die Erlaubnis, den Hund mitzubringen, heute sogar ein entscheidender Grund, sich für uns und gegen die Konkurrenz zu entscheiden. Es zeigt, dass wir modern und flexibel sind.\nHerr Koch: Modernität hin oder her – ich halte es für problematisch, wenn private Hobbys so stark in den professionellen Raum drängen. Was ist mit den Kollegen ohne Hund? Die fühlen sich vielleicht benachteiligt, wenn andere Sonderrechte genießen. Meiner Meinung nach eignet sich auch längst nicht jedes Großraumbüro für Tiere, schon gar nicht, wenn es dort sehr hektisch zugeht.\nFrau Wagner: Könnte man denn einen Kompromiss finden?\nFrau Jung: Ich denke, man sollte niemanden übergehen. Eine Abstimmung im Team ist ein Muss. Wenn auch nur einer strikt dagegen ist, geht es eben nicht. Aber oft sind die Vorurteile größer als die tatsächlichen Probleme.\nHerr Koch: Einverstanden, Transparenz ist wichtig. Aber am Ende trägt der Arbeitgeber das Risiko, falls doch mal etwas passiert. Regeln sind gut, aber wer kontrolliert sie im Alltag?",
+      questions: [
+        { id: 22, statement: "Die Anwesenheit von Tieren reduziert nachweislich das Stresslevel im Team.", options: ["Frau Wagner", "Herr Koch", "Frau Jung"], correctAnswer: "Frau Jung" },
+        { id: 23, statement: "Man muss Rücksicht auf Kollegen mit Allergien oder Ängsten nehmen.", options: ["Frau Wagner", "Herr Koch", "Frau Jung"], correctAnswer: "Herr Koch" },
+        { id: 24, statement: "Ein Hund im Büro führt zu ständigen Unterbrechungen der Arbeitsabläufe.", options: ["Frau Wagner", "Herr Koch", "Frau Jung"], correctAnswer: "Herr Koch" },
+        { id: 25, statement: "Klare Regeln und eine 'Hunde-Etikette' sind für den Erfolg entscheidend.", options: ["Frau Wagner", "Herr Koch", "Frau Jung"], correctAnswer: "Frau Jung" },
+        { id: 26, statement: "Die Attraktivität des Unternehmens für junge Talente steigt durch Haustiere.", options: ["Frau Wagner", "Herr Koch", "Frau Jung"], correctAnswer: "Frau Jung" },
+        { id: 27, statement: "Tiere im Büro können das Betriebsklima und die Kommunikation verbessern.", options: ["Frau Wagner", "Herr Koch", "Frau Jung"], correctAnswer: "Frau Jung" },
+        { id: 28, statement: "Nicht jede Büroumgebung ist für die Haltung von Tieren geeignet.", options: ["Frau Wagner", "Herr Koch", "Frau Jung"], correctAnswer: "Herr Koch" },
+        { id: 29, statement: "Es ist ungerecht gegenüber Mitarbeitern, die keine Haustiere haben.", options: ["Frau Wagner", "Herr Koch", "Frau Jung"], correctAnswer: "Herr Koch" },
+        { id: 30, statement: "Die endgültige Entscheidung sollte immer beim gesamten Team liegen.", options: ["Frau Wagner", "Herr Koch", "Frau Jung"], correctAnswer: "Frau Jung" }
+      ]
+    },
+    teil4: {
+      audioTranscript: "Guten Tag! Kaffee ist für viele von uns das erste Ritual des Tages. Doch hinter der Tasse in Ihrer Hand steckt eine jahrhundertelange Reise. Ursprünglich entdeckten Mönche in Äthiopien, dass sie durch die Beeren der Kaffeepflanze bei ihren langen Gebeten die Müdigkeit besiegen konnten. Von dort eroberte der Kaffee die Welt. Im 17. Jahrhundert entstanden in London und Paris die ersten Kaffeehäuser. Sie waren weit mehr als Gaststätten; sie waren die 'Internet-Cafés' der Aufklärung. Hier wurden Geschäfte besiegelt und politische Diskurse geführt. Heute befinden wir uns in der 'Third Wave'. Kaffee ist kein anonymes Pulver mehr. Wir wollen wissen: Von welcher Farm kommt die Bohne? Wie wurde sie geröstet? Kaffee ist zum Genussobjekt geworden, vergleichbar mit edlem Wein. Doch über dieser Kultur hängt ein dunkler Schatten: der Klimawandel. Die Arabica-Bohne ist extrem empfindlich. Sie braucht kühle Nächte und spezifische Höhenlagen. Steigen die Temperaturen nur um zwei Grad, verschieben sich die fruchtbaren Zonen weiter nach oben – dort, wo oft geschützte Bergwälder liegen. Die ökologische Herausforderung ist gewaltig. Zudem kämpfen viele der 25 Millionen Kaffeebauern weltweit um ihre Existenz. Der Weltmarktpreis für Rohkaffee ist extrem volatil. Hier setzt der faire Handel an, der den Bauern Mindestpreise garantiert, unabhängig von den Börsenschwankungen. Was bringt die Zukunft? Wir sehen einen Trend zum 'Direct Trade'. Kleine Röstereien umgehen die großen Börsen und verhandeln direkt mit den Kooperativen vor Ort. Das sorgt für Transparenz und Qualität. Für uns Konsumenten bedeutet das aber auch: Der Preis für das tägliche Vergnügen wird steigen. Kaffee wird in den nächsten Jahrzehnten wohl wieder das werden, was er am Anfang war: ein kostbares Gut für besondere Momente.",
+      questions: [
+        { id: 31, question: "Was war die ursprüngliche Funktion von Kaffee in seiner frühen Geschichte?", options: ["a) Er wurde primär als kostbares Handelsgut für den Export genutzt.", "b) Er diente religiösen Gruppen dazu, bei nächtlichen Gebeten wach zu bleiben.", "c) Er wurde wegen seines Geschmacks als Luxusgetränk an Königshöfen serviert."], correctAnswer: "b" },
+        { id: 32, question: "Wie veränderte sich die Bedeutung des Kaffees durch die ersten Kaffeehäuser in Europa?", options: ["a) Kaffee wurde zu einem Symbol für politische Revolutionen und Aufstände.", "b) Kaffeehäuser wurden zu zentralen Orten für den Austausch von Nachrichten und Ideen.", "c) Die Menschen tranken Kaffee vor allem, um die schlechte Qualität des Wassers zu ersetzen."], correctAnswer: "b" },
+        { id: 33, question: "Was kennzeichnet die sogenannte „Third Wave of Coffee“ (Dritte Welle des Kaffees)?", options: ["a) Die industrielle Massenproduktion von billigem Instant-Kaffee.", "b) Der Fokus auf die individuelle Herkunft der Bohne und handwerkliche Röstung.", "c) Die Erfindung von Kaffeekapseln für eine schnellere Zubereitung zu Hause."], correctAnswer: "b" },
+        { id: 34, question: "Welches ökologische Problem wird im Zusammenhang mit dem Kaffeeanbau genannt?", options: ["a) Kaffee verbraucht mehr Wasser als jede andere Pflanze weltweit.", "b) Für neue Plantagen werden oft wertvolle Waldflächen gerodet.", "c) Die Kaffeepflanze entzieht dem Boden alle Mineralien, sodass nichts anderes mehr wächst."], correctAnswer: "b" },
+        { id: 35, question: "Wie wirkt sich der Klimawandel direkt auf die Kaffeebauern aus?", options: ["a) Die Ernten werden durch zu viel Regen in den Sommermonaten zerstört.", "b) Die Anbaugebiete für die hochwertige Arabica-Bohne schrumpfen aufgrund steigender Temperaturen.", "c) Die Kaffeepflanzen wachsen zwar schneller, produzieren aber weniger Koffein."], correctAnswer: "b" },
+        { id: 36, question: "Warum ist fairer Handel (Fair Trade) beim Kaffee besonders wichtig?", options: ["a) Damit die Qualität des Kaffees in den Supermärkten stabil bleibt.", "b) Damit die Kleinbauern trotz schwankender Weltmarktpreise ein gesichertes Einkommen haben.", "c) Damit der Staat höhere Steuern auf Luxusgüter erheben kann."], correctAnswer: "b" },
+        { id: 37, question: "Was ist eine neue technologische Entwicklung in der Kaffeeproduktion?", options: ["a) Die Ernte durch vollautomatische Roboter, die nur reife Beeren pflücken.", "b) Der Anbau von Kaffeepflanzen in klimatisierten Gewächshäusern in Europa.", "c) Die genetische Veränderung der Bohnen, damit sie nach Schokolade schmecken."], correctAnswer: "a" },
+        { id: 38, question: "Welchen Trend beobachtet man beim Konsumverhalten der jungen Generation?", options: ["a) Junge Leute trinken fast gar keinen Kaffee mehr und bevorzugen Tee.", "b) Das Wissen über die Zubereitungsarten wird zu einem wichtigen Teil des Lifestyles.", "c) Kaffee wird nur noch als schneller Wachmacher im Stehen getrunken."], correctAnswer: "b" },
+        { id: 39, question: "Was versteht man unter „Direktimport“ bei spezialisierten Röstereien?", options: ["a) Dass der Kaffee ohne Zwischenhändler direkt vom Bauern gekauft wird.", "b) Dass der Kaffee mit dem Flugzeug statt mit dem Schiff transportiert wird.", "c) Dass der Kunde seinen Kaffee direkt in der Fabrik abholt."], correctAnswer: "a" },
+        { id: 40, question: "Welches Fazit zieht Dr. Meisner über die Zukunft des Kaffees?", options: ["a) Kaffee wird in Zukunft ein billiges Massenprodukt für jedermann bleiben.", "b) Der Genuss von hochwertigem Kaffee wird aufgrund des Klimawandels teurer und exklusiver.", "c) Die Kaffeeproduktion wird sich komplett in Laboratorien verlagern."], correctAnswer: "b" }
+      ]
     }
+  }
 ];
