@@ -130,25 +130,6 @@ const vokabelGruppen = {
         woerter: [
             { de: "die Bevölkerung", vi: "dân số", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='30' cy='35' r='10' fill='%23f39c12'/><circle cx='50' cy='25' r='12' fill='%233498db'/><circle cx='70' cy='35' r='10' fill='%23e74c3c'/><path d='M15 70 Q30 50 45 70 M35 70 Q50 40 65 70 M55 70 Q70 50 85 70' stroke='%232c3e50' stroke-width='5' fill='none'/></svg>" },
             { de: "die Integration", vi: "sự hội nhập", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M30 30 L50 30 L50 50 L30 50 Z' fill='%233498db'/><path d='M50 30 L70 30 L70 50 L50 50 Z' fill='%23e74c3c'/><path d='M40 50 L60 50 L60 70 L40 70 Z' fill='%23f1c40f'/><circle cx='50' cy='50' r='8' fill='%232ecc71'/></svg>" }
-        ]
-    },
-    studium: {
-        titel: "🎓 Studium",
-        woerter: [
-            { de: "das Semester", vi: "học kỳ", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='25' y='25' width='50' height='50' rx='5' fill='%23ecf0f1' stroke='%2334495e' stroke-width='4'/><rect x='25' y='25' width='50' height='15' rx='5' fill='%23e74c3c'/><circle cx='40' cy='55' r='6' fill='%233498db'/><circle cx='60' cy='55' r='6' fill='%23bdc3c7'/></svg>" },
-            { de: "die Vorlesung", vi: "bài giảng", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='15' y='20' width='70' height='45' fill='%232c3e50' stroke='%237f8c8d' stroke-width='3'/><circle cx='50' cy='80' r='12' fill='%23f39c12'/><path d='M40 100 L60 100 L50 85 Z' fill='%233498db'/><line x1='25' y1='35' x2='55' y2='35' stroke='%23ecf0f1' stroke-width='3'/></svg>" }
-        ]
-    },
-    saetze: {
-        titel: "💬 Sätze",
-        woerter: [
-            { de: "Meiner Meinung nach", vi: "Theo ý kiến của tôi", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><ellipse cx='50' cy='40' rx='35' ry='25' fill='%23ecf0f1' stroke='%2395a5a6' stroke-width='3'/><circle cx='35' cy='75' r='8' fill='%23ecf0f1'/><circle cx='25' cy='88' r='4' fill='%23ecf0f1'/><text x='50' y='48' font-size='20' fill='%2334495e' text-anchor='middle'>💡</text></svg>" },
-            { de: "Ich bin davon überzeugt, dass", vi: "Tôi tin chắc rằng", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='50' r='35' fill='%232ecc71'/><path d='M35 50 L45 60 L65 35' fill='none' stroke='%23fff' stroke-width='8'/><circle cx='70' cy='25' r='5' fill='%23f1c40f'/><circle cx='85' cy='40' r='4' fill='%23f1c40f'/></svg>" }
-        ]
-    },
-    alltag: {
-        titel: "☕ Alltag & Gesellschaft",
-        woerter: [
             { de: "sich auf etwas (Akkusativ) konzentrieren", vi: "tập trung vào cái gì", bild: "https://image.pollinations.ai/prompt/cute%20capybara%20wearing%20glasses%20reading%20a%20book%20concentrating%203d%20animation?width=400&height=300&nologo=true" },
             { de: "zum ersten Mal + V", vi: "lần đầu tiên làm gì", bild: "https://image.pollinations.ai/prompt/cute%20capybara%20eating%20sushi%20for%20the%20first%20time%20surprised%203d%20style?width=400&height=300&nologo=true" },
             { de: "an diesem Tag", vi: "ngày hôm đó", bild: "https://image.pollinations.ai/prompt/cute%20capybara%20pointing%20at%20a%20specific%20day%20on%20a%20calendar%203d?width=400&height=300&nologo=true" },
@@ -176,6 +157,21 @@ const vokabelGruppen = {
             { de: "die Bewunderung", vi: "sự ngưỡng mộ", bild: "https://image.pollinations.ai/prompt/cute%20capybara%20looking%20up%20with%20sparkling%20eyes%20admiring%203d?width=400&height=300&nologo=true" },
             { de: "die Eifersucht", vi: "sự ghen tuông", bild: "https://image.pollinations.ai/prompt/cute%20capybara%20looking%20angry%20and%20jealous%20with%20crossed%20arms%203d?width=400&height=300&nologo=true" }
         ]
+    },
+    studium: {
+        titel: "🎓 Studium",
+        woerter: [
+            { de: "das Semester", vi: "học kỳ", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='25' y='25' width='50' height='50' rx='5' fill='%23ecf0f1' stroke='%2334495e' stroke-width='4'/><rect x='25' y='25' width='50' height='15' rx='5' fill='%23e74c3c'/><circle cx='40' cy='55' r='6' fill='%233498db'/><circle cx='60' cy='55' r='6' fill='%23bdc3c7'/></svg>" },
+            { de: "die Vorlesung", vi: "bài giảng", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='15' y='20' width='70' height='45' fill='%232c3e50' stroke='%237f8c8d' stroke-width='3'/><circle cx='50' cy='80' r='12' fill='%23f39c12'/><path d='M40 100 L60 100 L50 85 Z' fill='%233498db'/><line x1='25' y1='35' x2='55' y2='35' stroke='%23ecf0f1' stroke-width='3'/></svg>" }
+        ]
+    },
+    saetze: {
+        titel: "💬 Sätze",
+        woerter: [
+            { de: "Meiner Meinung nach", vi: "Theo ý kiến của tôi", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><ellipse cx='50' cy='40' rx='35' ry='25' fill='%23ecf0f1' stroke='%2395a5a6' stroke-width='3'/><circle cx='35' cy='75' r='8' fill='%23ecf0f1'/><circle cx='25' cy='88' r='4' fill='%23ecf0f1'/><text x='50' y='48' font-size='20' fill='%2334495e' text-anchor='middle'>💡</text></svg>" },
+            { de: "Ich bin davon überzeugt, dass", vi: "Tôi tin chắc rằng", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='50' r='35' fill='%232ecc71'/><path d='M35 50 L45 60 L65 35' fill='none' stroke='%23fff' stroke-width='8'/><circle cx='70' cy='25' r='5' fill='%23f1c40f'/><circle cx='85' cy='40' r='4' fill='%23f1c40f'/></svg>" }
+        ]
+    }
     },
 };
 
