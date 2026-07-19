@@ -791,6 +791,9 @@ function showKapiStory(level, chapter = 1) {
                 <button class="btn-kapi btn-green" onclick="alert('Mùa 1 khép lại ở đây! Cùng chờ đón Mùa 2 nhé Vịt! 🦫🎬')">Hết Tập 7 🔚</button>
             `;
         }
+    document.getElementById("feedback-area").innerHTML = resultHtml;
+    document.getElementById("buttons").innerHTML = buttonContent;
+}
 // ==========================================
 // 9. BÚT NHỚ HIGHLIGHT (HỖ TRỢ CẢ PC & MOBILE) 🍑✨
 // ==========================================
