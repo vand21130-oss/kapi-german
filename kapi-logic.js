@@ -859,3 +859,33 @@ window.saveTranscriptNote = function() {
         localStorage.setItem(noteKey, currentNote);
     }
 };
+// ================= TẬP 7 =================
+        } else if (chapter === 7) {
+            resultHtml = `
+                <div style="text-align: center; animation: fadeIn 0.5s;">
+                    <h3 style="color: #2980b9; margin-top: 10px; margin-bottom: 5px;">Tập 7: Die erste Nachtschicht</h3>
+                    <p style="font-size: 15px; color: #e67e22; font-style: italic; margin-top: 0; margin-bottom: 15px;">
+                        <b>P.S:</b> Vergiss nicht, das Bild zu vergrößern, um es besser lesen zu können! <br>
+                        <span style="color: #7f8c8d;">(Nhớ phóng to ảnh lên để đọc cho dễ nha khum! 🦫🔍)</span>
+                    </p>
+                    
+                    <img src="stories/tap7.jpg" style="width: 100%; max-width: 900px; height: auto; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); margin: 0 auto 20px auto; display: block;">
+                    
+                    <div style="background-color: #e8f6f3; padding: 20px; border-radius: 15px; text-align: left; max-width: 900px; margin: 0 auto; line-height: 1.8;">
+                        <p style="margin-top: 0;"><b>💡 Từ vựng B2 đáng chú ý trong tập này (Di chuột vào từ in đậm nhé):</b></p>
+                        <p>
+                            Während der <span class="vocab-highlight" data-vi="ca trực đêm">Nachtschicht</span> muss Kapi <span class="vocab-highlight" data-vi="tỉnh táo">wach bleiben</span>. 
+                            Beim <span class="vocab-highlight" data-vi="đi tuần / đi vòng kiểm tra">Rundgang</span> kontrolliert er die <span class="vocab-highlight" data-vi="chỉ số sinh tồn">Vitalwerte</span> der Patienten. 
+                            Manchmal gibt es <span class="vocab-highlight" data-vi="không thể lường trước">unvorhersehbare</span> Notfälle. 
+                            Am Morgen macht er die <span class="vocab-highlight" data-vi="sự bàn giao ca">Übergabe</span>. 
+                            Danach ist er <span class="vocab-highlight" data-vi="thiếu ngủ / quá mệt mỏi">übermüdet</span>, aber er hat alles <span class="vocab-highlight" data-vi="hoàn thành xuất sắc">gemeistert</span>.
+                        </p>
+                    </div>
+                </div>
+            `;
+            buttonContent = `
+                <button class="btn-kapi btn-home" onclick="showKapiStory('B2', 6)">⬅️ Tập 6</button>
+                <button class="btn-kapi btn-home" onclick="showLessons()">🏠 Menu</button>
+                <button class="btn-kapi btn-green" onclick="alert('Mùa 1 khép lại ở đây! Cùng chờ đón Mùa 2 nhé Vịt! 🦫🎬')">Hết Tập 7 🔚</button>
+            `;
+        }
