@@ -348,12 +348,6 @@ function checkMCAnswer(selectedIndex) {
     document.getElementById("buttons").style.display = "none";
 }
 
-function nextMCQuestion() {
-    document.getElementById("buttons").style.display = "block";
-    currentGameIndex++;
-    showMCQuestion();
-}
-
 // 5. GAME ĐẶT CÂU VỚI TỪ NGẪU NHIÊN
 function showSentenceGame() {
     let allWords = [];
@@ -394,7 +388,7 @@ function setupSprechenUI(titleHtml) {
     document.getElementById("feedback-area").style.display = "block";
     document.getElementById("feedback-area").innerHTML = `
         <div id="transcript-text" class="transcript-box" contenteditable="true">
-            <i>Click chuột vào đây, nhấn <b>Windows + H</b> và bắt đầu nói tiếng Đức...</i>
+            <i>Click chuột vào đây, nhấn <b>Windows + H</b> und bắt đầu nói tiếng Đức...</i>
         </div>
         <div id="ai-correction" style="display:none; margin-top:15px; border-top:1px solid #ccc; padding-top:15px;"></div>
     `;
@@ -417,9 +411,7 @@ function showSchreibenMenu() {
         <button class="btn-kapi btn-home" onclick="showLessons()">⬅️ Zurück</button>
     `;
 }
-// ==========================================
-// HÀM CHẤM ĐIỂM SCHREIBEN BẰNG AI XỊN (OPENROUTER)
-// ==========================================
+
 // ==========================================
 // HÀM CHẤM ĐIỂM SCHREIBEN BẰNG AI XỊN (OPENROUTER)
 // ==========================================
@@ -460,8 +452,6 @@ async function checkGrammar(inputId) {
         aiCorrection.innerHTML = `<p style="color:red; font-weight:bold;">Lỗi kết nối máy chủ API của Vịt rồi! (Check lại Vercel nha)</p>`; 
     }
 }
-
-
 
 // 7. HÖREN LOGIC
 function showHoerenMenu() {
@@ -566,10 +556,7 @@ function submitHoeren() {
         <div style="text-align:center; margin-top:20px;">
             <h3 style="font-size:24px;">Điểm của cậu: <span style="color:#e67e22;">${score} / ${teil.fragen.length}</span></h3>
             <div style="display: flex; flex-direction: column; align-items: center; gap: 15px; margin-top: 15px;">
-            <!-- Nút Nghe lại (giữ nguyên lệnh chuẩn của Vịt) -->
             <button class="btn-kapi btn-green" onclick="startHoerenTeil(${currentTeilIndex})"> 🔄 Nghe lại phần này </button>
-            
-            <!-- Nút Transkript -->
             <button onclick="openTranscriptPage()" style="background: #fdf2f8; border: 2px dashed #fbcfe8; padding: 10px 25px; border-radius: 12px; color: #db2777; font-weight: bold; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.05); font-size: 16px; transition: 0.2s;">
                 📖 Sang trang đọc Transkript
             </button>
@@ -579,7 +566,149 @@ function submitHoeren() {
     document.getElementById("feedback-area").innerHTML = resultHtml;
 }
 
-<img src="stories/tap5.jpg" style="width: 100%; max-width: 900px; height: auto; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); margin: 0 auto 20px auto; display: block;">
+// =========================================================
+// 8. TRUYỆN CỦA KAPI
+// =========================================================
+function showKapiStory(level, chapter = 1) {
+    document.getElementById("feedback-area").style.display = "block";
+    let resultHtml = "";
+    let buttonContent = "";
+
+    if (level === "A1" || level === "A2" || level === "B1") {
+        resultHtml = `
+            <div style="padding: 20px; background-color: #f8d7da; color: #721c24; border-radius: 10px; margin-top: 20px; text-align: center;">
+                <h3 style="margin: 0;">Ôi, Kapi chưa gặm tới truyện của ${level}, Vịt đợi nhé! 🦫💦</h3>
+            </div>
+        `;
+        buttonContent = `<button class="btn-kapi btn-home" onclick="showLessons()">⬅️ Zurück</button>`;
+
+    } else if (level === "B2") {
+
+        // ================= TẬP 1 =================
+        if (chapter === 1) {
+            resultHtml = `
+                <div style="text-align: center; animation: fadeIn 0.5s;">
+                    <div style="background-color: #fff3e0; padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 2px dashed #ffb74d; display: inline-block;">
+                        <p style="font-size: 18px; color: #d35400; font-weight: bold; margin: 0 0 5px 0;">
+                            "Hallo zusammen! Ich bin Kapi. Möchtest du mich auf meiner Reise begleiten?"
+                        </p>
+                        <p style="font-size: 16px; color: #555; font-style: italic; margin: 0;">
+                            (Xin chào! Tớ là Kapi. Cậu có muốn tham gia hành trình của tớ không? 🦫🎒)
+                        </p>
+                    </div>
+
+                    <h3 style="color: #2980b9; margin-top: 10px; margin-bottom: 5px;">Tập 1: Kapis erster Tag im Krankenhaus</h3>
+                    <p style="font-size: 15px; color: #e67e22; font-style: italic; margin-top: 0; margin-bottom: 15px;">
+                        <b>P.S:</b> Vergiss nicht, das Bild zu vergrößern, um es besser lesen zu können! <br>
+                        <span style="color: #7f8c8d;">(Nhớ phóng to ảnh lên để đọc cho dễ nha khum! 🦫🔍)</span>
+                    </p>
+                    
+                    <img src="stories/tap1.jpg" style="width: 100%; max-width: 900px; height: auto; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); margin: 0 auto 20px auto; display: block;">
+                    
+                    <div style="background-color: #e8f6f3; padding: 20px; border-radius: 15px; text-align: left; max-width: 900px; margin: 0 auto; line-height: 1.8;">
+                        <p style="margin-top: 0;"><b>💡 Từ vựng B2 đáng chú ý trong tập này (Di chuột vào từ in đậm nhé):</b></p>
+                        <p>Kapi hat heute einen Brief mit einem echten <span class="vocab-highlight" data-vi="Ấn sáp">Wachssiegel</span> bekommen. Was für eine <span class="vocab-highlight" data-vi="Sự bất ngờ">Überraschung</span>! Es ist die <span class="vocab-highlight" data-vi="Thư xác nhận / Lời đồng ý">Zusage</span> für sein <span class="vocab-highlight" data-vi="Kỳ thực tập">Praktikum</span>. Die Freude ist so groß, Kapi muss das Ganze erst mal <span class="vocab-highlight" data-vi="Bình tĩnh lại để tiêu hóa thông tin (Idiom B2)">sacken lassen</span>.</p>
+                    </div>
+                </div>
+            `;
+            buttonContent = `
+                <button class="btn-kapi btn-home" onclick="showLessons()">⬅️ Zurück</button>
+                <button class="btn-kapi btn-green" onclick="showKapiStory('B2', 2)">Tập 2 ➡️</button>
+            `;
+
+        // ================= TẬP 2 =================
+        } else if (chapter === 2) {
+            resultHtml = `
+                <div style="text-align: center; animation: fadeIn 0.5s;">
+                    <h3 style="color: #2980b9; margin-top: 10px; margin-bottom: 5px;">Tập 2: Vorbereitung auf das Praktikum</h3>
+                    <p style="font-size: 15px; color: #e67e22; font-style: italic; margin-top: 0; margin-bottom: 15px;">
+                        <b>P.S:</b> Vergiss nicht, das Bild zu vergrößern, um es besser lesen zu können! <br>
+                        <span style="color: #7f8c8d;">(Nhớ phóng to ảnh lên để đọc cho dễ nha khum! 🦫🔍)</span>
+                    </p>
+                    
+                    <img src="stories/tap2.jpg" style="width: 100%; max-width: 900px; height: auto; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); margin: 0 auto 20px auto; display: block;">
+                    
+                    <div style="background-color: #e8f6f3; padding: 20px; border-radius: 15px; text-align: left; max-width: 900px; margin: 0 auto; line-height: 1.8;">
+                        <p style="margin-top: 0;"><b>💡 Từ vựng B2 đáng chú ý trong tập này (Di chuột vào từ in đậm nhé):</b></p>
+                        <p>Kapi bereitet sich vor! Hygiene ist <span class="vocab-highlight" data-vi="Điều quan trọng nhất (Idiom)">das A und O</span>. Er kauft <span class="vocab-highlight" data-vi="Đồ ăn vặt giảm stress">Nervennahrung</span> und bügelt seinen Arztkittel, damit er <span class="vocab-highlight" data-vi="Hoàn hảo, không tì vết">makellos</span> aussieht. Der Kittel <span class="vocab-highlight" data-vi="Vừa in, vừa vặn hoàn hảo (Idiom)">sitzt wie angegossen</span>! Zum Schluss stellt er den Wecker, denn <span class="vocab-highlight" data-vi="Sự đúng giờ">Pünktlichkeit</span> ist das halbe Leben.</p>
+                    </div>
+                </div>
+            `;
+            buttonContent = `
+                <button class="btn-kapi btn-home" onclick="showKapiStory('B2', 1)">⬅️ Tập 1</button>
+                <button class="btn-kapi btn-home" onclick="showLessons()">🏠 Menu</button>
+                <button class="btn-kapi btn-green" onclick="showKapiStory('B2', 3)">Tập 3 ➡️</button>
+            `;
+
+        // ================= TẬP 3 =================
+        } else if (chapter === 3) {
+            resultHtml = `
+                <div style="text-align: center; animation: fadeIn 0.5s;">
+                    <h3 style="color: #2980b9; margin-top: 10px; margin-bottom: 5px;">Tập 3: Kapi's First Day at the Hospital</h3>
+                    <p style="font-size: 15px; color: #e67e22; font-style: italic; margin-top: 0; margin-bottom: 15px;">
+                        <b>P.S:</b> Vergiss nicht, das Bild zu vergrößern, um es besser lesen zu können! <br>
+                        <span style="color: #7f8c8d;">(Nhớ phóng to ảnh lên để đọc cho dễ nha khum! 🦫🔍)</span>
+                    </p>
+                    
+                    <img src="stories/tap3.jpg" style="width: 100%; max-width: 900px; height: auto; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); margin: 0 auto 20px auto; display: block;">
+                    
+                    <div style="background-color: #e8f6f3; padding: 20px; border-radius: 15px; text-align: left; max-width: 900px; margin: 0 auto; line-height: 1.8;">
+                        <p style="margin-top: 0;"><b>💡 Từ vựng B2 đáng chú ý trong tập này (Di chuột vào từ in đậm nhé):</b></p>
+                        <p>
+                            Kapi fühlt sich am ersten Tag etwas <span class="vocab-highlight" data-vi="hồi hộp, phấn khích">aufgeregt</span>. 
+                            Im Krankenhaus ist <span class="vocab-highlight" data-vi="vệ sinh">Hygiene</span> das A und O. 
+                            Kapi muss den <span class="vocab-highlight" data-vi="huyết áp">Blutdruck</span> bei Patienten <span class="vocab-highlight" data-vi="đo lường">messen</span>. 
+                            Die Arbeit ist sehr <span class="vocab-highlight" data-vi="vất vả, căng thẳng">anstrengend</span>, 
+                            aber Kapi arbeitet sehr <span class="vocab-highlight" data-vi="chuyên nghiệp">professionell</span>.
+                        </p>
+                    </div>
+                </div>
+            `;
+            buttonContent = `
+                <button class="btn-kapi btn-home" onclick="showKapiStory('B2', 2)">⬅️ Tập 2</button>
+                <button class="btn-kapi btn-home" onclick="showLessons()">🏠 Menu</button>
+                <button class="btn-kapi btn-green" onclick="showKapiStory('B2', 4)">Tập 4 ➡️</button>
+            `;
+            
+        // ================= TẬP 4 =================
+        } else if (chapter === 4) {
+            resultHtml = `
+                <div style="text-align: center; animation: fadeIn 0.5s;">
+                    <h3 style="color: #2980b9; margin-top: 10px; margin-bottom: 5px;">Tập 4: Gespräche mit Kollegen</h3>
+                    <p style="font-size: 15px; color: #e67e22; font-style: italic; margin-top: 0; margin-bottom: 15px;">
+                        <b>P.S:</b> Vergiss nicht, das Bild zu vergrößern, um es besser lesen zu können! <br>
+                        <span style="color: #7f8c8d;">(Nhớ phóng to ảnh lên để đọc cho dễ nha khum! 🦫🔍)</span>
+                    </p>
+                    
+                    <img src="stories/tap4.jpg" style="width: 100%; max-width: 900px; height: auto; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); margin: 0 auto 20px auto; display: block;">
+                    
+                    <div style="background-color: #e8f6f3; padding: 20px; border-radius: 15px; text-align: left; max-width: 900px; margin: 0 auto; line-height: 1.8;">
+                        <p style="margin-top: 0;"><b>💡 Từ vựng B2 đáng chú ý trong tập này (Di chuột vào từ in đậm nhé):</b></p>
+                        <p>
+                            Kapi und sein Kollege schauen sich den <span class="vocab-highlight" data-vi="Lịch trực">Dienstplan</span> an und <span class="vocab-highlight" data-vi="Trao đổi thông tin với nhau">tauschen sich aus</span>. 
+                            Der Kollege ist sehr <span class="vocab-highlight" data-vi="Hay giúp đỡ, nhiệt tình">hilfsbereit</span> und teilt seine <span class="vocab-highlight" data-vi="Kinh nghiệm">Erfahrung</span>. 
+                            Kapi ist sehr dankbar für diesen guten <span class="vocab-highlight" data-vi="Lời khuyên">Rat</span>.
+                        </p>
+                    </div>
+                </div>
+            `;
+            buttonContent = `
+                <button class="btn-kapi btn-home" onclick="showKapiStory('B2', 3)">⬅️ Tập 3</button>
+                <button class="btn-kapi btn-home" onclick="showLessons()">🏠 Menu</button>
+                <button class="btn-kapi btn-green" onclick="showKapiStory('B2', 5)">Tập 5 ➡️</button>
+            `;
+
+        // ================= TẬP 5 =================
+        } else if (chapter === 5) {
+            resultHtml = `
+                <div style="text-align: center; animation: fadeIn 0.5s;">
+                    <h3 style="color: #2980b9; margin-top: 10px; margin-bottom: 5px;">Tập 5: Einkauf im Supermarkt</h3>
+                    <p style="font-size: 15px; color: #e67e22; font-style: italic; margin-top: 0; margin-bottom: 15px;">
+                        <b>P.S:</b> Vergiss nicht, das Bild zu vergrößern, um es besser lesen zu können! <br>
+                        <span style="color: #7f8c8d;">(Nhớ phóng to ảnh lên để đọc cho dễ nha khum! 🦫🔍)</span>
+                    </p>
+                    
+                    <img src="stories/tap5.jpg" style="width: 100%; max-width: 900px; height: auto; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); margin: 0 auto 20px auto; display: block;">
                     
                     <div style="background-color: #e8f6f3; padding: 20px; border-radius: 15px; text-align: left; max-width: 900px; margin: 0 auto; line-height: 1.8;">
                         <p style="margin-top: 0;"><b>💡 Từ vựng B2 đáng chú ý trong tập này (Di chuột vào từ in đậm nhé):</b></p>
@@ -596,18 +725,47 @@ function submitHoeren() {
             buttonContent = `
                 <button class="btn-kapi btn-home" onclick="showKapiStory('B2', 4)">⬅️ Tập 4</button>
                 <button class="btn-kapi btn-home" onclick="showLessons()">🏠 Menu</button>
-                <button class="btn-kapi btn-green" onclick="alert('Tập 6 đang lên kịch bản, Vịt đi nấu mì ăn tạm nha! 🦫🍜')">Tập 6 ➡️</button>
+                <button class="btn-kapi btn-green" onclick="showKapiStory('B2', 6)">Tập 6 ➡️</button>
+            `;
+
+        // ================= TẬP 6 =================
+        } else if (chapter === 6) {
+            resultHtml = `
+                <div style="text-align: center; animation: fadeIn 0.5s;">
+                    <h3 style="color: #2980b9; margin-top: 10px; margin-bottom: 5px;">Tập 6: Kapi als Telefon-Arzt</h3>
+                    <p style="font-size: 15px; color: #e67e22; font-style: italic; margin-top: 0; margin-bottom: 15px;">
+                        <b>P.S:</b> Vergiss nicht, das Bild zu vergrößern, um es besser lesen zu können! <br>
+                        <span style="color: #7f8c8d;">(Nhớ phóng to ảnh lên để đọc cho dễ nha khum! 🦫🔍)</span>
+                    </p>
+                    
+                    <img src="stories/tap6.jpg" style="width: 100%; max-width: 900px; height: auto; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); margin: 0 auto 20px auto; display: block;">
+                    
+                    <div style="background-color: #e8f6f3; padding: 20px; border-radius: 15px; text-align: left; max-width: 900px; margin: 0 auto; line-height: 1.8;">
+                        <p style="margin-top: 0;"><b>💡 Từ vựng B2 đáng chú ý trong tập này (Di chuột vào từ in đậm nhé):</b></p>
+                        <p>
+                            Biber ist <span class="vocab-highlight" data-vi="hoàn toàn kiệt sức">völlig fertig</span> und hat <span class="vocab-highlight" data-vi="ớn lạnh">Schüttelfrost</span>. 
+                            Kapi empfiehlt <span class="vocab-highlight" data-vi="nghỉ ngơi tại giường">Bettruhe</span>, viel <span class="vocab-highlight" data-vi="chất lỏng">Flüssigkeit</span> und <span class="vocab-highlight" data-vi="mẹo dân gian">Hausmittel</span>. 
+                            Das Wichtigste ist, <span class="vocab-highlight" data-vi="cố quá sức/lao lực">sich nicht zu überanstrengen</span>.
+                        </p>
+                    </div>
+                </div>
+            `;
+            buttonContent = `
+                <button class="btn-kapi btn-home" onclick="showKapiStory('B2', 5)">⬅️ Tập 5</button>
+                <button class="btn-kapi btn-home" onclick="showLessons()">🏠 Menu</button>
+                <button class="btn-kapi btn-green" onclick="alert('Đang làm Tập 7, Vịt đợi xíu nha! 🦫🎬')">Hết tập 6 🔚</button>
             `;
         }
     }
 
     document.getElementById("feedback-area").innerHTML = resultHtml;
     document.getElementById("buttons").innerHTML = buttonContent;
+}
+
 // ==========================================
-// BÚT NHỚ HIGHLIGHT (HỖ TRỢ CẢ PC & MOBILE) 🍑✨
+// 9. BÚT NHỚ HIGHLIGHT (HỖ TRỢ CẢ PC & MOBILE) 🍑✨
 // ==========================================
 
-// 1. Tạo nút bấm và hướng dẫn lơ lửng góc dưới màn hình
 let highlighterUI = document.createElement('div');
 highlighterUI.style.position = 'fixed';
 highlighterUI.style.bottom = '20px';
@@ -633,7 +791,6 @@ highlighterUI.innerHTML = `
 `;
 document.body.appendChild(highlighterUI);
 
-// 2. Hàm tô màu hồng đào 🍑
 window.applyPinkHighlight = function() {
     let selection = window.getSelection();
     let selectedText = selection.toString().trim();
@@ -643,15 +800,12 @@ window.applyPinkHighlight = function() {
             let range = selection.getRangeAt(0);
             let span = document.createElement('span');
             
-            // Màu hồng đào siêu xinh
             span.style.backgroundColor = '#FFD1DC'; 
             span.style.color = '#2c3e50'; 
             span.style.borderRadius = '4px';
             span.style.padding = '2px 4px';
             
             range.surroundContents(span);
-            
-            // Xóa vùng bôi đen mặc định để hiện màu hồng luôn
             selection.removeAllRanges(); 
         } catch (err) {
             alert("Kapi nhắc nhẹ: Cậu highlight từng đoạn thôi nhé, bôi đen vắt ngang qua 2 dòng hoặc 2 thẻ là bút nhớ bị kẹt đó! 🦫💦");
@@ -659,69 +813,38 @@ window.applyPinkHighlight = function() {
     }
 };
 
-// 3. Giữ nguyên tính năng phím tắt Alt siêu tốc cho PC
 document.addEventListener('mouseup', function(e) {
     if (e.altKey) {
         applyPinkHighlight();
     }
 });
+
 // ==========================================
-// HÀM CHUYỂN TRANG TRANSCRIPT ĐỘC LẬP
+// 10. HÀM CHUYỂN TRANG TRANSCRIPT & LƯU GHI CHÚ
 // ==========================================
 
 window.openTranscriptPage = function() {
-    // 1. Giấu toàn bộ khu vực làm bài đi 
-    // LƯU Ý: Vịt xem ID của khung to nhất chứa bài làm là gì thì thay chữ "container" bằng ID đó nhé. (Ví dụ: "app-container", "main-content"...)
     document.getElementById("container").style.display = "none"; 
-    
-    // 2. Hiện trang Transcript lên
     document.getElementById("transcript-page").style.display = "block";
 
-    // 3. Lấy dữ liệu của bài hiện tại
     let teil = alleHoerenPruefungen[currentPruefungIndex].teile[currentTeilIndex];
-    
-    // 4. Đổ dữ liệu (Tên, Audio & Text) vào trang mới
     document.getElementById("transcript-title").innerText = teil.teilName;
     document.getElementById("transcript-audio").src = teil.audioSrc;
     document.getElementById("transcript-text").innerHTML = teil.transcript || "<i>Kein Transkript verfügbar (Chưa có Transkript).</i>";
-};
-
-window.closeTranscriptPage = function() {
-    // 1. Tắt audio nếu nó đang chạy dở để không bị vang tiếng khi quay lại
-    let audioEl = document.getElementById("transcript-audio");
-    audioEl.pause();
-    audioEl.currentTime = 0; // Tua lại từ đầu
-    
-    // 2. Giấu trang Transcript đi
-    document.getElementById("transcript-page").style.display = "none";
-    
-    // 3. Hiện lại khu vực kết quả làm bài 
-    // (Nhớ dùng đúng ID giống hệt ở hàm openTranscriptPage ở trên nha)
-    document.getElementById("container").style.display = "block"; 
-};
-// ==========================================
-// HÀM CHUYỂN TRANG TRANSCRIPT & LƯU GHI CHÚ
-// ==========================================
-
-window.openTranscriptPage = function() {
-    document.getElementById("container").style.display = "none"; 
-    document.getElementById("transcript-page").style.display = "block";
-
-    let teil = alleHoerenPruefungen[currentPruefungIndex].teile[currentTeilIndex];
-    document.getElementById("transcript-title").innerText = teil.teilName;
-    document.getElementById("transcript-audio").src = teil.audioSrc;
-    document.getElementById("transcript-text").innerHTML = teil.transcript || "<i>Kein Transkript verfügbar.</i>";
 
     // KAPI TỰ ĐỘNG TÌM LẠI GHI CHÚ CŨ (Nếu có)
     let noteKey = `kapi_note_exam_${currentPruefungIndex}_teil_${currentTeilIndex}`;
     let savedNote = localStorage.getItem(noteKey);
-    document.getElementById("transcript-note").value = savedNote ? savedNote : "";
+    let noteInput = document.getElementById("transcript-note");
+    if(noteInput) noteInput.value = savedNote ? savedNote : "";
 };
 
 window.closeTranscriptPage = function() {
     let audioEl = document.getElementById("transcript-audio");
-    audioEl.pause();
-    audioEl.currentTime = 0; 
+    if(audioEl) {
+        audioEl.pause();
+        audioEl.currentTime = 0; 
+    }
     
     document.getElementById("transcript-page").style.display = "none";
     document.getElementById("container").style.display = "block"; 
@@ -729,10 +852,10 @@ window.closeTranscriptPage = function() {
 
 // HÀM TỰ ĐỘNG LƯU KHI VỊT GÕ CHỮ
 window.saveTranscriptNote = function() {
-    // Tạo chìa khóa riêng cho từng bài (Ví dụ: Đề 1, Teil 2)
     let noteKey = `kapi_note_exam_${currentPruefungIndex}_teil_${currentTeilIndex}`;
-    let currentNote = document.getElementById("transcript-note").value;
-    
-    // Lưu vào bộ nhớ trình duyệt
-    localStorage.setItem(noteKey, currentNote);
+    let noteInput = document.getElementById("transcript-note");
+    if(noteInput) {
+        let currentNote = noteInput.value;
+        localStorage.setItem(noteKey, currentNote);
+    }
 };
