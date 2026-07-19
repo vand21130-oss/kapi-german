@@ -579,129 +579,30 @@ function submitHoeren() {
     document.getElementById("feedback-area").innerHTML = resultHtml;
 }
 
-// =========================================================
-// 8. TRUYỆN CỦA KAPI
-// =========================================================
-function showKapiStory(level, chapter = 1) {
-    document.getElementById("feedback-area").style.display = "block";
-    let resultHtml = "";
-    let buttonContent = "";
-
-    if (level === "A1" || level === "A2" || level === "B1") {
-        resultHtml = `
-            <div style="padding: 20px; background-color: #f8d7da; color: #721c24; border-radius: 10px; margin-top: 20px; text-align: center;">
-                <h3 style="margin: 0;">Ôi, Kapi chưa gặm tới truyện của ${level}, Vịt đợi nhé! 🦫💦</h3>
-            </div>
-        `;
-        buttonContent = `<button class="btn-kapi btn-home" onclick="showLessons()">⬅️ Zurück</button>`;
-
-    } else if (level === "B2") {
-
-        // ================= TẬP 1 =================
-        if (chapter === 1) {
-            resultHtml = `
-                <div style="text-align: center; animation: fadeIn 0.5s;">
-                    <img src="stories/tap1.jpg" style="width: 100%; max-width: 900px; height: auto; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); margin: 0 auto 20px auto; display: block;">
-                    <div style="background-color: #e8f6f3; padding: 20px; border-radius: 15px; text-align: left; max-width: 900px; margin: 0 auto; line-height: 1.8;">
-                        <p>Kapi hat heute ein <span class="vocab-highlight" data-vi="Ấn sáp">Wachssiegel</span> bekommen. Es ist die <span class="vocab-highlight" data-vi="Lời đồng ý">Zusage</span> cho sein <span class="vocab-highlight" data-vi="Kỳ thực tập">Praktikum</span>.</p>
-                    </div>
-                </div>
-            `;
-            buttonContent = `<button class="btn-kapi btn-home" onclick="showLessons()">⬅️ Zurück</button><button class="btn-kapi btn-green" onclick="showKapiStory('B2', 2)">Tập 2 ➡️</button>`;
-
-        // ================= TẬP 2 =================
-        } else if (chapter === 2) {
-            resultHtml = `
-                <div style="text-align: center; animation: fadeIn 0.5s;">
-                    <img src="stories/tap2.jpg" style="width: 100%; max-width: 900px; height: auto; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); margin: 0 auto 20px auto; display: block;">
-                    <div style="background-color: #e8f6f3; padding: 20px; border-radius: 15px; text-align: left; max-width: 900px; margin: 0 auto; line-height: 1.8;">
-                        <p>Hygiene ist <span class="vocab-highlight" data-vi="Điều quan trọng nhất">das A und O</span>. Kapi achtet auf <span class="vocab-highlight" data-vi="Sự đúng giờ">Pünktlichkeit</span>.</p>
-                    </div>
-                </div>
-            `;
-            buttonContent = `<button class="btn-kapi btn-home" onclick="showKapiStory('B2', 1)">⬅️ Tập 1</button><button class="btn-kapi btn-green" onclick="showKapiStory('B2', 3)">Tập 3 ➡️</button>`;
-
-        // ================= TẬP 3 =================
-        } else if (chapter === 3) {
-            resultHtml = `
-                <div style="text-align: center; animation: fadeIn 0.5s;">
-                    <img src="stories/tap3.jpg" style="width: 100%; max-width: 900px; height: auto; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); margin: 0 auto 20px auto; display: block;">
-                    <div style="background-color: #e8f6f3; padding: 20px; border-radius: 15px; text-align: left; max-width: 900px; margin: 0 auto; line-height: 1.8;">
-                        <p>Kapi muss den <span class="vocab-highlight" data-vi="huyết áp">Blutdruck</span> <span class="vocab-highlight" data-vi="đo lường">messen</span>. Die Arbeit ist sehr <span class="vocab-highlight" data-vi="vất vả">anstrengend</span>.</p>
-                    </div>
-                </div>
-            `;
-            buttonContent = `<button class="btn-kapi btn-home" onclick="showKapiStory('B2', 2)">⬅️ Tập 2</button><button class="btn-kapi btn-green" onclick="showKapiStory('B2', 4)">Tập 4 ➡️</button>`;
-
-        // ================= TẬP 4 =================
-        } else if (chapter === 4) {
-            resultHtml = `
-                <div style="text-align: center; animation: fadeIn 0.5s;">
-                    <img src="stories/tap4.jpg" style="width: 100%; max-width: 900px; height: auto; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); margin: 0 auto 20px auto; display: block;">
-                    <div style="background-color: #e8f6f3; padding: 20px; border-radius: 15px; text-align: left; max-width: 900px; margin: 0 auto; line-height: 1.8;">
-                        <p>Sie schauen sich den <span class="vocab-highlight" data-vi="Lịch trực">Dienstplan</span> an và <span class="vocab-highlight" data-vi="Trao đổi thông tin">tauschen sich aus</span>.</p>
-                    </div>
-                </div>
-            `;
-            buttonContent = `<button class="btn-kapi btn-home" onclick="showKapiStory('B2', 3)">⬅️ Tập 3</button><button class="btn-kapi btn-green" onclick="showKapiStory('B2', 5)">Tập 5 ➡️</button>`;
-
-        // ================= TẬP 5 =================
-        } else if (chapter === 5) {
-            resultHtml = `
-                <div style="text-align: center; animation: fadeIn 0.5s;">
-                    <img src="stories/tap5.jpg" style="width: 100%; max-width: 900px; height: auto; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); margin: 0 auto 20px auto; display: block;">
-                    <div style="background-color: #e8f6f3; padding: 20px; border-radius: 15px; text-align: left; max-width: 900px; margin: 0 auto; line-height: 1.8;">
-                        <p>Kapi muss <span class="vocab-highlight" data-vi="tích trữ đồ">Vorräte aufstocken</span>. An der Kasse ist es <span class="vocab-highlight" data-vi="đông nghịt">völlig überfüllt</span>.</p>
-                    </div>
-                </div>
-            `;
-            buttonContent = `<button class="btn-kapi btn-home" onclick="showKapiStory('B2', 4)">⬅️ Tập 4</button><button class="btn-kapi btn-green" onclick="showKapiStory('B2', 6)">Tập 6 ➡️</button>`;
-
-        // ================= TẬP 6 =================
-        } else if (chapter === 6) {
-            resultHtml = `
-                <div style="text-align: center; animation: fadeIn 0.5s;">
-                    <h3 style="color: #2980b9;">Tập 6: Kapi als Telefon-Arzt</h3>
-                    <img src="stories/tap6.jpg" style="width: 100%; max-width: 900px; height: auto; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); margin: 0 auto 20px auto; display: block;">
-                    <div style="background-color: #e8f6f3; padding: 20px; border-radius: 15px; text-align: left; max-width: 900px; margin: 0 auto; line-height: 1.8;">
-                        <p>Biber ist <span class="vocab-highlight" data-vi="kiệt sức">völlig fertig</span>, er hat <span class="vocab-highlight" data-vi="ớn lạnh">Schüttelfrost</span>. Kapi khuyên dùng <span class="vocab-highlight" data-vi="mẹo dân gian">Hausmittel</span> và cần <span class="vocab-highlight" data-vi="nghỉ ngơi">Bettruhe</span>. Không được <span class="vocab-highlight" data-vi="cố quá sức">sich überanstrengen</span>!</p>
-                    </div>
-                </div>
-            `;
-            buttonContent = `<button class="btn-kapi btn-home" onclick="showKapiStory('B2', 5)">⬅️ Tập 5</button><button class="btn-kapi btn-green" onclick="alert('Đang làm tập 7!')">Hết</button>`;
-        }
-    }
-    document.getElementById("feedback-area").innerHTML = resultHtml;
-    document.getElementById("buttons").innerHTML = buttonContent;
-}
-    // ================= TẬP 6 =================
-        } else if (chapter === 6) {
-            resultHtml = `
-                <div style="text-align: center; animation: fadeIn 0.5s;">
-                    <h3 style="color: #2980b9; margin-top: 10px; margin-bottom: 5px;">Tập 6: Kapi als Telefon-Arzt</h3>
-                    <p style="font-size: 15px; color: #e67e22; font-style: italic; margin-top: 0; margin-bottom: 15px;">
-                        <b>P.S:</b> Vergiss nicht, das Bild zu vergrößern, um es besser lesen zu können! <br>
-                        <span style="color: #7f8c8d;">(Nhớ phóng to ảnh lên để đọc cho dễ nha khum! 🦫🔍)</span>
-                    </p>
-                    
-                    <img src="stories/tap6.jpg" style="width: 100%; max-width: 900px; height: auto; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); margin: 0 auto 20px auto; display: block;">
+<img src="stories/tap5.jpg" style="width: 100%; max-width: 900px; height: auto; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); margin: 0 auto 20px auto; display: block;">
                     
                     <div style="background-color: #e8f6f3; padding: 20px; border-radius: 15px; text-align: left; max-width: 900px; margin: 0 auto; line-height: 1.8;">
                         <p style="margin-top: 0;"><b>💡 Từ vựng B2 đáng chú ý trong tập này (Di chuột vào từ in đậm nhé):</b></p>
                         <p>
-                            Biber ist <span class="vocab-highlight" data-vi="hoàn toàn kiệt sức">völlig fertig</span> và bị <span class="vocab-highlight" data-vi="ớn lạnh">Schüttelfrost</span>. 
-                            Kapi khuyên bạn nên tuân thủ <span class="vocab-highlight" data-vi="nghỉ ngơi tại giường">Bettruhe</span>, uống đủ <span class="vocab-highlight" data-vi="chất lỏng">Flüssigkeit</span> và dùng <span class="vocab-highlight" data-vi="mẹo dân gian">Hausmittel</span>. 
-                            Quan trọng nhất là không được <span class="vocab-highlight" data-vi="cố quá sức/lao lực">sich überanstrengen</span> để cơ thể mau hồi phục.
+                            Nach der Schicht muss Kapi unbedingt seine <span class="vocab-highlight" data-vi="tích trữ thêm đồ">Vorräte aufstocken</span>. 
+                            Er achtet auf seine Hautpflege und Gesundheit, weshalb er entscheidet, auf Limonade zu <span class="vocab-highlight" data-vi="tránh/từ bỏ">verzichten</span>. 
+                            Bevor er etwas in den Korb legt, überprüft er genau das <span class="vocab-highlight" data-vi="hạn sử dụng">Mindesthaltbarkeitsdatum</span>. 
+                            An der Kasse ist es <span class="vocab-highlight" data-vi="đông nghịt">völlig überfüllt</span>, sodass er ewig in der <span class="vocab-highlight" data-vi="xếp hàng">Schlange stehen</span> muss. 
+                            Am Ende freut er sich nur noch auf seinen <span class="vocab-highlight" data-vi="hoàn toàn xứng đáng">wohlverdienten</span> Feierabend in der Wohnung.
                         </p>
                     </div>
                 </div>
             `;
             buttonContent = `
-                <button class="btn-kapi btn-home" onclick="showKapiStory('B2', 5)">⬅️ Tập 5</button>
+                <button class="btn-kapi btn-home" onclick="showKapiStory('B2', 4)">⬅️ Tập 4</button>
                 <button class="btn-kapi btn-home" onclick="showLessons()">🏠 Menu</button>
-                <button class="btn-kapi btn-green" onclick="alert('Đang biên soạn Tập 7, Vịt đợi chút nha! 🦫🎬')">Tập 7 ➡️</button>
+                <button class="btn-kapi btn-green" onclick="alert('Tập 6 đang lên kịch bản, Vịt đi nấu mì ăn tạm nha! 🦫🍜')">Tập 6 ➡️</button>
             `;
         }
+    }
+
+    document.getElementById("feedback-area").innerHTML = resultHtml;
+    document.getElementById("buttons").innerHTML = buttonContent;
 // ==========================================
 // BÚT NHỚ HIGHLIGHT (HỖ TRỢ CẢ PC & MOBILE) 🍑✨
 // ==========================================
