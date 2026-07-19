@@ -45,7 +45,7 @@ const teil2 = [
 ];
 
 // ==========================================
-// 2. TỪ VỰNG FULL HÌNH ẢNH SVG CUTE (ĐÃ BỔ SUNG ALLTAG)
+// 2. TỪ VỰNG FULL HÌNH ẢNH SVG CUTE (ĐÃ BỔ SUNG ALLTAG VÀO GESELLSCHAFT)
 // ==========================================
 const vokabelGruppen = {
     krankheiten: {
@@ -129,7 +129,7 @@ const vokabelGruppen = {
         titel: "🏘️ Gesellschaft",
         woerter: [
             { de: "die Bevölkerung", vi: "dân số", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='30' cy='35' r='10' fill='%23f39c12'/><circle cx='50' cy='25' r='12' fill='%233498db'/><circle cx='70' cy='35' r='10' fill='%23e74c3c'/><path d='M15 70 Q30 50 45 70 M35 70 Q50 40 65 70 M55 70 Q70 50 85 70' stroke='%232c3e50' stroke-width='5' fill='none'/></svg>" },
-            { de: "die Integration", vi: "sự hội nhập", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M30 30 L50 30 L50 50 L30 50 Z' fill='%233498db'/><path d='M50 30 L70 30 L70 50 L50 50 Z' fill='%23e74c3c'/><path d='M40 50 L60 50 L60 70 L40 70 Z' fill='%23f1c40f'/><circle cx='50' cy='50' r='8' fill='%232ecc71'/></svg>" }
+            { de: "die Integration", vi: "sự hội nhập", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M30 30 L50 30 L50 50 L30 50 Z' fill='%233498db'/><path d='M50 30 L70 30 L70 50 L50 50 Z' fill='%23e74c3c'/><path d='M40 50 L60 50 L60 70 L40 70 Z' fill='%23f1c40f'/><circle cx='50' cy='50' r='8' fill='%232ecc71'/></svg>" },
             { de: "sich auf etwas (Akkusativ) konzentrieren", vi: "tập trung vào cái gì", bild: "https://image.pollinations.ai/prompt/cute%20capybara%20wearing%20glasses%20reading%20a%20book%20concentrating%203d%20animation?width=400&height=300&nologo=true" },
             { de: "zum ersten Mal + V", vi: "lần đầu tiên làm gì", bild: "https://image.pollinations.ai/prompt/cute%20capybara%20eating%20sushi%20for%20the%20first%20time%20surprised%203d%20style?width=400&height=300&nologo=true" },
             { de: "an diesem Tag", vi: "ngày hôm đó", bild: "https://image.pollinations.ai/prompt/cute%20capybara%20pointing%20at%20a%20specific%20day%20on%20a%20calendar%203d?width=400&height=300&nologo=true" },
@@ -174,6 +174,7 @@ const vokabelGruppen = {
     }
 };
 
+// ==========================================
 // 4. GAME TRẮC NGHIỆM ĐIỀN TỪ (50 CÂU B2 CỰC "CUỐN")
 // ==========================================
 const quizGameData = [
