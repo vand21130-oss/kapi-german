@@ -753,9 +753,10 @@ function showKapiStory(level, chapter = 1) {
             buttonContent = `
                 <button class="btn-kapi btn-home" onclick="showKapiStory('B2', 5)">⬅️ Tập 5</button>
                 <button class="btn-kapi btn-home" onclick="showLessons()">🏠 Menu</button>
-                <button class="btn-kapi btn-green" onclick="alert('Đang làm Tập 7, Vịt đợi xíu nha! 🦫🎬')">Hết tập 6 🔚</button>
+                <button class="btn-kapi btn-green" onclick="showKapiStory('B2', 7)">Tập 7 ➡️</button>
             `;
-// ================= TẬP 7 =================
+
+        // ================= TẬP 7 =================
         } else if (chapter === 7) {
             resultHtml = `
                 <div style="text-align: center; animation: fadeIn 0.5s;">
@@ -785,9 +786,12 @@ function showKapiStory(level, chapter = 1) {
                 <button class="btn-kapi btn-green" onclick="alert('Mùa 1 khép lại ở đây! Cùng chờ đón Mùa 2 nhé Vịt! 🦫🎬')">Hết Tập 7 🔚</button>
             `;
         }
+    }
+
     document.getElementById("feedback-area").innerHTML = resultHtml;
     document.getElementById("buttons").innerHTML = buttonContent;
 }
+
 // ==========================================
 // 9. BÚT NHỚ HIGHLIGHT (HỖ TRỢ CẢ PC & MOBILE) 🍑✨
 // ==========================================
