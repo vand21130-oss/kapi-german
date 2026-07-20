@@ -755,12 +755,6 @@ function showKapiStory(level, chapter = 1) {
                 <button class="btn-kapi btn-home" onclick="showLessons()">🏠 Menu</button>
                 <button class="btn-kapi btn-green" onclick="alert('Đang làm Tập 7, Vịt đợi xíu nha! 🦫🎬')">Hết tập 6 🔚</button>
             `;
-        }
-    }
-
-    document.getElementById("feedback-area").innerHTML = resultHtml;
-    document.getElementById("buttons").innerHTML = buttonContent;
-}
 // ================= TẬP 7 =================
         } else if (chapter === 7) {
             resultHtml = `
