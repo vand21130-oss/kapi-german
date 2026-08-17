@@ -91,9 +91,13 @@ const vokabelGruppen = {
     arbeit: {
         titel: "💼 Arbeit",
         woerter: [
+            // Các từ cũ của Vịt
             { de: "das Gehalt", vi: "tiền lương", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='50' r='35' fill='%23f1c40f' stroke='%23f39c12' stroke-width='4'/><text x='50' y='60' font-size='30' font-family='sans-serif' fill='%23d35400' text-anchor='middle'>€</text></svg>" },
             { de: "das Vorstellungsgespräch", vi: "buổi phỏng vấn", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='30' cy='40' r='15' fill='%233498db'/><circle cx='70' cy='40' r='15' fill='%232ecc71'/><path d='M 30 70 Q 50 90 70 70' stroke='%2334495e' stroke-width='5' fill='none'/><path d='M 40 30 Q 50 15 60 30' stroke='%23f1c40f' stroke-width='4' fill='none'/></svg>" },
-            { de: "die Bewerbung", vi: "đơn xin việc", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='25' y='15' width='50' height='70' rx='5' fill='%23ecf0f1' stroke='%23bdc3c7' stroke-width='4'/><circle cx='50' cy='35' r='10' fill='%2395a5a6'/><line x1='35' y1='55' x2='65' y2='55' stroke='%237f8c8d' stroke-width='4'/><line x1='35' y1='65' x2='55' y2='65' stroke='%237f8c8d' stroke-width='4'/></svg>" }
+            { de: "die Bewerbung", vi: "đơn xin việc", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='25' y='15' width='50' height='70' rx='5' fill='%23ecf0f1' stroke='%23bdc3c7' stroke-width='4'/><circle cx='50' cy='35' r='10' fill='%2395a5a6'/><line x1='35' y1='55' x2='65' y2='55' stroke='%237f8c8d' stroke-width='4'/><line x1='35' y1='65' x2='55' y2='65' stroke='%237f8c8d' stroke-width='4'/></svg>" },
+            // MẺ TỪ MỚI CỦA VỊT NÈ
+            { de: "erreichen", vi: "Đạt được / Tiếp cận", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><text x='50' y='75' font-size='60' text-anchor='middle'>🎯</text></svg>" },
+            { de: "pausenlos", vi: "Liên tục / Không ngừng", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><text x='50' y='75' font-size='60' text-anchor='middle'>⏳</text></svg>" }
         ]
     },
     umwelt: {
@@ -121,13 +125,19 @@ const vokabelGruppen = {
     technologie: {
         titel: "💻 Technologie",
         woerter: [
+            // Các từ cũ của Vịt
             { de: "die Digitalisierung", vi: "số hóa", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='20' y='25' width='60' height='40' rx='4' fill='%2334495e'/><rect x='10' y='65' width='80' height='10' rx='2' fill='%23bdc3c7'/><text x='50' y='52' font-size='18' font-weight='bold' fill='%232ecc71' text-anchor='middle'>0101</text></svg>" },
-            { de: "die künstliche Intelligenz", vi: "trí tuệ nhân tạo", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='30' y='25' width='40' height='40' rx='8' fill='%23ecf0f1' stroke='%237f8c8d' stroke-width='4'/><circle cx='40' cy='40' r='5' fill='%23e74c3c'/><circle cx='60' cy='40' r='5' fill='%23e74c3c'/><path d='M 40 55 Q 50 65 60 55' stroke='%237f8c8d' stroke-width='4' fill='none'/><line x1='50' y1='15' x2='50' y2='25' stroke='%23f1c40f' stroke-width='4'/></svg>" }
+            { de: "die künstliche Intelligenz", vi: "trí tuệ nhân tạo", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><rect x='30' y='25' width='40' height='40' rx='8' fill='%23ecf0f1' stroke='%237f8c8d' stroke-width='4'/><circle cx='40' cy='40' r='5' fill='%23e74c3c'/><circle cx='60' cy='40' r='5' fill='%23e74c3c'/><path d='M 40 55 Q 50 65 60 55' stroke='%237f8c8d' stroke-width='4' fill='none'/><line x1='50' y1='15' x2='50' y2='25' stroke='%23f1c40f' stroke-width='4'/></svg>" },
+            // MẺ TỪ MỚI CỦA VỊT NÈ
+            { de: "die Freundschaftsanfrage", vi: "Lời mời kết bạn", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><text x='50' y='75' font-size='60' text-anchor='middle'>🤝</text></svg>" },
+            { de: "stöbern", vi: "Lục lọi / Khám phá", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><text x='50' y='75' font-size='60' text-anchor='middle'>🔍</text></svg>" }
+       
         ]
     },
     gesellschaft: {
         titel: "🏘️ Gesellschaft",
         woerter: [
+            // Các từ cũ của Vịt
             { de: "die Bevölkerung", vi: "dân số", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='30' cy='35' r='10' fill='%23f39c12'/><circle cx='50' cy='25' r='12' fill='%233498db'/><circle cx='70' cy='35' r='10' fill='%23e74c3c'/><path d='M15 70 Q30 50 45 70 M35 70 Q50 40 65 70 M55 70 Q70 50 85 70' stroke='%232c3e50' stroke-width='5' fill='none'/></svg>" },
             { de: "die Integration", vi: "sự hội nhập", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path d='M30 30 L50 30 L50 50 L30 50 Z' fill='%233498db'/><path d='M50 30 L70 30 L70 50 L50 50 Z' fill='%23e74c3c'/><path d='M40 50 L60 50 L60 70 L40 70 Z' fill='%23f1c40f'/><circle cx='50' cy='50' r='8' fill='%232ecc71'/></svg>" },
             { de: "sich auf etwas (Akkusativ) konzentrieren", vi: "tập trung vào cái gì", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><text x='50' y='75' font-size='60' text-anchor='middle'>🎯</text></svg>" },
@@ -155,7 +165,24 @@ const vokabelGruppen = {
             { de: "die Zärtlichkeit", vi: "sự dịu dàng", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><text x='50' y='75' font-size='60' text-anchor='middle'>🧸</text></svg>" },
             { de: "die Leidenschaft", vi: "niềm đam mê", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><text x='50' y='75' font-size='60' text-anchor='middle'>🔥</text></svg>" },
             { de: "die Bewunderung", vi: "sự ngưỡng mộ", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><text x='50' y='75' font-size='60' text-anchor='middle'>🤩</text></svg>" },
-            { de: "die Eifersucht", vi: "sự ghen tuông", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><text x='50' y='75' font-size='60' text-anchor='middle'>😒</text></svg>" }
+            { de: "die Eifersucht", vi: "sự ghen tuông", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><text x='50' y='75' font-size='60' text-anchor='middle'>😒</text></svg>" },
+            // MẺ TỪ MỚI CỦA VỊT NÈ
+            { de: "die Erdbevölkerung", vi: "Dân số thế giới", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><text x='50' y='75' font-size='60' text-anchor='middle'>🌍</text></svg>" },
+            { de: "die Beziehungskette", vi: "Chuỗi quan hệ", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><text x='50' y='75' font-size='60' text-anchor='middle'>🔗</text></svg>" },
+            { de: "das Glied", vi: "Mắt xích / Thành viên", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><text x='50' y='75' font-size='60' text-anchor='middle'>🖇️</text></svg>" },
+            { de: "sich vernetzt fühlen", vi: "Cảm thấy có kết nối mạng lưới", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><text x='50' y='75' font-size='60' text-anchor='middle'>🕸️</text></svg>" },
+            { de: "großzügig", vi: "Hào phóng / Rộng rãi", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><text x='50' y='75' font-size='60' text-anchor='middle'>🎁</text></svg>" },
+            { de: "aktiv", vi: "Chủ động / Tích cực", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><text x='50' y='75' font-size='60' text-anchor='middle'>🏃</text></svg>" },
+            { de: "unkonventionell", vi: "Phá cách / Phi truyền thống", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><text x='50' y='75' font-size='60' text-anchor='middle'>🎨</text></svg>" },
+            { de: "die Wellenlänge", vi: "Tần số / Sự hòa hợp", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><text x='50' y='75' font-size='60' text-anchor='middle'>📻</text></svg>" },
+            { de: "oberflächlich", vi: "Hời hợt / Nông cạn", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><text x='50' y='75' font-size='60' text-anchor='middle'>🧊</text></svg>" },
+            { de: "eingebunden sein", vi: "Được hòa nhập vào tập thể", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><text x='50' y='75' font-size='60' text-anchor='middle'>🧩</text></svg>" },
+            { de: "die Einstellung", vi: "Thái độ / Quan điểm", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><text x='50' y='75' font-size='60' text-anchor='middle'>💡</text></svg>" },
+            { de: "die Mauer", vi: "Bức tường", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><text x='50' y='75' font-size='60' text-anchor='middle'>🧱</text></svg>" },
+            { de: "einschlafen", vi: "Ngủ lịm đi / Lụi tàn", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><text x='50' y='75' font-size='60' text-anchor='middle'>😴</text></svg>" },
+            { de: "anwachsen", vi: "Lớn lên / Cắm rễ", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><text x='50' y='75' font-size='60' text-anchor='middle'>🌱</text></svg>" },
+            { de: "stundenlang", vi: "Suốt hàng giờ đồng hồ", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><text x='50' y='75' font-size='60' text-anchor='middle'>⌛</text></svg>" },
+            { de: "erstaunlich", vi: "Đáng kinh ngạc", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><text x='50' y='75' font-size='60' text-anchor='middle'>😲</text></svg>" }
         ]
     },
     studium: {
@@ -168,8 +195,20 @@ const vokabelGruppen = {
     saetze: {
         titel: "💬 Sätze",
         woerter: [
+            // Các từ cũ của Vịt
             { de: "Meiner Meinung nach", vi: "Theo ý kiến của tôi", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><ellipse cx='50' cy='40' rx='35' ry='25' fill='%23ecf0f1' stroke='%2395a5a6' stroke-width='3'/><circle cx='35' cy='75' r='8' fill='%23ecf0f1'/><circle cx='25' cy='88' r='4' fill='%23ecf0f1'/><text x='50' y='48' font-size='20' fill='%2334495e' text-anchor='middle'>💡</text></svg>" },
-            { de: "Ich bin davon überzeugt, dass", vi: "Tôi tin chắc rằng", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='50' r='35' fill='%232ecc71'/><path d='M35 50 L45 60 L65 35' fill='none' stroke='%23fff' stroke-width='8'/><circle cx='70' cy='25' r='5' fill='%23f1c40f'/><circle cx='85' cy='40' r='4' fill='%23f1c40f'/></svg>" }
+            { de: "Ich bin davon überzeugt, dass", vi: "Tôi tin chắc rằng", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><circle cx='50' cy='50' r='35' fill='%232ecc71'/><path d='M35 50 L45 60 L65 35' fill='none' stroke='%23fff' stroke-width='8'/><circle cx='70' cy='25' r='5' fill='%23f1c40f'/><circle cx='85' cy='40' r='4' fill='%23f1c40f'/></svg>" },
+            // MẺ TỪ MỚI CỦA VỊT NÈ
+            { de: "die Redensart", vi: "Thành ngữ / Cách nói", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><text x='50' y='75' font-size='60' text-anchor='middle'>🗣️</text></svg>" },
+            { de: "auf der gleichen Wellenlänge sein", vi: "Hợp cạ / Cùng tần số", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><text x='50' y='75' font-size='60' text-anchor='middle'>👯</text></svg>" },
+            { de: "in die Tiefe gehen", vi: "Đào sâu vấn đề", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><text x='50' y='75' font-size='60' text-anchor='middle'>🤿</text></svg>" },
+            { de: "nicht so ganz", vi: "Không hẳn / Không hoàn toàn lắm", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><text x='50' y='75' font-size='60' text-anchor='middle'>🤏</text></svg>" },
+            { de: "sich verbunden fühlen (mit)", vi: "Cảm thấy gắn kết với", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><text x='50' y='75' font-size='60' text-anchor='middle'>🫂</text></svg>" },
+            { de: "über die Belastungsgrenzen hinaus", vi: "Vượt quá giới hạn chịu đựng", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><text x='50' y='75' font-size='60' text-anchor='middle'>💥</text></svg>" },
+            { de: "dazu neigen, ...", vi: "Có xu hướng là...", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><text x='50' y='75' font-size='60' text-anchor='middle'>📉</text></svg>" },
+            { de: "im Laufe der Zeit", vi: "Theo thời gian", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><text x='50' y='75' font-size='60' text-anchor='middle'>🕰️</text></svg>" },
+            { de: "dafür bekannt sein", vi: "Nổi tiếng vì điều gì", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><text x='50' y='75' font-size='60' text-anchor='middle'>🌟</text></svg>" },
+            { de: "stets", vi: "Luôn luôn / Thường xuyên", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><text x='50' y='75' font-size='60' text-anchor='middle'>🔄</text></svg>" }
         ]
     }
 };
