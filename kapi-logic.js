@@ -110,7 +110,7 @@ function saveMissed(arr) { localStorage.setItem('kapi_missed_vokabeln', JSON.str
 function showVokabelHauptmenu() {
     document.getElementById("feedback-area").style.display = "none";
     let missed = getSavedMissed();
-    let warningHtml = missed.length > 0 ? `<button class="btn-grid btn-full" style="background:#ffb74d; color:white; justify-content:center; display:flex;" onclick="showLernenScreen('review')">⚠️ Ôn ${missed.length} từ hay quên!</button>` : '';
+    let warningHtml = missed.length > 0 ? `<button class="btn-grid btn-full" style="background:#ffb74d; color:white; justify-content:center; display:flex;" onclick="showLernenScreen('review')">⚠️ Sổ tay từ khó: Ôn ${missed.length} từ!</button>` : '';
     
     document.getElementById("message").innerText = "Was möchtest du im Alltag üben?";
     document.getElementById("buttons").innerHTML = `
@@ -137,6 +137,7 @@ function showVokabelHauptmenu() {
             </div>
             <button class="btn-grid btn-full" style="background:#fff9c4; text-align:center; color:#f39c12; font-weight:bold;" onclick="startMultipleChoiceGame()">🎯 Game: Điền Từ Trắc Nghiệm</button>
             <button class="btn-grid btn-full" style="background:#dcedc8; text-align:center; color:#27ae60; font-weight:bold;" onclick="showSentenceGame()">✍️ Game: Đặt câu với từ ngẫu nhiên</button>
+            <button class="btn-grid btn-full" style="background:#e8eaf6; text-align:center; color:#3f51b5; font-weight:bold;" onclick="startTornadoGame()">🌪️ Game: Lốc Xoáy Từ Vựng (Trộn Ngẫu Nhiên)</button>
         </div>
         <button class="btn-kapi btn-home" onclick="showLessons()">⬅️ Zurück</button>
     `;
@@ -150,24 +151,67 @@ let currentFlashcardIndex = 0;
 let currentFlashcardGroup = '';
 let isFlipped = false;
 
+// Hàm trộn ngẫu nhiên mảng từ vựng (Xào bài)
+function shuffleArray(array) {
+    let shuffled = array.slice(); 
+    for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+}
+
 function showLernenScreen(gruppe) {
     currentFlashcardGroup = gruppe;
+    
     if (gruppe === 'review') {
-        flashcardWords = getSavedMissed();
+        let missedWords = getSavedMissed();
+        if(missedWords.length === 0) { alert("Sổ tay từ khó đang trống! Vịt giỏi quá!"); return; }
+        // Xào bài từ khó và lấy tối đa 20 từ để ôn
+        flashcardWords = shuffleArray(missedWords).slice(0, 20);
     } else {
-        flashcardWords = vokabelGruppen[gruppe].woerter;
+        let allWords = vokabelGruppen[gruppe].woerter;
+        if(allWords.length === 0) { alert("Chưa có từ vựng!"); return; }
+        // XÀO BÀI VÀ CẮT LẤY 20 TỪ ĐỂ CHỐNG NGỘP! 
+        flashcardWords = shuffleArray(allWords).slice(0, 20);
     }
 
-    if(flashcardWords.length === 0) { alert("Chưa có từ vựng!"); return; }
-    
     currentFlashcardIndex = 0;
     isFlipped = false;
     renderFlashcard();
 }
 
+// Hàm Ghim/Gỡ Ghim từ khó
+function togglePinWord() {
+    let w = flashcardWords[currentFlashcardIndex];
+    let savedMissed = getSavedMissed();
+    let isPinned = savedMissed.some(item => item.de === w.de);
+
+    if (isPinned) {
+        // Nếu đã ghim thì gỡ ra
+        savedMissed = savedMissed.filter(item => item.de !== w.de);
+    } else {
+        // Chưa ghim thì lưu vào sổ tay
+        savedMissed.push(w);
+    }
+    saveMissed(savedMissed);
+    renderFlashcard(); // Vẽ lại thẻ để đổi màu nút
+}
+
 function renderFlashcard() {
     document.getElementById("feedback-area").style.display = "none";
     let w = flashcardWords[currentFlashcardIndex];
+    
+    // Kiểm tra xem từ này có trong sổ tay từ khó chưa
+    let savedMissed = getSavedMissed();
+    let isPinned = savedMissed.some(item => item.de === w.de);
+    
+    // Code giao diện Nút Ghim 📌
+    let pinBtnHtml = `
+        <button onclick="togglePinWord()" style="background: ${isPinned ? '#e74c3c' : '#ecf0f1'}; color: ${isPinned ? 'white' : '#7f8c8d'}; border: none; padding: 8px 15px; border-radius: 20px; font-weight: bold; cursor: pointer; transition: 0.2s; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+            ${isPinned ? '📌 Đã ghim vào Sổ tay' : '🤍 Ghim từ này lại'}
+        </button>
+    `;
     
     let cardContent = "";
     if (!isFlipped) {
@@ -188,8 +232,11 @@ function renderFlashcard() {
 
     document.getElementById("message").innerHTML = `
         <span style="font-size:16px;color:#7f8c8d; font-weight:bold;">Flashcard | Thẻ ${currentFlashcardIndex + 1}/${flashcardWords.length}</span><br><br>
-        <div onclick="flipCard()" style="cursor:pointer; background: #fff; border: 2px solid #bdc3c7; border-radius: 20px; padding: 40px 20px; box-shadow: 0 8px 16px rgba(0,0,0,0.08); max-width: 350px; margin: 0 auto; min-height: 220px; display: flex; flex-direction: column; justify-content: center; align-items: center; user-select: none; transition: 0.2s;">
-            ${cardContent}
+        <div style="background: #fff; border: 2px solid #bdc3c7; border-radius: 20px; padding: 15px 20px; box-shadow: 0 8px 16px rgba(0,0,0,0.08); max-width: 350px; margin: 0 auto; min-height: 250px; display: flex; flex-direction: column; align-items: center; user-select: none; transition: 0.2s;">
+            ${pinBtnHtml}
+            <div onclick="flipCard()" style="cursor:pointer; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; padding-top: 10px;">
+                ${cardContent}
+            </div>
         </div>
     `;
     
@@ -217,9 +264,9 @@ function prevFlashcard() { currentFlashcardIndex--; isFlipped = false; renderFla
 
 function startSpecificQuiz(gruppe) {
     if (gruppe === 'review') {
-        quizWords = getSavedMissed();
+        quizWords = [...flashcardWords];
     } else {
-        quizWords = [...vokabelGruppen[gruppe].woerter];
+        quizWords = [...flashcardWords];
     }
     quizWords.sort(() => Math.random() - 0.5);
     currentQuizIndex = 0;
@@ -261,10 +308,15 @@ function checkVokabelAnswer() {
     
     if (isCorrect) {
         quizScore++;
-        savedMissed = savedMissed.filter(item => item.de !== w.de);
-        resultHtml = `<h3 style="color:#27ae60; margin:0;">✅ Chính xác!</h3><p style="font-size:18px;"><b>${w.de}</b> = ${w.vi}</p>`;
+        // KHÔNG XÓA GHIM TỰ ĐỘNG - ĐỂ QUAY LỐC XOÁY!
+        resultHtml = `
+            <h3 style="color:#27ae60; margin:0;">✅ Chính xác!</h3>
+            <p style="font-size:18px;"><b>${w.de}</b> = ${w.vi}</p>
+            <p style="font-size:14px; color:#7f8c8d;"><i>(Từ này vẫn nằm trong Sổ tay để Kapi "quay lốc xoáy" hỏi lại vào hôm khác nhé! 🌪️)</i></p>
+        `;
     } else {
         currentMissedWords.push(w);
+        // Tự động ghim vào sổ tay nếu gõ sai (và nếu chưa có)
         if (!savedMissed.find(item => item.de === w.de)) savedMissed.push(w);
         resultHtml = `<h3 style="color:#c0392b; margin:0;">❌ Sai rồi Vịt ơi!</h3><p style="font-size:16px;">Cậu gõ: <s>${input || "(trống)"}</s></p><p style="font-size:20px; color:#27ae60;">Phải là: <b>${w.de}</b></p>`;
     }
@@ -286,7 +338,7 @@ function finishQuiz() {
     document.getElementById("message").innerHTML = `<b>Kết quả Quiz! 🎉</b><br><br>${quizScore}/${quizWords.length} (${percent}%)`;
     let html = ``;
     if (currentMissedWords.length > 0) {
-        html += `<h3 style="color:#e74c3c;">Các từ Vịt gõ sai:</h3><ul style="text-align:left;">`;
+        html += `<h3 style="color:#e74c3c;">Các từ Vịt gõ sai (đã được lưu vào Sổ tay):</h3><ul style="text-align:left;">`;
         currentMissedWords.forEach(w => { html += `<li><b>${w.de}</b> (${w.vi})</li>`; });
         html += `</ul>`;
     } else { html += `<h3 style="color:#2ecc71;">Tuyệt vời! Không sai từ nào!</h3>`; }
@@ -295,7 +347,36 @@ function finishQuiz() {
     document.getElementById("buttons").innerHTML = `<button class="btn-kapi btn-home" onclick="showVokabelHauptmenu()">⬅️ Về Menu Từ Vựng</button>`;
 }
 
+// ==========================================
+// GAME 3: LỐC XOÁY TỪ VỰNG (ÔN TẬP TỔNG HỢP)
+// ==========================================
+function startTornadoGame() {
+    let allWords = [];
+    
+    // Lôi TOÀN BỘ từ vựng ở tất cả các chủ đề ra
+    for(let key in vokabelGruppen) { 
+        allWords = allWords.concat(vokabelGruppen[key].woerter); 
+    }
+    
+    // Lôi các từ trong "Sổ tay từ khó" ra và NHÂN ĐÔI chúng lên 
+    let missedWords = getSavedMissed();
+    if (missedWords.length > 0) {
+        allWords = allWords.concat(missedWords).concat(missedWords); 
+    }
+    
+    // Xóc đĩa toàn bộ và bốc ra đúng 20 từ
+    quizWords = shuffleArray(allWords).slice(0, 20);
+    
+    // Khởi động Game!
+    currentQuizIndex = 0;
+    quizScore = 0;
+    currentMissedWords = [];
+    showQuizQuestion();
+}
+
+// ==========================================
 // 4. GAME TRẮC NGHIỆM ĐIỀN TỪ
+// ==========================================
 function startMultipleChoiceGame() {
     currentGameIndex = 0;
     gameScore = 0;
