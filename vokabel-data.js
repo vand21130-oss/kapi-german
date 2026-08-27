@@ -1319,4 +1319,10 @@ const megaQuizGameDataPart5 = [
     { id: "part5_099", question: "Ich helfe dir, ______ du pünktlich fertig wirst.", options: ["damit", "um", "weil", "obwohl"], answer: 0, explanation: "damit: Để (2 chủ ngữ khác nhau)." },
     { id: "part5_100", question: "Er ist es gewohnt, den Hund ______ zu füttern.", options: ["morgens", "Morgen", "am morgens", "der Morgen"], answer: 0, explanation: "morgens: Vào các buổi sáng." }
 ];
-                    
+const quizGameData = [
+    ...megaQuizGameDataPart1,
+    ...megaQuizGameDataPart2,
+    ...megaQuizGameDataPart3,
+    ...megaQuizGameDataPart4,
+    ...megaQuizGameDataPart5
+];                    
