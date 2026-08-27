@@ -228,7 +228,7 @@
     </div>
 
     <!-- ========================================================================= -->
-    <!-- JAVASCRIPT: LOGIC ĐẾM LÁ, SHOP VÀ ẨN/HIỆN WIDGET                         -->
+    <!-- JAVASCRIPT: LOGIC ĐẾM LÁ, SHOP VÀ ẨN/HIỆN WIDGET TỰ ĐỘNG                 -->
     <!-- ========================================================================= -->
     <script>
         const STORAGE_KEY = 'kapi_eco_system';
@@ -393,7 +393,7 @@
             }
         }
 
-        // --- HÀM ẨN / HIỆN WIDGET KHI CHUYỂN MÀN HÌNH ---
+        // --- HÀM ẨN / HIỆN WIDGET THÔNG MINH ---
         function toggleKapiWidgets(show) {
             const group = document.getElementById('kapi-widgets-group');
             if (group) {
@@ -401,17 +401,22 @@
             }
         }
 
-        // Móc nối vào hàm sayHallo có sẵn của Vịt
+        // Khi bấm Hallo Kapi -> Ẩn widget
         function handleSayHalloClick() {
-            // Gọi hàm sayHallo gốc của Vịt (nếu có trong file logic)
             if (typeof sayHallo === 'function') {
                 sayHallo();
             }
-            // Ẩn 2 cục Shop và Lá đi khi sang màn hình chọn Level
             toggleKapiWidgets(false);
         }
 
-        // Nếu Vịt có nút Zurück (Quay lại trang chủ), nhớ gọi toggleKapiWidgets(true) ở hàm quay lại nhé!
+        // Tự động quét và bắt sự kiện bấm nút "Zurück" hoặc nút quay lại để HIỆN lại widget
+        document.addEventListener('click', function(event) {
+            const target = event.target;
+            // Kiểm tra nếu bấm vào nút Zurück hoặc có chữ Zurück bên trong
+            if (target && (target.innerText.includes('Zurück') || target.closest('button')?.innerText.includes('Zurück'))) {
+                toggleKapiWidgets(true);
+            }
+        });
 
         // --- 6. LOGIC BỘ ĐẾM VIEW ---
         let baseViews = 142; 
