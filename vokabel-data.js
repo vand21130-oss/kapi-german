@@ -1369,5 +1369,5 @@ const quizGameData = [
     { id: "part5_097", question: "Er hat keine Ahnung, ______ der Kollege heute kommt.", options: ["ob", "dass", "weil", "wenn"], answer: 0, explanation: "ob: Liệu rằng." },
     { id: "part5_098", question: "______ er gestern nach Hause kam, war die Wohnung sauber.", options: ["Als", "Wenn", "Wann", "Ob"], answer: 0, explanation: "Als: Khi (Sự việc xảy ra 1 lần trong quá khứ)." },
     { id: "part5_099", question: "Ich helfe dir, ______ du pünktlich fertig wirst.", options: ["damit", "um", "weil", "obwohl"], answer: 0, explanation: "damit: Để (2 chủ ngữ khác nhau)." },
-    { id: "part5_100", question: "Er ist es gewohnt, den Hund ______ zu füttern.", options: ["morgens", "Morgen", "am morgens", "der Morgen"], answer: 0, explanation: "morgens: Vào các buổi sáng." },
+    { id: "part5_100", question: "Er ist es gewohnt, den Hund ______ zu füttern.", options: ["morgens", "Morgen", "am morgens", "der Morgen"], answer: 0, explanation: "morgens: Vào các buổi sáng." }
 ];
