@@ -428,6 +428,60 @@ function checkMCAnswer(selectedIndex) {
     document.getElementById("feedback-area").innerHTML = resultHtml + `<button class="btn-kapi" style="background:#f39c12; color:white; width:100%; margin-left:0; margin-right:0;" onclick="nextMCQuestion()">➡️ Câu tiếp theo</button>`;
     document.getElementById("buttons").style.display = "none";
 }
+// ==========================================
+// 4. GAME TRẮC NGHIỆM ĐIỀN TỪ
+// ==========================================
+function startMultipleChoiceGame() {
+    currentGameIndex = 0;
+    gameScore = 0;
+    quizGameData.sort(() => Math.random() - 0.5);
+    showMCQuestion();
+}
+
+function showMCQuestion() {
+    if (currentGameIndex >= quizGameData.length) {
+        document.getElementById("message").innerHTML = `<b>Chúc mừng! Cậu đã hoàn thành Game Điền Từ! 🎮</b><br><br>Điểm: ${gameScore}/${quizGameData.length}`;
+        document.getElementById("feedback-area").style.display = "none";
+        document.getElementById("buttons").innerHTML = `<button class="btn-kapi btn-home" onclick="showVokabelHauptmenu()">⬅️ Về Menu</button>`;
+        return;
+    }
+    
+    let q = quizGameData[currentGameIndex];
+    document.getElementById("feedback-area").style.display = "none";
+    document.getElementById("message").innerHTML = `
+        <span style="font-size:16px;color:#7f8c8d;">Game Điền Từ | Câu ${currentGameIndex + 1}/${quizGameData.length}</span><br><br>
+        <p style="font-size:22px; color:#2c3e50; font-weight:bold;">${q.question}</p>
+    `;
+    
+    let html = `<div style="display:flex; flex-direction:column; gap:10px; max-width:500px; margin:0 auto;">`;
+    q.options.forEach((opt, index) => {
+        html += `<button class="btn-grid" style="text-align:center; background:#e3f2fd;" onclick="checkMCAnswer(${index})">${opt}</button>`;
+    });
+    html += `</div><br><button class="btn-kapi btn-home" onclick="showVokabelHauptmenu()">🚪 Thoát Game</button>`;
+    document.getElementById("buttons").innerHTML = html;
+}
+
+function checkMCAnswer(selectedIndex) {
+    let q = quizGameData[currentGameIndex];
+    let isCorrect = (selectedIndex === q.answer);
+    
+    let resultHtml = "";
+    if (isCorrect) {
+        gameScore++;
+        resultHtml = `<h3 style="color:#27ae60; margin:0;">✅ Chính xác!</h3>`;
+    } else {
+        resultHtml = `<h3 style="color:#c0392b; margin:0;">❌ Tiếc quá Vịt ơi!</h3><p>Đáp án đúng là: <b>${q.options[q.answer]}</b></p>`;
+    }
+    
+    resultHtml += `<div style="margin-top:10px; background:#e8f4f8; padding:10px; border-radius:5px; border-left: 4px solid #3498db;">
+                    <span style="color:#2980b9; font-weight:bold;">💡 Giải thích:</span><br>
+                    <span style="color:#34495e; font-size:15px;">${q.explanation}</span>
+                   </div>`;
+                   
+    document.getElementById("feedback-area").style.display = "block";
+    document.getElementById("feedback-area").innerHTML = resultHtml + `<button class="btn-kapi" style="background:#f39c12; color:white; width:100%; margin-left:0; margin-right:0;" onclick="nextMCQuestion()">➡️ Câu tiếp theo</button>`;
+    document.getElementById("buttons").style.display = "none";
+}
 
 // 5. GAME ĐẶT CÂU VỚI TỪ NGẪU NHIÊN
 function showSentenceGame() {
