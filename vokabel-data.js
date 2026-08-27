@@ -1351,7 +1351,7 @@ const megaQuizGameDataPart5 = [
     { id: "part5_084", question: "Er interessiert sich ______ Biohacking als auch für AI-Tools.", options: ["sowohl für", "weder für", "entweder für", "zwar für"], answer: 0, explanation: "sowohl ... als auch: Không những ... mà còn." },
     { id: "part5_085", question: "Es kommt darauf ______, wie viel Zeit man investiert.", options: ["an", "auf", "ein", "aus"], answer: 0, explanation: "ankommen auf: Phụ thuộc vào." },
     { id: "part5_086", question: "Wir müssen eine Lösung finden, ______ sich alle einig sind.", options: ["mit der", "mit dem", "mit den", "mit das"], answer: 0, explanation: "mit der: Mệnh đề quan hệ đi với giới từ." },
-    { id: "part5_087", question: "Er hat sich daran ______, jeden Tag früh aufzustehen.", options: ["gewöhnt", "erinnert", "gefreut", "interessiert"], answer: 0, explanation: "sich gewöhnen an: Quen với việc gì." },
+    { id: "part5_087", question: "Er hat sich daran ______, jeden Tag früh aufzustehen.", options: ["gewöhnt", "erinnert", "gefreut", "interessiert"], answer: 0, explanation: "sich gewöhnen an (+ Akkusativ): Quen với việc gì." }
     { id: "part5_088", question: "______ zu zögern, räumte er sofort das Zimmer auf.", options: ["Ohne", "Anstatt", "Um", "Wegen"], answer: 0, explanation: "Ohne zu zögern: Không chút do dự." },
     { id: "part5_089", question: "Sie lernt Deutsch, ______ ein Zertifikat zu bekommen.", options: ["um", "damit", "weil", "ohne"], answer: 0, explanation: "um ... zu: Để làm gì." },
     { id: "part5_090", question: "Das Medikament wirkt, ______ man es regelmäßig einnimmt.", options: ["vorausgesetzt, dass", "anstatt dass", "ohne dass", "als ob"], answer: 0, explanation: "vorausgesetzt, dass: Với điều kiện là." },
