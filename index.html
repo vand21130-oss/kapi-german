@@ -1,434 +1,533 @@
 <!DOCTYPE html>
+
 <html lang="de">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Kapi - Deutsch B2</title>
+
     
-    <!-- Gọi 3 "bộ não" của Kapi -->
+
+    <!-- Gọi 3 "bộ não" của Kapi (thêm defer để tránh lỗi Timeout) -->
+
     <script src="vokabel-data.js" defer></script>
+
     <script src="horen-data.js" defer></script>
+
     <script src="kapi-logic.js" defer></script>
+
     
+
     <style>
+
         /* TẠO LỚP NỀN CUTE */
+
+        /* Ép nền và hòa tan bằng "lệnh bài" !important */
+
         body {
+
             background-image: url('bg-pattern.jpg') !important;
+
             background-repeat: repeat !important;
+
             background-size: 300px !important;
+
             background-attachment: fixed !important;
-            margin: 0; 
-            min-height: 100vh; 
-            display: flex; 
-            flex-direction: column; 
-            justify-content: center; 
-            align-items: center; 
-            text-align: center; 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            padding-bottom: 50px;
+
         }
+
+
 
         body::before {
+
             content: "" !important;
+
             position: fixed !important;
+
             top: 0 !important; left: 0 !important; width: 100% !important; height: 100% !important;
+
             background: rgba(255, 255, 255, 0.7) !important;
+
             z-index: -1 !important;
+
         }
 
-        /* ========================================= */
-        /* WIDGET GÓC PHẢI & TRÁI (LEAF & SHOP)      */
-        /* ========================================= */
-        .widget-panel {
-            position: fixed;
-            top: 25px;
-            background-color: rgba(255, 255, 255, 0.9);
-            border: 3px dashed #ffcc80;
-            border-radius: 20px;
-            padding: 15px;
-            box-shadow: 0 8px 20px rgba(211, 84, 0, 0.08);
-            z-index: 100;
-            width: 210px;
-            backdrop-filter: blur(4px);
-        }
-        
-        .widget-right { right: 25px; text-align: center; }
-        .widget-left { left: 25px; text-align: left; }
 
-        .total-leaves { 
-            font-weight: 800; 
-            margin-bottom: 10px; 
-            color: #d35400; 
-            font-size: 15px; 
-            text-align: center; 
-            background: #ffe0b2;
-            padding: 4px 10px;
-            border-radius: 12px;
-            display: inline-block;
-        }
-        
-        .leaves-container { display: flex; justify-content: center; gap: 4px; margin: 10px 0; font-size: 16px; }
-        
-        .btn-action {
-            background-color: #4CAF50; color: white; border: none; padding: 8px 10px;
-            border-radius: 12px; cursor: pointer; font-weight: bold; width: 100%; transition: 0.2s;
-            box-shadow: 0 3px 0 #2e7d32; font-size: 13px;
-        }
-        .btn-action:disabled { background-color: #e0e0e0; color: #9e9e9e; cursor: not-allowed; box-shadow: none; transform: translateY(3px); }
-        .btn-action:hover:not(:disabled) { background-color: #45a049; transform: translateY(1px); box-shadow: 0 2px 0 #2e7d32; }
 
-        /* SHOP ITEMS VÀ KHUNG CUỘN GỌN GÀNG */
-        #shop-items-container {
-            max-height: 150px; 
-            overflow-y: auto;  
-            padding-right: 5px;
-        }
-        
-        #shop-items-container::-webkit-scrollbar { width: 4px; }
-        #shop-items-container::-webkit-scrollbar-track { background: transparent; }
-        #shop-items-container::-webkit-scrollbar-thumb { background: #ffcc80; border-radius: 10px; }
-
-        .shop-item {
-            display: flex; justify-content: space-between; align-items: center;
-            background: #fffaf0; padding: 6px 10px;
-            border-radius: 10px; margin-bottom: 6px; font-size: 13px;
-            font-weight: bold; color: #555;
-        }
-        .shop-item button {
-            background: #ffb74d; color: white; border: none; border-radius: 6px; padding: 4px 8px;
-            cursor: pointer; font-weight: bold; font-size: 11px; transition: 0.2s;
-        }
-        .shop-item button:disabled { background: #f5f5f5; color: #ccc; cursor: not-allowed; }
-        .shop-item button.equipped { background: #4CAF50; color: white; }
-
-        /* ========================================= */
-        /* HIỆU ỨNG KAPI NHÚN NHẢY & PHỤ KIỆN        */
-        /* ========================================= */
-        .kapi-container {
-            position: relative; display: inline-block; cursor: pointer; margin: 20px 0;
-        }
         .kapi-img {
-            width: 450px; max-width: 90%; height: auto;
-            mix-blend-mode: multiply !important;
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .kapi-container:hover .kapi-img { transform: translateY(-15px) scale(1.02); }
 
-        .kapi-head {
-            position: absolute; top: -5px; left: 50%; transform: translateX(-50%);
-            font-size: 65px; z-index: 10; transition: 0.3s; pointer-events: none; display: none;
+            mix-blend-mode: multiply !important; /* Hòa tan nền trắng */
+
         }
-        .kapi-accessory {
-            position: absolute; top: 120px; left: 50%; transform: translateX(-50%);
-            font-size: 90px; z-index: 11; pointer-events: none; display: none;
+
+
+
+        /* ========================================= */
+
+        /* HIỆU ỨNG KAPI NHÚN NHẢY & BONG BÓNG THOẠI */
+
+        /* ========================================= */
+
+
+
+        .kapi-container {
+
+            position: relative;
+
+            display: inline-block;
+
+            cursor: pointer; /* Biến chuột thành hình bàn tay */
+
+            margin: 20px 0;
+
         }
+
+
+
+        /* Kapi nhún nhảy */
+
+        .kapi-img {
+
+            width: 450px;
+
+            max-width: 90%;
+
+            height: auto;
+
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Mượt và nảy nhẹ */
+
+        }
+
+
+
+        .kapi-container:hover .kapi-img {
+
+            transform: translateY(-15px) scale(1.02); /* Nảy lên 15px và to ra một tẹo */
+
+        }
+
+
+
+        /* Bong bóng thoại "Hallo" */
 
         .kapi-bubble {
-            position: absolute; top: 20px; right: 20px;
-            background-color: transparent; border: 3px solid #ffb74d; border-radius: 20px;
-            padding: 10px 20px; font-size: 22px; font-weight: bold; color: #d35400;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.15); z-index: 10;
-            opacity: 0; visibility: hidden; transform: translateY(20px) scale(0.8);
-            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+            position: absolute;
+
+            top: 10px;
+
+            right: 20px; /* Căn nằm ngay cạnh đầu bé Kapi */
+
+            background-color: transparent;
+
+            border: 3px solid #ffb74d; /* Viền màu cam */
+
+            border-radius: 20px;
+
+            padding: 10px 20px;
+
+            font-size: 22px;
+
+            font-weight: bold;
+
+            color: #d35400;
+
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+
+            z-index: 10;
+
+            
+
+            /* Trạng thái ẩn ban đầu */
+
+            opacity: 0;
+
+            visibility: hidden;
+
+            transform: translateY(20px) scale(0.8);
+
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); /* Hiệu ứng "pop up" nảy nảy */
+
         }
+
+
+
+        /* Cái đuôi nhọn của bong bóng */
+
         .kapi-bubble::after {
-            content: ""; position: absolute; bottom: -12px; right: 40px;
-            border-width: 12px 12px 0; border-style: solid; border-color: #ffb74d transparent transparent transparent;
+
+            content: "";
+
+            position: absolute;
+
+            bottom: -12px;
+
+            right: 40px; /* Chỉnh cái đuôi trỏ xuống gần đầu Kapi */
+
+            border-width: 12px 12px 0;
+
+            border-style: solid;
+
+            border-color: #ffb74d transparent transparent transparent;
+
         }
+
+
+
         .kapi-bubble::before {
-            content: ""; position: absolute; bottom: -8px; right: 40px; z-index: 1;
-            border-width: 12px 12px 0; border-style: solid; border-color: white transparent transparent transparent;
+
+            content: "";
+
+            position: absolute;
+
+            bottom: -8px;
+
+            right: 40px;
+
+            border-width: 12px 12px 0;
+
+            border-style: solid;
+
+            border-color: white transparent transparent transparent;
+
+            z-index: 1;
+
         }
-        .kapi-container:hover .kapi-bubble { opacity: 1; visibility: visible; transform: translateY(0) scale(1); }
+
+
+
+        /* Hiển thị bong bóng khi di chuột vào vùng chứa */
+
+        .kapi-container:hover .kapi-bubble {
+
+            opacity: 1;
+
+            visibility: visible;
+
+            transform: translateY(0) scale(1);
+
+        }
+
+
+
+        body { margin:0; min-height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; background:white; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding-bottom: 50px; }
+
+        
 
         .btn-kapi { font-size:22px; padding:15px 25px; margin:10px; border-radius:20px; border:none; cursor:pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.05); transition: 0.2s; color: #333; }
+
         .btn-kapi:hover { transform: translateY(-2px); box-shadow: 0 6px 10px rgba(0,0,0,0.1); }
-        #feedback-area { display:none; max-width:800px; width:90%; margin:10px auto; padding:20px; background-color:#f5f5f5; border-radius:12px; text-align:left; border: 1px solid #ddd; }
+
         
-        @media (max-width: 900px) {
-            .widget-panel { position: static; max-width: 90%; margin: 10px auto; display: flex; flex-direction: column; align-items: center; width: 90%; }
-            .shop-item { width: 100%; box-sizing: border-box; }
+
+        .btn-green { background: #dcedc8; }
+
+        .btn-red { background: #ffcdd2; }
+
+        .btn-home { background: #eee; }
+
+        .btn-a1 { background: #e8f5e9; }
+
+        .btn-a2 { background: #e3f2fd; }
+
+        .btn-b1 { background: #fff9c4; }
+
+        .btn-b2 { background: #ffe0b2; }
+
+        
+
+        .btn-lesson-1 { background: #f3e5f5; }
+
+        .btn-lesson-2 { background: #e1f5fe; }
+
+        .btn-lesson-3 { background: #e8f5e9; }
+
+        .btn-lesson-4 { background: #fff3e0; }
+
+        .btn-lesson-5 { background: #ffecb3; }
+
+
+
+        #feedback-area { display:none; max-width:800px; width:90%; margin:10px auto; padding:20px; background-color:#f5f5f5; border-radius:12px; text-align:left; border: 1px solid #ddd; }
+
+        .transcript-box { font-size:20px; margin-top:0; min-height:100px; padding:15px; background:#fff; border:2px dashed #bdc3c7; border-radius:8px; outline:none; cursor:text; }
+
+        
+
+        .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; max-width: 600px; margin: 0 auto; }
+
+        .btn-grid { padding: 15px; border-radius: 15px; border: none; cursor: pointer; font-size: 18px; text-align: left; transition: 0.2s; background: #e3f2fd; }
+
+        .btn-grid:hover { background: #bbdefb; }
+
+        .btn-full { grid-column: span 2; font-weight: bold; text-align: center; }
+
+        
+
+        input[type="text"], textarea { width: 100%; box-sizing: border-box; font-family: inherit; font-size: 20px; padding: 15px; border-radius: 12px; border: 2px solid #ccc; outline: none; margin-bottom: 15px; }
+
+        /* Phép thuật cho điện thoại: Tự động xếp thành 1 cột nếu màn hình nhỏ */
+
+        @media (max-width: 500px) {
+
+            .grid-container { grid-template-columns: 1fr; }
+
+            .btn-kapi { font-size: 18px; padding: 12px 20px; }
+
         }
+
+
+
+        /* Hiệu ứng làm nổi bật từ vựng B2 */
+
+        .vocab-highlight {
+
+            font-weight: bold;
+
+            color: #d35400;
+
+            border-bottom: 2px dashed #d35400;
+
+            cursor: help;
+
+            position: relative;
+
+            display: inline-block;
+
+        }
+
+
+
+        /* Khung hiển thị nghĩa tiếng Việt khi hover */
+
+        .vocab-highlight:hover::after {
+
+            content: attr(data-vi);
+
+            position: absolute;
+
+            bottom: 120%;
+
+            left: 50%;
+
+            transform: translateX(-50%);
+
+            background-color: #333;
+
+            color: #fff;
+
+            padding: 8px 12px;
+
+            border-radius: 8px;
+
+            font-size: 16px;
+
+            font-weight: normal;
+
+            white-space: nowrap;
+
+            z-index: 10;
+
+            box-shadow: 0px 4px 6px rgba(0,0,0,0.1);
+
+        }
+
     </style>
+
 </head>
+
 <body>
 
-    <!-- GOM CHUNG 2 WIDGET VÀO MỘT KHUNG ĐỂ DỄ ẨN/HIỆN -->
-    <div id="kapi-widgets-group">
-        <!-- WIDGET GÓC TRÁI: CỬA HÀNG -->
-        <div id="shop-widget" class="widget-panel widget-left">
-            <h3 style="margin-top: 0; color: #d35400; text-align: center; font-size: 16px;">Kapi Shop 🛍️</h3>
-            <div id="shop-items-container"></div>
-        </div>
 
-        <!-- WIDGET GÓC PHẢI: LÁ & ĐIỂM DANH -->
-        <div id="leaf-widget" class="widget-panel widget-right">
-            <div class="total-leaves">💰 Ví: <span id="total-leaves-count">0</span> 🍃</div>
-            <div style="font-size: 13px; font-weight: bold; color: #555;">Chuỗi tuần này:</div>
-            <div id="leaves-container" class="leaves-container">
-                <span class="leaf" id="day-1">🍂</span>
-                <span class="leaf" id="day-2">🍂</span>
-                <span class="leaf" id="day-3">🍂</span>
-                <span class="leaf" id="day-4">🍂</span>
-                <span class="leaf" id="day-5">🍂</span>
-                <span class="leaf" id="day-6">🍂</span>
-                <span class="leaf" id="day-7">🍂</span>
-            </div>
-            <button id="btn-claim-leaf" class="btn-action" onclick="claimDailyLeaf()">🌿 Điểm danh ngay</button>
-        </div>
-    </div>
 
-    <!-- CONTAINER BẢO VỆ CHÍNH -->
+    <!-- ========================================================================= -->
+
+    <!-- CONTAINER BẢO VỆ (Bao quanh toàn bộ giao diện bài làm, trừ trang Transcript) -->
+
+    <!-- ========================================================================= -->
+
     <div id="container">
+
+        
+
         <h1>Hallo! Ich bin Kapi 🦫</h1>
+
         
+
         <!-- KAPI VÀ BONG BÓNG THOẠI -->
+
         <div class="kapi-container">
+
             <div class="kapi-bubble">Hallo! 👋</div>
-            <div id="kapi-head-item" class="kapi-head">👑</div>
-            <div id="kapi-accessory" class="kapi-accessory">😎</div>
+
             <img src="capy.png" class="kapi-img" alt="Bé Kapi dễ thương">
+
         </div>
+
         
+
         <p id="message" style="font-size:30px; margin:20px;">Guten Morgen! Schön, dich kennenzulernen! 🌟</p>
+
         <p id="timer" style="font-size:40px; color:#e67e22; font-weight:bold; margin: 0;"></p>
+
+
 
         <div id="feedback-area"></div>
 
+
+
         <div id="buttons">
-            <!-- Nút bấm chuyển sang giao diện chọn Level -->
-            <button class="btn-kapi" style="background:#4CAF50; color:white;" onclick="handleSayHalloClick()">👋 Hallo Kapi</button>
+
+            <!-- Nút cũ của Vịt -->
+
+            <button class="btn-kapi" style="background:#4CAF50; color:white;" onclick="sayHallo()">👋 Hallo Kapi</button>
+
         </div>
 
-        <!-- BỘ ĐẾM LƯỢT TRUY CẬP -->
+
+
+        <!-- BỘ ĐẾM LƯỢT TRUY CẬP PRO (Đếm view thật, chống F5) -->
+
         <div style="text-align: center; margin-top: 40px; margin-bottom: 20px; padding: 10px;">
-            <p style="font-size: 14px; color: #7f8c8d; font-weight: bold; margin-bottom: 5px;">👀 Số lượt ghé thăm bé Kapi:</p>
-            <span style="font-family: Arial, sans-serif; font-size: 14px; background: #555; color: white; padding: 4px 8px; border-radius: 4px 0 0 4px;">Profile views</span><span id="fake-views" style="font-family: Arial, sans-serif; font-size: 14px; background: #fe7d37; color: white; padding: 4px 8px; border-radius: 0 4px 4px 0;">...</span>
-        </div>
-    </div> 
 
-    <!-- GIAO DIỆN TRANG TRANSCRIPT -->
-    <div id="transcript-page" style="display: none; padding: 20px; max-width: 800px; margin: 0 auto; background: #fffaf0; min-height: 100vh; font-family: sans-serif;">
-        <button onclick="closeTranscriptPage()" style="background: #fdf2f8; border: 2px solid #fbcfe8; padding: 10px 20px; border-radius: 20px; color: #db2777; font-weight: bold; cursor: pointer; margin-bottom: 20px;">
+            <p style="font-size: 14px; color: #7f8c8d; font-weight: bold; margin-bottom: 5px;">👀 Số lượt ghé thăm bé Kapi:</p>
+
+            <!-- Giao diện cái huy hiệu (badge) giống hệt ảnh của Vịt -->
+
+<span style="font-family: Arial, sans-serif; font-size: 14px; background: #555; color: white; padding: 4px 8px; border-radius: 4px 0 0 4px;">Profile views</span><span id="fake-views" style="font-family: Arial, sans-serif; font-size: 14px; background: #fe7d37; color: white; padding: 4px 8px; border-radius: 0 4px 4px 0;">...</span>
+
+
+
+<script>
+
+  // Số lượt xem gốc (mức độ "phông bạt" vừa phải, Vịt tự đổi số này nha)
+
+  let baseViews = 142; 
+
+
+
+  // Kiểm tra xem trình duyệt này đã vào web mấy lần rồi
+
+  let localVisits = localStorage.getItem('kapi_visits');
+
+  
+
+  if (!localVisits) {
+
+    localVisits = 1; // Lần đầu vào web
+
+  } else {
+
+    localVisits = parseInt(localVisits) + 1; // Lần sau vào hoặc F5 sẽ tự cộng thêm
+
+  }
+
+  
+
+  // Lưu lại vào bộ nhớ trình duyệt
+
+  localStorage.setItem('kapi_visits', localVisits);
+
+
+
+  // Hiển thị: Số gốc + số lần truy cập của họ
+
+  document.getElementById('fake-views').innerText = baseViews + localVisits;
+
+</script>
+
+        </div>
+
+
+
+    </div> <!-- KẾT THÚC THẺ CONTAINER Ở ĐÂY -->
+
+    <!-- ========================================================================= -->
+
+
+
+    <!-- ========================================================================= -->
+
+    <!-- GIAO DIỆN TRANG TRANSCRIPT RIÊNG (Nằm độc lập, không bị container quản lý) -->
+
+    <!-- ========================================================================= -->
+
+   <div id="transcript-page" style="display: none; padding: 20px; max-width: 800px; margin: 0 auto; background: #fffaf0; min-height: 100vh; font-family: sans-serif;">
+
+        
+
+        <!-- Nút quay lại -->
+
+        <button onclick="closeTranscriptPage()" style="background: #fdf2f8; border: 2px solid #fbcfe8; padding: 10px 20px; border-radius: 20px; color: #db2777; font-weight: bold; cursor: pointer; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+
             ⬅️ Quay lại kết quả
+
         </button>
+
+
+
+        <!-- Tiêu đề và Audio -->
+
         <h2 id="transcript-title" style="color: #2c3e50; text-align: center; margin-bottom: 20px;"></h2>
+
         <div style="text-align: center; margin-bottom: 30px;">
+
             <audio id="transcript-audio" controls style="width: 100%; max-width: 500px;"></audio>
+
         </div>
+
+
+
+        <!-- Khung chữ Transcript (Ở trên) -->
+
         <div id="transcript-text" style="background: #fff; padding: 30px; border-radius: 16px; border: 1px solid #ffe4e1; box-shadow: 0 4px 15px rgba(0,0,0,0.03); font-size: 16px; line-height: 1.8; color: #4b5563; text-align: justify; white-space: pre-line; margin-bottom: 20px;">
+
         </div>
-        <div style="background: #fff; padding: 20px; border-radius: 16px; border: 2px dashed #fbcfe8;">
+
+
+
+        <!-- Khung Sổ tay Ghi chú (Nằm dưới, tự động lưu) -->
+
+        <div style="background: #fff; padding: 20px; border-radius: 16px; border: 2px dashed #fbcfe8; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);">
+
+            
+
+            <!-- Tiêu đề và Nút xóa nhanh -->
+
             <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed #fbcfe8; padding-bottom: 10px; margin-bottom: 10px;">
-                <h3 style="margin: 0; color: #db2777; font-size: 18px;">📝 Ghi chú từ vựng</h3>
-                <button onclick="clearTranscriptNote()" style="background: #fee2e2; border: none; padding: 6px 12px; border-radius: 8px; color: #ef4444; cursor: pointer; font-size: 13px; font-weight: bold;">🗑️ Xóa hết</button>
+
+                <h3 style="margin: 0; color: #db2777; font-size: 18px;">
+
+                    📝 Ghi chú từ vựng
+
+                </h3>
+
+                <button onclick="clearTranscriptNote()" style="background: #fee2e2; border: none; padding: 6px 12px; border-radius: 8px; color: #ef4444; cursor: pointer; font-size: 13px; font-weight: bold; transition: 0.2s;">
+
+                    🗑️ Xóa hết
+
+                </button>
+
             </div>
-            <textarea id="transcript-note" oninput="saveTranscriptNote()" placeholder="Vịt gõ từ mới, cấu trúc hay vào đây nhé..." style="width: 100%; min-height: 150px; border: none; outline: none; resize: vertical; font-size: 16px;"></textarea>
+
+
+
+            <!-- Khung nhập liệu -->
+
+            <textarea id="transcript-note" oninput="saveTranscriptNote()" placeholder="Vịt gõ từ mới, cấu trúc hay vào đây nhé. Kapi sẽ tự động lưu lại, lần sau mở bài này ra vẫn còn nguyên! 🦫✨" style="width: 100%; min-height: 150px; border: none; outline: none; resize: vertical; font-family: inherit; font-size: 16px; color: #4b5563; background: transparent; line-height: 1.6;"></textarea>
+
         </div>
+
+        
+
     </div>
 
-    <!-- ========================================================================= -->
-    <!-- JAVASCRIPT: LOGIC ĐẾM LÁ, SHOP VÀ ẨN/HIỆN WIDGET TỰ ĐỘNG                 -->
-    <!-- ========================================================================= -->
-    <script>
-        const STORAGE_KEY = 'kapi_eco_system';
-        
-        let sysData = {
-            totalLeaves: 0,
-            weeklyStreak: 0,
-            lastClaimDate: null,
-            currentWeekStart: getMonday(new Date()).toDateString(),
-            inventory: [],
-            equippedItem: null
-        };
+    
 
-        const shopItems = [
-            { id: "item_glass", name: "Kính râm 😎", price: 5, emoji: "😎", type: "face" },
-            { id: "item_flower", name: "Hoa cài 🌸", price: 10, emoji: "🌸", type: "head" },
-            { id: "item_hat", name: "Mũ chóp 🎩", price: 15, emoji: "🎩", type: "head" },
-            { id: "item_star", name: "Kính sao 🤩", price: 20, emoji: "🤩", type: "face" },
-            { id: "item_band", name: "Băng đô 🤕", price: 25, emoji: "🤕", type: "head" }
-        ];
-
-        function getMonday(d) {
-            let date = new Date(d);
-            let day = date.getDay();
-            let diff = date.getDate() - day + (day === 0 ? -6 : 1);
-            return new Date(date.setDate(diff));
-        }
-
-        function initSystem() {
-            let savedData = JSON.parse(localStorage.getItem(STORAGE_KEY));
-            if (savedData) sysData = { ...sysData, ...savedData };
-            
-            checkResetWeek();
-            renderLeavesUI();
-            renderShopUI();
-            updateKapiAppearance();
-        }
-
-        function checkResetWeek() {
-            const thisMonday = getMonday(new Date()).toDateString();
-            if (sysData.currentWeekStart !== thisMonday) {
-                sysData.weeklyStreak = 0;
-                sysData.currentWeekStart = thisMonday;
-                saveData();
-            }
-        }
-
-        function saveData() {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(sysData));
-        }
-
-        function claimDailyLeaf() {
-            const todayStr = new Date().toDateString();
-            if (sysData.lastClaimDate === todayStr) return;
-
-            if (sysData.weeklyStreak < 7) sysData.weeklyStreak += 1;
-            sysData.totalLeaves += 1;
-            sysData.lastClaimDate = todayStr;
-            
-            saveData();
-            renderLeavesUI();
-            renderShopUI();
-            updateKapiAppearance();
-        }
-
-        function renderLeavesUI() {
-            document.getElementById('total-leaves-count').innerText = sysData.totalLeaves;
-
-            for (let i = 1; i <= 7; i++) {
-                const leaf = document.getElementById(`day-${i}`);
-                leaf.innerText = (i <= sysData.weeklyStreak) ? "🌿" : "🍂";
-            }
-
-            const btnClaim = document.getElementById('btn-claim-leaf');
-            if (sysData.lastClaimDate === new Date().toDateString()) {
-                btnClaim.disabled = true;
-                btnClaim.innerText = "Đã điểm danh";
-            } else {
-                btnClaim.disabled = false;
-                btnClaim.innerText = "🌿 Điểm danh ngay";
-            }
-        }
-
-        function renderShopUI() {
-            const container = document.getElementById('shop-items-container');
-            container.innerHTML = '';
-
-            shopItems.forEach(item => {
-                const isOwned = sysData.inventory.includes(item.id);
-                const isEquipped = sysData.equippedItem === item.id;
-                const canAfford = sysData.totalLeaves >= item.price;
-
-                let btnHTML = '';
-                if (isEquipped) {
-                    btnHTML = `<button class="equipped" onclick="equipItem('${item.id}')">Đang mặc</button>`;
-                } else if (isOwned) {
-                    btnHTML = `<button onclick="equipItem('${item.id}')">Mặc</button>`;
-                } else {
-                    btnHTML = `<button ${!canAfford ? 'disabled' : ''} onclick="buyItem('${item.id}', ${item.price})">
-                                ${canAfford ? 'Mua (' + item.price + ' 🍃)' : '🔒 ' + item.price + ' 🍃'}
-                               </button>`;
-                }
-
-                container.innerHTML += `
-                    <div class="shop-item">
-                        <span>${item.name}</span>
-                        ${btnHTML}
-                    </div>
-                `;
-            });
-        }
-
-        function buyItem(id, price) {
-            if (sysData.totalLeaves >= price) {
-                sysData.totalLeaves -= price;
-                sysData.inventory.push(id);
-                saveData();
-                renderLeavesUI();
-                renderShopUI();
-            }
-        }
-
-        function equipItem(id) {
-            if (sysData.equippedItem === id) {
-                sysData.equippedItem = null;
-            } else {
-                sysData.equippedItem = id;
-            }
-            saveData();
-            renderShopUI();
-            updateKapiAppearance();
-        }
-
-        function updateKapiAppearance() {
-            const headItem = document.getElementById('kapi-head-item');
-            const accItem = document.getElementById('kapi-accessory');
-            const isSunday = new Date().getDay() === 0;
-
-            if (isSunday && sysData.weeklyStreak === 7) {
-                headItem.innerText = "👑";
-                headItem.style.display = "block";
-                headItem.style.animation = "bounce 1s infinite alternate";
-            } else {
-                headItem.style.display = "none";
-                headItem.style.animation = "none";
-            }
-
-            if (sysData.equippedItem) {
-                const itemDef = shopItems.find(i => i.id === sysData.equippedItem);
-                if (itemDef.type === 'face') {
-                    accItem.innerText = itemDef.emoji;
-                    accItem.style.display = 'block';
-                } else if (itemDef.type === 'head') {
-                    if (!(isSunday && sysData.weeklyStreak === 7)) {
-                        headItem.innerText = itemDef.emoji;
-                        headItem.style.display = 'block';
-                    }
-                    accItem.style.display = 'none';
-                }
-            } else {
-                accItem.style.display = 'none';
-            }
-        }
-
-        // --- HÀM ẨN / HIỆN WIDGET THÔNG MINH ---
-        function toggleKapiWidgets(show) {
-            const group = document.getElementById('kapi-widgets-group');
-            if (group) {
-                group.style.display = show ? 'block' : 'none';
-            }
-        }
-
-        // Khi bấm Hallo Kapi -> Ẩn widget
-        function handleSayHalloClick() {
-            if (typeof sayHallo === 'function') {
-                sayHallo();
-            }
-            toggleKapiWidgets(false);
-        }
-
-        // Tự động quét và bắt sự kiện bấm nút "Zurück" hoặc nút quay lại để HIỆN lại widget
-        document.addEventListener('click', function(event) {
-            const target = event.target;
-            // Kiểm tra nếu bấm vào nút Zurück hoặc có chữ Zurück bên trong
-            if (target && (target.innerText.includes('Zurück') || target.closest('button')?.innerText.includes('Zurück'))) {
-                toggleKapiWidgets(true);
-            }
-        });
-
-        // --- 6. LOGIC BỘ ĐẾM VIEW ---
-        let baseViews = 142; 
-        let localVisits = localStorage.getItem('kapi_visits');
-        localVisits = !localVisits ? 1 : parseInt(localVisits) + 1;
-        localStorage.setItem('kapi_visits', localVisits);
-        
-        document.addEventListener('DOMContentLoaded', () => {
-            const viewSpan = document.getElementById('fake-views');
-            if(viewSpan) viewSpan.innerText = baseViews + localVisits;
-            initSystem();
-        });
-    </script>
 </body>
+
 </html>
