@@ -1295,7 +1295,7 @@ const megaQuizGameDataPart5 = [
     { id: "part5_075", question: "Ordnung auf dem Schreibtisch erhöht die ______.", options: ["Produktivität", "Kreativität", "Aktivität", "Passivität"], answer: 0, explanation: "Produktivität: Năng suất." },
     { id: "part5_076", question: "______ des sechsmonatigen Praktikums lernte er viel dazu.", options: ["Während", "Trotz", "Wegen", "Anstatt"], answer: 0, explanation: "Während (+ Genitiv): Trong suốt." },
     { id: "part5_077", question: "Er wäscht das Geschirr, ______ er die Küche verlässt.", options: ["bevor", "nachdem", "als", "wenn"], answer: 0, explanation: "bevor: Trước khi." },
-    { id: "part5_078", question: "Das ist das Hund, ______ Bellen alle Nachbarn kennen.", options: ["dessen", "dem", "den", "der"], answer: 0, explanation: "dessen: Của người/vật đó (Mệnh đề quan hệ sở hữu cách)." },
+    { id: "part5_078", question: "Das ist der Hund, ______ Bellen alle Nachbarn kennen.", options: ["dessen", "dem", "den", "der"], answer: 0, explanation: "dessen: Của người/vật đó (Mệnh đề quan hệ sở hữu cách)." },
     { id: "part5_079", question: "Ich trinke lieber Tee, ______ ich Cola trinke.", options: ["anstatt dass", "ohne dass", "indem", "dadurch dass"], answer: 0, explanation: "anstatt dass: Thay vì." },
     { id: "part5_080", question: "______ man regelmäßig übt, besteht man die B2-Prüfung.", options: ["Indem", "Ohne dass", "Anstatt dass", "Als"], answer: 0, explanation: "Indem: Bằng cách." },
     { id: "part5_081", question: "Er ist fest davon überzeugt, ______ Skincare wichtig ist.", options: ["dass", "ob", "weil", "wenn"], answer: 0, explanation: "dass: Rằng." },
