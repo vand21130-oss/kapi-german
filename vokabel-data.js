@@ -930,7 +930,8 @@ const quizGameData = [
     { question: "Wir brauchen mehr ______ im Gesundheitswesen, um den Personalmangel auszugleichen.", options: ["Fachkräfte", "Computer", "Krankheiten"], answer: 0, explanation: "Fachkräfte (nhân lực chuyên môn) đang thiếu hụt." },
     { question: "Die regelmäßige ______ von Vokabeln ist der Schlüssel zum Erfolg beim Sprachenlernen.", options: ["Wiederholung", "Ignoranz", "Pause"], answer: 0, explanation: "Wiederholung (sự ôn tập) là chìa khóa." },
     { question: "Die ______ in unserem Team ist sehr kooperativ und unterstützend.", options: ["Atmosphäre", "Mülltrennung", "Grippe"], answer: 0, explanation: "Atmosphäre (bầu không khí) làm việc rất tốt." }
-const megaQuizGameDataPart1 = [
+];
+    const megaQuizGameDataPart1 = [
     // ==========================================
     // CHỦ ĐỀ 1: Y TẾ, ĐIỀU DƯỠNG & BỆNH VIỆN (50 CÂU)
     // ==========================================
@@ -995,7 +996,8 @@ const megaQuizGameDataPart1 = [
     { id: "gram_09", question: "______ des starken Regens fand das Open-Air-Konzert statt.", options: ["Trotz", "Wegen", "Während", "Innerhalb"], answer: 0, explanation: "Trotz (+ Genitiv): Mặc dù." },
     { id: "gram_10", question: "Ich bin fest davon ______, dass wir das Ziel gemeinsam erreichen.", options: ["überzeugt", "enttäuscht", "überrascht", "gelangweilt"], answer: 0, explanation: "überzeugt sein: Tin chắc." }
     // (Tiếp tục mở rộng ra đến 25 câu về Môi trường, Công nghệ số hoá và Ngữ pháp B2 nâng cao).
-const megaQuizGameDataPart2 = [
+];
+        const megaQuizGameDataPart2 = [
     // ==========================================
     // CHỦ ĐỀ 1: Y TẾ & ĐIỀU DƯỠNG CHUYÊN SÂU (Tiếp nối)
     // ==========================================
@@ -1048,7 +1050,8 @@ const megaQuizGameDataPart2 = [
     { id: "gram_18", question: "Ich bin mir nicht sicher, ______ er mit diesem Vorschlag einverstanden ist.", options: ["ob", "dass", "weil", "wenn"], answer: 0, explanation: "ob: liệu rằng (câu hỏi gián tiếp)." },
     { id: "gram_19", question: "______ meiner langen Schicht im Krankenhaus war ich völlig erschöpft.", options: ["Aufgrund", "Trotz", "Anstatt", "Innerhalb"], answer: 0, explanation: "Aufgrund (+ Genitiv): Bởi vì / Do." },
     { id: "gram_20", question: "Es steht außer ______, dass diese Technologie die Zukunft verändern wird.", options: ["Frage", "Antwort", "Zweifel", "Diskussion"], answer: 0, explanation: "außer Frage stehen: Không còn nghi ngờ gì nữa / Chắc chắn là." }
-const megaQuizGameDataPart3 = [
+];
+            const megaQuizGameDataPart3 = [
     // --- Y TẾ & ĐIỀU DƯỠNG ---
     { id: "part3_001", question: "Die ______ des Patienten erfordert viel Geduld und Einfühlungsvermögen.", options: ["Pflege", "Anlage", "Aussage", "Vorlage"], answer: 0, explanation: "Pflege: Sự chăm sóc y tế." },
     { id: "part3_002", question: "Während des ______ im Krankenhaus lernt man viele praktische Fähigkeiten.", options: ["Praktikums", "Studiums", "Zentrums", "Datums"], answer: 0, explanation: "Praktikum: Kỳ thực tập (rất quen thuộc với sinh viên điều dưỡng)." },
@@ -1156,7 +1159,8 @@ const megaQuizGameDataPart3 = [
     { id: "part3_098", question: "______ zu zögern, griff er sofort ein.", options: ["Ohne", "Anstatt", "Um", "Außer"], answer: 0, explanation: "Ohne zu zögern: Không chút do dự." },
     { id: "part3_099", question: "Sie interessiert sich ______ für Biohacking als auch für Videoproduktion.", options: ["sowohl", "weder", "entweder", "zwar"], answer: 0, explanation: "sowohl ... als auch: Không những ... mà còn." },
     { id: "part3_100", question: "Das ist der Hund, ______ Fell so weich ist.", options: ["dessen", "dem", "den", "der"], answer: 0, explanation: "dessen: Mệnh đề quan hệ sở hữu cách (Genitiv)." }
-const megaQuizGameDataPart4 = [
+];
+                const megaQuizGameDataPart4 = [
     // --- CHỦ ĐỀ 1: Y TẾ, BỆNH VIỆN & THỰC TẬP (30 CÂU) ---
     { id: "part4_001", question: "Die sechsmonatige ______ im Krankenhaus neigt sich dem Ende zu.", options: ["Hospitation", "Meditation", "Station", "Generation"], answer: 0, explanation: "Hospitation / Praktikum: Kỳ thực tập / kiến tập." },
     { id: "part4_002", question: "Als angehende ______ trägt man viel Verantwortung.", options: ["Pflegefachkraft", "Lehrkraft", "Hilfskraft", "Schreibkraft"], answer: 0, explanation: "Pflegefachkraft: Điều dưỡng viên chuyên nghiệp." },
@@ -1264,7 +1268,8 @@ const megaQuizGameDataPart4 = [
     { id: "part4_098", question: "Die Skincare-Produkte, ______ er online bestellt hat, sind angekommen.", options: ["die", "der", "das", "den"], answer: 0, explanation: "die: Mệnh đề quan hệ (Die Produkte số nhiều)." },
     { id: "part4_099", question: "Man muss die Haut reinigen, ______ man das Serum aufträgt.", options: ["bevor", "nachdem", "während", "als"], answer: 0, explanation: "bevor: Trước khi." },
     { id: "part4_100", question: "Er ist fest ______ überzeugt, dass KI die Zukunft ist.", options: ["davon", "daran", "darauf", "dazu"], answer: 0, explanation: "davon überzeugt sein: Hoàn toàn tin chắc về điều đó." }
-const megaQuizGameDataPart5 = [
+];
+                    const megaQuizGameDataPart5 = [
     { id: "part5_001", question: "Die tägliche ______ der Vitalwerte ist extrem wichtig.", options: ["Überprüfung", "Erprobung", "Ausübung", "Verschiebung"], answer: 0, explanation: "Überprüfung: Sự kiểm tra." },
     { id: "part5_002", question: "Ein erfahrener Pfleger erkennt eine ______ sofort.", options: ["Verschlechterung", "Erleichterung", "Begeisterung", "Erschütterung"], answer: 0, explanation: "Verschlechterung: Sự chuyển biến xấu." },
     { id: "part5_003", question: "Während der sechsmonatigen ______ sammelt man wertvolle Praxiserfahrung.", options: ["Praxisphase", "Lernphase", "Ruhephase", "Tiefschlafphase"], answer: 0, explanation: "Praxisphase: Giai đoạn thực hành." },
