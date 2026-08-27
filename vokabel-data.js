@@ -873,7 +873,9 @@ const vokabelGruppen = {
             , { de: "sich (Dativ) voll und ganz widmen", vi: "Cống hiến toàn tâm toàn ý cho...", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><text x='50' y='75' font-size='60' text-anchor='middle'>❤️</text></svg>" }
             , { de: "den Fokus voll auf etwas legen", vi: "Đặt toàn bộ trọng tâm vào...", bild: "data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><text x='50' y='75' font-size='60' text-anchor='middle'>🔍</text></svg>" }
 
-
+]
+}
+};
 // ==========================================
 // 4. GAME TRẮC NGHIỆM ĐIỀN TỪ (50 CÂU B2 CỰC "CUỐN")
 // ==========================================
