@@ -279,6 +279,51 @@
         .decor-item:nth-child(3) { animation-delay: 1s; font-size: 35px; }
         .decor-item:nth-child(4) { animation-delay: 1.5s; font-size: 28px; }
         .decor-item:nth-child(5) { animation-delay: 0.8s; }
+        /* Kỹ thuật dán chết 2 chùm tia sáng vào 2 bên nút bấm */
+        .btn-kapi-glow {
+            position: relative;
+        }
+
+        /* Tia sáng bên trái */
+        .btn-kapi-glow::before {
+            content: "";
+            position: absolute;
+            left: -45px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 40px;
+            background-image: 
+                radial-gradient(circle, #689f38 60%, transparent 62%),
+                radial-gradient(circle, #689f38 60%, transparent 62%),
+                radial-gradient(circle, #689f38 60%, transparent 62%);
+            /* Vẽ 3 vạch sáng chụm hướng ra ngoài */
+            box-shadow: 
+                -8px -12px 0 0 #689f38,
+                -12px 0px 0 0 #689f38,
+                -8px 12px 0 0 #689f38;
+            border-radius: 50%;
+            width: 4px;
+            height: 4px;
+            pointer-events: none;
+        }
+
+        /* Tia sáng bên phải */
+        .btn-kapi-glow::after {
+            content: "";
+            position: absolute;
+            right: -45px;
+            top: 50%;
+            transform: translateY(-50%);
+            box-shadow: 
+                8px -12px 0 0 #689f38,
+                12px 0px 0 0 #689f38,
+                8px 12px 0 0 #689f38;
+            border-radius: 50%;
+            width: 4px;
+            height: 4px;
+            pointer-events: none;
+        }
     </style>
 </head>
 <body>
@@ -334,28 +379,10 @@
 
         <div id="feedback-area"></div>
 
-     <div id="buttons" style="text-align: center;">
-            <!-- Khung bọc chung giữ nút và 2 chùm tia sáng nằm độc lập bên ngoài -->
-            <div style="position: relative; display: inline-block; margin: 10px;">
-                
-                <!-- Tia sáng bên TRÁI (nằm độc lập bên ngoài nút) -->
-                <div style="position: absolute; left: -45px; top: 50%; transform: translateY(-50%); width: 20px; height: 40px; pointer-events: none;">
-                    <div style="position: absolute; top: 0px; left: 0px; width: 12px; height: 4px; background: #689f38; border-radius: 4px; transform: rotate(35deg);"></div>
-                    <div style="position: absolute; top: 18px; left: -4px; width: 14px; height: 4px; background: #689f38; border-radius: 4px;"></div>
-                    <div style="position: absolute; bottom: 0px; left: 0px; width: 12px; height: 4px; background: #689f38; border-radius: 4px; transform: rotate(-35deg);"></div>
-                </div>
-
-                <!-- Nút bấm nguyên bản không bị vướng víu gì cả -->
-                <button class="btn-kapi" style="background:#4CAF50; color:white; margin: 0;" onclick="sayHallo()">👋 Hallo Kapi →</button>
-
-                <!-- Tia sáng bên PHẢI (nằm độc lập bên ngoài nút) -->
-                <div style="position: absolute; right: -45px; top: 50%; transform: translateY(-50%); width: 20px; height: 40px; pointer-events: none;">
-                    <div style="position: absolute; top: 0px; right: 0px; width: 12px; height: 4px; background: #689f38; border-radius: 4px; transform: rotate(-35deg);"></div>
-                    <div style="position: absolute; top: 18px; right: -4px; width: 14px; height: 4px; background: #689f38; border-radius: 4px;"></div>
-                    <div style="position: absolute; bottom: 0px; right: 0px; width: 12px; height: 4px; background: #689f38; border-radius: 4px; transform: rotate(35deg);"></div>
-                </div>
-
-            </div>
+     <div id="buttons">
+            <button class="btn-kapi btn-kapi-glow" style="background:#4CAF50; color:white; margin: 10px;" onclick="sayHallo()">
+                👋 Hallo Kapi →
+            </button>
         </div>
 
         <!-- BỘ ĐẾM LƯỢT TRUY CẬP PRO (Đếm view thật, chống F5) -->
