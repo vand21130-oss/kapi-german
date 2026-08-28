@@ -335,8 +335,14 @@
         <div id="feedback-area"></div>
 
         <div id="buttons">
-            <!-- Nút cũ của Vịt -->
-            <button class="btn-kapi" style="background:#4CAF50; color:white;" onclick="sayHallo()">👋 Hallo Kapi</button>
+            <!-- Khung bọc giữ 2 vạch trang trí đứng cố định hai bên nút -->
+            <div style="position: relative; display: inline-block; margin: 10px;">
+                <span style="position: absolute; left: -25px; top: 50%; transform: translateY(-50%); font-size: 20px; color: #689f38; pointer-events: none;">🌿</span>
+                
+                <button class="btn-kapi" style="background:#4CAF50; color:white; margin: 0;" onclick="sayHallo()">👋 Hallo Kapi →</button>
+                
+                <span style="position: absolute; right: -25px; top: 50%; transform: translateY(-50%); font-size: 20px; color: #689f38; pointer-events: none;">🌿</span>
+            </div>
         </div>
 
         <!-- BỘ ĐẾM LƯỢT TRUY CẬP PRO (Đếm view thật, chống F5) -->
