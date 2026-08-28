@@ -379,9 +379,17 @@
 
         <div id="feedback-area"></div>
 
-     <div id="buttons">
-            <button class="btn-kapi btn-kapi-glow" style="background:#4CAF50; color:white; margin: 10px;" onclick="sayHallo()">
-                👋 Hallo Kapi →
+     <div id="buttons" style="text-align: center;">
+            <!-- Nút bấm chứa sẵn ký tự trang trí, đảm bảo luôn hiển thị cùng nút -->
+            <button class="btn-kapi" style="background:#4CAF50; color:white; margin: 10px; padding: 10px 30px; border-radius: 25px; font-size: 16px; font-family: inherit; border: none; cursor: pointer;" onclick="sayHallo()">
+                <!-- Ký tự trang trí bên trái, dịch ra xa một chút bằng non-breaking space -->
+                <span style="color: #689f38; font-weight: bold; font-size: 20px; vertical-align: middle; margin-right: 10px;">‹‹</span>
+                
+                <!-- Nội dung chính của nút -->
+                <span style="vertical-align: middle;">👋 Hallo Kapi →</span>
+                
+                <!-- Ký tự trang trí bên phải -->
+                <span style="color: #689f38; font-weight: bold; font-size: 20px; vertical-align: middle; margin-left: 10px;">››</span>
             </button>
         </div>
 
