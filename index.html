@@ -256,15 +256,17 @@
 
         .kapi-decor-grass {
             position: absolute;
-            bottom: -5px; /* Ép cỏ sát xuống dưới chân */
+            bottom: 15px; /* Kéo thảm cỏ lên cao chạm đúng chân Kapi */
             left: 50%;
             transform: translateX(-50%);
-            width: 80%; 
+            width: 260px; /* Thu hẹp lại để cỏ mọc túm tụm quanh 2 chân */
             display: flex;
             justify-content: space-around;
+            align-items: flex-end; /* Ép gốc cỏ bằng phẳng với nhau */
             font-size: 32px; 
             pointer-events: none; 
-            z-index: 5; /* Đè nhẹ lên chân Kapi cho thật */
+            z-index: 15; /* Đè lên trên chân Kapi cho chân thực */
+        
         }
 
         .decor-item {
