@@ -621,14 +621,13 @@
         function checkAndToggleWidgets() {
             const widgetsGroup = document.getElementById('kapi-eco-widgets');
             const container = document.getElementById('container');
+            const message = document.getElementById('message');
             
-            if (widgetsGroup && container) {
-                // Nếu container chính (màn hình chào Kapi) đang hiển thị -> Hiện widget. Ngược lại -> Ẩn widget.
-                if (window.getComputedStyle(container).display !== 'none') {
-                    widgetsGroup.style.display = 'block';
-                } else {
-                    widgetsGroup.style.display = 'none';
-                }
+            if (widgetsGroup && container && message) {
+                // Shop và bảng lá chỉ xuất hiện ở đúng sảnh chào ban đầu.
+                const isHalloHall = message.textContent.trim() === "Guten Morgen! Schön, dich kennenzulernen! 🌟";
+                const isMainContainerVisible = window.getComputedStyle(container).display !== 'none';
+                widgetsGroup.style.display = isHalloHall && isMainContainerVisible ? 'block' : 'none';
             }
         }
 
