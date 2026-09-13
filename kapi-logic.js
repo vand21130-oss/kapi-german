@@ -32,7 +32,23 @@ function goHome() {
     document.getElementById("timer").innerText = "";
     clearInterval(countdown);
     document.getElementById("message").innerText = "Guten Morgen! Schön, dich kennenzulernen! 🌟";
-    document.getElementById("buttons").innerHTML = `<button class="btn-kapi" style="background:#4CAF50; color:white;" onclick="sayHallo()">👋 Hallo Kapi</button>`;
+    document.getElementById("buttons").innerHTML = `
+        <div style="position:relative;display:inline-block;margin:10px;">
+            <div style="position:absolute;left:-45px;top:50%;transform:translateY(-50%);width:20px;height:40px;pointer-events:none;">
+                <div style="position:absolute;top:0;left:0;width:12px;height:4px;background:#689f38;border-radius:4px;transform:rotate(35deg);"></div>
+                <div style="position:absolute;top:18px;left:-4px;width:14px;height:4px;background:#689f38;border-radius:4px;"></div>
+                <div style="position:absolute;bottom:0;left:0;width:12px;height:4px;background:#689f38;border-radius:4px;transform:rotate(-35deg);"></div>
+            </div>
+
+            <button class="btn-kapi" style="background:#4CAF50;color:white;margin:0;" onclick="sayHallo()">👋 Hallo Kapi →</button>
+
+            <div style="position:absolute;right:-45px;top:50%;transform:translateY(-50%);width:20px;height:40px;pointer-events:none;">
+                <div style="position:absolute;top:0;right:0;width:12px;height:4px;background:#689f38;border-radius:4px;transform:rotate(-35deg);"></div>
+                <div style="position:absolute;top:18px;right:-4px;width:14px;height:4px;background:#689f38;border-radius:4px;"></div>
+                <div style="position:absolute;bottom:0;right:0;width:12px;height:4px;background:#689f38;border-radius:4px;transform:rotate(35deg);"></div>
+            </div>
+        </div>
+    `;
 }
 
 function showLevels() {
