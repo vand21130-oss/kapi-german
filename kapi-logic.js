@@ -591,7 +591,29 @@ async function checkGrammar(inputId) {
 // 7. HÖREN LOGIC
 function showHoerenMenu() {
     document.getElementById("feedback-area").style.display = "none";
-    document.getElementById("message").innerHTML = `🎧 Kho đề Hören - Trình độ ${currentLevel}`;
+    document.getElementById("message").innerHTML = `🎧 Hôm nay Vịt muốn nghe gì?`;
+    document.getElementById("buttons").innerHTML = `
+        <div style="max-width:760px;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:center;gap:18px;">
+            <button onclick="showGoetheHoerenMenu()" style="flex:1 1 280px;max-width:350px;min-height:220px;padding:24px;border:2px solid #9ccc65;border-radius:24px;background:linear-gradient(145deg,#f1f8e9,#dcedc8);box-shadow:0 8px 18px rgba(85,139,47,.14);cursor:pointer;text-align:left;color:#2c3e50;transition:transform .2s,box-shadow .2s;" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="font-size:48px;margin-bottom:12px;">📝🎧</div>
+                <div style="font-size:23px;font-weight:800;color:#558b2f;">Goethe B2 Hörtraining</div>
+                <div style="font-size:15px;line-height:1.55;margin-top:9px;color:#607d5a;">Làm đề nghe theo từng Teil, chọn đáp án và xem giải thích chi tiết.</div>
+                <div style="display:inline-block;margin-top:15px;padding:7px 13px;border-radius:999px;background:#7cb342;color:white;font-size:13px;font-weight:bold;">Vào kho đề ➜</div>
+            </button>
+            <a href="https://www.youtube.com/channel/UCfrNpDqhsl7sA4ZpI_ldUPg" target="_blank" rel="noopener noreferrer" style="box-sizing:border-box;flex:1 1 280px;max-width:350px;min-height:220px;padding:24px;border:2px solid #ffb74d;border-radius:24px;background:linear-gradient(145deg,#fff8e1,#fce4ec);box-shadow:0 8px 18px rgba(230,126,34,.14);cursor:pointer;text-align:left;color:#2c3e50;text-decoration:none;transition:transform .2s,box-shadow .2s;" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="font-size:48px;margin-bottom:12px;">☕🐦</div>
+                <div style="font-size:23px;font-weight:800;color:#d35400;">Kapi Café Podcast</div>
+                <div style="font-size:15px;line-height:1.55;margin-top:9px;color:#795548;">Nghe hội thoại tiếng Đức B1+/B2 tự nhiên cùng Kapi trên YouTube.</div>
+                <div style="display:inline-block;margin-top:15px;padding:7px 13px;border-radius:999px;background:#ff0000;color:white;font-size:13px;font-weight:bold;">▶ Mở YouTube</div>
+            </a>
+        </div>
+        <button class="btn-kapi btn-home" style="margin-top:24px;" onclick="showLessons()">⬅️ Zurück</button>
+    `;
+}
+
+function showGoetheHoerenMenu() {
+    document.getElementById("feedback-area").style.display = "none";
+    document.getElementById("message").innerHTML = `📝 Kho đề Hören - Trình độ ${currentLevel}`;
     let html = `<div style="max-width:600px;margin:0 auto;display:flex;flex-direction:column;gap:10px;">`;
     let hasExams = false;
     
@@ -606,7 +628,7 @@ function showHoerenMenu() {
 
     if (!hasExams) html += `<p style="color:#e74c3c; font-size:18px;">Chưa có đề nghe nào cho trình độ này.</p>`;
     html += `</div>`;
-    document.getElementById("buttons").innerHTML = html + `<button class="btn-kapi btn-home" onclick="showLessons()">⬅️ Zurück</button>`;
+    document.getElementById("buttons").innerHTML = html + `<button class="btn-kapi btn-home" onclick="showHoerenMenu()">⬅️ Hai lựa chọn Hören</button>`;
 }
 
 function showHoerenTeile(pruefungIndex) {
@@ -618,7 +640,7 @@ function showHoerenTeile(pruefungIndex) {
         html += `<button class="btn-grid" style="background:#e1f5fe;" onclick="startHoerenTeil(${index})">▶️ ${teil.teilName}</button>`;
     });
     html += `</div>`;
-    document.getElementById("buttons").innerHTML = html + `<button class="btn-kapi btn-home" onclick="showHoerenMenu()">⬅️ Chọn đề khác</button>`;
+    document.getElementById("buttons").innerHTML = html + `<button class="btn-kapi btn-home" onclick="showGoetheHoerenMenu()">⬅️ Chọn đề khác</button>`;
 }
 
 function startHoerenTeil(teilIndex) {
