@@ -107,6 +107,55 @@ function startTimer() {
 function getSavedMissed() { return JSON.parse(localStorage.getItem('kapi_missed_vokabeln')) || []; }
 function saveMissed(arr) { localStorage.setItem('kapi_missed_vokabeln', JSON.stringify(arr)); }
 
+// Phân loại cách dùng hoàn toàn ở trình duyệt: không gọi API, không sửa kho từ.
+// Thứ tự ưu tiên: chuyên ngành/hiếm -> văn viết/trang trọng -> đời sống.
+function classifyGermanUsage(word, group = '') {
+    const text = `${word.de || ''} ${word.vi || ''}`.toLocaleLowerCase('de-DE');
+
+    const rareGroups = new Set(['diagnostik', 'verbandmaterial']);
+    const rareSignals = [
+        /kardiolog|orthopäd|stethoskop|blutdruckmessgerät|kanüle|infarkt|karies|mittelohrentzündung/,
+        /herz-kreislauf|infektionskrank|vorsorge-untersuchung|heilfasten|erbgut|nährstoffmängel/,
+        /feinstaubbelastung|treibhausgas|schwermetall|konjunkturell|geringqualifiziert/,
+        /publikumsumfrage|beziehungskette|wegwerfgesellschaft|alleinernährer|vervielfachung/
+    ];
+
+    const formalSignals = [
+        /bundestag|bundesagentur|geschäftsleitung|arbeitserlaubnis|lohnfortzahlung|probezeit/,
+        /maßnahme|befürworter|opposition|wahlbeteiligung|menschenrechtsverletzung|steuerzahler/,
+        /prüfungsamt|privatuniversität|hochschulabsolvent|erhebung|auswertung|kompetenzen/,
+        /(?:^|\s)(anhand|angesichts|hinsichtlich|lediglich|ausschließlich|insbesondere|zudem|stets)(?:\s|$)/,
+        /aus der studie geht hervor|dabei stellte sich heraus|in diesem zusammenhang|zur verfügung stehen/,
+        /die kosten belaufen sich|vorgesehen sein|bezeichnet werden|reibungslos|sicherstellen/,
+        /(?:ung|keit|heit|tion|tät|nis|schaft|enz|anz)(?:en)?(?:\s|$)/
+    ];
+
+    const dailySignals = [
+        /hallo|pustekuchen|unfassbar|nervig|peinlich|dummerweise|aus versehen|das macht nichts/,
+        /wie sieht.s mit|nicht so ganz|vor ein paar tagen|zum ersten mal|bald|unterwegs sein/,
+        /einschlafen|herumlaufen|nachschauen|stöbern|jammern|büffeln|schnäppchen|rabatte/,
+        /sich sorgen machen|heimweh|fernweh|blumenstrauß|rückflug|abflug|ankunft|einkauf/,
+        /erkältung|grippe|schnupfen|müdigkeit|schwindel|durchfall|juckreiz|herzklopfen/
+    ];
+
+    let type = 'daily';
+    if (rareGroups.has(group) || rareSignals.some(pattern => pattern.test(text))) type = 'rare';
+    else if (dailySignals.some(pattern => pattern.test(text))) type = 'daily';
+    else if (formalSignals.some(pattern => pattern.test(text))) type = 'formal';
+
+    const labels = {
+        daily:  { icon: '😸', text: 'Hay dùng trong đời sống', color: '#2e7d32', bg: '#e8f5e9' },
+        formal: { icon: '😺', text: 'Hay gặp trong văn viết / trang trọng', color: '#8d6e00', bg: '#fff8d6' },
+        rare:   { icon: '😿', text: 'Hiếm trong hội thoại / chuyên ngành', color: '#8e4b61', bg: '#fce4ec' }
+    };
+    return labels[type];
+}
+
+function renderUsageBadge(word) {
+    const usage = classifyGermanUsage(word, currentFlashcardGroup);
+    return `<div title="Ước lượng tự động, chạy local và không dùng API" style="margin-top:14px;padding:7px 12px;border-radius:999px;background:${usage.bg};color:${usage.color};font-size:14px;font-weight:700;line-height:1.35;text-align:center;">${usage.icon} ${usage.text}</div>`;
+}
+
 function showVokabelHauptmenu() {
     document.getElementById("feedback-area").style.display = "none";
     let missed = getSavedMissed();
@@ -226,6 +275,7 @@ function renderFlashcard() {
         cardContent = `
             ${bildHtml}
             <b style="font-size:32px; color:#2980b9; text-align:center;">${w.de}</b>
+            ${renderUsageBadge(w)}
             <p style="font-size:15px; color:#95a5a6; margin-top:20px; font-style:italic;">👆 Chạm để lật lại</p>
         `;
     }
