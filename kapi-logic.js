@@ -945,6 +945,116 @@ function submitHoeren() {
 // =========================================================
 // 8. TRUYỆN CỦA KAPI
 // =========================================================
+const storyLanguageTreasures = {
+    1: {
+        words: [
+            { badge:'😸', phrase:'etwas erst einmal sacken lassen', meaning:'cần thời gian để tiếp nhận hoặc “tiêu hóa” một thông tin', tone:'Thân mật, rất tự nhiên', story:'Ich muss das Ganze erst mal sacken lassen.', native:'Ich muss das erst einmal verdauen.' },
+            { badge:'😺', phrase:'eine Zusage bekommen / erhalten', meaning:'nhận được lời đồng ý hoặc thông báo trúng tuyển', tone:'Trung tính, thường gặp trong học tập và công việc', story:'Kapi hat die Zusage für sein Praktikum bekommen.', native:'Ich habe endlich eine Zusage erhalten.' },
+            { badge:'😿', phrase:'das Wachssiegel', meaning:'con dấu bằng sáp', tone:'Khá hiếm; thường gặp trong truyện lịch sử hoặc thư trang trọng', story:'Der Brief trägt ein echtes Wachssiegel.', native:'Der Umschlag war sogar versiegelt.' }
+        ],
+        quiz:'Kapi kann die gute Nachricht noch kaum glauben. Er muss sie erst einmal ____ lassen.', options:['sacken','sinken','liegen'], answer:0
+    },
+    2: {
+        words: [
+            { badge:'😸', phrase:'das A und O sein', meaning:'là điều quan trọng cốt lõi nhất', tone:'Tự nhiên trong cả văn nói và văn viết', story:'Hygiene ist im Krankenhaus das A und O.', native:'Gute Vorbereitung ist das A und O.' },
+            { badge:'😸', phrase:'wie angegossen sitzen', meaning:'vừa vặn hoàn hảo, thường nói về quần áo', tone:'Thân mật, giàu hình ảnh', story:'Der Kittel sitzt wie angegossen.', native:'Die Jacke passt wie angegossen.' },
+            { badge:'😺', phrase:'makellos aussehen', meaning:'trông hoàn hảo, không có khuyết điểm', tone:'Trung tính đến trang trọng', story:'Kapi möchte am ersten Tag makellos aussehen.', native:'Du siehst richtig gepflegt aus.' }
+        ],
+        quiz:'Der neue Kittel passt Kapi perfekt. Er sitzt wie ____.', options:['angegossen','gegossen','gewachsen'], answer:0
+    },
+    3: {
+        words: [
+            { badge:'😺', phrase:'den Blutdruck messen', meaning:'đo huyết áp', tone:'Cụm chuyên môn nhưng rất thông dụng trong bệnh viện', story:'Kapi misst bei einem Patienten den Blutdruck.', native:'Ich messe kurz Ihren Blutdruck.' },
+            { badge:'😸', phrase:'aufgeregt sein', meaning:'hồi hộp hoặc phấn khích', tone:'Rất thường dùng trong đời sống', story:'Am ersten Tag ist Kapi etwas aufgeregt.', native:'Ich bin ein bisschen nervös.' },
+            { badge:'😺', phrase:'professionell auftreten', meaning:'thể hiện tác phong chuyên nghiệp', tone:'Công việc và văn viết', story:'Trotz seiner Nervosität tritt Kapi professionell auf.', native:'Er wirkt sehr professionell.' }
+        ],
+        quiz:'Vor einer Untersuchung sagt Kapi: „Ich ____ kurz Ihren Blutdruck.“', options:['messe','zähle','wiege'], answer:0
+    },
+    4: {
+        words: [
+            { badge:'😸', phrase:'sich mit jemandem austauschen', meaning:'trao đổi ý kiến hoặc thông tin với ai', tone:'Rất hữu ích trong đời sống và công việc', story:'Kapi tauscht sich mit seinem Kollegen aus.', native:'Wir sollten uns kurz dazu austauschen.' },
+            { badge:'😺', phrase:'einen Rat befolgen', meaning:'làm theo một lời khuyên', tone:'Trung tính; collocation đáng học', story:'Kapi möchte den Rat seines Kollegen befolgen.', native:'Ich nehme mir deinen Rat zu Herzen.' },
+            { badge:'😸', phrase:'hilfsbereit sein', meaning:'sẵn lòng giúp đỡ người khác', tone:'Thông dụng, tích cực', story:'Sein Kollege ist sehr hilfsbereit.', native:'Er hilft immer, wenn man ihn braucht.' }
+        ],
+        quiz:'Kapi und sein Kollege sprechen über ihre Erfahrungen. Sie tauschen sich ____.', options:['aus','ein','um'], answer:0
+    },
+    5: {
+        words: [
+            { badge:'😺', phrase:'die Vorräte aufstocken', meaning:'bổ sung thêm đồ dự trữ', tone:'Trung tính, thường gặp trong đời sống', story:'Kapi muss nach der Schicht seine Vorräte aufstocken.', native:'Ich muss wieder Lebensmittel einkaufen.' },
+            { badge:'😿', phrase:'das Mindesthaltbarkeitsdatum', meaning:'hạn dùng tốt nhất; không nhất thiết là ngày thực phẩm lập tức hỏng', tone:'Từ dài đặc thù trên bao bì thực phẩm', story:'Kapi prüft das Mindesthaltbarkeitsdatum.', native:'Ist das noch haltbar?' },
+            { badge:'😸', phrase:'auf etwas verzichten', meaning:'tự nguyện không dùng hoặc từ bỏ điều gì', tone:'Rất hay gặp ở B1–B2', story:'Kapi verzichtet heute auf Limonade.', native:'Ich lasse die Limo heute lieber weg.' }
+        ],
+        quiz:'Kapi mua thêm thực phẩm để dự trữ. Er möchte seine Vorräte ____.', options:['aufstocken','aufstellen','aufgeben'], answer:0
+    },
+    6: {
+        words: [
+            { badge:'😸', phrase:'völlig fertig sein', meaning:'mệt rã rời hoặc kiệt sức', tone:'Khẩu ngữ, người Đức dùng rất thường xuyên', story:'Biber ist völlig fertig.', native:'Ich bin total erledigt.' },
+            { badge:'😿', phrase:'der Schüttelfrost', meaning:'cơn rét run / rét run toàn thân', tone:'Thuật ngữ y khoa và triệu chứng cụ thể', story:'Biber hat Fieber und Schüttelfrost.', native:'Ich zittere am ganzen Körper.' },
+            { badge:'😺', phrase:'sich nicht überanstrengen', meaning:'không cố gắng quá sức', tone:'Trung tính, thường dùng khi khuyên về sức khỏe', story:'Du solltest dich nicht überanstrengen.', native:'Mach lieber langsam und ruh dich aus.' }
+        ],
+        quiz:'Biber nên nghỉ ngơi và không được cố quá sức: Er soll sich nicht ____.', options:['überanstrengen','überzeugen','unterhalten'], answer:0
+    },
+    7: {
+        words: [
+            { badge:'😿', phrase:'die Übergabe machen', meaning:'thực hiện bàn giao ca', tone:'Ngôn ngữ chuyên ngành điều dưỡng', story:'Am Morgen macht Kapi die Übergabe.', native:'Ich übergebe Ihnen jetzt die Patienten.' },
+            { badge:'😺', phrase:'etwas meistern', meaning:'vượt qua hoặc xử lý thành công một thử thách', tone:'Tự nhiên trong văn nói và viết', story:'Kapi hat seine erste Nachtschicht gemeistert.', native:'Du hast das richtig gut geschafft.' },
+            { badge:'😿', phrase:'die Vitalwerte kontrollieren', meaning:'kiểm tra các chỉ số sinh tồn', tone:'Ngôn ngữ chuyên môn bệnh viện', story:'Beim Rundgang kontrolliert Kapi die Vitalwerte.', native:'Ich kontrolliere kurz Ihre Vitalzeichen.' }
+        ],
+        quiz:'Kapi đã xử lý thành công ca đêm đầu tiên: Er hat sie ____.', options:['gemeistert','gemessen','gemischt'], answer:0
+    }
+};
+
+function renderStoryLanguageBox(chapter) {
+    const data = storyLanguageTreasures[chapter];
+    if (!data) return '';
+
+    const cards = data.words.map(word => `
+        <div style="background:#fff;border:1px solid #dceee8;border-radius:14px;padding:15px;box-shadow:0 4px 10px rgba(44,98,80,.06);">
+            <div style="font-size:18px;font-weight:800;color:#287c67;">${word.badge} ${word.phrase}</div>
+            <div style="margin-top:6px;color:#455a64;">${word.meaning}</div>
+            <div style="margin-top:8px;font-size:13px;color:#8d6e63;"><b>Sắc thái:</b> ${word.tone}</div>
+            <div style="margin-top:10px;padding:9px 11px;background:#f5fbf9;border-radius:9px;"><b>📖 Trong truyện:</b><br><i>${word.story}</i></div>
+            <div style="margin-top:7px;padding:9px 11px;background:#fff8e8;border-radius:9px;"><b>🇩🇪 Người Đức còn nói:</b><br><i>${word.native}</i></div>
+        </div>
+    `).join('');
+
+    const options = data.options.map((option, index) => `
+        <button onclick="checkStoryMiniQuiz(${chapter},${index},this)" style="padding:9px 14px;border:1px solid #ffcc80;border-radius:10px;background:#fff;cursor:pointer;font-weight:bold;">${option}</button>
+    `).join('');
+
+    return `
+        <div style="background:linear-gradient(145deg,#e8f6f3,#fffaf0);padding:20px;border-radius:18px;text-align:left;max-width:900px;margin:0 auto;line-height:1.6;border:2px solid #cfe8df;">
+            <h3 style="margin:0;color:#287c67;">💡 Sprachschätze aus dieser Folge</h3>
+            <p style="margin:5px 0 16px;color:#6f7f79;font-size:14px;">Ít nhưng chất: cụm đáng học, sắc thái và cách người Đức thật sự nói.</p>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;">${cards}</div>
+            <div style="margin-top:16px;padding:15px;background:#fff;border:2px dashed #ffcc80;border-radius:13px;">
+                <b>🎯 Mini-Quiz</b>
+                <p style="margin:7px 0 10px;">${data.quiz}</p>
+                <div style="display:flex;flex-wrap:wrap;gap:8px;">${options}</div>
+                <div id="story-quiz-feedback-${chapter}" style="min-height:22px;margin-top:8px;font-weight:bold;"></div>
+            </div>
+        </div>
+    `;
+}
+
+function checkStoryMiniQuiz(chapter, selectedIndex, button) {
+    const data = storyLanguageTreasures[chapter];
+    const feedback = document.getElementById(`story-quiz-feedback-${chapter}`);
+    if (!data || !feedback) return;
+
+    const buttons = button.parentElement.querySelectorAll('button');
+    buttons.forEach((item, index) => {
+        item.disabled = true;
+        item.style.background = index === data.answer ? '#dcedc8' : '#fff';
+        item.style.borderColor = index === data.answer ? '#7cb342' : '#ffcc80';
+    });
+
+    feedback.style.color = selectedIndex === data.answer ? '#388e3c' : '#c75b68';
+    feedback.textContent = selectedIndex === data.answer
+        ? '✅ Richtig! Kapi trao cậu một chiếc lá 🌿'
+        : `❌ Suýt đúng rồi :vvvv Đáp án là “${data.options[data.answer]}”.`;
+}
+
 function showKapiStory(level, chapter = 1) {
     document.getElementById("feedback-area").style.display = "block";
     let resultHtml = "";
@@ -980,6 +1090,7 @@ function showKapiStory(level, chapter = 1) {
                     </p>
                     
                     <img src="stories/tap1.jpg" style="width: 100%; max-width: 900px; height: auto; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); margin: 0 auto 20px auto; display: block;">
+                    ${renderStoryLanguageBox(1)}
                     
                     <div style="background-color: #e8f6f3; padding: 20px; border-radius: 15px; text-align: left; max-width: 900px; margin: 0 auto; line-height: 1.8;">
                         <p style="margin-top: 0;"><b>💡 Từ vựng B2 đáng chú ý trong tập này (Di chuột vào từ in đậm nhé):</b></p>
@@ -1003,6 +1114,7 @@ function showKapiStory(level, chapter = 1) {
                     </p>
                     
                     <img src="stories/tap2.jpg" style="width: 100%; max-width: 900px; height: auto; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); margin: 0 auto 20px auto; display: block;">
+                    ${renderStoryLanguageBox(2)}
                     
                     <div style="background-color: #e8f6f3; padding: 20px; border-radius: 15px; text-align: left; max-width: 900px; margin: 0 auto; line-height: 1.8;">
                         <p style="margin-top: 0;"><b>💡 Từ vựng B2 đáng chú ý trong tập này (Di chuột vào từ in đậm nhé):</b></p>
@@ -1027,6 +1139,7 @@ function showKapiStory(level, chapter = 1) {
                     </p>
                     
                     <img src="stories/tap3.jpg" style="width: 100%; max-width: 900px; height: auto; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); margin: 0 auto 20px auto; display: block;">
+                    ${renderStoryLanguageBox(3)}
                     
                     <div style="background-color: #e8f6f3; padding: 20px; border-radius: 15px; text-align: left; max-width: 900px; margin: 0 auto; line-height: 1.8;">
                         <p style="margin-top: 0;"><b>💡 Từ vựng B2 đáng chú ý trong tập này (Di chuột vào từ in đậm nhé):</b></p>
@@ -1057,6 +1170,7 @@ function showKapiStory(level, chapter = 1) {
                     </p>
                     
                     <img src="stories/tap4.jpg" style="width: 100%; max-width: 900px; height: auto; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); margin: 0 auto 20px auto; display: block;">
+                    ${renderStoryLanguageBox(4)}
                     
                     <div style="background-color: #e8f6f3; padding: 20px; border-radius: 15px; text-align: left; max-width: 900px; margin: 0 auto; line-height: 1.8;">
                         <p style="margin-top: 0;"><b>💡 Từ vựng B2 đáng chú ý trong tập này (Di chuột vào từ in đậm nhé):</b></p>
@@ -1085,6 +1199,7 @@ function showKapiStory(level, chapter = 1) {
                     </p>
                     
                     <img src="stories/tap5.jpg" style="width: 100%; max-width: 900px; height: auto; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); margin: 0 auto 20px auto; display: block;">
+                    ${renderStoryLanguageBox(5)}
                     
                     <div style="background-color: #e8f6f3; padding: 20px; border-radius: 15px; text-align: left; max-width: 900px; margin: 0 auto; line-height: 1.8;">
                         <p style="margin-top: 0;"><b>💡 Từ vựng B2 đáng chú ý trong tập này (Di chuột vào từ in đậm nhé):</b></p>
@@ -1115,6 +1230,7 @@ function showKapiStory(level, chapter = 1) {
                     </p>
                     
                     <img src="stories/tap6.jpg" style="width: 100%; max-width: 900px; height: auto; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); margin: 0 auto 20px auto; display: block;">
+                    ${renderStoryLanguageBox(6)}
                     
                     <div style="background-color: #e8f6f3; padding: 20px; border-radius: 15px; text-align: left; max-width: 900px; margin: 0 auto; line-height: 1.8;">
                         <p style="margin-top: 0;"><b>💡 Từ vựng B2 đáng chú ý trong tập này (Di chuột vào từ in đậm nhé):</b></p>
@@ -1143,6 +1259,7 @@ function showKapiStory(level, chapter = 1) {
                     </p>
                     
                     <img src="stories/tap7.jpg" style="width: 100%; max-width: 900px; height: auto; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); margin: 0 auto 20px auto; display: block;">
+                    ${renderStoryLanguageBox(7)}
                     
                     <div style="background-color: #e8f6f3; padding: 20px; border-radius: 15px; text-align: left; max-width: 900px; margin: 0 auto; line-height: 1.8;">
                         <p style="margin-top: 0;"><b>💡 Từ vựng B2 đáng chú ý trong tập này (Di chuột vào từ in đậm nhé):</b></p>
@@ -1165,6 +1282,12 @@ function showKapiStory(level, chapter = 1) {
     }
 
     document.getElementById("feedback-area").innerHTML = resultHtml;
+    // Ẩn khối chú thích đơn giản cũ; giữ nguyên trong code để không mất dữ liệu truyện.
+    document.querySelectorAll('#feedback-area p').forEach(paragraph => {
+        if (paragraph.textContent.trim().startsWith('💡 Từ vựng B2 đáng chú ý')) {
+            paragraph.parentElement.style.display = 'none';
+        }
+    });
     document.getElementById("buttons").innerHTML = buttonContent;
 }
 
