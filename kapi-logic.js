@@ -123,6 +123,202 @@ function startTimer() {
 function getSavedMissed() { return JSON.parse(localStorage.getItem('kapi_missed_vokabeln')) || []; }
 function saveMissed(arr) { localStorage.setItem('kapi_missed_vokabeln', JSON.stringify(arr)); }
 
+// ==========================================
+// NHẬT KÝ TỪ VỰNG THEO TUẦN (CHẠY LOCAL, KHÔNG GỌI API)
+// ==========================================
+const VOCAB_JOURNAL_KEY = 'kapi_vocab_weekly_journal_v1';
+
+function getLocalDateKey(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
+
+function getCurrentWeekStart() {
+    const date = new Date();
+    const day = date.getDay() || 7;
+    date.setHours(0, 0, 0, 0);
+    date.setDate(date.getDate() - day + 1);
+    return getLocalDateKey(date);
+}
+
+function createEmptyVocabWeek(weekStart = getCurrentWeekStart()) {
+    return {
+        weekStart,
+        learnedWords: [],
+        correctAnswers: 0,
+        wrongAnswers: 0,
+        groups: {},
+        wordStats: {},
+        note: ''
+    };
+}
+
+function loadVocabJournal() {
+    let journal;
+    try {
+        journal = JSON.parse(localStorage.getItem(VOCAB_JOURNAL_KEY));
+    } catch (_) {
+        journal = null;
+    }
+
+    if (!journal || !journal.current) {
+        journal = { current: createEmptyVocabWeek(), history: [] };
+    }
+
+    journal.history = journal.history || [];
+    journal.current.learnedWords = journal.current.learnedWords || [];
+    journal.current.correctAnswers = journal.current.correctAnswers || 0;
+    journal.current.wrongAnswers = journal.current.wrongAnswers || 0;
+    journal.current.groups = journal.current.groups || {};
+    journal.current.wordStats = journal.current.wordStats || {};
+    journal.current.note = journal.current.note || '';
+
+    const thisWeek = getCurrentWeekStart();
+    if (journal.current.weekStart !== thisWeek) {
+        const oldWeekHasData = journal.current.learnedWords.length ||
+            journal.current.correctAnswers || journal.current.wrongAnswers || journal.current.note;
+
+        if (oldWeekHasData) {
+            journal.history = journal.history || [];
+            journal.history.unshift({ ...journal.current, closedAt: getLocalDateKey(new Date()) });
+            journal.history = journal.history.slice(0, 12);
+        }
+        journal.current = createEmptyVocabWeek(thisWeek);
+        localStorage.setItem(VOCAB_JOURNAL_KEY, JSON.stringify(journal));
+    }
+
+    return journal;
+}
+
+function saveVocabJournal(journal) {
+    localStorage.setItem(VOCAB_JOURNAL_KEY, JSON.stringify(journal));
+}
+
+function findWordGroup(word) {
+    if (currentFlashcardGroup && currentFlashcardGroup !== 'review') return currentFlashcardGroup;
+    for (const [groupName, group] of Object.entries(vokabelGruppen)) {
+        if (group.woerter.some(item => item.de === word.de)) return groupName;
+    }
+    return 'khac';
+}
+
+function recordLearnedWord(word) {
+    if (!word || !word.de) return;
+    const journal = loadVocabJournal();
+    const week = journal.current;
+    const alreadyLearned = week.learnedWords.some(item => item.de === word.de);
+
+    if (!alreadyLearned) {
+        const group = findWordGroup(word);
+        week.learnedWords.push({ de: word.de, vi: word.vi || '', group });
+        week.groups[group] = (week.groups[group] || 0) + 1;
+    }
+    saveVocabJournal(journal);
+}
+
+function recordVocabAnswer(word, isCorrect) {
+    if (!word || !word.de) return;
+    recordLearnedWord(word);
+    const journal = loadVocabJournal();
+    const week = journal.current;
+    const key = word.de.toLocaleLowerCase('de-DE');
+
+    if (!week.wordStats[key]) {
+        week.wordStats[key] = { de: word.de, vi: word.vi || '', correct: 0, wrong: 0 };
+    }
+
+    if (isCorrect) {
+        week.correctAnswers++;
+        week.wordStats[key].correct++;
+    } else {
+        week.wrongAnswers++;
+        week.wordStats[key].wrong++;
+    }
+    saveVocabJournal(journal);
+}
+
+function saveVocabWeeklyNote() {
+    const noteInput = document.getElementById('vocab-weekly-note');
+    if (!noteInput) return;
+    const journal = loadVocabJournal();
+    journal.current.note = noteInput.value;
+    saveVocabJournal(journal);
+
+    const savedHint = document.getElementById('vocab-note-saved');
+    if (savedHint) {
+        savedHint.textContent = '✅ Đã lưu tự động';
+        clearTimeout(window.kapiNoteSavedTimer);
+        window.kapiNoteSavedTimer = setTimeout(() => savedHint.textContent = '', 1400);
+    }
+}
+
+function getWeakVocabWords(week, limit = 6) {
+    return Object.values(week.wordStats || {})
+        .filter(item => item.wrong > 0)
+        .sort((a, b) => (b.wrong - b.correct) - (a.wrong - a.correct) || b.wrong - a.wrong)
+        .slice(0, limit);
+}
+
+function escapeVocabHtml(value) {
+    return String(value || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
+function showVocabWeeklyJournal() {
+    const journal = loadVocabJournal();
+    const week = journal.current;
+    const attempts = week.correctAnswers + week.wrongAnswers;
+    const accuracy = attempts ? Math.round(week.correctAnswers / attempts * 100) : 0;
+    const weakWords = getWeakVocabWords(week);
+    const topGroups = Object.entries(week.groups || {}).sort((a, b) => b[1] - a[1]);
+    const lastWeek = (journal.history || [])[0];
+    const recentLearned = week.learnedWords.slice(-12).reverse();
+
+    const weakHtml = weakWords.length
+        ? weakWords.map(item => `<li><b>${escapeVocabHtml(item.de)}</b> — sai ${item.wrong} lần</li>`).join('')
+        : '<li>Chưa có từ nào bị ghi vào sổ truy nã 😸</li>';
+    const groupsHtml = topGroups.length
+        ? topGroups.slice(0, 4).map(([name, count]) => `<span style="display:inline-block;margin:3px;padding:5px 9px;border-radius:999px;background:#e8f5e9;color:#47733c;font-size:13px;">${name}: ${count}</span>`).join('')
+        : '<span style="color:#9e9e9e;">Chưa bắt đầu học tuần này.</span>';
+    const learnedHtml = recentLearned.length
+        ? recentLearned.map(item => `<span title="${escapeVocabHtml(item.vi)}" style="display:inline-block;margin:3px;padding:6px 10px;border-radius:10px;background:#fff7e8;border:1px solid #ffe0b2;font-size:13px;"><b>${escapeVocabHtml(item.de)}</b></span>`).join('')
+        : '<span style="color:#9e9e9e;">Lật flashcard sang mặt tiếng Đức để bắt đầu ghi nhật ký.</span>';
+    const lastWeekHtml = lastWeek
+        ? `<div style="margin-top:16px;padding:12px;background:#f7f3ff;border-radius:12px;color:#665c78;"><b>📦 Tuần trước (${lastWeek.weekStart})</b><br><small>${lastWeek.learnedWords.length} từ · ${lastWeek.correctAnswers} đúng · ${lastWeek.wrongAnswers} sai${lastWeek.note ? ' · Có ghi chú' : ''}</small></div>`
+        : '';
+
+    document.getElementById('message').innerHTML = `📒 Wochenbuch der Wörter`;
+    document.getElementById('feedback-area').style.display = 'none';
+    document.getElementById('buttons').innerHTML = `
+        <div style="max-width:680px;margin:0 auto;padding:22px;background:rgba(255,255,255,.92);border:2px solid #ffcc80;border-radius:22px;box-shadow:0 8px 20px rgba(211,84,0,.1);text-align:left;">
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;text-align:center;">
+                <div style="padding:12px;background:#fff3e0;border-radius:14px;"><b style="font-size:24px;color:#e67e22;">${week.learnedWords.length}</b><br><small>Từ đã học</small></div>
+                <div style="padding:12px;background:#e8f5e9;border-radius:14px;"><b style="font-size:24px;color:#43a047;">${week.correctAnswers}</b><br><small>Trả lời đúng</small></div>
+                <div style="padding:12px;background:#ffebee;border-radius:14px;"><b style="font-size:24px;color:#e57373;">${week.wrongAnswers}</b><br><small>Trả lời sai</small></div>
+                <div style="padding:12px;background:#e3f2fd;border-radius:14px;"><b style="font-size:24px;color:#4285a8;">${accuracy}%</b><br><small>Chính xác</small></div>
+            </div>
+            <h3 style="margin:20px 0 8px;color:#5d7b50;">🌿 Nhóm đã gặm</h3>
+            <div>${groupsHtml}</div>
+            <h3 style="margin:18px 0 8px;color:#b07a3f;">🧺 Từ vừa học</h3>
+            <div>${learnedHtml}</div>
+            <h3 style="margin:18px 0 6px;color:#b75d69;">🔎 Cần chú ý</h3>
+            <ul style="margin-top:6px;line-height:1.7;">${weakHtml}</ul>
+            <h3 style="margin:18px 0 8px;color:#8d6e63;">✏️ Note của Vịt</h3>
+            <textarea id="vocab-weekly-note" oninput="saveVocabWeeklyNote()" placeholder="Ví dụ: Nhớ Dativ sau mit; ôn lại nhóm Arbeit…" style="width:100%;min-height:120px;margin:0;resize:vertical;background:#fffdf7;border:2px dashed #ffcc80;"></textarea>
+            <div id="vocab-note-saved" style="height:20px;margin-top:5px;text-align:right;color:#66a05a;font-size:13px;"></div>
+            ${lastWeekHtml}
+        </div>
+        <button class="btn-kapi btn-home" onclick="showVokabelHauptmenu()">⬅️ Về Menu Từ Vựng</button>
+    `;
+    document.getElementById('vocab-weekly-note').value = week.note || '';
+}
+
 // Phân loại cách dùng hoàn toàn ở trình duyệt: không gọi API, không sửa kho từ.
 // Thứ tự ưu tiên: chuyên ngành/hiếm -> văn viết/trang trọng -> đời sống.
 function classifyGermanUsage(word, group = '') {
@@ -175,12 +371,14 @@ function renderUsageBadge(word) {
 function showVokabelHauptmenu() {
     document.getElementById("feedback-area").style.display = "none";
     let missed = getSavedMissed();
+    let weeklyJournal = loadVocabJournal().current;
     let warningHtml = missed.length > 0 ? `<button class="btn-grid btn-full" style="background:#ffb74d; color:white; justify-content:center; display:flex;" onclick="showLernenScreen('review')">⚠️ Sổ tay từ khó: Ôn ${missed.length} từ!</button>` : '';
     
     document.getElementById("message").innerText = "Was möchtest du im Alltag üben?";
     document.getElementById("buttons").innerHTML = `
         <div class="grid-container">
             ${warningHtml}
+            <button class="btn-grid btn-full" style="background:linear-gradient(135deg,#fff8e1,#fce4ec);border:2px solid #ffcc80;text-align:center;color:#8d6e63;font-weight:bold;" onclick="showVocabWeeklyJournal()">📒 Nhật ký tuần này · ${weeklyJournal.learnedWords.length} từ · ${weeklyJournal.correctAnswers} đúng</button>
             <button class="btn-grid" onclick="showLernenScreen('arbeit')">💼 Arbeit</button>
             <button class="btn-grid" style="background:#e8f5e9;" onclick="showLernenScreen('umwelt')">🌍 Umwelt</button>
             <button class="btn-grid" style="background:#fff8e1;" onclick="showLernenScreen('kulinarik')">🍽️ Kulinarik</button>
@@ -324,7 +522,11 @@ function renderFlashcard() {
     document.getElementById("buttons").innerHTML = btnHtml;
 }
 
-function flipCard() { isFlipped = !isFlipped; renderFlashcard(); }
+function flipCard() {
+    isFlipped = !isFlipped;
+    if (isFlipped) recordLearnedWord(flashcardWords[currentFlashcardIndex]);
+    renderFlashcard();
+}
 function nextFlashcard() { currentFlashcardIndex++; isFlipped = false; renderFlashcard(); }
 function prevFlashcard() { currentFlashcardIndex--; isFlipped = false; renderFlashcard(); }
 
@@ -371,6 +573,7 @@ function checkVokabelAnswer() {
     let isCorrect = (input === correctAns);
     let savedMissed = getSavedMissed();
     let resultHtml = "";
+    recordVocabAnswer(w, isCorrect);
     
     if (isCorrect) {
         quizScore++;
