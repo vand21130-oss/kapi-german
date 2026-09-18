@@ -1100,10 +1100,27 @@ const kofferRoutes = {
 
 const kofferItemIcons = ['🧦','📘','🥨','🩹','🪥','🧸','☕','🩺'];
 const kofferWrongLines = [
-    '🫩 Cái này mà cũng mang à? Tôi bắt đầu muốn xuống xe rồi đấy.',
-    '🫩🫩 Tôi đã khóa một bên bánh xe. Cậu suy nghĩ thật kỹ đi.',
-    '🫩🫩🫩 Tạm biệt. Tôi sẽ tự sang Đức một mình.'
+    '🫩 Cái này mà cũng mang à? Tôi vừa mở lại đơn xin nghỉ việc.',
+    '🫩🫩 Đơn xin nghỉ việc với thế giới của tôi đang chờ một chữ ký.',
+    '🫩🫩🫩 Tạm biệt. Tôi xin nghỉ việc khỏi chuyến đi, khỏi sân bay và khỏi thế giới.'
 ];
+
+const kofferMoodLines = [
+    '🫩 Tôi vẫn ở đây vì hợp đồng chưa hết hạn.',
+    '🫩 Đi Đức hay đi đâu cũng được. Cho tôi nằm xuống trước đã.',
+    '🫩 Tôi không bi quan. Tôi chỉ đã nhìn thấy quá nhiều hành lý.',
+    '🫩 Nếu câu này sai, tôi sẽ cập nhật CV ngay tại sân bay.',
+    '🫩 Nhân sự nói đây là môi trường làm việc năng động. Họ nói dối.',
+    '🫩 Tôi đang vận chuyển từ vựng và cả gánh nặng cuộc đời.',
+    '🫩 Cậu chọn đi. Tôi tranh thủ từ bỏ kỳ vọng.',
+    '🫩 Tôi không ngủ. Tôi đang tạm ngừng tham gia thế giới.'
+];
+
+function getKofferMoodLine() {
+    if (kofferGame.mistakes >= 2) return '🫩 Đơn xin nghỉ việc với thế giới đã được in thành ba bản.';
+    if (kofferGame.mistakes === 1) return '🫩 Tôi đang cân nhắc một cuộc đời không có bồ câu.';
+    return kofferMoodLines[kofferGame.index % kofferMoodLines.length];
+}
 
 function renderKofferMascot(state = 'calm', elementId = '') {
     const safeState = ['calm', 'annoyed', 'done', 'leaving'].includes(state) ? state : 'calm';
@@ -1120,15 +1137,19 @@ function renderKofferMascot(state = 'calm', elementId = '') {
             .koffer-mascot{position:relative;width:96px;height:75px;margin:4px auto 8px;background:linear-gradient(145deg,#e7a74a,#bd7332);border:4px solid #6d4528;border-radius:15px 15px 18px 18px;box-shadow:inset 0 4px rgba(255,255,255,.27),0 8px 10px rgba(91,58,32,.18);animation:kofferSigh 3s ease-in-out infinite;transition:transform 1s ease-in,opacity 1s ease-in;flex:0 0 auto;}
             .koffer-mascot:before{content:'';position:absolute;width:38px;height:16px;border:5px solid #6d4528;border-bottom:0;border-radius:12px 12px 0 0;left:25px;top:-19px;}
             .koffer-mascot:after{content:'';position:absolute;left:45px;top:0;width:4px;height:100%;background:rgba(109,69,40,.32);}
-            .koffer-eye{position:absolute;top:26px;width:24px;height:13px;background:white;border:3px solid #4e342e;border-radius:4px 4px 13px 13px;overflow:hidden;animation:kofferBlink 4.2s infinite;transform-origin:center;z-index:2;}
+            .koffer-eye{position:absolute;top:25px;width:25px;height:16px;background:#fffdf4;border:3px solid #4e342e;border-radius:5px 5px 14px 14px;overflow:hidden;animation:kofferBlink 4.2s infinite;transform-origin:center;z-index:3;}
             .koffer-eye.left{left:17px}.koffer-eye.right{right:17px}
-            .koffer-eye span{position:absolute;width:9px;height:9px;background:#3e2723;border-radius:50%;left:7px;top:0;}
-            .koffer-brow{position:absolute;top:18px;width:25px;height:4px;background:#4e342e;border-radius:8px;z-index:3;}
-            .koffer-brow.left{left:16px;transform:rotate(5deg)}.koffer-brow.right{right:16px;transform:rotate(-5deg)}
-            .koffer-mouth{position:absolute;left:36px;top:52px;width:24px;height:5px;background:#4e342e;border-radius:8px;z-index:3;}
-            .koffer-mascot.annoyed .koffer-brow.left,.koffer-mascot.leaving .koffer-brow.left{transform:rotate(-12deg)}
-            .koffer-mascot.annoyed .koffer-brow.right,.koffer-mascot.leaving .koffer-brow.right{transform:rotate(12deg)}
-            .koffer-mascot.annoyed .koffer-eye,.koffer-mascot.leaving .koffer-eye{height:10px;top:29px;background:#fff8e1;}
+            .koffer-eye:after{content:'';position:absolute;left:-2px;top:-2px;width:29px;height:8px;background:#c9813b;border-bottom:2px solid #4e342e;z-index:2;}
+            .koffer-eye span{position:absolute;width:9px;height:10px;background:#3e2723;border-radius:50%;left:7px;top:5px;z-index:1;}
+            .koffer-bag{position:absolute;top:40px;width:28px;height:10px;background:#a95f35;border-radius:0 0 18px 18px;opacity:.7;z-index:2;}
+            .koffer-bag.left{left:16px}.koffer-bag.right{right:16px}
+            .koffer-brow{position:absolute;top:17px;width:25px;height:4px;background:#4e342e;border-radius:8px;z-index:4;}
+            .koffer-brow.left{left:16px;transform:rotate(-5deg)}.koffer-brow.right{right:16px;transform:rotate(5deg)}
+            .koffer-mouth{position:absolute;left:36px;top:57px;width:24px;height:5px;background:#4e342e;border-radius:8px;z-index:4;}
+            .koffer-mascot.annoyed .koffer-brow.left,.koffer-mascot.leaving .koffer-brow.left{transform:rotate(-9deg);top:19px}
+            .koffer-mascot.annoyed .koffer-brow.right,.koffer-mascot.leaving .koffer-brow.right{transform:rotate(9deg);top:19px}
+            .koffer-mascot.annoyed .koffer-eye,.koffer-mascot.leaving .koffer-eye{height:13px;top:28px;}
+            .koffer-mascot.annoyed .koffer-bag,.koffer-mascot.leaving .koffer-bag{top:39px;height:12px;opacity:.9;}
             .koffer-mascot.annoyed .koffer-mouth,.koffer-mascot.leaving .koffer-mouth{height:4px;transform:rotate(-3deg)}
             .koffer-mascot.done .koffer-mouth{height:10px;background:transparent;border-bottom:4px solid #4e342e;border-radius:0 0 18px 18px;top:48px;}
             .koffer-wheel{position:absolute;bottom:-9px;width:15px;height:10px;background:#4e342e;border-radius:0 0 6px 6px;}.koffer-wheel.left{left:13px}.koffer-wheel.right{right:13px}
@@ -1136,6 +1157,7 @@ function renderKofferMascot(state = 'calm', elementId = '') {
         <div ${elementId ? `id="${elementId}"` : ''} class="koffer-mascot ${safeState}" role="img" aria-label="Vali Kapi đang ${safeState === 'done' ? 'hài lòng' : safeState === 'calm' ? 'chớp mắt' : 'bất mãn'}">
             <span class="koffer-brow left"></span><span class="koffer-brow right"></span>
             <span class="koffer-eye left"><span></span></span><span class="koffer-eye right"><span></span></span>
+            <span class="koffer-bag left"></span><span class="koffer-bag right"></span>
             <span class="koffer-mouth"></span><span class="koffer-wheel left"></span><span class="koffer-wheel right"></span>
         </div>`;
 }
@@ -1147,6 +1169,7 @@ function showKofferIntro() {
         <div style="max-width:620px;margin:0 auto;">
             ${renderKofferMascot('calm')}
             <h2 style="margin:5px 0;color:#795548;">Koffer nach Deutschland</h2>
+            <div style="display:inline-block;margin:2px auto 8px;padding:9px 13px;background:white;border:2px solid #d7ccc8;border-radius:16px;color:#6d4c41;font-size:14px;"><i>“🫩 Tôi nhận chuyến này vì phòng nhân sự nói chỉ có tám từ.”</i></div>
             <p style="color:#607d8b;line-height:1.6;">Vali chỉ còn chỗ cho <b>8 từ</b>. Chọn đúng thì được đóng gói; sai ba lần, nó sẽ <b>🫩 tạm biệt</b> và bỏ đi không luyến tiếc.</p>
         </div>`;
     document.getElementById('buttons').innerHTML = `
@@ -1194,7 +1217,9 @@ function renderKofferStatus() {
             ? `<span title="${kofferGame.packed[index].de}" style="font-size:27px;">${kofferItemIcons[index % kofferItemIcons.length]}</span>`
             : '<span style="width:28px;height:28px;border:2px dashed #bcaaa4;border-radius:8px;display:inline-block;"></span>'
     ).join('');
-    const patience = Array.from({ length: 3 }, (_, index) => index < 3 - kofferGame.mistakes ? '🛞' : '💨').join(' ');
+    const patience = Array.from({ length: 3 }, (_, index) =>
+        `<span style="display:inline-block;width:13px;height:13px;margin-left:4px;border-radius:50%;border:2px solid #6d4c41;background:${index < 3 - kofferGame.mistakes ? '#8d6e63' : '#efebe9'};"></span>`
+    ).join('');
     const faceState = kofferGame.mistakes >= 1 ? 'annoyed' : 'calm';
     return `
         <div style="max-width:620px;margin:0 auto 16px;padding:14px;background:#fff8e1;border:2px solid #ffcc80;border-radius:18px;box-shadow:0 7px 14px rgba(121,85,72,.10);">
@@ -1202,6 +1227,7 @@ function renderKofferStatus() {
                 ${renderKofferMascot(faceState, 'koffer-face')}
                 <div style="text-align:left;"><b>${kofferRoutes[kofferGame.route].title}</b><br><small style="color:#8d6e63;">Kiên nhẫn của vali: ${patience}</small></div>
             </div>
+            <div style="position:relative;margin:7px auto 4px;max-width:470px;padding:9px 12px;background:white;border:2px solid #d7ccc8;border-radius:14px;color:#6d4c41;font-size:14px;font-style:italic;">“${getKofferMoodLine()}”</div>
             <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:12px;">${packedSlots}</div>
         </div>`;
 }
