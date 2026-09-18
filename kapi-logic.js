@@ -1105,12 +1105,47 @@ const kofferWrongLines = [
     '🫩🫩🫩 Tạm biệt. Tôi sẽ tự sang Đức một mình.'
 ];
 
+function renderKofferMascot(state = 'calm', elementId = '') {
+    const safeState = ['calm', 'annoyed', 'done', 'leaving'].includes(state) ? state : 'calm';
+    return `
+        <style>
+            @keyframes kofferBlink {
+                0%, 42%, 46%, 100% { transform:scaleY(1); }
+                44% { transform:scaleY(.08); }
+            }
+            @keyframes kofferSigh {
+                0%,100% { transform:translateY(0) rotate(-1deg); }
+                50% { transform:translateY(3px) rotate(1deg); }
+            }
+            .koffer-mascot{position:relative;width:96px;height:75px;margin:4px auto 8px;background:linear-gradient(145deg,#e7a74a,#bd7332);border:4px solid #6d4528;border-radius:15px 15px 18px 18px;box-shadow:inset 0 4px rgba(255,255,255,.27),0 8px 10px rgba(91,58,32,.18);animation:kofferSigh 3s ease-in-out infinite;transition:transform 1s ease-in,opacity 1s ease-in;flex:0 0 auto;}
+            .koffer-mascot:before{content:'';position:absolute;width:38px;height:16px;border:5px solid #6d4528;border-bottom:0;border-radius:12px 12px 0 0;left:25px;top:-19px;}
+            .koffer-mascot:after{content:'';position:absolute;left:45px;top:0;width:4px;height:100%;background:rgba(109,69,40,.32);}
+            .koffer-eye{position:absolute;top:26px;width:24px;height:13px;background:white;border:3px solid #4e342e;border-radius:4px 4px 13px 13px;overflow:hidden;animation:kofferBlink 4.2s infinite;transform-origin:center;z-index:2;}
+            .koffer-eye.left{left:17px}.koffer-eye.right{right:17px}
+            .koffer-eye span{position:absolute;width:9px;height:9px;background:#3e2723;border-radius:50%;left:7px;top:0;}
+            .koffer-brow{position:absolute;top:18px;width:25px;height:4px;background:#4e342e;border-radius:8px;z-index:3;}
+            .koffer-brow.left{left:16px;transform:rotate(5deg)}.koffer-brow.right{right:16px;transform:rotate(-5deg)}
+            .koffer-mouth{position:absolute;left:36px;top:52px;width:24px;height:5px;background:#4e342e;border-radius:8px;z-index:3;}
+            .koffer-mascot.annoyed .koffer-brow.left,.koffer-mascot.leaving .koffer-brow.left{transform:rotate(-12deg)}
+            .koffer-mascot.annoyed .koffer-brow.right,.koffer-mascot.leaving .koffer-brow.right{transform:rotate(12deg)}
+            .koffer-mascot.annoyed .koffer-eye,.koffer-mascot.leaving .koffer-eye{height:10px;top:29px;background:#fff8e1;}
+            .koffer-mascot.annoyed .koffer-mouth,.koffer-mascot.leaving .koffer-mouth{height:4px;transform:rotate(-3deg)}
+            .koffer-mascot.done .koffer-mouth{height:10px;background:transparent;border-bottom:4px solid #4e342e;border-radius:0 0 18px 18px;top:48px;}
+            .koffer-wheel{position:absolute;bottom:-9px;width:15px;height:10px;background:#4e342e;border-radius:0 0 6px 6px;}.koffer-wheel.left{left:13px}.koffer-wheel.right{right:13px}
+        </style>
+        <div ${elementId ? `id="${elementId}"` : ''} class="koffer-mascot ${safeState}" role="img" aria-label="Vali Kapi đang ${safeState === 'done' ? 'hài lòng' : safeState === 'calm' ? 'chớp mắt' : 'bất mãn'}">
+            <span class="koffer-brow left"></span><span class="koffer-brow right"></span>
+            <span class="koffer-eye left"><span></span></span><span class="koffer-eye right"><span></span></span>
+            <span class="koffer-mouth"></span><span class="koffer-wheel left"></span><span class="koffer-wheel right"></span>
+        </div>`;
+}
+
 function showKofferIntro() {
     document.getElementById('feedback-area').style.display = 'none';
     document.getElementById('buttons').style.display = 'block';
     document.getElementById('message').innerHTML = `
         <div style="max-width:620px;margin:0 auto;">
-            <div style="font-size:76px;filter:drop-shadow(0 8px 8px rgba(0,0,0,.12));">🧳</div>
+            ${renderKofferMascot('calm')}
             <h2 style="margin:5px 0;color:#795548;">Koffer nach Deutschland</h2>
             <p style="color:#607d8b;line-height:1.6;">Vali chỉ còn chỗ cho <b>8 từ</b>. Chọn đúng thì được đóng gói; sai ba lần, nó sẽ <b>🫩 tạm biệt</b> và bỏ đi không luyến tiếc.</p>
         </div>`;
@@ -1160,10 +1195,11 @@ function renderKofferStatus() {
             : '<span style="width:28px;height:28px;border:2px dashed #bcaaa4;border-radius:8px;display:inline-block;"></span>'
     ).join('');
     const patience = Array.from({ length: 3 }, (_, index) => index < 3 - kofferGame.mistakes ? '🛞' : '💨').join(' ');
+    const faceState = kofferGame.mistakes >= 1 ? 'annoyed' : 'calm';
     return `
         <div style="max-width:620px;margin:0 auto 16px;padding:14px;background:#fff8e1;border:2px solid #ffcc80;border-radius:18px;box-shadow:0 7px 14px rgba(121,85,72,.10);">
             <div style="display:flex;align-items:center;justify-content:center;gap:12px;">
-                <span id="koffer-emoji" style="font-size:54px;display:inline-block;transition:transform .8s ease,opacity .8s ease;">🧳</span>
+                ${renderKofferMascot(faceState, 'koffer-face')}
                 <div style="text-align:left;"><b>${kofferRoutes[kofferGame.route].title}</b><br><small style="color:#8d6e63;">Kiên nhẫn của vali: ${patience}</small></div>
             </div>
             <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:12px;">${packedSlots}</div>
@@ -1239,8 +1275,9 @@ function finishKofferGame(success) {
     document.getElementById('feedback-area').style.display = 'block';
 
     if (success) {
+        const successStatus = renderKofferStatus().replace('class="koffer-mascot calm"', 'class="koffer-mascot done"').replace('class="koffer-mascot annoyed"', 'class="koffer-mascot done"');
         document.getElementById('message').innerHTML = `
-            ${renderKofferStatus()}
+            ${successStatus}
             <h2 style="color:#2e7d32;">🇩🇪 Vali đã tới Deutschland!</h2>
             <p>Nó vẫn 🫩, nhưng không thể phủ nhận bồ câu đã đóng gói đủ <b>${packed}/${kofferGame.questions.length}</b> từ.</p>`;
         document.getElementById('feedback-area').innerHTML = `
@@ -1251,7 +1288,7 @@ function finishKofferGame(success) {
     } else {
         document.getElementById('message').innerHTML = `
             <div style="max-width:620px;margin:auto;overflow:hidden;min-height:120px;">
-                <span id="koffer-leaving" style="font-size:76px;display:inline-block;transition:transform 1s ease-in,opacity 1s ease-in;">🧳</span>
+                ${renderKofferMascot('leaving', 'koffer-leaving')}
                 <h3 style="color:#795548;">🫩 Tôi không còn gì để mất. Tạm biệt.</h3>
             </div>`;
         document.getElementById('feedback-area').innerHTML = `
@@ -1261,7 +1298,11 @@ function finishKofferGame(success) {
             </div>`;
         setTimeout(() => {
             const suitcase = document.getElementById('koffer-leaving');
-            if (suitcase) { suitcase.style.transform = 'translateX(260px) rotate(12deg)'; suitcase.style.opacity = '0'; }
+            if (suitcase) {
+                suitcase.style.animation = 'none';
+                suitcase.style.transform = 'translateX(260px) rotate(12deg)';
+                suitcase.style.opacity = '0';
+            }
         }, 80);
     }
 
