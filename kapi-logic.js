@@ -197,7 +197,7 @@ function saveVocabJournal(journal) {
 }
 
 function findWordGroup(word) {
-    if (currentFlashcardGroup && currentFlashcardGroup !== 'review') return currentFlashcardGroup;
+    if (currentFlashcardGroup && vokabelGruppen[currentFlashcardGroup]) return currentFlashcardGroup;
     for (const [groupName, group] of Object.entries(vokabelGruppen)) {
         if (group.woerter.some(item => item.de === word.de)) return groupName;
     }
@@ -369,14 +369,17 @@ function renderUsageBadge(word) {
 }
 
 function showVokabelHauptmenu() {
+    dailyMissionActive = false;
     document.getElementById("feedback-area").style.display = "none";
     let missed = getSavedMissed();
     let weeklyJournal = loadVocabJournal().current;
+    let dailyStatus = getDailyMissionStatus();
     let warningHtml = missed.length > 0 ? `<button class="btn-grid btn-full" style="background:#ffb74d; color:white; justify-content:center; display:flex;" onclick="showLernenScreen('review')">⚠️ Sổ tay từ khó: Ôn ${missed.length} từ!</button>` : '';
     
     document.getElementById("message").innerText = "Was möchtest du im Alltag üben?";
     document.getElementById("buttons").innerHTML = `
         <div class="grid-container">
+            <button class="btn-grid btn-full" style="background:linear-gradient(135deg,#e8f5e9,#fff8e1);border:3px solid #8bc34a;text-align:center;color:#47733c;font-weight:800;padding:20px;box-shadow:0 7px 15px rgba(76,125,55,.15);" onclick="startDailyVocabMission()">${dailyStatus.completed ? '✅ Nhiệm vụ hôm nay đã xong · Ôn lại' : '🐦 Bắt đầu nhiệm vụ hôm nay · khoảng 7 phút'}<br><small style="font-weight:normal;color:#71856a;">5 từ mới + 3 từ cần ôn + 5 câu kiểm tra</small></button>
             ${warningHtml}
             <button class="btn-grid btn-full" style="background:linear-gradient(135deg,#fff8e1,#fce4ec);border:2px solid #ffcc80;text-align:center;color:#8d6e63;font-weight:bold;" onclick="showVocabWeeklyJournal()">📒 Nhật ký tuần này · ${weeklyJournal.learnedWords.length} từ · ${weeklyJournal.correctAnswers} đúng</button>
             <button class="btn-grid" onclick="showLernenScreen('arbeit')">💼 Arbeit</button>
@@ -398,9 +401,10 @@ function showVokabelHauptmenu() {
             <div style="grid-column: span 2; border-top: 1px solid #eee; margin-top: 10px; padding-top: 10px;">
                 <p style="font-size:18px; color:#666; margin:0 0 10px 0; text-align:left;">🎮 Minigames</p>
             </div>
-            <button class="btn-grid btn-full" style="background:#fff9c4; text-align:center; color:#f39c12; font-weight:bold;" onclick="startMultipleChoiceGame()">🎯 Game: Điền Từ Trắc Nghiệm</button>
-            <button class="btn-grid btn-full" style="background:#dcedc8; text-align:center; color:#27ae60; font-weight:bold;" onclick="showSentenceGame()">✍️ Game: Đặt câu với từ ngẫu nhiên</button>
-            <button class="btn-grid btn-full" style="background:#e8eaf6; text-align:center; color:#3f51b5; font-weight:bold;" onclick="startTornadoGame()">🌪️ Game: Lốc Xoáy Từ Vựng (Trộn Ngẫu Nhiên)</button>
+            <button class="btn-grid btn-full" style="background:#fff9c4; text-align:center; color:#f39c12; font-weight:bold;" onclick="showMiniGameSetup('mc')">🎯 Game: Điền Từ Trắc Nghiệm</button>
+            <button class="btn-grid btn-full" style="background:#dcedc8; text-align:center; color:#27ae60; font-weight:bold;" onclick="showMiniGameSetup('sentence')">✍️ Game: Đặt câu với từ ngẫu nhiên</button>
+            <button class="btn-grid btn-full" style="background:#e8eaf6; text-align:center; color:#3f51b5; font-weight:bold;" onclick="showMiniGameSetup('tornado')">🌪️ Game: Lốc Xoáy Từ Vựng (Trộn Ngẫu Nhiên)</button>
+            <button class="btn-grid btn-full" style="background:linear-gradient(135deg,#ffe0b2,#e3f2fd);border:2px solid #ffb74d;text-align:center;color:#795548;font-weight:800;" onclick="showKofferIntro()">🧳 Game: Koffer nach Deutschland</button>
         </div>
         <button class="btn-kapi btn-home" onclick="showLessons()">⬅️ Zurück</button>
     `;
@@ -413,6 +417,154 @@ let flashcardWords = [];
 let currentFlashcardIndex = 0;
 let currentFlashcardGroup = '';
 let isFlipped = false;
+let dailyMissionActive = false;
+let dailyMissionOriginalWords = [];
+let dailyMissionRatings = {};
+let dailyMissionRequeued = new Set();
+
+const DAILY_MISSION_KEY = 'kapi_daily_vocab_mission_v1';
+
+function getDailyMissionStatus() {
+    let status = {};
+    try { status = JSON.parse(localStorage.getItem(DAILY_MISSION_KEY)) || {}; } catch (_) {}
+    const today = getLocalDateKey(new Date());
+    return status.date === today ? status : { date: today, completed: false, score: 0 };
+}
+
+function getAllUniqueVocabWords() {
+    const seen = new Set();
+    const words = [];
+    Object.values(vokabelGruppen).forEach(group => {
+        group.woerter.forEach(word => {
+            const key = word.de.toLocaleLowerCase('de-DE');
+            if (!seen.has(key)) {
+                seen.add(key);
+                words.push(word);
+            }
+        });
+    });
+    return words;
+}
+
+function findVocabWordByGerman(german, allWords) {
+    const key = String(german || '').toLocaleLowerCase('de-DE');
+    return allWords.find(word => word.de.toLocaleLowerCase('de-DE') === key);
+}
+
+function startDailyVocabMission() {
+    const allWords = getAllUniqueVocabWords();
+    const journal = loadVocabJournal().current;
+    const missed = getSavedMissed();
+    const reviewCandidates = [];
+    const added = new Set();
+
+    Object.values(journal.wordStats || {})
+        .filter(stat => stat.wrong > stat.correct)
+        .sort((a, b) => b.wrong - a.wrong)
+        .forEach(stat => {
+            const word = findVocabWordByGerman(stat.de, allWords);
+            if (word && !added.has(word.de)) {
+                reviewCandidates.push(word);
+                added.add(word.de);
+            }
+        });
+
+    shuffleArray(missed).forEach(word => {
+        const fullWord = findVocabWordByGerman(word.de, allWords) || word;
+        if (!added.has(fullWord.de)) {
+            reviewCandidates.push(fullWord);
+            added.add(fullWord.de);
+        }
+    });
+
+    shuffleArray(journal.learnedWords || []).forEach(item => {
+        const word = findVocabWordByGerman(item.de, allWords);
+        if (word && !added.has(word.de)) {
+            reviewCandidates.push(word);
+            added.add(word.de);
+        }
+    });
+
+    const reviewWords = reviewCandidates.slice(0, 3);
+    const learnedKeys = new Set((journal.learnedWords || []).map(item => item.de));
+    let newPool = allWords.filter(word => !added.has(word.de) && !learnedKeys.has(word.de));
+    if (newPool.length < 5) newPool = allWords.filter(word => !added.has(word.de));
+    const newWords = shuffleArray(newPool).slice(0, Math.max(0, 8 - reviewWords.length));
+
+    if (reviewWords.length < 3) {
+        const extraReview = shuffleArray(newPool.filter(word => !newWords.includes(word)))
+            .slice(0, 3 - reviewWords.length);
+        reviewWords.push(...extraReview);
+    }
+
+    dailyMissionOriginalWords = shuffleArray([...reviewWords, ...newWords]).slice(0, 8);
+    flashcardWords = [...dailyMissionOriginalWords];
+    currentFlashcardGroup = 'daily';
+    currentFlashcardIndex = 0;
+    isFlipped = false;
+    dailyMissionActive = true;
+    dailyMissionRatings = {};
+    dailyMissionRequeued = new Set();
+    renderFlashcard();
+}
+
+function rateDailyMissionWord(level) {
+    const word = flashcardWords[currentFlashcardIndex];
+    if (!word) return;
+
+    recordLearnedWord(word);
+    dailyMissionRatings[word.de] = level;
+
+    if (level === 'hard') {
+        let missed = getSavedMissed();
+        if (!missed.some(item => item.de === word.de)) {
+            missed.push(word);
+            saveMissed(missed);
+        }
+        if (!dailyMissionRequeued.has(word.de)) {
+            flashcardWords.push(word);
+            dailyMissionRequeued.add(word.de);
+        }
+    }
+
+    currentFlashcardIndex++;
+    isFlipped = false;
+
+    if (currentFlashcardIndex >= flashcardWords.length) {
+        startDailyMissionQuiz();
+    } else {
+        renderFlashcard();
+    }
+}
+
+function startDailyMissionQuiz() {
+    dailyMissionActive = false;
+    quizWords = shuffleArray(dailyMissionOriginalWords).slice(0, 5);
+    currentQuizIndex = 0;
+    quizScore = 0;
+    currentMissedWords = [];
+    showQuizQuestion();
+}
+
+function completeDailyMission() {
+    const today = getLocalDateKey(new Date());
+    const previous = getDailyMissionStatus();
+    const firstCompletion = !previous.completed;
+    localStorage.setItem(DAILY_MISSION_KEY, JSON.stringify({
+        date: today,
+        completed: true,
+        score: quizScore,
+        total: quizWords.length
+    }));
+
+    if (firstCompletion && typeof sysData !== 'undefined') {
+        sysData.totalLeaves += 3;
+        if (typeof saveData === 'function') saveData();
+        if (typeof renderLeavesUI === 'function') renderLeavesUI();
+        if (typeof renderShopUI === 'function') renderShopUI();
+    }
+    return firstCompletion;
+}
 
 // Hàm trộn ngẫu nhiên mảng từ vựng (Xào bài)
 function shuffleArray(array) {
@@ -425,6 +577,7 @@ function shuffleArray(array) {
 }
 
 function showLernenScreen(gruppe) {
+    dailyMissionActive = false;
     currentFlashcardGroup = gruppe;
     
     if (gruppe === 'review') {
@@ -494,8 +647,13 @@ function renderFlashcard() {
         `;
     }
 
+    const dailyRatedCount = Object.keys(dailyMissionRatings).length;
+    const progressLabel = dailyMissionActive
+        ? `🐦 Nhiệm vụ hôm nay · Đã gặm ${Math.min(dailyRatedCount, 8)}/8 từ`
+        : `Flashcard | Thẻ ${currentFlashcardIndex + 1}/${flashcardWords.length}`;
+
     document.getElementById("message").innerHTML = `
-        <span style="font-size:16px;color:#7f8c8d; font-weight:bold;">Flashcard | Thẻ ${currentFlashcardIndex + 1}/${flashcardWords.length}</span><br><br>
+        <span style="font-size:16px;color:#7f8c8d; font-weight:bold;">${progressLabel}</span><br><br>
         <div style="background: #fff; border: 2px solid #bdc3c7; border-radius: 20px; padding: 15px 20px; box-shadow: 0 8px 16px rgba(0,0,0,0.08); max-width: 350px; margin: 0 auto; min-height: 250px; display: flex; flex-direction: column; align-items: center; user-select: none; transition: 0.2s;">
             ${pinBtnHtml}
             <div onclick="flipCard()" style="cursor:pointer; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; padding-top: 10px;">
@@ -504,21 +662,38 @@ function renderFlashcard() {
         </div>
     `;
     
-    let btnHtml = `<div style="display:flex; justify-content: center; gap: 15px; max-width: 350px; margin: 0 auto; margin-top: 25px;">`;
-    
-    if (currentFlashcardIndex > 0) {
-        btnHtml += `<button class="btn-kapi btn-home" style="margin:0; flex:1;" onclick="prevFlashcard()">⬅️ Trước</button>`;
+    let btnHtml = '';
+
+    if (dailyMissionActive) {
+        if (isFlipped) {
+            btnHtml = `
+                <p style="margin:20px 0 9px;color:#607d5a;font-weight:bold;">Từ này đang nằm ở đâu trong đầu bồ câu?</p>
+                <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:9px;max-width:620px;margin:0 auto;">
+                    <button class="btn-kapi" style="margin:0;background:#ffcdd2;" onclick="rateDailyMissionWord('hard')">😵 Chưa nhớ</button>
+                    <button class="btn-kapi" style="margin:0;background:#fff9c4;" onclick="rateDailyMissionWord('medium')">🤔 Hơi nhớ</button>
+                    <button class="btn-kapi" style="margin:0;background:#dcedc8;" onclick="rateDailyMissionWord('easy')">😎 Thuộc rồi</button>
+                </div>`;
+        } else {
+            btnHtml = `<button class="btn-kapi btn-green" style="margin-top:20px;" onclick="flipCard()">👆 Lật thẻ rồi tự chấm</button>`;
+        }
+        btnHtml += `<br><button class="btn-kapi btn-home" onclick="showVokabelHauptmenu()">🚪 Dừng nhiệm vụ</button>`;
     } else {
-        btnHtml += `<div style="flex:1;"></div>`;
+        btnHtml = `<div style="display:flex; justify-content: center; gap: 15px; max-width: 350px; margin: 0 auto; margin-top: 25px;">`;
+
+        if (currentFlashcardIndex > 0) {
+            btnHtml += `<button class="btn-kapi btn-home" style="margin:0; flex:1;" onclick="prevFlashcard()">⬅️ Trước</button>`;
+        } else {
+            btnHtml += `<div style="flex:1;"></div>`;
+        }
+
+        if (currentFlashcardIndex < flashcardWords.length - 1) {
+            btnHtml += `<button class="btn-kapi btn-green" style="margin:0; flex:1;" onclick="nextFlashcard()">Tiếp ➡️</button>`;
+        } else {
+            btnHtml += `<button class="btn-kapi" style="margin:0; flex:1; background:#f39c12; color:white; font-weight:bold;" onclick="startSpecificQuiz('${currentFlashcardGroup}')">🎯 Làm Quiz</button>`;
+        }
+
+        btnHtml += `</div><br><button class="btn-kapi btn-home" onclick="showVokabelHauptmenu()">🚪 Thoát</button>`;
     }
-    
-    if (currentFlashcardIndex < flashcardWords.length - 1) {
-        btnHtml += `<button class="btn-kapi btn-green" style="margin:0; flex:1;" onclick="nextFlashcard()">Tiếp ➡️</button>`;
-    } else {
-        btnHtml += `<button class="btn-kapi" style="margin:0; flex:1; background:#f39c12; color:white; font-weight:bold;" onclick="startSpecificQuiz('${currentFlashcardGroup}')">🎯 Làm Quiz</button>`;
-    }
-    
-    btnHtml += `</div><br><button class="btn-kapi btn-home" onclick="showVokabelHauptmenu()">🚪 Thoát</button>`;
     document.getElementById("buttons").innerHTML = btnHtml;
 }
 
@@ -611,119 +786,500 @@ function finishQuiz() {
         currentMissedWords.forEach(w => { html += `<li><b>${w.de}</b> (${w.vi})</li>`; });
         html += `</ul>`;
     } else { html += `<h3 style="color:#2ecc71;">Tuyệt vời! Không sai từ nào!</h3>`; }
+
+    if (currentFlashcardGroup === 'daily') {
+        const firstCompletion = completeDailyMission();
+        html += `<div style="margin-top:16px;padding:15px;background:linear-gradient(135deg,#e8f5e9,#fff8e1);border:2px dashed #8bc34a;border-radius:14px;text-align:center;"><b>🐦 Nhiệm vụ hôm nay hoàn thành!</b><br>${firstCompletion ? 'Kapi tặng cậu 3 chiếc lá 🌿🌿🌿' : 'Cậu đã ôn lại nhiệm vụ hôm nay rất ngoan :vvvv'}</div>`;
+    }
     document.getElementById("feedback-area").style.display = "block";
     document.getElementById("feedback-area").innerHTML = html;
     document.getElementById("buttons").innerHTML = `<button class="btn-kapi btn-home" onclick="showVokabelHauptmenu()">⬅️ Về Menu Từ Vựng</button>`;
 }
 
 // ==========================================
-// GAME 3: LỐC XOÁY TỪ VỰNG (ÔN TẬP TỔNG HỢP)
+// CỔNG MINIGAME TỪ VỰNG (LOCAL, KHÔNG GỌI API TRỪ NÚT CHẤM CÂU)
 // ==========================================
-function startTornadoGame() {
-    let allWords = [];
-    
-    // Lôi TOÀN BỘ từ vựng ở tất cả các chủ đề ra
-    for(let key in vokabelGruppen) { 
-        allWords = allWords.concat(vokabelGruppen[key].woerter); 
-    }
-    
-    // Lôi các từ trong "Sổ tay từ khó" ra và NHÂN ĐÔI chúng lên 
-    let missedWords = getSavedMissed();
-    if (missedWords.length > 0) {
-        allWords = allWords.concat(missedWords).concat(missedWords); 
-    }
-    
-    // Xóc đĩa toàn bộ và bốc ra đúng 20 từ
-    quizWords = shuffleArray(allWords).slice(0, 20);
-    
-    // Khởi động Game!
-    currentQuizIndex = 0;
-    quizScore = 0;
-    currentMissedWords = [];
-    showQuizQuestion();
+const MINI_GAME_REWARD_KEY = 'kapi_vocab_game_rewards_v1';
+let miniGame = {
+    type: '', scope: 'all', words: [], questions: [], index: 0,
+    score: 0, streak: 0, bestStreak: 0, wrongWords: [], sentenceDone: 0
+};
+
+const miniGameNames = {
+    mc: '🎯 Điền Từ Trắc Nghiệm',
+    sentence: '✍️ Đặt Câu Ngẫu Nhiên',
+    tornado: '🌪️ Lốc Xoáy Từ Vựng'
+};
+
+const miniGameGroupLabels = {
+    arbeit:'💼 Arbeit', umwelt:'🌍 Umwelt', kulinarik:'🍽️ Kulinarik',
+    gesundheit:'💊 Gesundheit', technologie:'💻 Technologie', gesellschaft:'🏘️ Gesellschaft',
+    studium:'🎓 Studium', saetze:'💬 Sätze', krankheiten:'🦠 Krankheiten',
+    diagnostik:'🩺 Diagnostik', verbandmaterial:'🩹 Verbandmaterial'
+};
+
+function showMiniGameSetup(type) {
+    miniGame.type = type;
+    document.getElementById('feedback-area').style.display = 'none';
+    document.getElementById('buttons').style.display = 'block';
+    document.getElementById('message').innerHTML = `<b>${miniGameNames[type]}</b><br><small>Chọn phần từ mà bồ câu muốn đối đầu hôm nay:</small>`;
+
+    let groupButtons = Object.keys(miniGameGroupLabels)
+        .filter(key => vokabelGruppen[key] && vokabelGruppen[key].woerter.length)
+        .map(key => `<button class="btn-grid" style="text-align:center;" onclick="beginMiniGame('${key}')">${miniGameGroupLabels[key]}</button>`).join('');
+
+    document.getElementById('buttons').innerHTML = `
+        <div class="grid-container">
+            <button class="btn-grid btn-full" style="background:#fff3cd;text-align:center;font-weight:bold;" onclick="beginMiniGame('all')">🎲 Tất cả chủ đề</button>
+            ${groupButtons}
+            <button class="btn-grid" style="background:#fce4ec;text-align:center;" onclick="beginMiniGame('pinned')">📌 Chỉ từ đã ghim</button>
+            <button class="btn-grid" style="background:#ede7f6;text-align:center;" onclick="beginMiniGame('rare')">😿 Hiếm / chuyên ngành</button>
+            <button class="btn-grid btn-full" style="background:#e3f2fd;text-align:center;" onclick="beginMiniGame('weak')">🧠 Những từ từng trả lời sai</button>
+        </div>
+        <button class="btn-kapi btn-home" onclick="showVokabelHauptmenu()">⬅️ Về Menu</button>`;
 }
 
-// ==========================================
-// 4. GAME TRẮC NGHIỆM ĐIỀN TỪ
-// ==========================================
-function startMultipleChoiceGame() {
-    currentGameIndex = 0;
-    gameScore = 0;
-    quizGameData.sort(() => Math.random() - 0.5);
-    showMCQuestion();
+function uniqueMiniGameWords(words) {
+    const seen = new Set();
+    return words.filter(word => {
+        const key = String(word.de || '').toLocaleLowerCase('de-DE');
+        if (!key || seen.has(key)) return false;
+        seen.add(key);
+        return true;
+    });
 }
 
-function showMCQuestion() {
-    if (currentGameIndex >= quizGameData.length) {
-        document.getElementById("message").innerHTML = `<b>Chúc mừng! Cậu đã hoàn thành Game Điền Từ! 🎮</b><br><br>Điểm: ${gameScore}/${quizGameData.length}`;
-        document.getElementById("feedback-area").style.display = "none";
-        document.getElementById("buttons").innerHTML = `<button class="btn-kapi btn-home" onclick="showVokabelHauptmenu()">⬅️ Về Menu</button>`;
+function getMiniGameWordGroup(word) {
+    for (const [groupName, group] of Object.entries(vokabelGruppen)) {
+        if (group.woerter.some(item => item.de === word.de)) return groupName;
+    }
+    return '';
+}
+
+function getMiniGamePool(scope) {
+    const all = getAllUniqueVocabWords();
+    if (scope === 'all') return all;
+    if (scope === 'pinned') return uniqueMiniGameWords(getSavedMissed());
+    if (scope === 'rare') return all.filter(word => classifyGermanUsage(word, getMiniGameWordGroup(word)).icon === '😿');
+    if (scope === 'weak') {
+        const stats = loadVocabJournal().current.wordStats || {};
+        const weakKeys = new Set(Object.values(stats).filter(item => item.wrong > 0).map(item => item.de.toLocaleLowerCase('de-DE')));
+        getSavedMissed().forEach(item => weakKeys.add(item.de.toLocaleLowerCase('de-DE')));
+        return all.filter(word => weakKeys.has(word.de.toLocaleLowerCase('de-DE')));
+    }
+    return vokabelGruppen[scope] ? uniqueMiniGameWords(vokabelGruppen[scope].woerter) : [];
+}
+
+function beginMiniGame(scope) {
+    const pool = getMiniGamePool(scope);
+    if (!pool.length) {
+        alert(scope === 'pinned' || scope === 'weak' ? 'Mục này đang trống. Bồ câu chưa có từ nào cần cứu hộ! 🐦' : 'Nhóm này chưa có từ để chơi.');
         return;
     }
-    
-    let q = quizGameData[currentGameIndex];
-    document.getElementById("feedback-area").style.display = "none";
-    document.getElementById("message").innerHTML = `
-        <span style="font-size:16px;color:#7f8c8d;">Game Điền Từ | Câu ${currentGameIndex + 1}/${quizGameData.length}</span><br><br>
-        <p style="font-size:22px; color:#2c3e50; font-weight:bold;">${q.question}</p>
-    `;
-    
-    let html = `<div style="display:flex; flex-direction:column; gap:10px; max-width:500px; margin:0 auto;">`;
-    q.options.forEach((opt, index) => {
-        html += `<button class="btn-grid" style="text-align:center; background:#e3f2fd;" onclick="checkMCAnswer(${index})">${opt}</button>`;
-    });
-    html += `</div><br><button class="btn-kapi btn-home" onclick="showVokabelHauptmenu()">🚪 Thoát Game</button>`;
-    document.getElementById("buttons").innerHTML = html;
+    miniGame = { ...miniGame, scope, words: shuffleArray(pool), questions: [], index: 0, score: 0, streak: 0, bestStreak: 0, wrongWords: [], sentenceDone: 0 };
+    if (miniGame.type === 'sentence') startSentenceGame();
+    else startChoiceMiniGame();
 }
 
-function checkMCAnswer(selectedIndex) {
-    let q = quizGameData[currentGameIndex];
-    let isCorrect = (selectedIndex === q.answer);
-    
-    let resultHtml = "";
-    if (isCorrect) {
-        gameScore++;
-        resultHtml = `<h3 style="color:#27ae60; margin:0;">✅ Chính xác!</h3>`;
+function buildChoiceQuestion(word, direction) {
+    const all = getAllUniqueVocabWords();
+    const field = direction === 'de-vi' ? 'vi' : 'de';
+    const correct = word[field];
+    const distractors = shuffleArray(all.filter(item => item.de !== word.de && item[field] && item[field] !== correct))
+        .slice(0, 3).map(item => item[field]);
+    const options = shuffleArray([correct, ...distractors]);
+    return {
+        word, direction, options, answer: options.indexOf(correct),
+        prompt: direction === 'de-vi' ? word.de : word.vi
+    };
+}
+
+function startChoiceMiniGame() {
+    const total = miniGame.type === 'tornado' ? 12 : 10;
+    const chosen = shuffleArray(miniGame.words).slice(0, Math.min(total, miniGame.words.length));
+    miniGame.questions = chosen.map((word, index) => buildChoiceQuestion(
+        word,
+        miniGame.type === 'tornado' && index % 2 ? 'vi-de' : 'de-vi'
+    ));
+    showMiniChoiceQuestion();
+}
+
+function showMiniChoiceQuestion() {
+    if (miniGame.index >= miniGame.questions.length) return finishMiniGame();
+    const q = miniGame.questions[miniGame.index];
+    const total = miniGame.questions.length;
+    const percent = Math.round((miniGame.index / total) * 100);
+    const instruction = q.direction === 'de-vi' ? 'Từ này có nghĩa là gì?' : 'Chọn cách nói tiếng Đức:';
+
+    document.getElementById('feedback-area').style.display = 'none';
+    document.getElementById('buttons').style.display = 'block';
+    document.getElementById('message').innerHTML = `
+        <div style="max-width:560px;margin:0 auto;">
+            <div style="display:flex;justify-content:space-between;color:#78909c;font-size:14px;font-weight:bold;"><span>${miniGameNames[miniGame.type]}</span><span>Câu ${miniGame.index + 1}/${total} · 🔥 ${miniGame.streak}</span></div>
+            <div style="height:10px;background:#eceff1;border-radius:999px;margin:10px 0 22px;overflow:hidden;"><div style="height:100%;width:${percent}%;background:linear-gradient(90deg,#8bc34a,#ffca28);transition:.25s;"></div></div>
+            <small style="color:#78909c;">${instruction}</small>
+            <p style="font-size:27px;color:#2c3e50;font-weight:bold;margin:10px 0;">${q.prompt}</p>
+        </div>`;
+
+    document.getElementById('buttons').innerHTML = `
+        <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;max-width:620px;margin:0 auto;">
+            ${q.options.map((option, index) => `<button class="btn-grid" style="text-align:center;min-height:68px;" onclick="checkMiniChoice(${index})">${option}</button>`).join('')}
+        </div>
+        <button class="btn-kapi btn-home" onclick="showVokabelHauptmenu()">🚪 Thoát Game</button>`;
+}
+
+function checkMiniChoice(selectedIndex) {
+    const q = miniGame.questions[miniGame.index];
+    const correct = selectedIndex === q.answer;
+    recordVocabAnswer(q.word, correct);
+
+    if (correct) {
+        miniGame.score++;
+        miniGame.streak++;
+        miniGame.bestStreak = Math.max(miniGame.bestStreak, miniGame.streak);
     } else {
-        resultHtml = `<h3 style="color:#c0392b; margin:0;">❌ Tiếc quá Vịt ơi!</h3><p>Đáp án đúng là: <b>${q.options[q.answer]}</b></p>`;
+        miniGame.streak = 0;
+        if (!miniGame.wrongWords.some(item => item.de === q.word.de)) miniGame.wrongWords.push(q.word);
+        const saved = getSavedMissed();
+        if (!saved.some(item => item.de === q.word.de)) { saved.push(q.word); saveMissed(saved); }
     }
-    
-    resultHtml += `<div style="margin-top:10px; background:#e8f4f8; padding:10px; border-radius:5px; border-left: 4px solid #3498db;">
-                    <span style="color:#2980b9; font-weight:bold;">💡 Giải thích:</span><br>
-                    <span style="color:#34495e; font-size:15px;">${q.explanation}</span>
-                   </div>`;
-                   
-    document.getElementById("feedback-area").style.display = "block";
-    document.getElementById("feedback-area").innerHTML = resultHtml + `<button class="btn-kapi" style="background:#f39c12; color:white; width:100%; margin-left:0; margin-right:0;" onclick="nextMCQuestion()">➡️ Câu tiếp theo</button>`;
-    document.getElementById("buttons").style.display = "none";
+
+    const praise = miniGame.streak >= 3 ? `🔥 Chuỗi ${miniGame.streak}! Bồ câu bắt đầu bốc khói rồi!` : '😎 Chuẩn, người Đức cũng hiểu như vậy!';
+    const correction = `🫪 Voi vừa nghe thấy một từ rơi xuống đất…<br>Đáp án đúng: <b>${q.options[q.answer]}</b>`;
+    document.getElementById('feedback-area').style.display = 'block';
+    document.getElementById('feedback-area').innerHTML = `
+        <div style="padding:13px;border-radius:12px;background:${correct ? '#e8f5e9' : '#ffebee'};color:${correct ? '#2e7d32' : '#b71c1c'};font-weight:bold;">${correct ? praise : correction}</div>
+        <button class="btn-kapi" style="background:#f39c12;color:white;width:100%;margin:12px 0 0;" onclick="nextMiniChoice()">➡️ Câu tiếp theo</button>`;
+    document.getElementById('buttons').style.display = 'none';
 }
-function nextMCQuestion() {
-    currentGameIndex++;
-    document.getElementById("buttons").style.display = "block";
-    showMCQuestion();
+
+function nextMiniChoice() {
+    miniGame.index++;
+    document.getElementById('buttons').style.display = 'block';
+    showMiniChoiceQuestion();
 }
-// 5. GAME ĐẶT CÂU VỚI TỪ NGẪU NHIÊN
+
+function startSentenceGame() {
+    miniGame.questions = shuffleArray(miniGame.words).slice(0, Math.min(5, miniGame.words.length));
+    miniGame.index = 0;
+    showSentenceGame();
+}
+
 function showSentenceGame() {
-    let allWords = [];
-    for(let key in vokabelGruppen) { allWords = allWords.concat(vokabelGruppen[key].woerter); }
-    let randomWord = allWords[Math.floor(Math.random() * allWords.length)];
-    
-    document.getElementById("message").innerHTML = `
-        <span style="font-size:18px; color:#e67e22;">Game: Hãy đặt 1 câu với từ này nhé!</span><br><br>
-        <b style="font-size:30px; color:#2980b9;">${randomWord.de}</b> <br>
-        <i style="font-size:16px; color:#7f8c8d;">(${randomWord.vi})</i>
-    `;
-    
-    document.getElementById("feedback-area").style.display = "block";
-    document.getElementById("feedback-area").innerHTML = `
-        <textarea id="schreibenInput" rows="4" placeholder="Gõ câu của cậu vào đây, có chứa từ '${randomWord.de}' nhé..."></textarea>
-        <div id="ai-correction" style="display:none; margin-top:10px; border-top:1px solid #eee; padding-top:15px;"></div>
-    `;
-    document.getElementById("buttons").innerHTML = `
-        <button class="btn-kapi btn-green" onclick="checkGrammar('schreibenInput')">🔍 Check Lỗi Câu Này</button>
-        <button class="btn-kapi btn-home" onclick="showSentenceGame()">🔄 Đổi Từ Khác</button>
-        <br><button class="btn-kapi btn-home" onclick="showVokabelHauptmenu()">⬅️ Về Menu</button>
-    `;
+    if (!miniGame.questions.length) {
+        miniGame.type = 'sentence';
+        miniGame.scope = 'all';
+        miniGame.words = shuffleArray(getAllUniqueVocabWords());
+        return startSentenceGame();
+    }
+    if (miniGame.index >= miniGame.questions.length) return finishMiniGame();
+    const word = miniGame.questions[miniGame.index];
+    const total = miniGame.questions.length;
+    const percent = Math.round((miniGame.index / total) * 100);
+    currentFlashcardGroup = getMiniGameWordGroup(word);
+    recordLearnedWord(word);
+
+    document.getElementById('message').innerHTML = `
+        <div style="max-width:560px;margin:0 auto;">
+            <div style="display:flex;justify-content:space-between;color:#78909c;font-size:14px;font-weight:bold;"><span>✍️ Đặt câu</span><span>${miniGame.index + 1}/${total}</span></div>
+            <div style="height:10px;background:#eceff1;border-radius:999px;margin:10px 0 20px;overflow:hidden;"><div style="height:100%;width:${percent}%;background:#66bb6a;"></div></div>
+            <b style="font-size:30px;color:#2980b9;">${word.de}</b><br><i style="color:#7f8c8d;">${word.vi}</i>
+            ${renderUsageBadge(word)}
+        </div>`;
+    document.getElementById('feedback-area').style.display = 'block';
+    document.getElementById('feedback-area').innerHTML = `
+        <textarea id="schreibenInput" rows="4" placeholder="Viết một câu có chứa '${word.de}' nhé..."></textarea>
+        <div id="ai-correction" style="display:none;margin-top:10px;border-top:1px solid #eee;padding-top:15px;"></div>`;
+    document.getElementById('buttons').style.display = 'block';
+    document.getElementById('buttons').innerHTML = `
+        <button class="btn-kapi btn-green" onclick="checkGrammar('schreibenInput')">🐘 Nhờ voi chấm câu</button>
+        <button class="btn-kapi" style="background:#fff3cd;" onclick="finishSentenceRound(false)">😵 Câu này khó, lưu để ôn</button>
+        <button class="btn-kapi" style="background:#dcedc8;" onclick="finishSentenceRound(true)">✅ Đã viết xong · Tiếp</button>
+        <br><button class="btn-kapi btn-home" onclick="showVokabelHauptmenu()">🚪 Thoát Game</button>`;
+}
+
+function finishSentenceRound(done) {
+    const word = miniGame.questions[miniGame.index];
+    const text = (document.getElementById('schreibenInput') || {}).value || '';
+    if (done && text.trim().length < 8) {
+        alert('???? Hả, sao ngắn vậy :vvvv Viết ít nhất một câu nhỏ rồi hãy đi tiếp nhé!');
+        return;
+    }
+    if (done) {
+        miniGame.score++;
+        miniGame.sentenceDone++;
+        recordVocabAnswer(word, true);
+    } else {
+        recordVocabAnswer(word, false);
+        miniGame.wrongWords.push(word);
+        const saved = getSavedMissed();
+        if (!saved.some(item => item.de === word.de)) { saved.push(word); saveMissed(saved); }
+    }
+    miniGame.index++;
+    showSentenceGame();
+}
+
+function awardMiniGameLeaves() {
+    const today = getLocalDateKey(new Date());
+    let rewards = {};
+    try { rewards = JSON.parse(localStorage.getItem(MINI_GAME_REWARD_KEY)) || {}; } catch (_) {}
+    const key = `${today}_${miniGame.type}`;
+    if (rewards[key]) return 0;
+    const total = miniGame.questions.length || 1;
+    const leaves = miniGame.score === total ? 3 : (miniGame.score / total >= 0.6 ? 2 : 1);
+    rewards[key] = leaves;
+    localStorage.setItem(MINI_GAME_REWARD_KEY, JSON.stringify(rewards));
+    if (typeof sysData !== 'undefined') {
+        sysData.totalLeaves += leaves;
+        if (typeof saveData === 'function') saveData();
+        if (typeof renderLeavesUI === 'function') renderLeavesUI();
+        if (typeof renderShopUI === 'function') renderShopUI();
+    }
+    return leaves;
+}
+
+function finishMiniGame() {
+    const total = miniGame.questions.length;
+    const leaves = awardMiniGameLeaves();
+    const wrong = uniqueMiniGameWords(miniGame.wrongWords);
+    const percent = Math.round((miniGame.score / Math.max(1, total)) * 100);
+    document.getElementById('feedback-area').style.display = 'block';
+    document.getElementById('feedback-area').innerHTML = `
+        <div style="padding:18px;background:linear-gradient(135deg,#fff8e1,#e8f5e9);border:2px dashed #ffb74d;border-radius:16px;">
+            <h3 style="margin-top:0;">🎒 Chiến lợi phẩm của bồ câu</h3>
+            <p style="font-size:21px;"><b>${miniGame.score}/${total}</b> · ${percent}% ${miniGame.type === 'sentence' ? 'đã hoàn thành' : 'chính xác'}</p>
+            ${miniGame.type !== 'sentence' ? `<p>🔥 Chuỗi đúng dài nhất: <b>${miniGame.bestStreak}</b></p>` : ''}
+            <p>${leaves ? `+${leaves} 🍃 cho lần hoàn thành đầu tiên hôm nay` : '🍃 Hôm nay đã nhận thưởng game này rồi — chơi lại vẫn được ôn nhé!'}</p>
+            ${wrong.length ? `<p style="color:#c0392b;"><b>Cần cứu hộ (${wrong.length}):</b><br>${wrong.map(word => word.de).join(' · ')}</p>` : '<p style="color:#2e7d32;"><b>Không có từ nào rơi khỏi voi! 🐘🐦</b></p>'}
+        </div>`;
+    document.getElementById('message').innerHTML = `<b>${miniGameNames[miniGame.type]} hoàn thành! 🎉</b>`;
+    document.getElementById('buttons').style.display = 'block';
+    document.getElementById('buttons').innerHTML = `
+        ${wrong.length ? '<button class="btn-kapi" style="background:#ffcc80;" onclick="reviewMiniGameMistakes()">🔁 Ôn riêng các từ sai</button>' : ''}
+        <button class="btn-kapi btn-green" onclick="showMiniGameSetup(miniGame.type)">🎮 Chơi lượt khác</button>
+        <button class="btn-kapi btn-home" onclick="showVokabelHauptmenu()">⬅️ Về Menu</button>`;
+}
+
+function reviewMiniGameMistakes() {
+    const wrong = uniqueMiniGameWords(miniGame.wrongWords);
+    if (!wrong.length) return showVokabelHauptmenu();
+    dailyMissionActive = false;
+    flashcardWords = wrong;
+    currentFlashcardGroup = 'review';
+    currentFlashcardIndex = 0;
+    isFlipped = false;
+    renderFlashcard();
+}
+
+// ==========================================
+// GAME: KOFFER NACH DEUTSCHLAND
+// Vali có 3 lần kiên nhẫn. Sai lần thứ ba là 🫩 tạm biệt.
+// ==========================================
+let kofferGame = {
+    route: 'all', questions: [], index: 0, packed: [], mistakes: 0,
+    wrongWords: [], answered: false
+};
+
+const kofferRoutes = {
+    all: {
+        title: '🎲 Chuyến đi tổng hợp',
+        subtitle: 'Đức, Việt, bệnh viện và đời sống trộn chung — vali tự lo số phận.',
+        groups: []
+    },
+    pflege: {
+        title: '🏥 Sang Đức học điều dưỡng',
+        subtitle: 'Chỉ gói nhóm sức khỏe và y khoa. Voi đã chuẩn bị băng cá nhân.',
+        groups: ['gesundheit', 'krankheiten', 'diagnostik', 'verbandmaterial']
+    },
+    alltag: {
+        title: '🏠 Cuộc sống thường ngày',
+        subtitle: 'Những từ cần để sống sót ngoài bệnh viện và tìm được bánh mì.',
+        groups: ['arbeit', 'kulinarik', 'gesellschaft', 'saetze', 'studium']
+    }
+};
+
+const kofferItemIcons = ['🧦','📘','🥨','🩹','🪥','🧸','☕','🩺'];
+const kofferWrongLines = [
+    '🫩 Cái này mà cũng mang à? Tôi bắt đầu muốn xuống xe rồi đấy.',
+    '🫩🫩 Tôi đã khóa một bên bánh xe. Cậu suy nghĩ thật kỹ đi.',
+    '🫩🫩🫩 Tạm biệt. Tôi sẽ tự sang Đức một mình.'
+];
+
+function showKofferIntro() {
+    document.getElementById('feedback-area').style.display = 'none';
+    document.getElementById('buttons').style.display = 'block';
+    document.getElementById('message').innerHTML = `
+        <div style="max-width:620px;margin:0 auto;">
+            <div style="font-size:76px;filter:drop-shadow(0 8px 8px rgba(0,0,0,.12));">🧳</div>
+            <h2 style="margin:5px 0;color:#795548;">Koffer nach Deutschland</h2>
+            <p style="color:#607d8b;line-height:1.6;">Vali chỉ còn chỗ cho <b>8 từ</b>. Chọn đúng thì được đóng gói; sai ba lần, nó sẽ <b>🫩 tạm biệt</b> và bỏ đi không luyến tiếc.</p>
+        </div>`;
+    document.getElementById('buttons').innerHTML = `
+        <div style="display:grid;gap:11px;max-width:620px;margin:0 auto;">
+            <button class="btn-grid" style="background:#fff3e0;text-align:center;" onclick="startKofferGame('pflege')"><b>🏥 Sang Đức học điều dưỡng</b><br><small>Gesundheit · Krankheiten · Diagnostik</small></button>
+            <button class="btn-grid" style="background:#e8f5e9;text-align:center;" onclick="startKofferGame('alltag')"><b>🏠 Cuộc sống thường ngày</b><br><small>Arbeit · Alltag · Studium</small></button>
+            <button class="btn-grid" style="background:#e3f2fd;text-align:center;" onclick="startKofferGame('all')"><b>🎲 Chuyến đi tổng hợp</b><br><small>Trộn toàn bộ kho từ</small></button>
+        </div>
+        <button class="btn-kapi btn-home" onclick="showVokabelHauptmenu()">⬅️ Về Menu</button>`;
+}
+
+function getKofferPool(route) {
+    const config = kofferRoutes[route];
+    if (!config || !config.groups.length) return getAllUniqueVocabWords();
+    let words = [];
+    config.groups.forEach(groupName => {
+        if (vokabelGruppen[groupName]) words = words.concat(vokabelGruppen[groupName].woerter);
+    });
+    return uniqueMiniGameWords(words);
+}
+
+function startKofferGame(route) {
+    const routePool = getKofferPool(route);
+    const fallbackPool = getAllUniqueVocabWords();
+    const chosen = shuffleArray(routePool).slice(0, Math.min(8, routePool.length));
+    kofferGame = {
+        route, index: 0, packed: [], mistakes: 0, wrongWords: [], answered: false,
+        questions: chosen.map(word => {
+            const distractors = shuffleArray(fallbackPool.filter(item => item.de !== word.de && item.de))
+                .slice(0, 3).map(item => item.de);
+            const options = shuffleArray([word.de, ...distractors]);
+            return { word, options, answer: options.indexOf(word.de) };
+        })
+    };
+    if (!kofferGame.questions.length) {
+        alert('Vali mở ra nhưng bên trong chưa có từ nào :vvvv');
+        return showKofferIntro();
+    }
+    renderKofferQuestion();
+}
+
+function renderKofferStatus() {
+    const packedSlots = Array.from({ length: kofferGame.questions.length }, (_, index) =>
+        index < kofferGame.packed.length
+            ? `<span title="${kofferGame.packed[index].de}" style="font-size:27px;">${kofferItemIcons[index % kofferItemIcons.length]}</span>`
+            : '<span style="width:28px;height:28px;border:2px dashed #bcaaa4;border-radius:8px;display:inline-block;"></span>'
+    ).join('');
+    const patience = Array.from({ length: 3 }, (_, index) => index < 3 - kofferGame.mistakes ? '🛞' : '💨').join(' ');
+    return `
+        <div style="max-width:620px;margin:0 auto 16px;padding:14px;background:#fff8e1;border:2px solid #ffcc80;border-radius:18px;box-shadow:0 7px 14px rgba(121,85,72,.10);">
+            <div style="display:flex;align-items:center;justify-content:center;gap:12px;">
+                <span id="koffer-emoji" style="font-size:54px;display:inline-block;transition:transform .8s ease,opacity .8s ease;">🧳</span>
+                <div style="text-align:left;"><b>${kofferRoutes[kofferGame.route].title}</b><br><small style="color:#8d6e63;">Kiên nhẫn của vali: ${patience}</small></div>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:12px;">${packedSlots}</div>
+        </div>`;
+}
+
+function renderKofferQuestion() {
+    if (kofferGame.index >= kofferGame.questions.length) return finishKofferGame(true);
+    const question = kofferGame.questions[kofferGame.index];
+    const progress = Math.round((kofferGame.index / kofferGame.questions.length) * 100);
+    kofferGame.answered = false;
+    document.getElementById('feedback-area').style.display = 'none';
+    document.getElementById('buttons').style.display = 'block';
+    document.getElementById('message').innerHTML = `
+        ${renderKofferStatus()}
+        <div style="max-width:580px;margin:auto;">
+            <div style="height:9px;background:#eceff1;border-radius:999px;overflow:hidden;"><div style="height:100%;width:${progress}%;background:linear-gradient(90deg,#ffb74d,#66bb6a);transition:.3s;"></div></div>
+            <p style="color:#78909c;margin:13px 0 4px;">Món ${kofferGame.index + 1}/${kofferGame.questions.length} · Vali yêu cầu:</p>
+            <b style="font-size:25px;color:#37474f;">${question.word.vi}</b>
+            <p style="font-size:14px;color:#8d6e63;">Chọn đúng từ tiếng Đức để bỏ vào vali.</p>
+        </div>`;
+    document.getElementById('buttons').innerHTML = `
+        <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;max-width:620px;margin:0 auto;">
+            ${question.options.map((option, index) => `<button class="btn-grid" style="text-align:center;min-height:66px;background:#fffdf7;" onclick="checkKofferAnswer(${index})">${option}</button>`).join('')}
+        </div>
+        <button class="btn-kapi btn-home" onclick="showVokabelHauptmenu()">🚪 Bỏ vali ở sân bay</button>`;
+}
+
+function checkKofferAnswer(selectedIndex) {
+    if (kofferGame.answered) return;
+    kofferGame.answered = true;
+    const question = kofferGame.questions[kofferGame.index];
+    const correct = selectedIndex === question.answer;
+    recordVocabAnswer(question.word, correct);
+    document.getElementById('buttons').style.display = 'none';
+    document.getElementById('feedback-area').style.display = 'block';
+
+    if (correct) {
+        kofferGame.packed.push(question.word);
+        document.getElementById('feedback-area').innerHTML = `
+            <div style="padding:14px;border-radius:14px;background:#e8f5e9;color:#2e7d32;font-weight:bold;">✅ Cạch! Đã đóng gói <b>${question.word.de}</b>.<br><small>Vali miễn cưỡng ở lại với đoàn.</small></div>
+            <button class="btn-kapi btn-green" style="width:100%;margin:12px 0 0;" onclick="nextKofferQuestion()">🧳 Đóng gói món tiếp theo</button>`;
+        return;
+    }
+
+    kofferGame.mistakes++;
+    if (!kofferGame.wrongWords.some(item => item.de === question.word.de)) kofferGame.wrongWords.push(question.word);
+    const saved = getSavedMissed();
+    if (!saved.some(item => item.de === question.word.de)) { saved.push(question.word); saveMissed(saved); }
+    const line = kofferWrongLines[Math.min(kofferGame.mistakes - 1, kofferWrongLines.length - 1)];
+
+    if (kofferGame.mistakes >= 3) {
+        document.getElementById('feedback-area').innerHTML = `
+            <div style="padding:14px;border-radius:14px;background:#ffebee;color:#b71c1c;font-weight:bold;">${line}<br><small>Đúng ra phải là: <b>${question.word.de}</b></small></div>
+            <button class="btn-kapi" style="width:100%;margin:12px 0 0;background:#eceff1;" onclick="finishKofferGame(false)">🥺 Nhìn vali bỏ đi</button>`;
+    } else {
+        document.getElementById('feedback-area').innerHTML = `
+            <div style="padding:14px;border-radius:14px;background:#fff3e0;color:#bf5f00;font-weight:bold;">${line}<br><small>Đúng ra phải là: <b>${question.word.de}</b></small></div>
+            <button class="btn-kapi" style="width:100%;margin:12px 0 0;background:#ffcc80;" onclick="nextKofferQuestion()">🫩 Đi tiếp trước khi nó đổi ý</button>`;
+    }
+}
+
+function nextKofferQuestion() {
+    kofferGame.index++;
+    document.getElementById('buttons').style.display = 'block';
+    renderKofferQuestion();
+}
+
+function finishKofferGame(success) {
+    const wrong = uniqueMiniGameWords(kofferGame.wrongWords);
+    const packed = kofferGame.packed.length;
+    document.getElementById('buttons').style.display = 'block';
+    document.getElementById('feedback-area').style.display = 'block';
+
+    if (success) {
+        document.getElementById('message').innerHTML = `
+            ${renderKofferStatus()}
+            <h2 style="color:#2e7d32;">🇩🇪 Vali đã tới Deutschland!</h2>
+            <p>Nó vẫn 🫩, nhưng không thể phủ nhận bồ câu đã đóng gói đủ <b>${packed}/${kofferGame.questions.length}</b> từ.</p>`;
+        document.getElementById('feedback-area').innerHTML = `
+            <div style="padding:16px;background:#e8f5e9;border:2px dashed #81c784;border-radius:16px;">
+                <b>🏅 Huy hiệu: Không bị bỏ lại ở sân bay</b><br>
+                ${wrong.length ? `Cần ôn lại: ${wrong.map(word => word.de).join(' · ')}` : 'Không làm rơi từ nào. Voi rất đỗi tự hào 🫪'}
+            </div>`;
+    } else {
+        document.getElementById('message').innerHTML = `
+            <div style="max-width:620px;margin:auto;overflow:hidden;min-height:120px;">
+                <span id="koffer-leaving" style="font-size:76px;display:inline-block;transition:transform 1s ease-in,opacity 1s ease-in;">🧳</span>
+                <h3 style="color:#795548;">🫩 Tôi không còn gì để mất. Tạm biệt.</h3>
+            </div>`;
+        document.getElementById('feedback-area').innerHTML = `
+            <div style="padding:16px;background:#fff3e0;border-radius:16px;">
+                Bồ câu đứng lại với <b>${packed}</b> món đã gói và một biểu cảm 🥺.<br>
+                ${wrong.length ? `Từ làm vali mất niềm tin: <b>${wrong.map(word => word.de).join(' · ')}</b>` : ''}
+            </div>`;
+        setTimeout(() => {
+            const suitcase = document.getElementById('koffer-leaving');
+            if (suitcase) { suitcase.style.transform = 'translateX(260px) rotate(12deg)'; suitcase.style.opacity = '0'; }
+        }, 80);
+    }
+
+    document.getElementById('buttons').innerHTML = `
+        ${wrong.length ? '<button class="btn-kapi" style="background:#ffcc80;" onclick="reviewKofferMistakes()">🔁 Ôn những từ làm vali 🫩</button>' : ''}
+        <button class="btn-kapi btn-green" onclick="startKofferGame(kofferGame.route)">🧳 Gọi vali quay lại</button>
+        <button class="btn-kapi btn-home" onclick="showVokabelHauptmenu()">⬅️ Về Menu</button>`;
+}
+
+function reviewKofferMistakes() {
+    const wrong = uniqueMiniGameWords(kofferGame.wrongWords);
+    if (!wrong.length) return showVokabelHauptmenu();
+    dailyMissionActive = false;
+    flashcardWords = wrong;
+    currentFlashcardGroup = 'review';
+    currentFlashcardIndex = 0;
+    isFlipped = false;
+    renderFlashcard();
 }
 
 // 6. SPRECHEN & SCHREIBEN
