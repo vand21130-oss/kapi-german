@@ -1560,9 +1560,8 @@ function finishKofferGame(success) {
                 ${wrong.length ? `Cần ôn lại: ${wrong.map(word => word.de).join(' · ')}` : 'Không làm rơi từ nào. Voi rất đỗi tự hào 🫪'}
             </div>${roundSummary}`;
     } else {
-        const dumpedIcons = kofferGame.packed.length
-            ? kofferGame.packed.map((_, index) => kofferItemIcons[index % kofferItemIcons.length])
-            : ['🧦', '📄', '🥨'];
+        // Vali luôn mang đủ 8 món của chuyến; thất bại là nó dốc sạch, không chỉ đổ số từ đã trả lời đúng.
+        const dumpedIcons = [...kofferItemIcons];
         document.getElementById('message').innerHTML = `
             <style>
                 @keyframes kofferFinalDump {
@@ -1571,7 +1570,7 @@ function finishKofferGame(success) {
                     14%{transform:translateX(calc(-50% + 7px)) rotate(5deg)}
                     17%{transform:translateX(calc(-50% - 5px)) rotate(-4deg)}
                     21%{transform:translateX(-50%) rotate(0)}
-                    35%,55%{transform:translateX(calc(-50% - 25px)) translateY(34px) rotate(-82deg)}
+                    35%,55%{transform:translateX(calc(-50% - 18px)) translateY(27px) rotate(-65deg)}
                     69%,78%{transform:translateX(-50%) translateY(0) rotate(0);opacity:1}
                     100%{transform:translateX(390px) rotate(12deg);opacity:0}
                 }
@@ -1593,8 +1592,7 @@ function finishKofferGame(success) {
                 .koffer-airport-floor{position:absolute;left:4%;right:4%;bottom:27px;height:5px;border-radius:99px;background:#c7b8b1;box-shadow:0 6px 0 #efebe9;z-index:1;}
                 .koffer-dump-actor{position:absolute;left:50%;top:35px;z-index:5;transform-origin:50% 82%;animation:kofferFinalDump 4.8s ease-in-out forwards;}
                 .koffer-dump-actor #koffer-leaving{position:relative;z-index:2;margin:0;animation:none;transition:none;}
-                .koffer-open-lid{position:absolute;z-index:1;left:2px;top:-1px;width:84px;height:31px;border:4px solid #6d4528;border-radius:12px 12px 5px 5px;background:linear-gradient(145deg,#e7a74a,#bd7332);transform-origin:6px 27px;animation:kofferLidOpen 4.8s ease-in-out forwards;box-shadow:inset 0 4px rgba(255,255,255,.22);}
-                .koffer-open-lid:before{content:"";position:absolute;width:36px;height:14px;border:5px solid #6d4528;border-bottom:0;border-radius:11px 11px 0 0;left:19px;top:-18px;}
+                .koffer-open-lid{position:absolute;z-index:1;left:18px;top:3px;width:54px;height:13px;border:3px solid #6d4528;border-radius:8px 8px 4px 4px;background:linear-gradient(145deg,#e7a74a,#bd7332);transform-origin:5px 10px;animation:kofferLidOpen 4.8s ease-in-out forwards;box-shadow:inset 0 2px rgba(255,255,255,.22);}
                 .koffer-dumped-item{position:absolute;left:calc(50% - 14px);top:73px;font-size:29px;z-index:3;opacity:0;filter:drop-shadow(0 3px 2px rgba(0,0,0,.13));animation:kofferItemFall 3.8s cubic-bezier(.22,.72,.3,1) var(--drop-delay) forwards;}
                 .koffer-dump-caption{position:relative;z-index:7;margin-top:2px;color:#8d6e63;font-size:14px;}
             </style>
@@ -1613,7 +1611,7 @@ function finishKofferGame(success) {
             </div>`;
         document.getElementById('feedback-area').innerHTML = `
             <div style="padding:16px;background:#fff3e0;border-radius:16px;">
-                Vali đã đổ <b>${packed || 'toàn bộ'}</b> món ra ngoài. Bồ câu đứng lại giữa sân bay với biểu cảm 🥺.<br>
+                Vali đã đổ sạch <b>${dumpedIcons.length} món</b> ra ngoài${packed ? `, kể cả ${packed} món bồ câu vừa đóng gói đúng` : ''}. Bồ câu đứng lại giữa sân bay với biểu cảm 🥺.<br>
                 ${wrong.length ? `Từ làm vali mất niềm tin: <b>${wrong.map(word => word.de).join(' · ')}</b>` : ''}
             </div>${roundSummary}`;
         // Vali chỉ nói tạm biệt sau khi dựng dậy; tránh âm thanh chạy trước hoạt cảnh.
