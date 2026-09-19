@@ -15,7 +15,23 @@ let currentGameIndex = 0;
 let gameScore = 0;
 
 // 1. ĐIỀU HƯỚNG CƠ BẢN
+function setLearningFocus(enabled, mascot = '') {
+    document.body.classList.toggle('learning-focus', Boolean(enabled));
+    let slot = document.getElementById('focus-mascot-slot');
+    const message = document.getElementById('message');
+    if (!slot && message) {
+        slot = document.createElement('div');
+        slot.id = 'focus-mascot-slot';
+        message.parentNode.insertBefore(slot, message);
+    }
+    if (slot) {
+        slot.innerHTML = enabled && mascot === 'koffer' ? renderKofferMascot('calm') : '';
+        slot.style.display = enabled && mascot === 'koffer' ? 'block' : 'none';
+    }
+}
+
 function sayHallo() {
+    setLearningFocus(false);
     document.getElementById("message").innerText = "Hallo! Wie geht's dir? 😊";
     document.getElementById("buttons").innerHTML = `
         <button class="btn-kapi btn-green" onclick="goodAnswer()">😊 Mir geht's gut!</button>
@@ -28,6 +44,7 @@ function goodAnswer() { document.getElementById("message").innerText = "Das freu
 function badAnswer() { document.getElementById("message").innerText = "Oh nein! Hoffentlich wird dein Tag besser. 💛"; showLevels(); }
 
 function goHome() {
+    setLearningFocus(false);
     document.getElementById("feedback-area").style.display = "none";
     document.getElementById("timer").innerText = "";
     clearInterval(countdown);
@@ -52,6 +69,7 @@ function goHome() {
 }
 
 function showLevels() {
+    setLearningFocus(false);
     document.getElementById("feedback-area").style.display = "none";
     document.getElementById("message").innerText = "Welches Niveau möchtest du heute üben? 📚";
     document.getElementById("buttons").innerHTML = `
@@ -75,6 +93,7 @@ function chooseLevel(level) {
 }
 
 function showLessons() {
+    setLearningFocus(false);
     document.getElementById("feedback-area").style.display = "none";
     clearInterval(countdown);
     document.getElementById("timer").innerText = "";
@@ -89,6 +108,7 @@ function showLessons() {
 }
 
 function chooseLesson(lesson) {
+    setLearningFocus(true, lesson === 'Vokabeln' ? 'koffer' : '');
     if (lesson === "Sprechen") {
         document.getElementById("message").innerHTML = "Welchen Teil möchtest du üben?";
         document.getElementById("buttons").innerHTML = `
@@ -369,6 +389,7 @@ function renderUsageBadge(word) {
 }
 
 function showVokabelHauptmenu() {
+    setLearningFocus(true, 'koffer');
     dailyMissionActive = false;
     document.getElementById("feedback-area").style.display = "none";
     let missed = getSavedMissed();
@@ -1269,6 +1290,7 @@ function makeKofferSayBye(elementId = 'koffer-face') {
 }
 
 function showKofferIntro() {
+    setLearningFocus(true);
     document.getElementById('feedback-area').style.display = 'none';
     document.getElementById('buttons').style.display = 'block';
     document.getElementById('message').innerHTML = `
@@ -1277,6 +1299,7 @@ function showKofferIntro() {
             <h2 style="margin:5px 0;color:#795548;">Koffer nach Deutschland</h2>
             <div style="display:inline-block;margin:2px auto 8px;padding:9px 13px;background:white;border:2px solid #d7ccc8;border-radius:16px;color:#6d4c41;font-size:14px;"><i>“Tôi nhận chuyến này vì phòng nhân sự nói chỉ có tám từ.”</i></div>
             <p style="color:#607d8b;line-height:1.6;">Vali chỉ còn chỗ cho <b>8 từ</b>. Đúng liên tiếp <b>3 câu</b> để mở Level 2; sau đó phải tự gõ lại toàn bộ tám từ. Sai ba lần, nó sẽ đổ đồ và bỏ đi không luyến tiếc.</p>
+            ${renderKofferWeeklyProgress()}
         </div>`;
     document.getElementById('buttons').innerHTML = `
         <div style="display:grid;gap:11px;max-width:620px;margin:0 auto;">
@@ -1519,6 +1542,130 @@ function nextKofferTypingWord() {
     renderKofferTypingQuestion();
 }
 
+const KOFFER_WEEKLY_STORY_KEY = 'kapi_koffer_weekly_story_v1';
+const kofferWeeklyStories = [
+    {
+        title: 'Teil 1 · Der Koffer auf Gleis 7',
+        html: `Am Montag stand ein Koffer ohne <ruby>Besitzer<rt>chủ sở hữu</rt></ruby> auf Gleis 7. Ein <ruby>Sicherheitsbeamter<rt>nhân viên an ninh</rt></ruby> wollte ihn öffnen. Da sagte eine müde Stimme <ruby>aus dem Inneren<rt>từ bên trong</rt></ruby>: „Fassen Sie mich nicht an. Ich habe gerade <ruby>gekündigt<rt>xin nghỉ việc</rt></ruby>.“ Alle <ruby>wichen zurück<rt>lùi lại</rt></ruby>. Nur eine kleine Taube blieb stehen. Plötzlich klopfte etwas dreimal von innen. Dann öffnete sich der Reißverschluss von selbst …`,
+        speech: 'Am Montag stand ein Koffer ohne Besitzer auf Gleis sieben. Ein Sicherheitsbeamter wollte ihn öffnen. Da sagte eine müde Stimme aus dem Inneren: Fassen Sie mich nicht an. Ich habe gerade gekündigt. Alle wichen zurück. Nur eine kleine Taube blieb stehen. Plötzlich klopfte etwas dreimal von innen. Dann öffnete sich der Reißverschluss von selbst.'
+    },
+    {
+        title: 'Teil 2 · Der blinde Passagier',
+        html: `Aus dem Koffer sprang kein Mensch, sondern ein sehr kleiner Pinguin mit einer roten Krawatte. Er behauptete, er sei ein <ruby>blinder Passagier<rt>hành khách lậu</rt></ruby> und müsse dringend nach Berlin. Der Koffer <ruby>seufzte<rt>thở dài</rt></ruby>: „Ich transportiere keine Tiere mehr. Die letzte Ente hat meine Socken gefressen.“ Die Taube wollte gerade antworten, als der Pinguin ein goldenes Ticket <ruby>hervorzog<rt>rút ra</rt></ruby>. Darauf stand der Name des Koffers …`,
+        speech: 'Aus dem Koffer sprang kein Mensch, sondern ein sehr kleiner Pinguin mit einer roten Krawatte. Er behauptete, er sei ein blinder Passagier und müsse dringend nach Berlin. Der Koffer seufzte: Ich transportiere keine Tiere mehr. Die letzte Ente hat meine Socken gefressen. Die Taube wollte gerade antworten, als der Pinguin ein goldenes Ticket hervorzog. Darauf stand der Name des Koffers.'
+    },
+    {
+        title: 'Teil 3 · Ein Name, den niemand kannte',
+        html: `Auf dem Ticket stand: Herr Knitterfrei. Der Koffer wurde <ruby>schlagartig<rt>đột ngột</rt></ruby> still. „Diesen Namen kennt niemand“, flüsterte er. Der Pinguin erklärte, das Ticket stamme aus dem <ruby>Fundbüro<rt>phòng đồ thất lạc</rt></ruby> des Berliner Flughafens und sei seit zwanzig Jahren <ruby>verschollen<rt>mất tích</rt></ruby>. Noch bevor jemand fragen konnte, warum ein Ticket so lange verschwunden war, ertönte aus dem Lautsprecher eine Durchsage: „Herr Knitterfrei, Ihr Besitzer wartet am Ausgang.“ Der Koffer drehte sich langsam um …`,
+        speech: 'Auf dem Ticket stand: Herr Knitterfrei. Der Koffer wurde schlagartig still. Diesen Namen kennt niemand, flüsterte er. Der Pinguin erklärte, das Ticket stamme aus dem Fundbüro des Berliner Flughafens und sei seit zwanzig Jahren verschollen. Noch bevor jemand fragen konnte, warum ein Ticket so lange verschwunden war, ertönte aus dem Lautsprecher eine Durchsage: Herr Knitterfrei, Ihr Besitzer wartet am Ausgang. Der Koffer drehte sich langsam um.'
+    },
+    {
+        title: 'Teil 4 · Die Frau mit dem gelben Regenschirm',
+        html: `Am Ausgang stand eine alte Frau mit einem gelben Regenschirm. Als sie den Koffer sah, lächelte sie, als hätte sie ihn gestern erst <ruby>abgestellt<rt>đặt xuống</rt></ruby>. Herr Knitterfrei dagegen <ruby>erstarrte<rt>đứng sững</rt></ruby>. „Sie haben mich damals am Flughafen vergessen“, sagte er. Die Frau schüttelte den Kopf: „Nein. Du bist weggelaufen.“ Die Taube sah den Koffer an. Der Koffer sah die Taube an. Der Pinguin setzte vorsichtshalber einen Helm auf. Dann sagte die Frau: „Und ich weiß auch, warum.“ …`,
+        speech: 'Am Ausgang stand eine alte Frau mit einem gelben Regenschirm. Als sie den Koffer sah, lächelte sie, als hätte sie ihn gestern erst abgestellt. Herr Knitterfrei dagegen erstarrte. Sie haben mich damals am Flughafen vergessen, sagte er. Die Frau schüttelte den Kopf: Nein. Du bist weggelaufen. Die Taube sah den Koffer an. Der Koffer sah die Taube an. Der Pinguin setzte vorsichtshalber einen Helm auf. Dann sagte die Frau: Und ich weiß auch, warum.'
+    },
+    {
+        title: 'Teil 5 · Die verbotene Socke',
+        html: `Die Frau öffnete ihre Handtasche und holte eine einzelne grüne Socke heraus. Der Koffer begann sofort zu <ruby>zittern<rt>run rẩy</rt></ruby>. „Die gehört nicht mir“, sagte er viel zu schnell. Laut der Frau enthielt die Socke eine <ruby>geheime Botschaft<rt>thông điệp bí mật</rt></ruby>, die niemals Deutschland erreichen durfte. Der Pinguin prüfte das Etikett und wurde blass. Die Taube fragte: „Was steht darauf?“ Er antwortete nicht, sondern zeigte wortlos auf die Waschmaschine hinter ihnen. Sie hatte gerade angefangen, rückwärts zu laufen …`,
+        speech: 'Die Frau öffnete ihre Handtasche und holte eine einzelne grüne Socke heraus. Der Koffer begann sofort zu zittern. Die gehört nicht mir, sagte er viel zu schnell. Laut der Frau enthielt die Socke eine geheime Botschaft, die niemals Deutschland erreichen durfte. Der Pinguin prüfte das Etikett und wurde blass. Die Taube fragte: Was steht darauf? Er antwortete nicht, sondern zeigte wortlos auf die Waschmaschine hinter ihnen. Sie hatte gerade angefangen, rückwärts zu laufen.'
+    },
+    {
+        title: 'Teil 6 · Abflug ohne Flugzeug',
+        html: `Die Waschmaschine wurde immer schneller. Aus ihrer Trommel kam Wind, obwohl sie nicht einmal <ruby>angeschlossen<rt>được cắm điện</rt></ruby> war. Die alte Frau rief: „Niemand darf die Socke hineinwerfen!“ Natürlich stolperte die Taube genau in diesem Moment. Die Socke flog durch die Luft und <ruby>verschwand<rt>biến mất</rt></ruby> in der Trommel. Ein blaues Licht <ruby>breitete sich aus<rt>lan rộng</rt></ruby>. Der Boden unter ihnen löste sich auf — und der Koffer flüsterte: „Nicht schon wieder.“ …`,
+        speech: 'Die Waschmaschine wurde immer schneller. Aus ihrer Trommel kam Wind, obwohl sie nicht einmal angeschlossen war. Die alte Frau rief: Niemand darf die Socke hineinwerfen! Natürlich stolperte die Taube genau in diesem Moment. Die Socke flog durch die Luft und verschwand in der Trommel. Ein blaues Licht breitete sich aus. Der Boden unter ihnen löste sich auf, und der Koffer flüsterte: Nicht schon wieder.'
+    }
+];
+
+function getKofferWeekId(date = new Date()) {
+    const copy = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    const day = copy.getDay() || 7;
+    copy.setDate(copy.getDate() - day + 1);
+    return copy.toLocaleDateString('sv-SE');
+}
+
+function loadKofferStoryProgress() {
+    let data = {};
+    try { data = JSON.parse(localStorage.getItem(KOFFER_WEEKLY_STORY_KEY) || '{}'); } catch (_) {}
+    const weekId = getKofferWeekId();
+    if (data.weekId !== weekId) data = { ...data, weekId, perfectDates: [] };
+    data.perfectDates = Array.isArray(data.perfectDates) ? data.perfectDates : [];
+    data.unlocked = Math.min(Number(data.unlocked) || 0, kofferWeeklyStories.length);
+    data.claimedWeeks = data.claimedWeeks || {};
+    return data;
+}
+
+function saveKofferStoryProgress(data) {
+    try { localStorage.setItem(KOFFER_WEEKLY_STORY_KEY, JSON.stringify(data)); } catch (_) {}
+}
+
+function recordKofferPerfectDay() {
+    const data = loadKofferStoryProgress();
+    const today = new Date().toLocaleDateString('sv-SE');
+    if (!data.perfectDates.includes(today)) data.perfectDates.push(today);
+    let newlyUnlocked = false;
+    if (data.perfectDates.length >= 5 && !data.claimedWeeks[data.weekId] && data.unlocked < kofferWeeklyStories.length) {
+        data.unlocked++;
+        data.claimedWeeks[data.weekId] = data.unlocked;
+        newlyUnlocked = true;
+    }
+    saveKofferStoryProgress(data);
+    return { ...data, newlyUnlocked };
+}
+
+function renderKofferWeeklyProgress(data = loadKofferStoryProgress()) {
+    const count = Math.min(data.perfectDates.length, 5);
+    const stamps = Array.from({ length: 5 }, (_, index) => index < count ? '🎫' : '▫️').join(' ');
+    return `<div style="margin-top:12px;padding:12px;background:#fff8e1;border:2px dashed #ffb74d;border-radius:14px;color:#6d4c41;">
+        <b>🎙️ Truyện thưởng tuần này: ${count}/5 ngày hoàn hảo</b><br>
+        <span style="font-size:22px;letter-spacing:4px;">${stamps}</span><br>
+        <small>Chỉ lượt gõ 8/8 không sai mới được đóng một tem mỗi ngày.</small>
+        ${data.unlocked ? `<br><button class="btn-kapi" style="margin:9px 0 0;background:#ffe0b2;font-size:15px;padding:9px 13px;" onclick="showKofferRewardStory(${data.unlocked - 1})">🎧 Nghe chương đã mở gần nhất</button>` : ''}
+    </div>`;
+}
+
+function showKofferRewardStory(index) {
+    setLearningFocus(true);
+    const data = loadKofferStoryProgress();
+    const safeIndex = Math.max(0, Math.min(Number(index) || 0, data.unlocked - 1));
+    if (!data.unlocked || !kofferWeeklyStories[safeIndex]) return showKofferIntro();
+    const story = kofferWeeklyStories[safeIndex];
+    document.getElementById('feedback-area').style.display = 'none';
+    document.getElementById('message').innerHTML = `
+        <style>
+            .koffer-story-card{max-width:720px;margin:auto;padding:20px;background:#fffdf7;border:3px solid #ffcc80;border-radius:20px;text-align:left;line-height:2;color:#37474f;box-shadow:0 9px 22px rgba(93,64,55,.1)}
+            .koffer-story-card ruby{color:#d35400;font-weight:900;ruby-position:under;text-decoration:underline dotted #ffb74d;text-underline-offset:3px}
+            .koffer-story-card rt{font-size:10px;color:#795548;font-weight:600}
+            .koffer-cliffhanger{margin-top:16px;padding:12px;background:#4e342e;color:white;border-radius:13px;text-align:center;font-weight:800}
+            #koffer-storyteller.talking .koffer-mouth{animation:kofferTalk .24s ease-in-out infinite}
+        </style>
+        ${renderKofferMascot('calm', 'koffer-storyteller')}
+        <div class="koffer-story-card">
+            <h3 style="text-align:center;color:#795548;margin-top:0;">🧳 ${story.title}</h3>
+            <div>${story.html}</div>
+            <div class="koffer-cliffhanger">Fortsetzung folgt …<br><small>„Den Rest erzähle ich dir nächste Woche — wenn du dich benimmst.“</small></div>
+        </div>`;
+    const chapterButtons = Array.from({ length: data.unlocked }, (_, chapter) => `<button class="btn-kapi" style="font-size:14px;padding:8px 11px;background:${chapter === safeIndex ? '#ffcc80' : '#f5f5f5'};" onclick="showKofferRewardStory(${chapter})">Teil ${chapter + 1}</button>`).join('');
+    document.getElementById('buttons').style.display = 'block';
+    document.getElementById('buttons').innerHTML = `
+        <button class="btn-kapi btn-green" onclick="playKofferRewardStory(${safeIndex})">🔊 Vali kể chậm</button><br>
+        <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:5px;">${chapterButtons}</div>
+        <button class="btn-kapi btn-home" onclick="showKofferIntro()">⬅️ Về game vali</button>`;
+}
+
+function playKofferRewardStory(index) {
+    const story = kofferWeeklyStories[index];
+    const mascot = document.getElementById('koffer-storyteller');
+    if (!story || !('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+    const voice = new SpeechSynthesisUtterance(story.speech);
+    voice.lang = 'de-DE';
+    voice.rate = 0.72;
+    voice.pitch = 0.76;
+    if (mascot) mascot.classList.add('talking');
+    voice.onend = voice.onerror = () => mascot && mascot.classList.remove('talking');
+    window.speechSynthesis.speak(voice);
+}
+
 function renderKofferRoundSummary() {
     const cards = kofferGame.questions.map((question, index) => {
         const word = question.word;
@@ -1537,6 +1684,19 @@ function renderKofferRoundSummary() {
         </details>`;
 }
 
+const KOFFER_DUMP_DAILY_KEY = 'kapi_koffer_dump_daily_v1';
+
+function claimDailyKofferDump() {
+    // Hoạt cảnh hiếm: chỉ mở sau Level 2 và tối đa một lần/ngày trên mỗi trình duyệt.
+    if (!kofferGame.typingMode) return false;
+    const today = new Date().toLocaleDateString('sv-SE');
+    try {
+        if (localStorage.getItem(KOFFER_DUMP_DAILY_KEY) === today) return false;
+        localStorage.setItem(KOFFER_DUMP_DAILY_KEY, today);
+    } catch (_) {}
+    return true;
+}
+
 function finishKofferGame(success) {
     const wrong = uniqueMiniGameWords(kofferGame.wrongWords);
     const packed = kofferGame.packed.length;
@@ -1546,6 +1706,9 @@ function finishKofferGame(success) {
     document.getElementById('feedback-area').style.display = 'block';
 
     if (success) {
+        const storyProgress = kofferGame.typingMode && wrong.length === 0
+            ? recordKofferPerfectDay()
+            : loadKofferStoryProgress();
         const successStatus = renderKofferStatus().replace('class="koffer-mascot calm"', 'class="koffer-mascot done"').replace('class="koffer-mascot annoyed"', 'class="koffer-mascot done"');
         const successText = kofferGame.typingMode
             ? `Bồ câu đã tự gõ lại đủ <b>${kofferGame.typingWords.length}/${kofferGame.typingWords.length}</b> từ mà không nhìn đáp án.`
@@ -1558,10 +1721,29 @@ function finishKofferGame(success) {
             <div style="padding:16px;background:#e8f5e9;border:2px dashed #81c784;border-radius:16px;">
                 <b>🏅 Huy hiệu: ${kofferGame.typingMode ? 'Qua hải quan bằng trí nhớ' : 'Không bị bỏ lại ở sân bay'}</b><br>
                 ${wrong.length ? `Cần ôn lại: ${wrong.map(word => word.de).join(' · ')}` : 'Không làm rơi từ nào. Voi rất đỗi tự hào 🫪'}
-            </div>${roundSummary}`;
+            </div>
+            ${storyProgress.newlyUnlocked ? `<div style="margin-top:12px;padding:16px;background:linear-gradient(135deg,#fff3e0,#e8f5e9);border:3px solid #ffb74d;border-radius:17px;"><b>🎁 Vali miễn cưỡng mở khóa Teil ${storyProgress.unlocked}!</b><br><small>“Tôi không chuẩn bị riêng cho cậu đâu.”</small><br><button class="btn-kapi btn-green" style="margin:10px 0 0;" onclick="showKofferRewardStory(${storyProgress.unlocked - 1})">🎧 Nghe truyện thưởng</button></div>` : renderKofferWeeklyProgress(storyProgress)}
+            ${roundSummary}`;
     } else {
         // Vali luôn mang đủ 8 món của chuyến; thất bại là nó dốc sạch, không chỉ đổ số từ đã trả lời đúng.
         const dumpedIcons = [...kofferItemIcons];
+        const showFullDump = claimDailyKofferDump();
+        if (!showFullDump) {
+            const refusal = kofferGame.typingMode
+                ? 'Hôm nay tôi diễn một lần rồi. Muốn xem nữa thì học thuộc tám từ đi.'
+                : 'Chưa qua nổi Level 1 mà đã đòi xem tôi đổ đồ à? Hết suất diễn. Ôn từ đi.';
+            document.getElementById('message').innerHTML = `
+                <div style="max-width:580px;margin:auto;">
+                    ${renderKofferMascot('annoyed')}
+                    <div style="margin:10px auto;padding:12px 16px;background:#fff;border:2px solid #d7ccc8;border-radius:16px;color:#795548;font-size:16px;font-weight:800;line-height:1.5;">“${refusal}”</div>
+                    <p style="color:#8d6e63;font-size:14px;">🫩 Vali đóng khóa. Không có tiết mục thất bại để cày.</p>
+                </div>`;
+            document.getElementById('feedback-area').innerHTML = `
+                <div style="padding:16px;background:#fff3e0;border-radius:16px;">
+                    Chuyến đi kết thúc. Muốn mở cảnh đặc biệt, bồ câu phải vào được <b>Level 2</b>; hoạt cảnh chỉ xuất hiện <b>một lần mỗi ngày</b>.<br>
+                    ${wrong.length ? `Ôn lại ngay: <b>${wrong.map(word => word.de).join(' · ')}</b>` : ''}
+                </div>${roundSummary}`;
+        } else {
         document.getElementById('message').innerHTML = `
             <style>
                 @keyframes kofferFinalDump {
@@ -1573,11 +1755,6 @@ function finishKofferGame(success) {
                     35%,55%{transform:translateX(calc(-50% - 18px)) translateY(27px) rotate(-65deg)}
                     69%,78%{transform:translateX(-50%) translateY(0) rotate(0);opacity:1}
                     100%{transform:translateX(390px) rotate(12deg);opacity:0}
-                }
-                @keyframes kofferLidOpen {
-                    0%,31%{transform:rotate(0) translateY(0)}
-                    39%,57%{transform:rotate(-112deg) translate(-8px,-7px)}
-                    69%,100%{transform:rotate(0) translateY(0)}
                 }
                 @keyframes kofferItemFall {
                     0%,34%{transform:translate(0,0) rotate(0) scale(.3);opacity:0}
@@ -1592,7 +1769,6 @@ function finishKofferGame(success) {
                 .koffer-airport-floor{position:absolute;left:4%;right:4%;bottom:27px;height:5px;border-radius:99px;background:#c7b8b1;box-shadow:0 6px 0 #efebe9;z-index:1;}
                 .koffer-dump-actor{position:absolute;left:50%;top:35px;z-index:5;transform-origin:50% 82%;animation:kofferFinalDump 4.8s ease-in-out forwards;}
                 .koffer-dump-actor #koffer-leaving{position:relative;z-index:2;margin:0;animation:none;transition:none;}
-                .koffer-open-lid{position:absolute;z-index:1;left:18px;top:3px;width:54px;height:13px;border:3px solid #6d4528;border-radius:8px 8px 4px 4px;background:linear-gradient(145deg,#e7a74a,#bd7332);transform-origin:5px 10px;animation:kofferLidOpen 4.8s ease-in-out forwards;box-shadow:inset 0 2px rgba(255,255,255,.22);}
                 .koffer-dumped-item{position:absolute;left:calc(50% - 14px);top:73px;font-size:29px;z-index:3;opacity:0;filter:drop-shadow(0 3px 2px rgba(0,0,0,.13));animation:kofferItemFall 3.8s cubic-bezier(.22,.72,.3,1) var(--drop-delay) forwards;}
                 .koffer-dump-caption{position:relative;z-index:7;margin-top:2px;color:#8d6e63;font-size:14px;}
             </style>
@@ -1605,7 +1781,7 @@ function finishKofferGame(success) {
                         const [x, y, rotation] = scatter[index % scatter.length];
                         return `<span class="koffer-dumped-item" style="--drop-x:${x}px;--drop-y:${y}px;--drop-r:${rotation}deg;--drop-delay:${(index % 4) * 0.07}s">${icon}</span>`;
                     }).join('')}</div>
-                    <div class="koffer-dump-actor"><div class="koffer-open-lid"></div>${renderKofferMascot('leaving', 'koffer-leaving')}</div>
+                    <div class="koffer-dump-actor">${renderKofferMascot('leaving', 'koffer-leaving')}</div>
                 </div>
                 <div class="koffer-dump-caption"><small>*Vali rung lên, nghiêng người dốc sạch đồ, nói “bye” rồi tự lăn đi.*</small></div>
             </div>`;
@@ -1616,6 +1792,7 @@ function finishKofferGame(success) {
             </div>${roundSummary}`;
         // Vali chỉ nói tạm biệt sau khi dựng dậy; tránh âm thanh chạy trước hoạt cảnh.
         setTimeout(() => makeKofferSayBye('koffer-leaving'), 3200);
+        }
     }
 
     document.getElementById('buttons').innerHTML = `
@@ -1637,11 +1814,13 @@ function reviewKofferMistakes() {
 
 // 6. SPRECHEN & SCHREIBEN
 function showTeil1() {
+    setLearningFocus(true);
     let thema = teil1[Math.floor(Math.random() * teil1.length)];
     setupSprechenUI("<b>🗣️ B2 Teil 1</b><br><br>" + thema.thema + "<br><br>• " + thema.punkte.join("<br>• "));
 }
 
 function showTeil2() {
+    setLearningFocus(true);
     let thema = teil2[Math.floor(Math.random() * teil2.length)];
     setupSprechenUI("<b>🗣️ B2 Teil 2</b><br><br>" + thema);
 }
@@ -1663,6 +1842,7 @@ function setupSprechenUI(titleHtml) {
 }
 
 function showSchreibenMenu() {
+    setLearningFocus(true);
     document.getElementById("message").innerHTML = "✍️ Nhập đoạn văn của cậu vào đây:";
     document.getElementById("feedback-area").style.display = "block";
     document.getElementById("feedback-area").innerHTML = `
@@ -1718,6 +1898,7 @@ async function checkGrammar(inputId) {
 
 // 7. HÖREN LOGIC
 function showHoerenMenu() {
+    setLearningFocus(true);
     document.getElementById("feedback-area").style.display = "none";
     document.getElementById("message").innerHTML = `🎧 Hôm nay Vịt muốn nghe gì?`;
     document.getElementById("buttons").innerHTML = `
@@ -1965,6 +2146,7 @@ function checkStoryMiniQuiz(chapter, selectedIndex, button) {
 }
 
 function showKapiStory(level, chapter = 1) {
+    setLearningFocus(true);
     document.getElementById("feedback-area").style.display = "block";
     let resultHtml = "";
     let buttonContent = "";
