@@ -1813,32 +1813,315 @@ function reviewKofferMistakes() {
 }
 
 // 6. SPRECHEN & SCHREIBEN
+// Kho đề teil1 / teil2 được giữ nguyên. Phần này chỉ quản lý buổi luyện.
+const SPRECHEN_HISTORY_KEY = 'kapi_sprechen_history_v1';
+const sprechenCounterarguments = [
+    'Das klingt vernünftig, aber ist diese Lösung nicht zu teuer?',
+    'Ich verstehe deinen Standpunkt. Trotzdem profitieren nicht alle Menschen davon.',
+    'Da muss ich dir teilweise widersprechen. Welche Nachteile könnte das haben?',
+    'Das ist ein gutes Argument. Aber funktioniert das auch langfristig?',
+    'Viele Menschen sehen das anders. Wie würdest du sie überzeugen?'
+];
+
+let sprechenSession = null;
+let sprechenRecorder = null;
+let sprechenStream = null;
+let sprechenAudioChunks = [];
+let sprechenStartedAt = 0;
+
 function showTeil1() {
     setLearningFocus(true);
-    let thema = teil1[Math.floor(Math.random() * teil1.length)];
-    setupSprechenUI("<b>🗣️ B2 Teil 1</b><br><br>" + thema.thema + "<br><br>• " + thema.punkte.join("<br>• "));
+    const thema = teil1[Math.floor(Math.random() * teil1.length)];
+    setupSprechenUI({ teil: 1, thema: thema.thema, punkte: thema.punkte || [] });
 }
 
 function showTeil2() {
     setLearningFocus(true);
-    let thema = teil2[Math.floor(Math.random() * teil2.length)];
-    setupSprechenUI("<b>🗣️ B2 Teil 2</b><br><br>" + thema);
+    const thema = teil2[Math.floor(Math.random() * teil2.length)];
+    setupSprechenUI({ teil: 2, thema: String(thema), punkte: [] });
 }
 
-function setupSprechenUI(titleHtml) {
-    document.getElementById("message").innerHTML = titleHtml;
-    document.getElementById("feedback-area").style.display = "block";
-    document.getElementById("feedback-area").innerHTML = `
-        <div id="transcript-text" class="transcript-box" contenteditable="true">
-            <i>Click chuột vào đây, nhấn <b>Windows + H</b> und bắt đầu nói tiếng Đức...</i>
-        </div>
-        <div id="ai-correction" style="display:none; margin-top:15px; border-top:1px solid #ccc; padding-top:15px;"></div>
-    `;
-    document.getElementById("buttons").innerHTML = `
-        <button class="btn-kapi btn-green" onclick="checkGrammar('transcript-text')">🔍 Kiểm tra ngữ pháp</button>
-        <button class="btn-kapi btn-home" onclick="showLessons()">⬅️ Zurück</button>
-    `;
-    startTimer();
+function getSprechenTaskHtml() {
+    if (!sprechenSession) return '';
+    const punkte = sprechenSession.punkte.length
+        ? `<div style="margin-top:12px;text-align:left;display:inline-block;line-height:1.7;">${sprechenSession.punkte.map(p => `• ${p}`).join('<br>')}</div>`
+        : '';
+    return `<b>🗣️ B2 Teil ${sprechenSession.teil}</b><br><br>${sprechenSession.thema}${punkte}`;
+}
+
+function setupSprechenUI(task) {
+    clearInterval(countdown);
+    document.getElementById('timer').innerText = '';
+    sprechenSession = {
+        ...task,
+        mode: '',
+        notes: '',
+        transcript: '',
+        replyTranscript: '',
+        counterargument: '',
+        durationSeconds: 0,
+        recordingRound: 1
+    };
+    document.getElementById('message').innerHTML = getSprechenTaskHtml();
+    document.getElementById('feedback-area').style.display = 'block';
+    document.getElementById('feedback-area').innerHTML = `
+        <div style="max-width:680px;margin:auto;padding:18px;background:#f3f8ff;border:2px solid #90caf9;border-radius:18px;text-align:left;line-height:1.6;">
+            <b style="color:#1565c0;">🐘 Voi đã nhận đúng hồ sơ Sprechen</b><br>
+            <span style="color:#607d8b;">Chọn chế độ. Kho đề vẫn giữ nguyên, chỉ khác cách luyện.</span>
+        </div>`;
+    document.getElementById('buttons').innerHTML = `
+        <button class="btn-kapi btn-green" onclick="beginSprechenPreparation('practice')">🌱 Übungsmodus</button>
+        <button class="btn-kapi" style="background:#ffcc80;" onclick="beginSprechenPreparation('exam')">⏱️ Prüfungsmodus</button>
+        <button class="btn-kapi btn-home" onclick="leaveSprechen()">⬅️ Zurück</button>`;
+}
+
+function beginSprechenPreparation(mode) {
+    sprechenSession.mode = mode;
+    document.getElementById('message').innerHTML = getSprechenTaskHtml();
+    document.getElementById('feedback-area').innerHTML = `
+        <div style="max-width:680px;margin:auto;text-align:left;">
+            <label for="sprechen-notes"><b>📝 Stichpunkte chuẩn bị</b></label>
+            <textarea id="sprechen-notes" rows="4" placeholder="Chỉ ghi từ khóa – đừng viết nguyên bài..." style="width:100%;box-sizing:border-box;margin-top:8px;"></textarea>
+            ${mode === 'practice' ? `
+                <div style="margin-top:12px;padding:13px;background:#fff8e1;border-radius:13px;color:#6d4c41;line-height:1.65;">
+                    <b>🪜 Cầu nối cứu bồ câu:</b><br>
+                    Zunächst möchte ich … · Hinzu kommt, dass … · Ein gutes Beispiel dafür ist … · Abschließend lässt sich sagen, dass …
+                </div>` : `
+                <div style="margin-top:12px;padding:13px;background:#ffebee;border-radius:13px;color:#8e3b46;">🔒 Prüfungsmodus: không hiện khung câu gợi ý.</div>`}
+        </div>`;
+    document.getElementById('buttons').innerHTML = `
+        <button class="btn-kapi btn-green" onclick="startSprechenRecording(1)">🎤 Bắt đầu nói</button>
+        <button class="btn-kapi btn-home" onclick="restartSprechenModeChoice()">⬅️ Chọn lại chế độ</button>`;
+    startSprechenTimer(mode === 'exam' ? 900 : 180, '⏳ Chuẩn bị');
+}
+
+function startSprechenTimer(seconds, label) {
+    clearInterval(countdown);
+    let remaining = seconds;
+    const render = () => {
+        const m = Math.floor(remaining / 60);
+        const s = String(remaining % 60).padStart(2, '0');
+        document.getElementById('timer').innerText = `${label}: ${m}:${s}`;
+    };
+    render();
+    countdown = setInterval(() => {
+        remaining--;
+        render();
+        if (remaining <= 0) {
+            clearInterval(countdown);
+            document.getElementById('timer').innerText = `⏰ ${label}: hết giờ`;
+        }
+    }, 1000);
+}
+
+function getSupportedAudioMimeType() {
+    const candidates = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4'];
+    return candidates.find(type => window.MediaRecorder && MediaRecorder.isTypeSupported(type)) || '';
+}
+
+async function startSprechenRecording(round = 1) {
+    if (!sprechenSession) return;
+    const notes = document.getElementById('sprechen-notes');
+    if (notes) sprechenSession.notes = notes.value.trim();
+    if (!navigator.mediaDevices || !window.MediaRecorder) return showSprechenFallback();
+
+    try {
+        sprechenStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        const mimeType = getSupportedAudioMimeType();
+        sprechenRecorder = mimeType ? new MediaRecorder(sprechenStream, { mimeType }) : new MediaRecorder(sprechenStream);
+        sprechenAudioChunks = [];
+        sprechenSession.recordingRound = round;
+        sprechenRecorder.ondataavailable = event => { if (event.data.size) sprechenAudioChunks.push(event.data); };
+        sprechenRecorder.onstop = transcribeSprechenAudio;
+        sprechenRecorder.start();
+        sprechenStartedAt = Date.now();
+        renderSprechenRecording();
+    } catch (error) {
+        console.error('Microphone error:', error);
+        showSprechenFallback('Trình duyệt chưa cho phép dùng micro.');
+    }
+}
+
+function renderSprechenRecording() {
+    clearInterval(countdown);
+    let seconds = 0;
+    document.getElementById('message').innerHTML = `${getSprechenTaskHtml()}<br><div style="margin-top:16px;color:#e53935;font-weight:bold;">🔴 Đang ghi âm…</div>`;
+    const render = () => document.getElementById('timer').innerText = `🎤 ${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;
+    render();
+    countdown = setInterval(() => { seconds++; render(); }, 1000);
+    document.getElementById('feedback-area').innerHTML = `
+        <div style="padding:17px;background:#ffebee;border-radius:16px;color:#b71c1c;">
+            <b>Voi đang nghe. Cứ nói hết câu, không cần hoảng khi vấp :vvvv</b><br>
+            <small>${sprechenSession.recordingRound === 2 ? 'Hãy trả lời ý kiến phản biện.' : 'Audio chỉ được gửi đi sau khi cậu bấm dừng.'}</small>
+        </div>`;
+    document.getElementById('buttons').innerHTML = `
+        <button class="btn-kapi btn-red" onclick="stopSprechenRecording()">⏹️ Dừng và phiên âm</button>
+        <button class="btn-kapi btn-home" onclick="leaveSprechen()">✖ Hủy buổi luyện</button>`;
+}
+
+function stopSprechenRecording() {
+    if (!sprechenRecorder || sprechenRecorder.state === 'inactive') return;
+    clearInterval(countdown);
+    sprechenSession.durationSeconds += Math.max(1, Math.round((Date.now() - sprechenStartedAt) / 1000));
+    sprechenRecorder.stop();
+    document.getElementById('buttons').innerHTML = '';
+    document.getElementById('feedback-area').innerHTML = `<div style="padding:18px;background:#e3f2fd;border-radius:16px;color:#1565c0;"><b>🐘 Voi đang nghe lại băng…</b><br><small>Bánh mì khô đang được chuyển hóa thành transcript.</small></div>`;
+}
+
+function stopSprechenStream() {
+    if (sprechenStream) sprechenStream.getTracks().forEach(track => track.stop());
+    sprechenStream = null;
+}
+
+async function transcribeSprechenAudio() {
+    stopSprechenStream();
+    const mimeType = sprechenRecorder.mimeType || 'audio/webm';
+    const extension = mimeType.includes('mp4') ? 'm4a' : 'webm';
+    const audioBlob = new Blob(sprechenAudioChunks, { type: mimeType });
+    const formData = new FormData();
+    formData.append('audio', audioBlob, `sprechen.${extension}`);
+
+    try {
+        const response = await fetch('/api/transcribe', { method: 'POST', body: formData });
+        const data = await response.json();
+        if (!response.ok || !data.text) throw new Error(data.error || 'Không có transcript');
+        if (sprechenSession.recordingRound === 2) sprechenSession.replyTranscript = data.text.trim();
+        else sprechenSession.transcript = data.text.trim();
+        renderSprechenTranscript();
+    } catch (error) {
+        console.error('Transcription error:', error);
+        showSprechenFallback('Voi nghe được tiếng nhưng máy phiên âm bị nghẹn. Cậu có thể dán transcript thủ công.');
+    }
+}
+
+function renderSprechenTranscript() {
+    const isTeil2FirstRound = sprechenSession.teil === 2 && !sprechenSession.replyTranscript;
+    if (isTeil2FirstRound && !sprechenSession.counterargument) {
+        sprechenSession.counterargument = sprechenCounterarguments[Math.floor(Math.random() * sprechenCounterarguments.length)];
+    }
+    document.getElementById('message').innerHTML = getSprechenTaskHtml();
+    document.getElementById('timer').innerText = `🎤 ${sprechenSession.durationSeconds} giây đã nói`;
+    document.getElementById('feedback-area').innerHTML = `
+        <div style="max-width:700px;margin:auto;text-align:left;">
+            <label><b>📜 Transcript của cậu</b> <small style="color:#78909c;">(sửa lỗi máy nghe nhầm trước khi chấm)</small></label>
+            <div id="transcript-text" class="transcript-box" contenteditable="true" style="margin-top:8px;min-height:110px;">${sprechenSession.transcript}</div>
+            ${sprechenSession.teil === 2 ? `
+                <div style="margin-top:15px;padding:15px;background:#fff3e0;border-left:5px solid #ff9800;border-radius:12px;">
+                    <b>🤝 Gesprächspartner widerspricht:</b><br>${sprechenSession.counterargument}
+                </div>
+                ${sprechenSession.replyTranscript ? `
+                    <label style="display:block;margin-top:14px;"><b>💬 Câu phản hồi của cậu</b></label>
+                    <div id="reply-transcript-text" class="transcript-box" contenteditable="true" style="margin-top:8px;min-height:80px;">${sprechenSession.replyTranscript}</div>` : ''}` : ''}
+            <div id="ai-correction" style="display:none;margin-top:15px;"></div>
+        </div>`;
+    document.getElementById('buttons').innerHTML = isTeil2FirstRound
+        ? `<button class="btn-kapi" style="background:#ffcc80;" onclick="startTeil2Reply()">🎤 Trả lời phản biện</button>
+           <button class="btn-kapi btn-home" onclick="leaveSprechen()">⬅️ Dừng buổi luyện</button>`
+        : `<button class="btn-kapi btn-green" onclick="checkSprechen()">🐘 Gửi voi chấm Sprechen</button>
+           <button class="btn-kapi" style="background:#e1f5fe;" onclick="startSprechenRecording(${sprechenSession.teil === 2 ? 2 : 1})">🎤 Ghi lại</button>
+           <button class="btn-kapi btn-home" onclick="leaveSprechen()">⬅️ Zurück</button>`;
+}
+
+function startTeil2Reply() {
+    const first = document.getElementById('transcript-text');
+    if (first) sprechenSession.transcript = first.innerText.trim();
+    startSprechenRecording(2);
+}
+
+function showSprechenFallback(reason = '') {
+    stopSprechenStream();
+    clearInterval(countdown);
+    document.getElementById('timer').innerText = '';
+    document.getElementById('feedback-area').style.display = 'block';
+    document.getElementById('feedback-area').innerHTML = `
+        <div style="padding:12px;background:#fff3e0;border-radius:12px;color:#8d6e63;margin-bottom:10px;">${reason || 'Thiết bị này chưa hỗ trợ ghi âm trực tiếp.'}</div>
+        <div id="transcript-text" class="transcript-box" contenteditable="true" style="min-height:130px;" data-placeholder="Dán transcript hoặc dùng bàn phím giọng nói tại đây..."></div>
+        <div id="ai-correction" style="display:none;margin-top:15px;"></div>`;
+    document.getElementById('buttons').innerHTML = `
+        <button class="btn-kapi btn-green" onclick="checkSprechen()">🐘 Gửi voi chấm Sprechen</button>
+        <button class="btn-kapi btn-home" onclick="leaveSprechen()">⬅️ Zurück</button>`;
+}
+
+async function checkSprechen() {
+    const transcriptBox = document.getElementById('transcript-text');
+    const replyBox = document.getElementById('reply-transcript-text');
+    const transcript = transcriptBox ? transcriptBox.innerText.trim() : sprechenSession.transcript;
+    const replyTranscript = replyBox ? replyBox.innerText.trim() : sprechenSession.replyTranscript;
+    if (!transcript) return alert('Bồ câu chưa nói gì, voi không thể chấm không khí :vvvv');
+
+    sprechenSession.transcript = transcript;
+    sprechenSession.replyTranscript = replyTranscript;
+    let aiCorrection = document.getElementById('ai-correction');
+    aiCorrection.style.display = 'block';
+    aiCorrection.innerHTML = `<p style="color:#5c6bc0;"><i>🐘 Voi đang đeo kính chấm đúng rubric Sprechen…</i></p>`;
+    document.getElementById('buttons').style.display = 'none';
+
+    try {
+        const response = await fetch('/api/check', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                mode: 'sprechen',
+                teil: sprechenSession.teil,
+                thema: sprechenSession.thema,
+                punkte: sprechenSession.punkte,
+                transcript,
+                replyTranscript,
+                counterargument: sprechenSession.counterargument,
+                durationSeconds: sprechenSession.durationSeconds,
+                cauVidu: transcript
+            })
+        });
+        const data = await response.json();
+        if (!response.ok || !data.result) throw new Error(data.error || 'Voi không gửi phiếu chấm về');
+        aiCorrection.innerHTML = `
+            <div style="background:#eef4ff;padding:20px;border-radius:16px;border-left:6px solid #5c6bc0;line-height:1.7;color:#263238;box-shadow:0 5px 12px rgba(63,81,181,.10);">
+                <h3 style="color:#3949ab;margin-top:0;">🐘 Phiếu chấm Sprechen</h3>${data.result}
+            </div>`;
+        saveSprechenHistory();
+    } catch (error) {
+        aiCorrection.innerHTML = `<p style="color:#c62828;font-weight:bold;">Voi bị nghẹn API: ${error.message}</p>`;
+    } finally {
+        document.getElementById('buttons').style.display = 'block';
+        document.getElementById('buttons').innerHTML = `
+            <button class="btn-kapi btn-green" onclick="${sprechenSession.teil === 1 ? 'showTeil1()' : 'showTeil2()'}">🎲 Luyện đề khác</button>
+            <button class="btn-kapi btn-home" onclick="leaveSprechen()">⬅️ Về menu</button>`;
+    }
+}
+
+function saveSprechenHistory() {
+    let history = [];
+    try { history = JSON.parse(localStorage.getItem(SPRECHEN_HISTORY_KEY)) || []; } catch (_) {}
+    history.unshift({
+        date: new Date().toISOString(),
+        teil: sprechenSession.teil,
+        thema: sprechenSession.thema,
+        durationSeconds: sprechenSession.durationSeconds,
+        transcript: sprechenSession.transcript,
+        replyTranscript: sprechenSession.replyTranscript
+    });
+    localStorage.setItem(SPRECHEN_HISTORY_KEY, JSON.stringify(history.slice(0, 30)));
+}
+
+function restartSprechenModeChoice() {
+    if (!sprechenSession) return chooseLesson('Sprechen');
+    setupSprechenUI({
+        teil: sprechenSession.teil,
+        thema: sprechenSession.thema,
+        punkte: sprechenSession.punkte
+    });
+}
+
+function leaveSprechen() {
+    if (sprechenRecorder && sprechenRecorder.state !== 'inactive') {
+        sprechenRecorder.onstop = null;
+        sprechenRecorder.stop();
+    }
+    stopSprechenStream();
+    clearInterval(countdown);
+    sprechenSession = null;
+    document.getElementById('timer').innerText = '';
+    showLessons();
 }
 
 function showSchreibenMenu() {
