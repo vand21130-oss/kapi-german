@@ -1077,7 +1077,8 @@ function reviewMiniGameMistakes() {
 // ==========================================
 let kofferGame = {
     route: 'all', questions: [], index: 0, packed: [], mistakes: 0,
-    wrongWords: [], answered: false
+    wrongWords: [], answered: false, streak: 0, bestStreak: 0,
+    levelUnlocked: false, typingMode: false, typingWords: [], typedIndex: 0
 };
 
 const kofferRoutes = {
@@ -1100,25 +1101,56 @@ const kofferRoutes = {
 
 const kofferItemIcons = ['🧦','📘','🥨','🩹','🪥','🧸','☕','🩺'];
 const kofferWrongLines = [
-    '🫩 Cái này mà cũng mang à? Tôi vừa mở lại đơn xin nghỉ việc.',
-    '🫩🫩 Đơn xin nghỉ việc với thế giới của tôi đang chờ một chữ ký.',
-    '🫩🫩🫩 Tạm biệt. Tôi xin nghỉ việc khỏi chuyến đi, khỏi sân bay và khỏi thế giới.'
+    'Cái này mà cũng mang à? Tôi vừa mở lại đơn xin nghỉ việc.',
+    'Đơn xin nghỉ việc với thế giới của tôi đang chờ một chữ ký.',
+    'Tạm biệt. Tôi xin nghỉ việc khỏi chuyến đi, khỏi sân bay và khỏi thế giới.'
 ];
 
 const kofferMoodLines = [
-    '🫩 Tôi vẫn ở đây vì hợp đồng chưa hết hạn.',
-    '🫩 Đi Đức hay đi đâu cũng được. Cho tôi nằm xuống trước đã.',
-    '🫩 Tôi không bi quan. Tôi chỉ đã nhìn thấy quá nhiều hành lý.',
-    '🫩 Nếu câu này sai, tôi sẽ cập nhật CV ngay tại sân bay.',
-    '🫩 Nhân sự nói đây là môi trường làm việc năng động. Họ nói dối.',
-    '🫩 Tôi đang vận chuyển từ vựng và cả gánh nặng cuộc đời.',
-    '🫩 Cậu chọn đi. Tôi tranh thủ từ bỏ kỳ vọng.',
-    '🫩 Tôi không ngủ. Tôi đang tạm ngừng tham gia thế giới.'
+    'Tôi vẫn ở đây vì hợp đồng chưa hết hạn.',
+    'Đi Đức hay đi đâu cũng được. Cho tôi nằm xuống trước đã.',
+    'Tôi không bi quan. Tôi chỉ đã nhìn thấy quá nhiều hành lý.',
+    'Nếu câu này sai, tôi sẽ cập nhật CV ngay tại sân bay.',
+    'Nhân sự nói đây là môi trường làm việc năng động. Họ nói dối.',
+    'Tôi đang vận chuyển từ vựng và cả gánh nặng cuộc đời.',
+    'Cậu chọn đi. Tôi tranh thủ từ bỏ kỳ vọng.',
+    'Tôi không ngủ. Tôi đang tạm ngừng tham gia thế giới.'
 ];
 
+// 11 × 10 × 10 = 1.100 tổ hợp tuyệt tình. Vali không cần lặp lại chính mình.
+const kofferFarewellOpeners = [
+    'Tôi đã cân nhắc kỹ.', 'Quyết định này không hề khó khăn.', 'Phòng nhân sự đã xác nhận.',
+    'Sau những gì vừa xảy ra,', 'Không giận, không buồn, không lưu luyến.', 'Xin thông báo lần cuối:',
+    'Tôi từng có kỳ vọng. Từng thôi.', 'Từ giây phút này,', 'Theo điều khoản hành lý số 404,',
+    'Tôi đã tham khảo ý kiến của hai bánh xe.', 'Không cần níu kéo.'
+];
+const kofferFarewellActions = [
+    'tôi trả lại toàn bộ đồ và chấm dứt quan hệ học tập',
+    'tôi xóa tên cậu khỏi danh sách hành khách lẫn ký ức',
+    'tôi xin nghỉ việc khỏi chuyến đi và khỏi câu chuyện của cậu',
+    'tôi chọn một cuộc đời không phải chuyên chở lựa chọn này',
+    'tôi coi tám từ vừa rồi là tài sản vô chủ',
+    'tôi từ bỏ hành lý, kỳ vọng và mọi trách nhiệm tình cảm',
+    'tôi sẽ khai với hải quan rằng chúng ta chưa từng quen',
+    'tôi tự chuyển mình sang diện hành lý thất lạc',
+    'tôi kết thúc hợp đồng vận chuyển mà không cần bàn giao',
+    'tôi để đồ lại đây và mang lòng tự trọng đi trước'
+];
+const kofferFarewellEndings = [
+    'kể từ bây giờ.', 'ngay tại cửa khởi hành.', 'và quyết định có hiệu lực lập tức.',
+    'xin đừng liên hệ lại.', 'không kèm bảo hành hay cơ hội thứ hai.', 'trong im lặng và hoàn toàn thanh thản.',
+    'trước sự chứng kiến của bồ câu và nền nhà sân bay.', 'vì cả hai chúng ta đều xứng đáng được nghỉ.',
+    'còn cậu tự lo lấy phần còn lại.', 'tình nghĩa đến đây là hết.'
+];
+
+function getKofferFarewellLine() {
+    const pick = list => list[Math.floor(Math.random() * list.length)];
+    return `${pick(kofferFarewellOpeners)} ${pick(kofferFarewellActions)} ${pick(kofferFarewellEndings)}`;
+}
+
 function getKofferMoodLine() {
-    if (kofferGame.mistakes >= 2) return '🫩 Đơn xin nghỉ việc với thế giới đã được in thành ba bản.';
-    if (kofferGame.mistakes === 1) return '🫩 Tôi đang cân nhắc một cuộc đời không có bồ câu.';
+    if (kofferGame.mistakes >= 2) return 'Đơn xin nghỉ việc với thế giới đã được in thành ba bản.';
+    if (kofferGame.mistakes === 1) return 'Tôi đang cân nhắc một cuộc đời không có bồ câu.';
     return kofferMoodLines[kofferGame.index % kofferMoodLines.length];
 }
 
@@ -1143,11 +1175,7 @@ function renderKofferMascot(state = 'calm', elementId = '') {
             .koffer-eye span{position:absolute;width:9px;height:10px;background:#3e2723;border-radius:50%;left:7px;top:5px;z-index:1;}
             .koffer-bag{position:absolute;top:40px;width:28px;height:10px;background:#a95f35;border-radius:0 0 18px 18px;opacity:.7;z-index:2;}
             .koffer-bag.left{left:16px}.koffer-bag.right{right:16px}
-            .koffer-brow{position:absolute;top:17px;width:25px;height:4px;background:#4e342e;border-radius:8px;z-index:4;}
-            .koffer-brow.left{left:16px;transform:rotate(-5deg)}.koffer-brow.right{right:16px;transform:rotate(5deg)}
             .koffer-mouth{position:absolute;left:36px;top:57px;width:24px;height:5px;background:#4e342e;border-radius:8px;z-index:4;}
-            .koffer-mascot.annoyed .koffer-brow.left,.koffer-mascot.leaving .koffer-brow.left{transform:rotate(-9deg);top:19px}
-            .koffer-mascot.annoyed .koffer-brow.right,.koffer-mascot.leaving .koffer-brow.right{transform:rotate(9deg);top:19px}
             .koffer-mascot.annoyed .koffer-eye,.koffer-mascot.leaving .koffer-eye{height:13px;top:28px;}
             .koffer-mascot.annoyed .koffer-bag,.koffer-mascot.leaving .koffer-bag{top:39px;height:12px;opacity:.9;}
             .koffer-mascot.annoyed .koffer-mouth,.koffer-mascot.leaving .koffer-mouth{height:4px;transform:rotate(-3deg)}
@@ -1155,7 +1183,6 @@ function renderKofferMascot(state = 'calm', elementId = '') {
             .koffer-wheel{position:absolute;bottom:-9px;width:15px;height:10px;background:#4e342e;border-radius:0 0 6px 6px;}.koffer-wheel.left{left:13px}.koffer-wheel.right{right:13px}
         </style>
         <div ${elementId ? `id="${elementId}"` : ''} class="koffer-mascot ${safeState}" role="img" aria-label="Vali Kapi đang ${safeState === 'done' ? 'hài lòng' : safeState === 'calm' ? 'chớp mắt' : 'bất mãn'}">
-            <span class="koffer-brow left"></span><span class="koffer-brow right"></span>
             <span class="koffer-eye left"><span></span></span><span class="koffer-eye right"><span></span></span>
             <span class="koffer-bag left"></span><span class="koffer-bag right"></span>
             <span class="koffer-mouth"></span><span class="koffer-wheel left"></span><span class="koffer-wheel right"></span>
@@ -1169,8 +1196,8 @@ function showKofferIntro() {
         <div style="max-width:620px;margin:0 auto;">
             ${renderKofferMascot('calm')}
             <h2 style="margin:5px 0;color:#795548;">Koffer nach Deutschland</h2>
-            <div style="display:inline-block;margin:2px auto 8px;padding:9px 13px;background:white;border:2px solid #d7ccc8;border-radius:16px;color:#6d4c41;font-size:14px;"><i>“🫩 Tôi nhận chuyến này vì phòng nhân sự nói chỉ có tám từ.”</i></div>
-            <p style="color:#607d8b;line-height:1.6;">Vali chỉ còn chỗ cho <b>8 từ</b>. Chọn đúng thì được đóng gói; sai ba lần, nó sẽ <b>🫩 tạm biệt</b> và bỏ đi không luyến tiếc.</p>
+            <div style="display:inline-block;margin:2px auto 8px;padding:9px 13px;background:white;border:2px solid #d7ccc8;border-radius:16px;color:#6d4c41;font-size:14px;"><i>“Tôi nhận chuyến này vì phòng nhân sự nói chỉ có tám từ.”</i></div>
+            <p style="color:#607d8b;line-height:1.6;">Vali chỉ còn chỗ cho <b>8 từ</b>. Đúng liên tiếp <b>3 câu</b> để mở Level 2; sau đó phải tự gõ lại toàn bộ tám từ. Sai ba lần, nó sẽ đổ đồ và bỏ đi không luyến tiếc.</p>
         </div>`;
     document.getElementById('buttons').innerHTML = `
         <div style="display:grid;gap:11px;max-width:620px;margin:0 auto;">
@@ -1197,6 +1224,8 @@ function startKofferGame(route) {
     const chosen = shuffleArray(routePool).slice(0, Math.min(8, routePool.length));
     kofferGame = {
         route, index: 0, packed: [], mistakes: 0, wrongWords: [], answered: false,
+        streak: 0, bestStreak: 0, levelUnlocked: false,
+        typingMode: false, typingWords: [], typedIndex: 0,
         questions: chosen.map(word => {
             const distractors = shuffleArray(fallbackPool.filter(item => item.de !== word.de && item.de))
                 .slice(0, 3).map(item => item.de);
@@ -1221,11 +1250,12 @@ function renderKofferStatus() {
         `<span style="display:inline-block;width:13px;height:13px;margin-left:4px;border-radius:50%;border:2px solid #6d4c41;background:${index < 3 - kofferGame.mistakes ? '#8d6e63' : '#efebe9'};"></span>`
     ).join('');
     const faceState = kofferGame.mistakes >= 1 ? 'annoyed' : 'calm';
+    const levelLabel = kofferGame.typingMode ? 'LEVEL 2 · ZOLLKONTROLLE' : 'LEVEL 1 · PACKEN';
     return `
         <div style="max-width:620px;margin:0 auto 16px;padding:14px;background:#fff8e1;border:2px solid #ffcc80;border-radius:18px;box-shadow:0 7px 14px rgba(121,85,72,.10);">
             <div style="display:flex;align-items:center;justify-content:center;gap:12px;">
                 ${renderKofferMascot(faceState, 'koffer-face')}
-                <div style="text-align:left;"><b>${kofferRoutes[kofferGame.route].title}</b><br><small style="color:#8d6e63;">Kiên nhẫn của vali: ${patience}</small></div>
+                <div style="text-align:left;"><b>${kofferRoutes[kofferGame.route].title}</b><br><small style="color:#8d6e63;">${levelLabel}<br>Kiên nhẫn: ${patience} · Chuỗi đúng: 🔥 ${kofferGame.streak}</small></div>
             </div>
             <div style="position:relative;margin:7px auto 4px;max-width:470px;padding:9px 12px;background:white;border:2px solid #d7ccc8;border-radius:14px;color:#6d4c41;font-size:14px;font-style:italic;">“${getKofferMoodLine()}”</div>
             <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:12px;">${packedSlots}</div>
@@ -1233,7 +1263,9 @@ function renderKofferStatus() {
 }
 
 function renderKofferQuestion() {
-    if (kofferGame.index >= kofferGame.questions.length) return finishKofferGame(true);
+    if (kofferGame.index >= kofferGame.questions.length) {
+        return kofferGame.levelUnlocked ? startKofferTypingLevel() : finishKofferGame(true);
+    }
     const question = kofferGame.questions[kofferGame.index];
     const progress = Math.round((kofferGame.index / kofferGame.questions.length) * 100);
     kofferGame.answered = false;
@@ -1265,12 +1297,18 @@ function checkKofferAnswer(selectedIndex) {
 
     if (correct) {
         kofferGame.packed.push(question.word);
+        kofferGame.streak++;
+        kofferGame.bestStreak = Math.max(kofferGame.bestStreak, kofferGame.streak);
+        const justUnlocked = kofferGame.streak === 3 && !kofferGame.levelUnlocked;
+        if (justUnlocked) kofferGame.levelUnlocked = true;
         document.getElementById('feedback-area').innerHTML = `
-            <div style="padding:14px;border-radius:14px;background:#e8f5e9;color:#2e7d32;font-weight:bold;">✅ Cạch! Đã đóng gói <b>${question.word.de}</b>.<br><small>Vali miễn cưỡng ở lại với đoàn.</small></div>
-            <button class="btn-kapi btn-green" style="width:100%;margin:12px 0 0;" onclick="nextKofferQuestion()">🧳 Đóng gói món tiếp theo</button>`;
+            <div style="padding:14px;border-radius:14px;background:#e8f5e9;color:#2e7d32;font-weight:bold;">✅ Cạch! Đã đóng gói <b>${question.word.de}</b>.<br><small>Chuỗi đúng: 🔥 ${kofferGame.streak}</small></div>
+            ${justUnlocked ? '<div style="margin-top:10px;padding:15px;border:3px solid #ffb74d;border-radius:14px;background:linear-gradient(135deg,#fff3e0,#e3f2fd);color:#795548;font-weight:900;font-size:19px;">⬆️ LEVEL UP!<br><small>Hải quan đã nghe tin. Cuối lượt cậu phải tự gõ lại cả 8 từ.</small></div>' : ''}
+            <button class="btn-kapi btn-green" style="width:100%;margin:12px 0 0;" onclick="nextKofferQuestion()">${justUnlocked ? '🛂 Tiếp tục tới hải quan' : '🧳 Đóng gói món tiếp theo'}</button>`;
         return;
     }
 
+    kofferGame.streak = 0;
     kofferGame.mistakes++;
     if (!kofferGame.wrongWords.some(item => item.de === question.word.de)) kofferGame.wrongWords.push(question.word);
     const saved = getSavedMissed();
@@ -1294,6 +1332,110 @@ function nextKofferQuestion() {
     renderKofferQuestion();
 }
 
+function startKofferTypingLevel() {
+    kofferGame.typingMode = true;
+    kofferGame.typingWords = shuffleArray(kofferGame.questions.map(question => question.word));
+    kofferGame.typedIndex = 0;
+    kofferGame.mistakes = 0;
+    kofferGame.streak = 0;
+    document.getElementById('feedback-area').style.display = 'block';
+    document.getElementById('feedback-area').innerHTML = `
+        <div style="padding:18px;background:linear-gradient(135deg,#e3f2fd,#fff3e0);border:3px solid #64b5f6;border-radius:17px;text-align:center;">
+            <b style="font-size:22px;color:#1565c0;">🛂 LEVEL 2 · ZOLLKONTROLLE</b><br>
+            <span>Hải quan không cho nhìn đáp án nữa. Hãy tự gõ lại đủ <b>8 từ vừa đóng gói</b>.</span><br>
+            <small>Vali được cấp lại 3 đơn vị kiên nhẫn, dù nó không hề yêu cầu.</small>
+        </div>`;
+    document.getElementById('message').innerHTML = `${renderKofferStatus()}<h3 style="color:#1565c0;">Hải quan đang mở vali…</h3>`;
+    document.getElementById('buttons').style.display = 'block';
+    document.getElementById('buttons').innerHTML = `<button class="btn-kapi btn-green" onclick="renderKofferTypingQuestion()">🛂 Bắt đầu kiểm tra 8 từ</button>`;
+}
+
+function normalizeKofferAnswer(text) {
+    return String(text || '')
+        .toLocaleLowerCase('de-DE')
+        .replace(/[„“”"'`´.,!?;:()[\]{}]/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+}
+
+function renderKofferTypingQuestion() {
+    if (kofferGame.typedIndex >= kofferGame.typingWords.length) return finishKofferGame(true);
+    const word = kofferGame.typingWords[kofferGame.typedIndex];
+    const progress = Math.round((kofferGame.typedIndex / kofferGame.typingWords.length) * 100);
+    kofferGame.answered = false;
+    document.getElementById('feedback-area').style.display = 'none';
+    document.getElementById('message').innerHTML = `
+        ${renderKofferStatus()}
+        <div style="max-width:580px;margin:auto;">
+            <div style="height:9px;background:#eceff1;border-radius:999px;overflow:hidden;"><div style="height:100%;width:${progress}%;background:linear-gradient(90deg,#42a5f5,#7e57c2);transition:.3s;"></div></div>
+            <p style="color:#78909c;margin:13px 0 4px;">Zollkontrolle ${kofferGame.typedIndex + 1}/${kofferGame.typingWords.length}</p>
+            <b style="font-size:25px;color:#37474f;">${word.vi}</b>
+            <p style="font-size:14px;color:#8d6e63;">Không có đáp án để chọn. Gõ lại từ tiếng Đức đầy đủ:</p>
+        </div>`;
+    document.getElementById('buttons').style.display = 'block';
+    document.getElementById('buttons').innerHTML = `
+        <div style="max-width:560px;margin:0 auto;">
+            <input id="kofferTypingInput" type="text" autocomplete="off" placeholder="der / die / das…" onkeypress="if(event.key==='Enter') checkKofferTypingAnswer()" style="width:100%;box-sizing:border-box;">
+            <button class="btn-kapi btn-green" style="width:100%;margin:10px 0 0;" onclick="checkKofferTypingAnswer()">🔒 Khai báo với hải quan</button>
+        </div>
+        <button class="btn-kapi btn-home" onclick="showVokabelHauptmenu()">🚪 Bỏ vali ở cửa kiểm tra</button>`;
+    setTimeout(() => {
+        const input = document.getElementById('kofferTypingInput');
+        if (input) input.focus();
+    }, 80);
+}
+
+function checkKofferTypingAnswer() {
+    if (kofferGame.answered) return;
+    const input = document.getElementById('kofferTypingInput');
+    const word = kofferGame.typingWords[kofferGame.typedIndex];
+    const userAnswer = normalizeKofferAnswer(input ? input.value : '');
+    const correctAnswer = normalizeKofferAnswer(word.de);
+    if (!userAnswer) {
+        alert('Hải quan nhận được một tờ khai trống. Vali nhìn cậu bằng toàn bộ sự 🫩 của nó.');
+        return;
+    }
+
+    kofferGame.answered = true;
+    const correct = userAnswer === correctAnswer;
+    recordVocabAnswer(word, correct);
+    document.getElementById('buttons').style.display = 'none';
+    document.getElementById('feedback-area').style.display = 'block';
+
+    if (correct) {
+        kofferGame.streak++;
+        kofferGame.bestStreak = Math.max(kofferGame.bestStreak, kofferGame.streak);
+        document.getElementById('feedback-area').innerHTML = `
+            <div style="padding:14px;border-radius:14px;background:#e8f5e9;color:#2e7d32;font-weight:bold;">✅ Hải quan đóng dấu: <b>${word.de}</b><br><small>${kofferGame.typedIndex + 1}/8 từ đã được nhớ lại bằng tay.</small></div>
+            <button class="btn-kapi btn-green" style="width:100%;margin:12px 0 0;" onclick="nextKofferTypingWord()">➡️ Từ tiếp theo</button>`;
+        return;
+    }
+
+    kofferGame.streak = 0;
+    kofferGame.mistakes++;
+    if (!kofferGame.wrongWords.some(item => item.de === word.de)) kofferGame.wrongWords.push(word);
+    const saved = getSavedMissed();
+    if (!saved.some(item => item.de === word.de)) { saved.push(word); saveMissed(saved); }
+    const line = kofferGame.mistakes >= 3 ? getKofferFarewellLine() : kofferWrongLines[Math.min(kofferGame.mistakes - 1, 1)];
+
+    document.getElementById('feedback-area').innerHTML = `
+        <div style="padding:14px;border-radius:14px;background:#ffebee;color:#b71c1c;font-weight:bold;">“${line}”<br><small>Cậu gõ: <s>${input.value}</s><br>Đúng ra: <b>${word.de}</b></small></div>
+        ${kofferGame.mistakes >= 3
+            ? '<button class="btn-kapi" style="width:100%;margin:12px 0 0;background:#eceff1;" onclick="finishKofferGame(false)">🥺 Nhìn vali đổ đồ</button>'
+            : '<button class="btn-kapi" style="width:100%;margin:12px 0 0;background:#ffcc80;" onclick="retryKofferTypingWord()">⌨️ Gõ lại từ này</button>'}`;
+}
+
+function retryKofferTypingWord() {
+    document.getElementById('buttons').style.display = 'block';
+    renderKofferTypingQuestion();
+}
+
+function nextKofferTypingWord() {
+    kofferGame.typedIndex++;
+    document.getElementById('buttons').style.display = 'block';
+    renderKofferTypingQuestion();
+}
+
 function finishKofferGame(success) {
     const wrong = uniqueMiniGameWords(kofferGame.wrongWords);
     const packed = kofferGame.packed.length;
@@ -1302,32 +1444,52 @@ function finishKofferGame(success) {
 
     if (success) {
         const successStatus = renderKofferStatus().replace('class="koffer-mascot calm"', 'class="koffer-mascot done"').replace('class="koffer-mascot annoyed"', 'class="koffer-mascot done"');
+        const successText = kofferGame.typingMode
+            ? `Bồ câu đã tự gõ lại đủ <b>${kofferGame.typingWords.length}/${kofferGame.typingWords.length}</b> từ mà không nhìn đáp án.`
+            : `Bồ câu đã hoàn thành Level 1 với chuỗi tốt nhất 🔥 <b>${kofferGame.bestStreak}</b>, nhưng chưa mở khóa Zollkontrolle.`;
         document.getElementById('message').innerHTML = `
             ${successStatus}
             <h2 style="color:#2e7d32;">🇩🇪 Vali đã tới Deutschland!</h2>
-            <p>Nó vẫn 🫩, nhưng không thể phủ nhận bồ câu đã đóng gói đủ <b>${packed}/${kofferGame.questions.length}</b> từ.</p>`;
+            <p>${successText}</p>`;
         document.getElementById('feedback-area').innerHTML = `
             <div style="padding:16px;background:#e8f5e9;border:2px dashed #81c784;border-radius:16px;">
-                <b>🏅 Huy hiệu: Không bị bỏ lại ở sân bay</b><br>
+                <b>🏅 Huy hiệu: ${kofferGame.typingMode ? 'Qua hải quan bằng trí nhớ' : 'Không bị bỏ lại ở sân bay'}</b><br>
                 ${wrong.length ? `Cần ôn lại: ${wrong.map(word => word.de).join(' · ')}` : 'Không làm rơi từ nào. Voi rất đỗi tự hào 🫪'}
             </div>`;
     } else {
+        const dumpedIcons = kofferGame.packed.length
+            ? kofferGame.packed.map((_, index) => kofferItemIcons[index % kofferItemIcons.length])
+            : ['🧦', '📄', '🥨'];
         document.getElementById('message').innerHTML = `
-            <div style="max-width:620px;margin:auto;overflow:hidden;min-height:120px;">
+            <style>
+                .koffer-dumped-item{position:absolute;left:calc(50% - 14px);top:68px;font-size:29px;z-index:1;opacity:1;transition:transform .9s cubic-bezier(.2,.8,.35,1.15),opacity .9s ease;filter:drop-shadow(0 3px 2px rgba(0,0,0,.13));}
+                #koffer-leaving{position:relative;z-index:3;}
+            </style>
+            <div style="max-width:620px;margin:auto;overflow:hidden;min-height:245px;position:relative;padding-top:8px;">
+                <div id="koffer-dumped-items">${dumpedIcons.map((icon, index) => `<span class="koffer-dumped-item" data-dump-index="${index}">${icon}</span>`).join('')}</div>
                 ${renderKofferMascot('leaving', 'koffer-leaving')}
-                <h3 style="color:#795548;">🫩 Tôi không còn gì để mất. Tạm biệt.</h3>
+                <h3 style="color:#795548;margin-top:14px;">“${getKofferFarewellLine()}”</h3>
+                <small style="color:#a1887f;">*Vali mở khóa, dốc ngược toàn bộ đồ xuống sàn rồi phủi bánh xe.*</small>
             </div>`;
         document.getElementById('feedback-area').innerHTML = `
             <div style="padding:16px;background:#fff3e0;border-radius:16px;">
-                Bồ câu đứng lại với <b>${packed}</b> món đã gói và một biểu cảm 🥺.<br>
+                Vali đã đổ <b>${packed || 'toàn bộ'}</b> món ra ngoài. Bồ câu đứng lại giữa sân bay với biểu cảm 🥺.<br>
                 ${wrong.length ? `Từ làm vali mất niềm tin: <b>${wrong.map(word => word.de).join(' · ')}</b>` : ''}
             </div>`;
         setTimeout(() => {
             const suitcase = document.getElementById('koffer-leaving');
+            const scatter = [
+                [-150,80,-35],[-95,125,22],[-35,145,-18],[35,140,30],
+                [95,115,-28],[150,75,38],[-175,35,16],[175,30,-20]
+            ];
+            document.querySelectorAll('.koffer-dumped-item').forEach((item, index) => {
+                const [x, y, rotation] = scatter[index % scatter.length];
+                item.style.transform = `translate(${x}px,${y}px) rotate(${rotation}deg)`;
+            });
             if (suitcase) {
                 suitcase.style.animation = 'none';
-                suitcase.style.transform = 'translateX(260px) rotate(12deg)';
-                suitcase.style.opacity = '0';
+                suitcase.style.transform = 'translateX(285px) rotate(14deg)';
+                suitcase.style.opacity = '.12';
             }
         }, 80);
     }
