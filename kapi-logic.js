@@ -1081,6 +1081,53 @@ let kofferGame = {
     levelUnlocked: false, typingMode: false, typingWords: [], typedIndex: 0
 };
 
+const KOFFER_HISTORY_KEY = 'kapi_koffer_history_v1';
+
+function loadKofferHistory() {
+    try { return JSON.parse(localStorage.getItem(KOFFER_HISTORY_KEY)) || []; }
+    catch (_) { return []; }
+}
+
+function getKofferExample(word) {
+    if (word.beispiel || word.example || word.satz || word.beispielsatz) {
+        return word.beispiel || word.example || word.satz || word.beispielsatz;
+    }
+    const german = String(word.de || '').trim();
+    if (/^(der|die|das)\s/i.test(german)) {
+        return `Der Begriff „${german}“ ist für dieses Thema besonders wichtig.`;
+    }
+    if (/^(ich|wir|man|es|das|da|wenn|obwohl|dadurch|aus diesem grund|hinzu kommt)/i.test(german)) {
+        return `Merksatz: „${german}${/[.!?]$/.test(german) ? '' : '.'}“`;
+    }
+    return `Heute übe ich den Ausdruck „${german}“ in einem eigenen Satz.`;
+}
+
+function saveKofferRoundToHistory() {
+    const history = loadKofferHistory();
+    const byGerman = new Map(history.map(item => [String(item.de).toLocaleLowerCase('de-DE'), item]));
+    kofferGame.questions.forEach(question => {
+        const word = question.word;
+        const key = word.de.toLocaleLowerCase('de-DE');
+        const old = byGerman.get(key) || {};
+        byGerman.set(key, {
+            de: word.de,
+            vi: word.vi || '',
+            example: getKofferExample(word),
+            seen: (old.seen || 0) + 1,
+            lastPlayed: getLocalDateKey(new Date())
+        });
+    });
+    localStorage.setItem(KOFFER_HISTORY_KEY, JSON.stringify(Array.from(byGerman.values()).slice(-300)));
+}
+
+function getKofferReviewWords(allWords, count = 2) {
+    const wordMap = new Map(allWords.map(word => [word.de.toLocaleLowerCase('de-DE'), word]));
+    const available = loadKofferHistory()
+        .map(item => wordMap.get(String(item.de).toLocaleLowerCase('de-DE')))
+        .filter(Boolean);
+    return shuffleArray(uniqueMiniGameWords(available)).slice(0, count);
+}
+
 const kofferRoutes = {
     all: {
         title: '🎲 Chuyến đi tổng hợp',
@@ -1166,6 +1213,11 @@ function renderKofferMascot(state = 'calm', elementId = '') {
                 0%,100% { transform:translateY(0) rotate(-1deg); }
                 50% { transform:translateY(3px) rotate(1deg); }
             }
+            @keyframes kofferTalk {
+                0%,100% { height:5px;transform:scaleX(1); }
+                35% { height:13px;transform:scaleX(.65); }
+                70% { height:8px;transform:scaleX(1.15); }
+            }
             .koffer-mascot{position:relative;width:96px;height:75px;margin:4px auto 8px;background:linear-gradient(145deg,#e7a74a,#bd7332);border:4px solid #6d4528;border-radius:15px 15px 18px 18px;box-shadow:inset 0 4px rgba(255,255,255,.27),0 8px 10px rgba(91,58,32,.18);animation:kofferSigh 3s ease-in-out infinite;transition:transform 1s ease-in,opacity 1s ease-in;flex:0 0 auto;}
             .koffer-mascot:before{content:'';position:absolute;width:38px;height:16px;border:5px solid #6d4528;border-bottom:0;border-radius:12px 12px 0 0;left:25px;top:-19px;}
             .koffer-mascot:after{content:'';position:absolute;left:45px;top:0;width:4px;height:100%;background:rgba(109,69,40,.32);}
@@ -1179,6 +1231,7 @@ function renderKofferMascot(state = 'calm', elementId = '') {
             .koffer-mascot.annoyed .koffer-eye,.koffer-mascot.leaving .koffer-eye{height:13px;top:28px;}
             .koffer-mascot.annoyed .koffer-bag,.koffer-mascot.leaving .koffer-bag{top:39px;height:12px;opacity:.9;}
             .koffer-mascot.annoyed .koffer-mouth,.koffer-mascot.leaving .koffer-mouth{height:4px;transform:rotate(-3deg)}
+            .koffer-mascot.talking .koffer-mouth{animation:kofferTalk .24s ease-in-out 5;background:#4e342e;border-radius:4px 4px 12px 12px;transform-origin:center top;}
             .koffer-mascot.done .koffer-mouth{height:10px;background:transparent;border-bottom:4px solid #4e342e;border-radius:0 0 18px 18px;top:48px;}
             .koffer-wheel{position:absolute;bottom:-9px;width:15px;height:10px;background:#4e342e;border-radius:0 0 6px 6px;}.koffer-wheel.left{left:13px}.koffer-wheel.right{right:13px}
         </style>
@@ -1187,6 +1240,25 @@ function renderKofferMascot(state = 'calm', elementId = '') {
             <span class="koffer-bag left"></span><span class="koffer-bag right"></span>
             <span class="koffer-mouth"></span><span class="koffer-wheel left"></span><span class="koffer-wheel right"></span>
         </div>`;
+}
+
+function makeKofferSayBye(elementId = 'koffer-face') {
+    const suitcase = document.getElementById(elementId);
+    if (suitcase) {
+        suitcase.classList.add('talking');
+        setTimeout(() => suitcase.classList.remove('talking'), 1350);
+    }
+    try {
+        if ('speechSynthesis' in window && typeof SpeechSynthesisUtterance !== 'undefined') {
+            window.speechSynthesis.cancel();
+            const bye = new SpeechSynthesisUtterance('Bye.');
+            bye.lang = 'de-DE';
+            bye.rate = 0.72;
+            bye.pitch = 0.62;
+            bye.volume = 0.7;
+            window.speechSynthesis.speak(bye);
+        }
+    } catch (_) {}
 }
 
 function showKofferIntro() {
@@ -1221,7 +1293,13 @@ function getKofferPool(route) {
 function startKofferGame(route) {
     const routePool = getKofferPool(route);
     const fallbackPool = getAllUniqueVocabWords();
-    const chosen = shuffleArray(routePool).slice(0, Math.min(8, routePool.length));
+    const reviewWords = getKofferReviewWords(fallbackPool, 2);
+    const reviewKeys = new Set(reviewWords.map(word => word.de.toLocaleLowerCase('de-DE')));
+    const freshPool = routePool.filter(word => !reviewKeys.has(word.de.toLocaleLowerCase('de-DE')));
+    const chosen = shuffleArray([
+        ...reviewWords,
+        ...shuffleArray(freshPool).slice(0, Math.max(0, 8 - reviewWords.length))
+    ]).slice(0, Math.min(8, routePool.length + reviewWords.length));
     kofferGame = {
         route, index: 0, packed: [], mistakes: 0, wrongWords: [], answered: false,
         streak: 0, bestStreak: 0, levelUnlocked: false,
@@ -1230,7 +1308,7 @@ function startKofferGame(route) {
             const distractors = shuffleArray(fallbackPool.filter(item => item.de !== word.de && item.de))
                 .slice(0, 3).map(item => item.de);
             const options = shuffleArray([word.de, ...distractors]);
-            return { word, options, answer: options.indexOf(word.de) };
+            return { word, options, answer: options.indexOf(word.de), isReview: reviewKeys.has(word.de.toLocaleLowerCase('de-DE')) };
         })
     };
     if (!kofferGame.questions.length) {
@@ -1276,6 +1354,7 @@ function renderKofferQuestion() {
         <div style="max-width:580px;margin:auto;">
             <div style="height:9px;background:#eceff1;border-radius:999px;overflow:hidden;"><div style="height:100%;width:${progress}%;background:linear-gradient(90deg,#ffb74d,#66bb6a);transition:.3s;"></div></div>
             <p style="color:#78909c;margin:13px 0 4px;">Món ${kofferGame.index + 1}/${kofferGame.questions.length} · Vali yêu cầu:</p>
+            ${question.isReview ? '<div style="display:inline-block;padding:5px 10px;margin:3px 0 8px;background:#ede7f6;color:#5e35b1;border-radius:999px;font-size:13px;font-weight:bold;">🧠 Còn nhớ cái này không?</div><br>' : ''}
             <b style="font-size:25px;color:#37474f;">${question.word.vi}</b>
             <p style="font-size:14px;color:#8d6e63;">Chọn đúng từ tiếng Đức để bỏ vào vali.</p>
         </div>`;
@@ -1304,7 +1383,7 @@ function checkKofferAnswer(selectedIndex) {
         document.getElementById('feedback-area').innerHTML = `
             <div style="padding:14px;border-radius:14px;background:#e8f5e9;color:#2e7d32;font-weight:bold;">✅ Cạch! Đã đóng gói <b>${question.word.de}</b>.<br><small>Chuỗi đúng: 🔥 ${kofferGame.streak}</small></div>
             ${justUnlocked ? '<div style="margin-top:10px;padding:15px;border:3px solid #ffb74d;border-radius:14px;background:linear-gradient(135deg,#fff3e0,#e3f2fd);color:#795548;font-weight:900;font-size:19px;">⬆️ LEVEL UP!<br><small>Hải quan đã nghe tin. Cuối lượt cậu phải tự gõ lại cả 8 từ.</small></div>' : ''}
-            <button class="btn-kapi btn-green" style="width:100%;margin:12px 0 0;" onclick="nextKofferQuestion()">${justUnlocked ? '🛂 Tiếp tục tới hải quan' : '🧳 Đóng gói món tiếp theo'}</button>`;
+            <button class="btn-kapi btn-green" style="width:100%;margin:12px 0 0;" onclick="${justUnlocked ? 'startKofferTypingLevel()' : 'nextKofferQuestion()'}">${justUnlocked ? '🛂 LEVEL UP · Sang màn gõ từ ngay' : '🧳 Đóng gói món tiếp theo'}</button>`;
         return;
     }
 
@@ -1324,6 +1403,7 @@ function checkKofferAnswer(selectedIndex) {
             <div style="padding:14px;border-radius:14px;background:#fff3e0;color:#bf5f00;font-weight:bold;">${line}<br><small>Đúng ra phải là: <b>${question.word.de}</b></small></div>
             <button class="btn-kapi" style="width:100%;margin:12px 0 0;background:#ffcc80;" onclick="nextKofferQuestion()">🫩 Đi tiếp trước khi nó đổi ý</button>`;
     }
+    makeKofferSayBye();
 }
 
 function nextKofferQuestion() {
@@ -1338,12 +1418,17 @@ function startKofferTypingLevel() {
     kofferGame.typedIndex = 0;
     kofferGame.mistakes = 0;
     kofferGame.streak = 0;
+    const manifest = kofferGame.typingWords.map((word, index) => `
+        <div style="padding:8px 10px;background:white;border:1px solid #d7ccc8;border-radius:10px;text-align:left;">
+            <b>${index + 1}. ${word.de}</b><br><small style="color:#6d4c41;">${word.vi}</small>
+        </div>`).join('');
     document.getElementById('feedback-area').style.display = 'block';
     document.getElementById('feedback-area').innerHTML = `
         <div style="padding:18px;background:linear-gradient(135deg,#e3f2fd,#fff3e0);border:3px solid #64b5f6;border-radius:17px;text-align:center;">
             <b style="font-size:22px;color:#1565c0;">🛂 LEVEL 2 · ZOLLKONTROLLE</b><br>
-            <span>Hải quan không cho nhìn đáp án nữa. Hãy tự gõ lại đủ <b>8 từ vừa đóng gói</b>.</span><br>
+            <span>Chuỗi đúng đã đạt 🔥3. Hãy nhìn danh sách lần cuối, sau đó tự gõ lại đủ <b>${kofferGame.typingWords.length} từ</b>.</span><br>
             <small>Vali được cấp lại 3 đơn vị kiên nhẫn, dù nó không hề yêu cầu.</small>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:7px;margin-top:13px;">${manifest}</div>
         </div>`;
     document.getElementById('message').innerHTML = `${renderKofferStatus()}<h3 style="color:#1565c0;">Hải quan đang mở vali…</h3>`;
     document.getElementById('buttons').style.display = 'block';
@@ -1423,6 +1508,7 @@ function checkKofferTypingAnswer() {
         ${kofferGame.mistakes >= 3
             ? '<button class="btn-kapi" style="width:100%;margin:12px 0 0;background:#eceff1;" onclick="finishKofferGame(false)">🥺 Nhìn vali đổ đồ</button>'
             : '<button class="btn-kapi" style="width:100%;margin:12px 0 0;background:#ffcc80;" onclick="retryKofferTypingWord()">⌨️ Gõ lại từ này</button>'}`;
+    makeKofferSayBye();
 }
 
 function retryKofferTypingWord() {
@@ -1436,9 +1522,29 @@ function nextKofferTypingWord() {
     renderKofferTypingQuestion();
 }
 
+function renderKofferRoundSummary() {
+    const cards = kofferGame.questions.map((question, index) => {
+        const word = question.word;
+        return `
+            <div style="padding:12px;background:#fff;border:1px solid #d7ccc8;border-radius:12px;text-align:left;">
+                <b style="color:#5d4037;">${index + 1}. ${word.de}</b>
+                ${question.isReview ? '<span style="float:right;padding:2px 7px;background:#ede7f6;color:#5e35b1;border-radius:999px;font-size:11px;">TỪ CŨ</span>' : ''}
+                <div style="color:#455a64;margin-top:4px;">🇻🇳 ${word.vi}</div>
+                <div style="color:#7b6b63;margin-top:6px;font-size:13px;font-style:italic;">💬 ${getKofferExample(word)}</div>
+            </div>`;
+    }).join('');
+    return `
+        <details open style="margin-top:14px;padding:12px;background:#fffaf0;border:2px solid #ffcc80;border-radius:15px;">
+            <summary style="cursor:pointer;font-weight:900;color:#795548;">🧳 Manifest · 8 từ trong chuyến này</summary>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:9px;margin-top:11px;">${cards}</div>
+        </details>`;
+}
+
 function finishKofferGame(success) {
     const wrong = uniqueMiniGameWords(kofferGame.wrongWords);
     const packed = kofferGame.packed.length;
+    saveKofferRoundToHistory();
+    const roundSummary = renderKofferRoundSummary();
     document.getElementById('buttons').style.display = 'block';
     document.getElementById('feedback-area').style.display = 'block';
 
@@ -1455,7 +1561,7 @@ function finishKofferGame(success) {
             <div style="padding:16px;background:#e8f5e9;border:2px dashed #81c784;border-radius:16px;">
                 <b>🏅 Huy hiệu: ${kofferGame.typingMode ? 'Qua hải quan bằng trí nhớ' : 'Không bị bỏ lại ở sân bay'}</b><br>
                 ${wrong.length ? `Cần ôn lại: ${wrong.map(word => word.de).join(' · ')}` : 'Không làm rơi từ nào. Voi rất đỗi tự hào 🫪'}
-            </div>`;
+            </div>${roundSummary}`;
     } else {
         const dumpedIcons = kofferGame.packed.length
             ? kofferGame.packed.map((_, index) => kofferItemIcons[index % kofferItemIcons.length])
@@ -1475,7 +1581,8 @@ function finishKofferGame(success) {
             <div style="padding:16px;background:#fff3e0;border-radius:16px;">
                 Vali đã đổ <b>${packed || 'toàn bộ'}</b> món ra ngoài. Bồ câu đứng lại giữa sân bay với biểu cảm 🥺.<br>
                 ${wrong.length ? `Từ làm vali mất niềm tin: <b>${wrong.map(word => word.de).join(' · ')}</b>` : ''}
-            </div>`;
+            </div>${roundSummary}`;
+        makeKofferSayBye('koffer-leaving');
         setTimeout(() => {
             const suitcase = document.getElementById('koffer-leaving');
             const scatter = [
@@ -1491,7 +1598,7 @@ function finishKofferGame(success) {
                 suitcase.style.transform = 'translateX(285px) rotate(14deg)';
                 suitcase.style.opacity = '.12';
             }
-        }, 80);
+        }, 1050);
     }
 
     document.getElementById('buttons').innerHTML = `
