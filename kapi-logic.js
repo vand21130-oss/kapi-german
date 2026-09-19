@@ -1829,6 +1829,7 @@ let sprechenRecorder = null;
 let sprechenStream = null;
 let sprechenAudioChunks = [];
 let sprechenStartedAt = 0;
+let sprechenPendingAvatar = '';
 
 function showTeil1() {
     setLearningFocus(true);
@@ -1857,10 +1858,14 @@ function getSprechenCandidate() {
     if (!profile || !profile.name || !profile.code) {
         profile = {
             name: 'Kleine Taube',
-            code: `KAPI-${String(Math.floor(100 + Math.random() * 900))}`
+            nickname: 'Bồ câu',
+            code: `KAPI-${String(Math.floor(100 + Math.random() * 900))}`,
+            avatar: ''
         };
         localStorage.setItem(SPRECHEN_PROFILE_KEY, JSON.stringify(profile));
     }
+    if (!profile.nickname) profile.nickname = 'Bồ câu';
+    if (typeof profile.avatar !== 'string') profile.avatar = '';
     return profile;
 }
 
@@ -1878,25 +1883,24 @@ function renderKapiCandidateCard() {
             <div class="kapi-id-card" id="kapi-candidate-card">
                 <div class="kapi-id-face kapi-id-front">
                     <div class="kapi-id-head">
-                        <span>KAPI NATIONAL ID CARD</span><span>★ ★ ★</span>
+                        <span>KAPI SPRACHCLUB</span><span>🌿 CANDIDATE</span>
                     </div>
                     <div class="kapi-id-body">
                         <div class="kapi-id-photo">
-                            <img src="capy.png" alt="Kapi Kandidat">
-                            <span>★</span>
+                            <img src="${profile.avatar || 'capy.png'}" alt="Kapi Kandidat">
+                            <span>✦</span>
                         </div>
                         <div class="kapi-id-data">
                             <div><b>GIVEN NAME</b><span>${escapeSprechenHtml(profile.name)}</span></div>
-                            <div><b>NICKNAME</b><span>Bồ câu</span></div>
-                            <div><b>SPECIES</b><span>Capybara</span></div>
+                            <div><b>NICKNAME</b><span>${escapeSprechenHtml(profile.nickname)}</span></div>
                             <div><b>LEVEL</b><span>Goethe B2</span></div>
                             <div><b>MODULE</b><span>Sprechen · Teil ${sprechenSession ? sprechenSession.teil : '?'}</span></div>
                             <div><b>STATUS</b><span>${status}</span></div>
-                            <div class="kapi-id-stars">★★★★★★★</div>
+                            <div class="kapi-id-motto">Gù gù · Deutsch · Brot</div>
                         </div>
                     </div>
                     <div class="kapi-id-bottom">
-                        <button type="button" onclick="editSprechenCandidate(event)">✎ Đổi tên</button>
+                        <button type="button" onclick="openSprechenProfileEditor(event)">✎ Chỉnh hồ sơ</button>
                         <div class="kapi-id-paw">🐾</div>
                         <div><div class="kapi-barcode">${barcodeBars}</div><small>${escapeSprechenHtml(profile.code)}</small></div>
                     </div>
@@ -1920,13 +1924,95 @@ function toggleKapiCandidateCard(event) {
     if (card) card.classList.toggle('is-flipped');
 }
 
-function editSprechenCandidate(event) {
+function openSprechenProfileEditor(event) {
     if (event) event.stopPropagation();
     const profile = getSprechenCandidate();
-    const nextName = prompt('Tên trên thẻ dự thi:', profile.name);
-    if (!nextName || !nextName.trim()) return;
-    profile.name = nextName.trim().slice(0, 26);
-    localStorage.setItem(SPRECHEN_PROFILE_KEY, JSON.stringify(profile));
+    sprechenPendingAvatar = profile.avatar || '';
+    document.getElementById('kapi-profile-modal')?.remove();
+    const modal = document.createElement('div');
+    modal.id = 'kapi-profile-modal';
+    modal.className = 'kapi-profile-overlay';
+    modal.onclick = e => { if (e.target === modal) closeSprechenProfileEditor(); };
+    modal.innerHTML = `
+        <div class="kapi-profile-dialog" role="dialog" aria-modal="true" aria-label="Chỉnh hồ sơ thí sinh">
+            <button class="kapi-profile-close" onclick="closeSprechenProfileEditor()">×</button>
+            <div class="kapi-profile-title">🪪 Hồ sơ bồ câu</div>
+            <p>Tự làm giấy tờ cho mình. Cơ quan Kapi không kiểm tra tính xác thực :vvvv</p>
+            <div class="kapi-profile-grid">
+                <label class="kapi-avatar-editor">
+                    <img id="kapi-avatar-preview" src="${profile.avatar || 'capy.png'}" alt="Xem trước avatar">
+                    <span>📷 Thay ảnh</span>
+                    <input type="file" accept="image/png,image/jpeg,image/webp" onchange="handleSprechenAvatar(event)">
+                </label>
+                <div class="kapi-profile-fields">
+                    <label>Tên trên thẻ<input id="kapi-profile-name" maxlength="26" value="${escapeSprechenHtml(profile.name)}"></label>
+                    <label>Nickname<input id="kapi-profile-nickname" maxlength="22" value="${escapeSprechenHtml(profile.nickname)}"></label>
+                    <label>Mã thí sinh<input id="kapi-profile-code" maxlength="18" value="${escapeSprechenHtml(profile.code)}"></label>
+                </div>
+            </div>
+            <small>Ảnh chỉ lưu trên thiết bị này và sẽ được thu nhỏ trước khi cất.</small>
+            <div class="kapi-profile-actions">
+                <button onclick="resetSprechenAvatar()">🐹 Dùng lại Kapi</button>
+                <button class="save" onclick="saveSprechenProfile()">💾 Lưu thẻ</button>
+            </div>
+        </div>`;
+    document.body.appendChild(modal);
+}
+
+function closeSprechenProfileEditor() {
+    document.getElementById('kapi-profile-modal')?.remove();
+}
+
+function handleSprechenAvatar(event) {
+    const file = event.target.files && event.target.files[0];
+    if (!file) return;
+    if (file.size > 8 * 1024 * 1024) return alert('Ảnh to quá 8 MB rồi, Kapi không khiêng nổi :vvvv');
+    const reader = new FileReader();
+    reader.onload = () => {
+        const image = new Image();
+        image.onload = () => {
+            const size = 420;
+            const canvas = document.createElement('canvas');
+            canvas.width = size;
+            canvas.height = size;
+            const ctx = canvas.getContext('2d');
+            const scale = Math.max(size / image.width, size / image.height);
+            const width = image.width * scale;
+            const height = image.height * scale;
+            ctx.fillStyle = '#f3eadc';
+            ctx.fillRect(0, 0, size, size);
+            ctx.drawImage(image, (size - width) / 2, (size - height) / 2, width, height);
+            sprechenPendingAvatar = canvas.toDataURL('image/jpeg', .82);
+            document.getElementById('kapi-avatar-preview').src = sprechenPendingAvatar;
+        };
+        image.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+}
+
+function resetSprechenAvatar() {
+    sprechenPendingAvatar = '';
+    const preview = document.getElementById('kapi-avatar-preview');
+    if (preview) preview.src = 'capy.png';
+}
+
+function saveSprechenProfile() {
+    const name = document.getElementById('kapi-profile-name')?.value.trim();
+    const nickname = document.getElementById('kapi-profile-nickname')?.value.trim();
+    const code = document.getElementById('kapi-profile-code')?.value.trim().toUpperCase();
+    if (!name || !nickname || !code) return alert('Thẻ thi không được để trống nha bồ câu :vvvv');
+    const profile = {
+        name: name.slice(0, 26),
+        nickname: nickname.slice(0, 22),
+        code: code.replace(/[^A-Z0-9À-ỹ_-]/g, '-').slice(0, 18),
+        avatar: sprechenPendingAvatar
+    };
+    try {
+        localStorage.setItem(SPRECHEN_PROFILE_KEY, JSON.stringify(profile));
+    } catch (_) {
+        return alert('Ảnh vẫn hơi nặng. Hãy chọn ảnh khác nhẹ hơn nha.');
+    }
+    closeSprechenProfileEditor();
     document.getElementById('message').innerHTML = getSprechenTaskHtml();
 }
 
@@ -1937,39 +2023,50 @@ function getSprechenTaskHtml() {
         : '';
     return `
         <style>
-            .sprechen-stage-head{position:relative;max-width:1040px;min-height:305px;margin:0 auto 8px;display:flex;align-items:flex-start;justify-content:center;padding:18px 270px 0;box-sizing:border-box}
+            .sprechen-stage-head{position:relative;max-width:1120px;min-height:350px;margin:0 auto 8px;display:flex;align-items:flex-start;justify-content:center;padding:22px 335px 0;box-sizing:border-box}
             .sprechen-task-sheet{width:100%;max-width:590px;text-align:center;font-size:24px;line-height:1.45;padding-top:2px}
             .sprechen-task-title{font-size:30px;font-weight:900;margin-bottom:24px;color:#111}
             .sprechen-task-points{display:inline-block;margin-top:17px;text-align:left;line-height:1.75}
-            .kapi-id-wrap{position:absolute;left:4px;top:6px;width:245px;height:174px;perspective:1000px;transform:rotate(-2deg);cursor:pointer;z-index:3;filter:drop-shadow(0 8px 8px rgba(91,61,82,.18))}
+            .kapi-id-wrap{position:absolute;left:0;top:8px;width:310px;height:218px;perspective:1000px;transform:rotate(-1.2deg);cursor:pointer;z-index:3;filter:drop-shadow(0 10px 10px rgba(94,69,48,.18))}
             .kapi-id-card{position:relative;width:100%;height:100%;transition:transform .65s;transform-style:preserve-3d}
             .kapi-id-card.is-flipped{transform:rotateY(180deg)}
-            .kapi-id-face{position:absolute;inset:0;backface-visibility:hidden;box-sizing:border-box;overflow:hidden;border-radius:12px;border-bottom:6px solid #f3a1ce;background:#fff5a8;color:#263238;font-family:Arial,sans-serif}
-            .kapi-id-head{height:29px;padding:0 9px;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(90deg,#94ead9 72%,#ef9bcc 72%);color:#dc3b9a;font-size:10px;font-weight:900;letter-spacing:1.4px}
-            .kapi-id-head span:last-child{color:white;letter-spacing:2px}
-            .kapi-id-body{display:grid;grid-template-columns:78px 1fr;gap:8px;padding:9px 9px 3px}
-            .kapi-id-photo{position:relative;height:92px;background:#df3d9c;border:2px solid #ee5da5;overflow:hidden}
-            .kapi-id-photo img{width:100%;height:100%;object-fit:contain;object-position:center bottom;filter:saturate(.92)}
-            .kapi-id-photo span{position:absolute;left:-3px;top:-5px;color:#be19a7;font-size:27px;transform:rotate(-18deg)}
-            .kapi-id-data{font-size:9px;line-height:1.38;text-align:left;overflow:hidden}
-            .kapi-id-data>div:not(.kapi-id-stars){display:grid;grid-template-columns:55px 1fr;border-bottom:1px dotted #70665c;white-space:nowrap}
-            .kapi-id-data b{color:#367090;font-size:7px;letter-spacing:.45px}
+            .kapi-id-face{position:absolute;inset:0;backface-visibility:hidden;box-sizing:border-box;overflow:hidden;border:2px solid #d9b995;border-radius:20px;background:linear-gradient(145deg,#fffdf6,#f8eddb);color:#4b392e;font-family:Arial,sans-serif;box-shadow:inset 0 0 0 5px rgba(255,255,255,.45)}
+            .kapi-id-face:after{content:'';position:absolute;width:105px;height:105px;right:-38px;bottom:-43px;border-radius:50%;background:rgba(151,181,126,.18);pointer-events:none}
+            .kapi-id-head{height:39px;padding:0 14px;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(90deg,#9fbd84 0 68%,#e9b17c 68%);color:#fffdf7;font-size:11px;font-weight:900;letter-spacing:1.5px}
+            .kapi-id-head span:last-child{font-size:9px;letter-spacing:1px}
+            .kapi-id-body{display:grid;grid-template-columns:106px 1fr;gap:13px;padding:12px 13px 5px}
+            .kapi-id-photo{position:relative;height:119px;background:linear-gradient(150deg,#d7ece5,#f8d9bd);border:3px solid white;border-radius:15px;box-shadow:0 3px 8px rgba(99,71,47,.16);overflow:hidden}
+            .kapi-id-photo img{width:100%;height:100%;object-fit:cover;object-position:center;filter:saturate(.9) contrast(.98)}
+            .kapi-id-photo span{position:absolute;left:5px;top:0;color:#f4a261;font-size:25px;transform:rotate(-18deg);text-shadow:0 1px white}
+            .kapi-id-data{font-size:11px;line-height:1.58;text-align:left;overflow:hidden;padding-top:1px}
+            .kapi-id-data>div:not(.kapi-id-motto){display:grid;grid-template-columns:66px 1fr;border-bottom:1px dashed #c7ad91;white-space:nowrap}
+            .kapi-id-data b{color:#73935f;font-size:8px;letter-spacing:.55px}
             .kapi-id-data span{overflow:hidden;text-overflow:ellipsis}
-            .kapi-id-stars{color:#ee94c8;font-size:13px;letter-spacing:1px;margin-top:2px}
-            .kapi-id-bottom{height:34px;padding:0 8px;display:flex;align-items:center;justify-content:space-between;gap:5px;background:rgba(255,255,255,.18)}
-            .kapi-id-bottom button{border:0;background:#ef9bcc;color:white;border-radius:999px;padding:4px 7px;font-size:8px;font-weight:bold;cursor:pointer}
-            .kapi-id-paw{width:27px;height:27px;display:grid;place-items:center;border:2px solid #63cdbd;border-radius:50%;font-size:17px;transform:rotate(10deg)}
-            .kapi-barcode{height:17px;display:flex;gap:1px;align-items:stretch;background:white;padding:2px 4px}
+            .kapi-id-motto{margin-top:6px;padding:5px 7px;border-radius:999px;background:#e8f0df;color:#688456;text-align:center;font-size:8px;font-weight:900;letter-spacing:.6px}
+            .kapi-id-bottom{height:37px;padding:0 13px;display:flex;align-items:center;justify-content:space-between;gap:7px;background:rgba(236,213,184,.35)}
+            .kapi-id-bottom button{position:relative;z-index:2;border:0;background:#c98455;color:white;border-radius:999px;padding:6px 10px;font-size:9px;font-weight:bold;cursor:pointer;box-shadow:0 2px 4px rgba(103,70,49,.15)}
+            .kapi-id-paw{width:31px;height:31px;display:grid;place-items:center;border:2px solid #90ad79;border-radius:50%;font-size:18px;background:#f7ffef;transform:rotate(10deg)}
+            .kapi-barcode{height:19px;display:flex;gap:1px;align-items:stretch;background:#fff;padding:2px 5px;border-radius:2px}
             .kapi-barcode i{display:block;background:#111}
-            .kapi-id-bottom small{display:block;font-size:6px;text-align:center;letter-spacing:1px}
+            .kapi-id-bottom small{display:block;font-size:7px;text-align:center;letter-spacing:1px}
             .kapi-id-back{transform:rotateY(180deg);text-align:center;padding-bottom:8px}
-            .kapi-back-paw{margin:11px auto 5px;width:48px;height:48px;display:grid;place-items:center;border:4px solid #69d6c4;border-radius:50%;font-size:31px;background:#ef9bcc}
-            .kapi-id-back>b{display:block;padding:0 13px;color:#b52b83;font-size:10px;line-height:1.35}
-            .kapi-id-back p{font-size:9px;margin:5px 0}
-            .kapi-back-reward{display:inline-block;padding:4px 9px;background:#ef9bcc;color:white;border-radius:999px;font-size:8px;font-weight:bold}
-            .kapi-signature{position:absolute;right:12px;bottom:15px;font-family:cursive;font-size:18px;transform:rotate(-8deg)}
-            .kapi-id-back>small{position:absolute;left:9px;bottom:7px;font-size:6px}
-            @media(max-width:850px){.sprechen-stage-head{display:block;min-height:0;padding:8px 10px}.kapi-id-wrap{position:relative;left:auto;top:auto;margin:0 auto 22px;transform:rotate(-1deg)}.sprechen-task-sheet{font-size:20px}.sprechen-task-title{font-size:27px;margin-bottom:15px}}
+            .kapi-back-paw{margin:18px auto 9px;width:58px;height:58px;display:grid;place-items:center;border:4px solid #91af78;border-radius:50%;font-size:35px;background:#eaf3e2}
+            .kapi-id-back>b{display:block;padding:0 18px;color:#805338;font-size:12px;line-height:1.4}
+            .kapi-id-back p{font-size:11px;margin:7px 0}
+            .kapi-back-reward{display:inline-block;padding:6px 12px;background:#c98455;color:white;border-radius:999px;font-size:9px;font-weight:bold}
+            .kapi-signature{position:absolute;right:18px;bottom:18px;font-family:cursive;font-size:21px;color:#79533f;transform:rotate(-8deg)}
+            .kapi-id-back>small{position:absolute;left:13px;bottom:9px;font-size:7px}
+            .kapi-profile-overlay{position:fixed;inset:0;z-index:99999;display:grid;place-items:center;padding:18px;background:rgba(54,42,34,.48);backdrop-filter:blur(5px)}
+            .kapi-profile-dialog{position:relative;width:min(560px,94vw);box-sizing:border-box;padding:25px;border:3px solid #dcb88d;border-radius:25px;background:linear-gradient(145deg,#fffdf8,#f5eadb);box-shadow:0 22px 60px rgba(47,35,28,.28);color:#4c3b30;text-align:left}
+            .kapi-profile-close{position:absolute;right:13px;top:10px;border:0;background:transparent;color:#8d6e63;font-size:29px;cursor:pointer}
+            .kapi-profile-title{font-size:24px;font-weight:900;color:#795548}.kapi-profile-dialog>p{margin:7px 30px 18px 0;color:#8a7465;font-size:14px}
+            .kapi-profile-grid{display:grid;grid-template-columns:165px 1fr;gap:20px;align-items:center}
+            .kapi-avatar-editor{height:175px;position:relative;display:block;border:4px solid white;border-radius:20px;overflow:hidden;background:#dcebe1;box-shadow:0 5px 13px rgba(89,66,49,.18);cursor:pointer}
+            .kapi-avatar-editor img{width:100%;height:100%;object-fit:cover}.kapi-avatar-editor span{position:absolute;left:50%;bottom:9px;transform:translateX(-50%);white-space:nowrap;padding:7px 12px;border-radius:999px;background:rgba(74,58,47,.78);color:white;font-size:12px;font-weight:bold}.kapi-avatar-editor input{display:none}
+            .kapi-profile-fields{display:grid;gap:11px}.kapi-profile-fields label{font-size:11px;font-weight:900;color:#708c5c;letter-spacing:.6px}.kapi-profile-fields input{display:block;width:100%;box-sizing:border-box;margin-top:5px;padding:11px 12px;border:2px solid #dfccb6;border-radius:12px;background:#fff;color:#3e332c;font-size:15px;outline:none}.kapi-profile-fields input:focus{border-color:#91ad79;box-shadow:0 0 0 3px rgba(145,173,121,.16)}
+            .kapi-profile-dialog>small{display:block;margin-top:15px;color:#9a8778}.kapi-profile-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:15px}.kapi-profile-actions button{border:0;border-radius:999px;padding:10px 16px;background:#e5dacb;color:#5c493c;font-weight:bold;cursor:pointer}.kapi-profile-actions .save{background:#86a86d;color:white}
+            @media(max-width:900px){.sprechen-stage-head{display:block;min-height:0;padding:8px 10px}.kapi-id-wrap{position:relative;left:auto;top:auto;margin:0 auto 26px;transform:rotate(-.7deg)}.sprechen-task-sheet{font-size:20px}.sprechen-task-title{font-size:27px;margin-bottom:15px}}
+            @media(max-width:560px){.kapi-id-wrap{width:286px;height:201px}.kapi-id-body{grid-template-columns:96px 1fr;padding:10px}.kapi-id-photo{height:108px}.kapi-id-data{font-size:10px}.kapi-profile-grid{grid-template-columns:1fr}.kapi-avatar-editor{width:155px;height:155px;margin:auto}.kapi-profile-actions{justify-content:stretch}.kapi-profile-actions button{flex:1}}
         </style>
         <div class="sprechen-stage-head">
             ${renderKapiCandidateCard()}
