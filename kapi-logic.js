@@ -1425,21 +1425,11 @@ function startKofferTypingLevel() {
     kofferGame.typedIndex = 0;
     kofferGame.mistakes = 0;
     kofferGame.streak = 0;
-    const manifest = kofferGame.typingWords.map((word, index) => `
-        <div style="padding:8px 10px;background:white;border:1px solid #d7ccc8;border-radius:10px;text-align:left;">
-            <b>${index + 1}. ${word.de}</b><br><small style="color:#6d4c41;">${word.vi}</small>
-        </div>`).join('');
-    document.getElementById('feedback-area').style.display = 'block';
-    document.getElementById('feedback-area').innerHTML = `
-        <div style="padding:18px;background:linear-gradient(135deg,#e3f2fd,#fff3e0);border:3px solid #64b5f6;border-radius:17px;text-align:center;">
-            <b style="font-size:22px;color:#1565c0;">🛂 LEVEL 2 · ZOLLKONTROLLE</b><br>
-            <span>Chuỗi đúng đã đạt 🔥3. Hãy nhìn danh sách lần cuối, sau đó tự gõ lại đủ <b>${kofferGame.typingWords.length} từ</b>.</span><br>
-            <small>Vali được cấp lại 3 đơn vị kiên nhẫn, dù nó không hề yêu cầu.</small>
-            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:7px;margin-top:13px;">${manifest}</div>
-        </div>`;
-    document.getElementById('message').innerHTML = `${renderKofferStatus()}<h3 style="color:#1565c0;">Hải quan đang mở vali…</h3>`;
+    // Level 2 là kiểm tra trí nhớ thật: không cho xem lại manifest hay đáp án trước khi gõ.
+    document.getElementById('feedback-area').style.display = 'none';
+    document.getElementById('feedback-area').innerHTML = '';
     document.getElementById('buttons').style.display = 'block';
-    document.getElementById('buttons').innerHTML = `<button class="btn-kapi btn-green" onclick="renderKofferTypingQuestion()">🛂 Bắt đầu kiểm tra 8 từ</button>`;
+    renderKofferTypingQuestion();
 }
 
 function normalizeKofferAnswer(text) {
@@ -1575,45 +1565,59 @@ function finishKofferGame(success) {
             : ['🧦', '📄', '🥨'];
         document.getElementById('message').innerHTML = `
             <style>
-                .koffer-farewell-bubble{position:relative;z-index:8;margin:0 auto 12px;padding:13px 18px;max-width:580px;background:#fff;border:2px solid #d7ccc8;border-radius:18px;color:#795548;font-weight:800;line-height:1.5;box-shadow:0 5px 14px rgba(93,64,55,.09);}
+                @keyframes kofferFinalDump {
+                    0%,8%{transform:translateX(-50%) rotate(0);opacity:1}
+                    11%{transform:translateX(calc(-50% - 7px)) rotate(-5deg)}
+                    14%{transform:translateX(calc(-50% + 7px)) rotate(5deg)}
+                    17%{transform:translateX(calc(-50% - 5px)) rotate(-4deg)}
+                    21%{transform:translateX(-50%) rotate(0)}
+                    35%,55%{transform:translateX(calc(-50% - 25px)) translateY(34px) rotate(-82deg)}
+                    69%,78%{transform:translateX(-50%) translateY(0) rotate(0);opacity:1}
+                    100%{transform:translateX(390px) rotate(12deg);opacity:0}
+                }
+                @keyframes kofferLidOpen {
+                    0%,31%{transform:rotate(0) translateY(0)}
+                    39%,57%{transform:rotate(-112deg) translate(-8px,-7px)}
+                    69%,100%{transform:rotate(0) translateY(0)}
+                }
+                @keyframes kofferItemFall {
+                    0%,34%{transform:translate(0,0) rotate(0) scale(.3);opacity:0}
+                    38%{opacity:1}
+                    72%{transform:translate(var(--drop-x),var(--drop-y)) rotate(var(--drop-r)) scale(1.08);opacity:1}
+                    79%{transform:translate(var(--drop-x),calc(var(--drop-y) - 13px)) rotate(var(--drop-r)) scale(1)}
+                    88%,100%{transform:translate(var(--drop-x),var(--drop-y)) rotate(var(--drop-r)) scale(1);opacity:1}
+                }
+                .koffer-farewell-bubble{position:relative;z-index:8;margin:0 auto 9px;padding:11px 15px;max-width:540px;background:#fff;border:2px solid #d7ccc8;border-radius:16px;color:#795548;font-size:clamp(14px,2.2vw,18px);font-weight:750;line-height:1.45;box-shadow:0 5px 14px rgba(93,64,55,.09);}
                 .koffer-farewell-bubble:after{content:"";position:absolute;left:50%;bottom:-10px;width:17px;height:17px;background:#fff;border-right:2px solid #d7ccc8;border-bottom:2px solid #d7ccc8;transform:translateX(-50%) rotate(45deg);}
-                .koffer-dump-stage{height:225px;position:relative;overflow:hidden;margin:auto;max-width:620px;}
-                .koffer-airport-floor{position:absolute;left:5%;right:5%;bottom:35px;height:5px;border-radius:99px;background:#d7ccc8;box-shadow:0 5px 0 #efebe9;}
-                .koffer-dumped-item{position:absolute;left:calc(50% - 14px);top:72px;font-size:29px;z-index:2;opacity:1;transition:transform .9s cubic-bezier(.2,.8,.35,1.15);filter:drop-shadow(0 3px 2px rgba(0,0,0,.13));}
-                #koffer-leaving{position:relative;z-index:4;transition:transform .85s ease-in,opacity .85s ease-in;transform-origin:50% 88%;}
-                .koffer-dump-caption{position:relative;z-index:7;margin-top:4px;color:#a1887f;}
+                .koffer-dump-stage{height:255px;position:relative;overflow:hidden;margin:auto;max-width:620px;}
+                .koffer-airport-floor{position:absolute;left:4%;right:4%;bottom:27px;height:5px;border-radius:99px;background:#c7b8b1;box-shadow:0 6px 0 #efebe9;z-index:1;}
+                .koffer-dump-actor{position:absolute;left:50%;top:35px;z-index:5;transform-origin:50% 82%;animation:kofferFinalDump 4.8s ease-in-out forwards;}
+                .koffer-dump-actor #koffer-leaving{position:relative;z-index:2;margin:0;animation:none;transition:none;}
+                .koffer-open-lid{position:absolute;z-index:1;left:2px;top:-1px;width:84px;height:31px;border:4px solid #6d4528;border-radius:12px 12px 5px 5px;background:linear-gradient(145deg,#e7a74a,#bd7332);transform-origin:6px 27px;animation:kofferLidOpen 4.8s ease-in-out forwards;box-shadow:inset 0 4px rgba(255,255,255,.22);}
+                .koffer-open-lid:before{content:"";position:absolute;width:36px;height:14px;border:5px solid #6d4528;border-bottom:0;border-radius:11px 11px 0 0;left:19px;top:-18px;}
+                .koffer-dumped-item{position:absolute;left:calc(50% - 14px);top:73px;font-size:29px;z-index:3;opacity:0;filter:drop-shadow(0 3px 2px rgba(0,0,0,.13));animation:kofferItemFall 3.8s cubic-bezier(.22,.72,.3,1) var(--drop-delay) forwards;}
+                .koffer-dump-caption{position:relative;z-index:7;margin-top:2px;color:#8d6e63;font-size:14px;}
             </style>
             <div style="max-width:650px;margin:auto;padding-top:8px;">
                 <div class="koffer-farewell-bubble">“${getKofferFarewellLine()}”</div>
                 <div class="koffer-dump-stage">
                     <div class="koffer-airport-floor"></div>
-                    <div id="koffer-dumped-items">${dumpedIcons.map((icon, index) => `<span class="koffer-dumped-item" data-dump-index="${index}">${icon}</span>`).join('')}</div>
-                    ${renderKofferMascot('leaving', 'koffer-leaving')}
+                    <div id="koffer-dumped-items">${dumpedIcons.map((icon, index) => {
+                        const scatter = [[-178,133,-35],[-130,143,22],[-78,132,-18],[-28,148,30],[30,137,-28],[82,148,38],[132,130,16],[178,145,-20]];
+                        const [x, y, rotation] = scatter[index % scatter.length];
+                        return `<span class="koffer-dumped-item" style="--drop-x:${x}px;--drop-y:${y}px;--drop-r:${rotation}deg;--drop-delay:${(index % 4) * 0.07}s">${icon}</span>`;
+                    }).join('')}</div>
+                    <div class="koffer-dump-actor"><div class="koffer-open-lid"></div>${renderKofferMascot('leaving', 'koffer-leaving')}</div>
                 </div>
-                <div class="koffer-dump-caption"><small>*Vali dốc hết đồ xuống sàn, nói “bye” rồi lăn đi không ngoảnh lại.*</small></div>
+                <div class="koffer-dump-caption"><small>*Vali rung lên, nghiêng người dốc sạch đồ, nói “bye” rồi tự lăn đi.*</small></div>
             </div>`;
         document.getElementById('feedback-area').innerHTML = `
             <div style="padding:16px;background:#fff3e0;border-radius:16px;">
                 Vali đã đổ <b>${packed || 'toàn bộ'}</b> món ra ngoài. Bồ câu đứng lại giữa sân bay với biểu cảm 🥺.<br>
                 ${wrong.length ? `Từ làm vali mất niềm tin: <b>${wrong.map(word => word.de).join(' · ')}</b>` : ''}
             </div>${roundSummary}`;
-        makeKofferSayBye('koffer-leaving');
-        setTimeout(() => {
-            const suitcase = document.getElementById('koffer-leaving');
-            const scatter = [
-                [-170,92,-35],[-120,125,22],[-62,139,-18],[-15,128,30],
-                [42,140,-28],[92,121,38],[142,91,16],[178,126,-20]
-            ];
-            document.querySelectorAll('.koffer-dumped-item').forEach((item, index) => {
-                const [x, y, rotation] = scatter[index % scatter.length];
-                item.style.transform = `translate(${x}px,${y}px) rotate(${rotation}deg)`;
-            });
-            if (suitcase) {
-                suitcase.style.animation = 'none';
-                suitcase.style.transform = 'translateX(300px) rotate(16deg)';
-                suitcase.style.opacity = '.12';
-            }
-        }, 1050);
+        // Vali chỉ nói tạm biệt sau khi dựng dậy; tránh âm thanh chạy trước hoạt cảnh.
+        setTimeout(() => makeKofferSayBye('koffer-leaving'), 3200);
     }
 
     document.getElementById('buttons').innerHTML = `
