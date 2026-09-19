@@ -1148,46 +1148,53 @@ const kofferRoutes = {
 
 const kofferItemIcons = ['🧦','📘','🥨','🩹','🪥','🧸','☕','🩺'];
 const kofferWrongLines = [
-    'Cái này mà cũng mang à? Tôi vừa mở lại đơn xin nghỉ việc.',
-    'Đơn xin nghỉ việc với thế giới của tôi đang chờ một chữ ký.',
-    'Tạm biệt. Tôi xin nghỉ việc khỏi chuyến đi, khỏi sân bay và khỏi thế giới.'
+    'Khoan. Cậu định nhét từ này vào thật đấy à? Tôi bắt đầu muốn trả vé rồi.',
+    'Sai thêm lần nữa là tôi đổ đồ ra ngay giữa sân bay nhé. Tôi nói thật đấy.',
+    'Thôi, tới đây được rồi. Tôi trả hành lý, trả vé, trả luôn niềm tin cho cậu.'
 ];
 
 const kofferMoodLines = [
-    'Tôi vẫn ở đây vì hợp đồng chưa hết hạn.',
-    'Đi Đức hay đi đâu cũng được. Cho tôi nằm xuống trước đã.',
-    'Tôi không bi quan. Tôi chỉ đã nhìn thấy quá nhiều hành lý.',
-    'Nếu câu này sai, tôi sẽ cập nhật CV ngay tại sân bay.',
-    'Nhân sự nói đây là môi trường làm việc năng động. Họ nói dối.',
-    'Tôi đang vận chuyển từ vựng và cả gánh nặng cuộc đời.',
-    'Cậu chọn đi. Tôi tranh thủ từ bỏ kỳ vọng.',
-    'Tôi không ngủ. Tôi đang tạm ngừng tham gia thế giới.'
+    'Tôi còn ngồi đây là vì chuyến bay chưa mở cửa thôi.',
+    'Đi Đức thì đi, nhưng cho tôi thở một miếng đã.',
+    'Tôi không cáu. Mặt tôi sinh ra đã hết kiên nhẫn như thế.',
+    'Cậu chọn cho kỹ nhé. Bánh xe của tôi bắt đầu run rồi đấy.',
+    'Người ta bảo chuyến này vui lắm. Tôi đang chờ đoạn vui.',
+    'Tôi đang chở tám từ và khoảng ba tấn áp lực tinh thần.',
+    'Cậu cứ chọn đi. Tôi tranh thủ chuẩn bị tinh thần thất vọng.',
+    'Tôi không ngủ gật. Tôi chỉ tạm thời rời khỏi cuộc đời.'
 ];
 
 // 11 × 10 × 10 = 1.100 tổ hợp tuyệt tình. Vali không cần lặp lại chính mình.
 const kofferFarewellOpeners = [
-    'Tôi đã cân nhắc kỹ.', 'Quyết định này không hề khó khăn.', 'Phòng nhân sự đã xác nhận.',
-    'Sau những gì vừa xảy ra,', 'Không giận, không buồn, không lưu luyến.', 'Xin thông báo lần cuối:',
-    'Tôi từng có kỳ vọng. Từng thôi.', 'Từ giây phút này,', 'Theo điều khoản hành lý số 404,',
-    'Tôi đã tham khảo ý kiến của hai bánh xe.', 'Không cần níu kéo.'
+    'Tôi nghĩ kỹ rồi.', 'Hai bánh xe của tôi vừa họp khẩn.', 'Thôi, mình dừng ở đây nhé.',
+    'Sau cú chọn vừa rồi, tôi đã hiểu tất cả.', 'Tôi không giận đâu, tôi chỉ hết muốn cố gắng thôi.',
+    'Xin phép thông báo một tin không vui cho cậu.', 'Tôi từng đặt niềm tin vào cậu. Từng thôi.',
+    'Từ giây phút này, hai ta chính thức đường ai nấy lăn.', 'Nội bộ vali vừa bỏ phiếu và cậu đã thua tuyệt đối.',
+    'Tôi đã hỏi ý kiến tay kéo, ổ khóa và cả hai bánh xe.', 'Đừng níu nữa, khóa kéo của tôi đã khép lại rồi.'
 ];
 const kofferFarewellActions = [
-    'tôi trả lại toàn bộ đồ và chấm dứt quan hệ học tập',
-    'tôi xóa tên cậu khỏi danh sách hành khách lẫn ký ức',
-    'tôi xin nghỉ việc khỏi chuyến đi và khỏi câu chuyện của cậu',
-    'tôi chọn một cuộc đời không phải chuyên chở lựa chọn này',
-    'tôi coi tám từ vừa rồi là tài sản vô chủ',
-    'tôi từ bỏ hành lý, kỳ vọng và mọi trách nhiệm tình cảm',
-    'tôi sẽ khai với hải quan rằng chúng ta chưa từng quen',
-    'tôi tự chuyển mình sang diện hành lý thất lạc',
-    'tôi kết thúc hợp đồng vận chuyển mà không cần bàn giao',
-    'tôi để đồ lại đây và mang lòng tự trọng đi trước'
+    'Tám từ này cậu tự xách nhé, tôi xin dừng phục vụ.',
+    'Tôi trả lại đồ, trả lại vé và giữ lấy chút tự trọng cuối cùng.',
+    'Từ nay cậu học phần cậu, tôi lăn phần tôi.',
+    'Tôi xin rút khỏi chuyến đi trước khi niềm tin bị quá cân.',
+    'Tôi để hết đồ lại đây; món nào lăn mất thì cậu tự nhặt.',
+    'Tôi sẽ báo với hải quan rằng chúng ta chưa từng đi cùng nhau.',
+    'Tôi tự nguyện trở thành hành lý thất lạc còn hơn chở tiếp.',
+    'Hợp đồng chuyên chở từ vựng của chúng ta kết thúc tại đây.',
+    'Tôi mang hai bánh xe đi, còn hậu quả cậu giữ lấy.',
+    'Cậu vừa chọn sai từ, còn tôi chọn rời khỏi mối quan hệ này.'
 ];
 const kofferFarewellEndings = [
-    'kể từ bây giờ.', 'ngay tại cửa khởi hành.', 'và quyết định có hiệu lực lập tức.',
-    'xin đừng liên hệ lại.', 'không kèm bảo hành hay cơ hội thứ hai.', 'trong im lặng và hoàn toàn thanh thản.',
-    'trước sự chứng kiến của bồ câu và nền nhà sân bay.', 'vì cả hai chúng ta đều xứng đáng được nghỉ.',
-    'còn cậu tự lo lấy phần còn lại.', 'tình nghĩa đến đây là hết.'
+    'Từ giờ gặp nhau ở băng chuyền thì cứ xem như người lạ.',
+    'Cậu đừng gọi; tôi đã bật chế độ máy bay rồi.',
+    'Quyết định có hiệu lực ngay, không có nút hoàn tác.',
+    'Tôi chúc cậu may mắn, vì kiến thức thôi là chưa đủ đâu.',
+    'Không bảo hành, không đổi trả và tuyệt đối không có cơ hội thứ hai.',
+    'Tôi đi đây. Bồ câu ở lại nhớ tự nhặt tất lên nhé.',
+    'Nền sân bay và ba con bồ câu đều có thể làm chứng.',
+    'Chúng ta đều cần nghỉ ngơi, nhưng tôi cần nghỉ khỏi cậu.',
+    'Phần đường còn lại cậu tự đi; tôi mệt cả bánh xe rồi.',
+    'Tình nghĩa của chúng ta chính thức thất lạc cùng hành lý.'
 ];
 
 function getKofferFarewellLine() {
@@ -1196,8 +1203,8 @@ function getKofferFarewellLine() {
 }
 
 function getKofferMoodLine() {
-    if (kofferGame.mistakes >= 2) return 'Đơn xin nghỉ việc với thế giới đã được in thành ba bản.';
-    if (kofferGame.mistakes === 1) return 'Tôi đang cân nhắc một cuộc đời không có bồ câu.';
+    if (kofferGame.mistakes >= 2) return 'Tôi đã in đơn nghỉ chơi thành ba bản. Một bản gửi cậu, hai bản gửi hai bánh xe.';
+    if (kofferGame.mistakes === 1) return 'Tôi vẫn cho cậu thêm một cơ hội, nhưng khóa kéo của tôi đang rất căng.';
     return kofferMoodLines[kofferGame.index % kofferMoodLines.length];
 }
 
@@ -1568,14 +1575,22 @@ function finishKofferGame(success) {
             : ['🧦', '📄', '🥨'];
         document.getElementById('message').innerHTML = `
             <style>
-                .koffer-dumped-item{position:absolute;left:calc(50% - 14px);top:68px;font-size:29px;z-index:1;opacity:1;transition:transform .9s cubic-bezier(.2,.8,.35,1.15),opacity .9s ease;filter:drop-shadow(0 3px 2px rgba(0,0,0,.13));}
-                #koffer-leaving{position:relative;z-index:3;}
+                .koffer-farewell-bubble{position:relative;z-index:8;margin:0 auto 12px;padding:13px 18px;max-width:580px;background:#fff;border:2px solid #d7ccc8;border-radius:18px;color:#795548;font-weight:800;line-height:1.5;box-shadow:0 5px 14px rgba(93,64,55,.09);}
+                .koffer-farewell-bubble:after{content:"";position:absolute;left:50%;bottom:-10px;width:17px;height:17px;background:#fff;border-right:2px solid #d7ccc8;border-bottom:2px solid #d7ccc8;transform:translateX(-50%) rotate(45deg);}
+                .koffer-dump-stage{height:225px;position:relative;overflow:hidden;margin:auto;max-width:620px;}
+                .koffer-airport-floor{position:absolute;left:5%;right:5%;bottom:35px;height:5px;border-radius:99px;background:#d7ccc8;box-shadow:0 5px 0 #efebe9;}
+                .koffer-dumped-item{position:absolute;left:calc(50% - 14px);top:72px;font-size:29px;z-index:2;opacity:1;transition:transform .9s cubic-bezier(.2,.8,.35,1.15);filter:drop-shadow(0 3px 2px rgba(0,0,0,.13));}
+                #koffer-leaving{position:relative;z-index:4;transition:transform .85s ease-in,opacity .85s ease-in;transform-origin:50% 88%;}
+                .koffer-dump-caption{position:relative;z-index:7;margin-top:4px;color:#a1887f;}
             </style>
-            <div style="max-width:620px;margin:auto;overflow:hidden;min-height:245px;position:relative;padding-top:8px;">
-                <div id="koffer-dumped-items">${dumpedIcons.map((icon, index) => `<span class="koffer-dumped-item" data-dump-index="${index}">${icon}</span>`).join('')}</div>
-                ${renderKofferMascot('leaving', 'koffer-leaving')}
-                <h3 style="color:#795548;margin-top:14px;">“${getKofferFarewellLine()}”</h3>
-                <small style="color:#a1887f;">*Vali mở khóa, dốc ngược toàn bộ đồ xuống sàn rồi phủi bánh xe.*</small>
+            <div style="max-width:650px;margin:auto;padding-top:8px;">
+                <div class="koffer-farewell-bubble">“${getKofferFarewellLine()}”</div>
+                <div class="koffer-dump-stage">
+                    <div class="koffer-airport-floor"></div>
+                    <div id="koffer-dumped-items">${dumpedIcons.map((icon, index) => `<span class="koffer-dumped-item" data-dump-index="${index}">${icon}</span>`).join('')}</div>
+                    ${renderKofferMascot('leaving', 'koffer-leaving')}
+                </div>
+                <div class="koffer-dump-caption"><small>*Vali dốc hết đồ xuống sàn, nói “bye” rồi lăn đi không ngoảnh lại.*</small></div>
             </div>`;
         document.getElementById('feedback-area').innerHTML = `
             <div style="padding:16px;background:#fff3e0;border-radius:16px;">
@@ -1586,8 +1601,8 @@ function finishKofferGame(success) {
         setTimeout(() => {
             const suitcase = document.getElementById('koffer-leaving');
             const scatter = [
-                [-150,80,-35],[-95,125,22],[-35,145,-18],[35,140,30],
-                [95,115,-28],[150,75,38],[-175,35,16],[175,30,-20]
+                [-170,92,-35],[-120,125,22],[-62,139,-18],[-15,128,30],
+                [42,140,-28],[92,121,38],[142,91,16],[178,126,-20]
             ];
             document.querySelectorAll('.koffer-dumped-item').forEach((item, index) => {
                 const [x, y, rotation] = scatter[index % scatter.length];
@@ -1595,7 +1610,7 @@ function finishKofferGame(success) {
             });
             if (suitcase) {
                 suitcase.style.animation = 'none';
-                suitcase.style.transform = 'translateX(285px) rotate(14deg)';
+                suitcase.style.transform = 'translateX(300px) rotate(16deg)';
                 suitcase.style.opacity = '.12';
             }
         }, 1050);
