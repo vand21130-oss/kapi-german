@@ -324,6 +324,51 @@
             height: 4px;
             pointer-events: none;
         }
+
+        /* FOCUS MODE: Kapi chào ở sảnh; khi học chỉ giữ nội dung và mascot chuyên môn. */
+        body.learning-focus {
+            justify-content: flex-start;
+            padding-top: 22px;
+        }
+        body.learning-focus #container {
+            width: 100%;
+        }
+        body.learning-focus #container > h1,
+        body.learning-focus .kapi-container > .kapi-bubble,
+        body.learning-focus .kapi-container > .kapi-head,
+        body.learning-focus .kapi-container > .kapi-accessory,
+        body.learning-focus .kapi-container > .kapi-img,
+        body.learning-focus .kapi-container > .kapi-decor-grass {
+            display: none !important;
+        }
+        body.learning-focus .kapi-container {
+            display: block;
+            width: min(1120px, calc(100vw - 30px));
+            margin: 0 auto;
+            cursor: default;
+        }
+        body.learning-focus .kapi-container:hover .kapi-img {
+            transform: none;
+        }
+        body.learning-focus #focus-mascot-slot {
+            min-height: 0;
+            margin: 2px auto 0;
+        }
+        body.learning-focus #message,
+        body.learning-focus #feedback-area,
+        body.learning-focus #buttons {
+            width: min(100%, 1050px);
+            margin-left: auto !important;
+            margin-right: auto !important;
+            box-sizing: border-box;
+        }
+        body.learning-focus #message {
+            margin-top: 8px !important;
+        }
+        @media (max-width: 600px) {
+            body.learning-focus { padding-top: 10px; }
+            body.learning-focus .kapi-container { width: calc(100vw - 18px); }
+        }
     </style>
 </head>
 <body>
