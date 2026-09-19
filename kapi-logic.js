@@ -97,7 +97,10 @@ function showLessons() {
     document.getElementById("feedback-area").style.display = "none";
     clearInterval(countdown);
     document.getElementById("timer").innerText = "";
+    const todayMission = getTodayStudyMission();
+    document.getElementById("message").innerHTML = renderTodayMissionCard(todayMission);
     document.getElementById("buttons").innerHTML = `
+        <button class="btn-kapi" style="background:linear-gradient(135deg,#6f9d63,#9bbb72);color:white;border:3px solid #eef6df;box-shadow:0 8px 18px rgba(77,112,63,.22);" onclick="showTodayMission()">🎲 Hôm nay học gì?</button>
         <button class="btn-kapi btn-lesson-1" onclick="chooseLesson('Hören')">🎧 Hören</button>
         <button class="btn-kapi btn-lesson-2" onclick="chooseLesson('Sprechen')">🗣️ Sprechen</button>
         <button class="btn-kapi btn-lesson-3" onclick="chooseLesson('Schreiben')">✍️ Schreiben</button>
@@ -153,6 +156,209 @@ function getLocalDateKey(date) {
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
+}
+
+// ==========================================
+// NHIỆM VỤ CHUYÊN SÂU MỖI NGÀY + TRUYỆN CỦA VALI
+// ==========================================
+const TODAY_STUDY_KEY = 'kapi_today_study_v1';
+const TODAY_STUDY_HISTORY_KEY = 'kapi_today_study_history_v1';
+let activeTodayMission = null;
+
+const TODAY_SKILLS = [
+    { id:'hoeren', icon:'🎧', name:'Hören', minutes:30, detail:'Hoàn thành một Teil, xem lỗi và đọc lại transcript.' },
+    { id:'lesen', icon:'📖', name:'Lesen', minutes:40, detail:'Đọc một tập truyện và vượt qua Mini-Quiz Sprachschätze.' },
+    { id:'sprechen', icon:'🗣️', name:'Sprechen', minutes:30, detail:'Hoàn thành một Teil và nhận phiếu chấm của Mr. Efa.' },
+    { id:'schreiben', icon:'✍️', name:'Schreiben', minutes:45, detail:'Viết trong 45 phút. Hết giờ ting ting và tự khóa bài.' },
+    { id:'vokabeln', icon:'🧳', name:'Wortschatz', minutes:25, detail:'Học 8 từ và hoàn thành 5 câu kiểm tra cuối buổi.' }
+];
+
+const DAILY_KOFFER_STORIES = [
+    { title:'Der verdächtige Regenschirm', text:'Am Morgen stand ein <b data-vi="đáng ngờ">verdächtiger</b> Regenschirm vor meiner Tür. Er gehörte niemandem, war aber bereits enttäuscht von mir. Ich nahm ihn mit. Seitdem regnet es nur innerhalb meiner Wohnung.', end:'🫩 „Tôi không giải thích thời tiết. Tôi chỉ kể chuyện.“' },
+    { title:'Die höfliche Kartoffel', text:'Im Supermarkt bat mich eine Kartoffel sehr <b data-vi="lịch sự">höflich</b>, sie nicht zu kaufen. Sie habe am Montag einen wichtigen Termin. Ich respektierte ihre Planung und kaufte stattdessen eine Zwiebel ohne Zukunftspläne.', end:'🫩 „Củ khoai có lịch trình. Bạn cũng nên có.“' },
+    { title:'Der Bus ohne Motivation', text:'Der Bus kam pünktlich, öffnete die Tür und sagte, er fühle sich heute nicht <b data-vi="có trách nhiệm">zuständig</b>. Alle Fahrgäste nickten verständnisvoll. Dann gingen wir gemeinsam zu Fuß, während der Bus hinter uns langsam Urlaub machte.', end:'🫩 „Phương tiện đã nghỉ việc. Tôi thì chưa được phép.“' },
+    { title:'Ein Termin mit dem Kühlschrank', text:'Mein Kühlschrank wollte ein ernstes Gespräch führen. Er sei mit meiner <b data-vi="sự thiếu quyết đoán">Unentschlossenheit</b> unzufrieden: Jede Nacht öffne ich die Tür und nehme trotzdem nichts. Nun verlangt er feste Besuchszeiten.', end:'🫩 „Ngay cả tủ lạnh cũng đã đặt ranh giới.“' },
+    { title:'Die Taube im Bewerbungsgespräch', text:'Eine Taube bewarb sich als Büroleiterin. Auf die Frage nach ihrer größten Stärke antwortete sie: „Ich kann gleichzeitig <b data-vi="kiên trì">hartnäckig</b> sein und Brot beobachten.“ Sie wurde sofort eingestellt.', end:'🫩 „Năng lực phù hợp thị trường. Tôi không có ý kiến.“' },
+    { title:'Der Aufzug zum Dienstag', text:'Ich drückte im Aufzug auf den dritten Stock. Die Anzeige antwortete: Dienstag. Nach einer <b data-vi="sự do dự">kurzen Zögerung</b> stieg ich aus. Man sollte Maschinen nicht widersprechen, die Kalender bedienen können.', end:'🫩 „Bạn đến sai ngày. Vẫn hơn là không đến.“' }
+];
+
+function todayDateKey(date = new Date()) {
+    const y = date.getFullYear();
+    return `${y}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
+}
+
+function readTodayHistory() {
+    try { return JSON.parse(localStorage.getItem(TODAY_STUDY_HISTORY_KEY)) || []; } catch (_) { return []; }
+}
+
+function getTodayStudyMission() {
+    const today = todayDateKey();
+    try {
+        const saved = JSON.parse(localStorage.getItem(TODAY_STUDY_KEY));
+        if (saved && saved.date === today) return saved;
+    } catch (_) {}
+    const history = readTodayHistory();
+    const yesterdaySkill = history[0]?.skill;
+    let pool = TODAY_SKILLS.filter(item => item.id !== yesterdaySkill);
+    if (!pool.length) pool = TODAY_SKILLS;
+    const seed = [...today].reduce((sum, char) => sum + char.charCodeAt(0), 0);
+    const picked = pool[seed % pool.length];
+    const mission = { date:today, skill:picked.id, changed:false, completed:false, storyOpened:false };
+    localStorage.setItem(TODAY_STUDY_KEY, JSON.stringify(mission));
+    return mission;
+}
+
+function saveTodayStudyMission(mission) {
+    localStorage.setItem(TODAY_STUDY_KEY, JSON.stringify(mission));
+    activeTodayMission = mission;
+}
+
+function getTodaySkill(mission = getTodayStudyMission()) {
+    return TODAY_SKILLS.find(item => item.id === mission.skill) || TODAY_SKILLS[0];
+}
+
+function renderTodayMissionCard(mission) {
+    const skill = getTodaySkill(mission);
+    return `<div style="max-width:720px;margin:0 auto 18px;padding:18px 20px;border:3px solid ${mission.completed ? '#8bc34a' : '#b8cf83'};border-radius:22px;background:linear-gradient(145deg,#fbfff3,#fff7e7);box-shadow:0 9px 20px rgba(79,103,58,.13);">
+        <div style="font-size:13px;font-weight:900;letter-spacing:1.2px;color:#778b55;">${mission.completed ? '✅ HỒ SƠ HÔM NAY ĐÃ HOÀN THÀNH' : '🐘 MR. EFA ĐÃ CHỌN HỒ SƠ HÔM NAY'}</div>
+        <div style="font-size:28px;font-weight:900;color:#3f5d38;margin:6px 0;">${skill.icon} ${skill.name} · ${skill.minutes} phút</div>
+        <div style="color:#71806b;font-size:14px;">${mission.completed ? 'Vali đã buộc phải thực hiện nghĩa vụ kể chuyện.' : skill.detail}</div>
+    </div>`;
+}
+
+function showTodayMission() {
+    setLearningFocus(true, 'koffer');
+    const mission = getTodayStudyMission();
+    activeTodayMission = mission;
+    const skill = getTodaySkill(mission);
+    document.getElementById('message').innerHTML = renderTodayMissionCard(mission);
+    document.getElementById('feedback-area').style.display = 'block';
+    document.getElementById('feedback-area').innerHTML = `<div style="max-width:720px;margin:auto;padding:18px;border:2px solid #d5c4af;border-radius:18px;background:rgba(255,253,247,.92);color:#654f45;line-height:1.6;">
+        <b>${skill.icon} Một kỹ năng duy nhất, học cho ra học:</b><br>${skill.detail}<br>
+        <small>${mission.changed ? '🎲 Quyền đổi hôm nay đã sử dụng.' : '🎲 Cậu được đổi đúng một lần trong ngày.'}</small>
+        <div style="margin-top:12px;padding:12px;border-radius:12px;background:${mission.completed ? '#eef7df' : '#f3eee8'};">🫩 ${mission.completed ? '“Giao dịch đã hoàn tất. Tôi sẽ kể đúng một chuyện.”' : '“Câu chuyện đang ở đây. Quyền truy cập của bạn thì không.”'}</div>
+    </div>`;
+    document.getElementById('buttons').innerHTML = `
+        ${mission.completed
+            ? '<button class="btn-kapi" style="background:#8d6e63;color:white;" onclick="openDailyKofferStory()">🎁 Nghe vali kể chuyện</button>'
+            : `<button class="btn-kapi btn-green" onclick="startTodayMission()">▶ Bắt đầu ${skill.name}</button>`}
+        ${!mission.completed && !mission.changed ? '<button class="btn-kapi" style="background:#ffe0b2;" onclick="changeTodayMission()">🎲 Đổi nhiệm vụ một lần</button>' : ''}
+        ${!mission.completed ? '<button class="btn-kapi" style="background:#eee;color:#6d4c41;" onclick="tryLockedKofferStory()">🔒 Kể chuyện ngay</button>' : ''}
+        <button class="btn-kapi btn-home" onclick="showLessons()">⬅️ Zurück</button>`;
+}
+
+function changeTodayMission() {
+    const mission = getTodayStudyMission();
+    if (mission.changed || mission.completed) return showTodayMission();
+    const alternatives = TODAY_SKILLS.filter(item => item.id !== mission.skill);
+    const next = alternatives[Math.floor(Math.random() * alternatives.length)];
+    mission.skill = next.id;
+    mission.changed = true;
+    saveTodayStudyMission(mission);
+    showTodayMission();
+}
+
+function startTodayMission() {
+    const mission = getTodayStudyMission();
+    activeTodayMission = mission;
+    if (mission.completed) return openDailyKofferStory();
+    if (mission.skill === 'hoeren') return showGoetheHoerenMenu();
+    if (mission.skill === 'sprechen') return chooseLesson('Sprechen');
+    if (mission.skill === 'vokabeln') return startDailyVocabMission();
+    if (mission.skill === 'lesen') {
+        const chapter = 1 + ([...mission.date].reduce((n,c)=>n+c.charCodeAt(0),0) % 7);
+        return showKapiStory('B2', chapter);
+    }
+    if (mission.skill === 'schreiben') {
+        const teil = Math.random() < .65 ? 1 : 2;
+        const pool = teil === 1 ? schreibenTeil1 : schreibenTeil2;
+        schreibenSession = { teil, task:pool[Math.floor(Math.random()*pool.length)], mode:'exam', startedAt:Date.now(), dailyMission:true };
+        return beginSchreiben('exam');
+    }
+}
+
+function tryLockedKofferStory() {
+    const lines = ['Nút hoạt động bình thường. Người dùng thì chưa.','Tôi không kể chuyện bằng tín dụng.','Tôi nhận thanh toán bằng bài tập, không nhận ánh mắt 🥺.','Bạn bấm thêm lần nữa cũng không làm bài tự hoàn thành.','Hoàn thành nhiệm vụ trước. Tình cảm không thay thế được quy trình.'];
+    alert('🫩 “' + lines[Math.floor(Math.random()*lines.length)] + '”');
+}
+
+function completeTodayStudyMission(skillId) {
+    const mission = getTodayStudyMission();
+    if (!activeTodayMission || mission.completed || mission.skill !== skillId) return false;
+    mission.completed = true;
+    mission.completedAt = new Date().toISOString();
+    saveTodayStudyMission(mission);
+    const history = readTodayHistory().filter(item => item.date !== mission.date);
+    history.unshift({ date:mission.date, skill:mission.skill, completedAt:mission.completedAt });
+    localStorage.setItem(TODAY_STUDY_HISTORY_KEY, JSON.stringify(history.slice(0,31)));
+    setTimeout(() => {
+        const buttons = document.getElementById('buttons');
+        if (buttons && !document.getElementById('daily-koffer-reward-btn')) {
+            buttons.insertAdjacentHTML('afterbegin', '<button id="daily-koffer-reward-btn" class="btn-kapi" style="background:#8d6e63;color:white;box-shadow:0 6px 14px rgba(93,64,55,.22);" onclick="openDailyKofferStory()">🎁 Nhiệm vụ xong · Nghe vali kể chuyện</button>');
+        }
+    }, 350);
+    return true;
+}
+
+function openDailyKofferStory() {
+    const mission = getTodayStudyMission();
+    if (!mission.completed) return tryLockedKofferStory();
+    const index = [...mission.date].reduce((n,c)=>n+c.charCodeAt(0),0) % DAILY_KOFFER_STORIES.length;
+    const story = DAILY_KOFFER_STORIES[index];
+    mission.storyOpened = true;
+    saveTodayStudyMission(mission);
+    setLearningFocus(true, 'koffer');
+    document.getElementById('message').innerHTML = `<div style="font-size:29px;font-weight:900;color:#6d4c41;">🧳 ${story.title}</div>`;
+    document.getElementById('feedback-area').style.display = 'block';
+    document.getElementById('feedback-area').innerHTML = `<div style="max-width:700px;margin:auto;padding:25px;border:2px solid #d7c3ae;border-radius:22px;background:#fffdf8;box-shadow:0 9px 20px rgba(80,60,47,.12);text-align:left;line-height:1.85;font-size:19px;color:#493b35;">
+        <div style="font-size:13px;color:#9a8174;margin-bottom:10px;">🫩 EINE VÖLLIG NOTWENDIGE GESCHICHTE</div>
+        <p>${story.text}</p><div style="border-top:1px dashed #cdb8a6;padding-top:13px;color:#795548;font-style:italic;">${story.end}</div>
+        <small style="display:block;margin-top:12px;color:#9b8b82;">Chạm hoặc rê vào từ in đậm để xem nghĩa.</small>
+    </div>`;
+    document.querySelectorAll('#feedback-area b[data-vi]').forEach(word => {
+        word.style.cssText = 'color:#d26939;border-bottom:2px dotted #d26939;cursor:help;';
+        word.title = word.dataset.vi;
+        word.onclick = () => alert(`${word.textContent}: ${word.dataset.vi}`);
+    });
+    document.getElementById('buttons').innerHTML = `<button class="btn-kapi btn-home" onclick="showTodayMission()">⬅️ Hồ sơ hôm nay</button>`;
+}
+
+function ringSchreibenBell() {
+    try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        const ctx = new AudioCtx();
+        [0, .28, .56].forEach((delay, i) => {
+            const osc = ctx.createOscillator(), gain = ctx.createGain();
+            osc.frequency.value = i === 1 ? 880 : 1046;
+            gain.gain.setValueAtTime(.0001, ctx.currentTime + delay);
+            gain.gain.exponentialRampToValueAtTime(.22, ctx.currentTime + delay + .02);
+            gain.gain.exponentialRampToValueAtTime(.0001, ctx.currentTime + delay + .23);
+            osc.connect(gain); gain.connect(ctx.destination); osc.start(ctx.currentTime + delay); osc.stop(ctx.currentTime + delay + .25);
+        });
+    } catch (_) {}
+}
+
+function startDailySchreibenTimer(seconds) {
+    clearInterval(countdown);
+    let remaining = seconds;
+    const render = () => {
+        const timer = document.getElementById('timer');
+        if (!timer) return;
+        timer.innerText = `⏱️ Prüfung: ${Math.floor(remaining/60)}:${String(remaining%60).padStart(2,'0')}`;
+        timer.style.color = remaining <= 60 ? '#c62828' : remaining <= 300 ? '#ef6c00' : remaining <= 600 ? '#b88700' : '';
+    };
+    render();
+    countdown = setInterval(() => {
+        remaining--; render();
+        if (remaining <= 0) {
+            clearInterval(countdown); ringSchreibenBell();
+            const input = document.getElementById('schreibenInput');
+            if (input) { input.readOnly = true; input.style.opacity = '.72'; }
+            document.getElementById('timer').innerText = '🔔 TING TING TING · HẾT GIỜ';
+            alert('🔔 Ting ting ting! Mr. Efa: “Hết giờ. Bỏ bút xuống.”\n🫩 “Bàn phím của bạn cũng nên nghe.”');
+            submitSchreibenToEfa(true);
+        }
+    }, 1000);
 }
 
 function getCurrentWeekStart() {
@@ -584,6 +790,7 @@ function completeDailyMission() {
         if (typeof renderLeavesUI === 'function') renderLeavesUI();
         if (typeof renderShopUI === 'function') renderShopUI();
     }
+    completeTodayStudyMission('vokabeln');
     return firstCompletion;
 }
 
@@ -2308,6 +2515,7 @@ async function checkSprechen() {
                 <h3 style="color:#3949ab;margin-top:0;">🐘 Phiếu chấm Sprechen</h3>${data.result}
             </div>`;
         saveSprechenHistory();
+        completeTodayStudyMission('sprechen');
     } catch (error) {
         aiCorrection.innerHTML = `<p style="color:#c62828;font-weight:bold;">Voi bị nghẹn API: ${error.message}</p>`;
     } finally {
@@ -2515,8 +2723,9 @@ function beginSchreiben(mode) {
         <button class="btn-kapi" style="background:#8eaa75;color:white;" onclick="submitSchreibenToEfa()">🐘 An Mr. Efa senden</button>
         <button class="btn-kapi btn-home" onclick="showSchreibenMenu()">⬅️ Entwurf verlassen</button>`;
     updateSchreibenStats();
-    const seconds = schreibenSession.teil === 1 ? 3000 : 1500;
-    startSprechenTimer(seconds, mode === 'exam' ? '⏱️ Prüfung' : '✍️ Schreibzeit');
+    const seconds = schreibenSession.dailyMission ? 2700 : (schreibenSession.teil === 1 ? 3000 : 1500);
+    if (schreibenSession.dailyMission) startDailySchreibenTimer(seconds);
+    else startSprechenTimer(seconds, mode === 'exam' ? '⏱️ Prüfung' : '✍️ Schreibzeit');
 }
 
 function updateSchreibenStats() {
@@ -2536,14 +2745,23 @@ function insertSchreibenText(text) {
     saveSchreibenDraft();
 }
 
-async function submitSchreibenToEfa() {
+async function submitSchreibenToEfa(timedOut = false) {
     const input = document.getElementById('schreibenInput');
     const text = input?.value.trim() || '';
     const wordCount = text ? text.split(/\s+/).filter(Boolean).length : 0;
-    if (!text) return alert('Mr. Efa: „Sie haben mir ein leeres Blatt geschickt. Mutig.“');
-    if (wordCount < 35 && !confirm(`Mr. Efa đếm được ${wordCount} từ và đang nhướng mày. Vẫn nộp chứ?`)) return;
+    if (!text) {
+        if (timedOut) {
+            const correction = document.getElementById('ai-correction');
+            if (correction) { correction.style.display = 'block'; correction.innerHTML = '<div style="padding:18px;border:2px solid #d7c1aa;border-radius:15px;background:#fff8ee;color:#795548;"><b>🐘 Mr. Efa:</b> „Bài đã được khóa, nhưng tờ giấy hoàn toàn trống.“<br><small>Nhiệm vụ chưa được tính là hoàn thành.</small></div>'; }
+            return;
+        }
+        return alert('Mr. Efa: „Sie haben mir ein leeres Blatt geschickt. Mutig.“');
+    }
+    if (!timedOut && wordCount < 35 && !confirm(`Mr. Efa đếm được ${wordCount} từ và đang nhướng mày. Vẫn nộp chứ?`)) return;
     const checks = [...document.querySelectorAll('.schreiben-check')];
-    if (checks.some(box => !box.checked) && !confirm('Checklist vẫn còn mục trống. Cứ gửi cho Mr. Efa sao?')) return;
+    if (!timedOut && checks.some(box => !box.checked) && !confirm('Checklist vẫn còn mục trống. Cứ gửi cho Mr. Efa sao?')) return;
+
+    if (input) { input.readOnly = true; input.style.opacity = '.78'; }
 
     clearInterval(countdown);
     const correction = document.getElementById('ai-correction');
@@ -2580,6 +2798,7 @@ async function submitSchreibenToEfa() {
             </div>`;
         saveSchreibenHistory(text, wordCount, data.result);
         clearSchreibenDraft();
+        completeTodayStudyMission('schreiben');
     } catch (error) {
         correction.innerHTML = `<div style="color:#c62828;font-weight:bold;">Mr. Efa bị nghẹn API: ${escapeSprechenHtml(error.message)}</div>`;
     } finally {
@@ -2808,6 +3027,7 @@ function submitHoeren() {
         </div></div>
     `;
     document.getElementById("feedback-area").innerHTML = resultHtml;
+    completeTodayStudyMission('hoeren');
 }
 
 // =========================================================
@@ -2921,6 +3141,7 @@ function checkStoryMiniQuiz(chapter, selectedIndex, button) {
     feedback.textContent = selectedIndex === data.answer
         ? '✅ Richtig! Kapi trao cậu một chiếc lá 🌿'
         : `❌ Suýt đúng rồi :vvvv Đáp án là “${data.options[data.answer]}”.`;
+    if (selectedIndex === data.answer) completeTodayStudyMission('lesen');
 }
 
 function showKapiStory(level, chapter = 1) {
