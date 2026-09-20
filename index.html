@@ -220,6 +220,21 @@
             transform:translateX(-50%); transform-origin:50% 100%;
             filter:drop-shadow(0 8px 5px rgba(92,61,33,.12));
         }
+        .kapi-scene-image {
+            position:absolute; left:50%; bottom:2px; width:560px; max-width:112vw;
+            height:auto; z-index:8; display:none; pointer-events:none;
+            transform:translateX(-50%); transform-origin:50% 100%;
+            filter:drop-shadow(0 8px 5px rgba(92,61,33,.12));
+        }
+        .kapi-container.kapi-full-scene > .kapi-img,
+        .kapi-container.kapi-full-scene > .kapi-head,
+        .kapi-container.kapi-full-scene > .kapi-accessory,
+        .kapi-container.kapi-full-scene > .kapi-decor-grass { visibility:hidden; }
+        .kapi-container.kapi-full-scene .kapi-activity-layer .scene-prop { display:none; }
+        .kapi-container.kapi-scene-radio #kapi-radio-image { display:block; animation:kapi-radio-image-sway 1.35s ease-in-out infinite; }
+        .kapi-container.kapi-scene-cocoa #kapi-cocoa-image { display:block; animation:kapi-cocoa-image-cozy 2.5s ease-in-out infinite; }
+        .kapi-container.kapi-scene-mirror #kapi-mirror-image { display:block; animation:kapi-mirror-image-shine 2.3s ease-in-out infinite; }
+        .kapi-container.kapi-scene-star-nod #kapi-star-image { display:block; animation:kapi-star-single-nod 1.05s cubic-bezier(.35,.05,.2,1) 1 both; }
         .kapi-activity-layer .scene-prop,
         .kapi-activity-layer .scene-fx { position:absolute; }
         .kapi-activity-layer.radio-scene { display:block; }
@@ -309,6 +324,10 @@
         @keyframes kapi-mirror-tilt { 0%,100%{transform:rotate(-6deg)} 50%{transform:rotate(7deg) translateY(-5px)} }
         @keyframes kapi-sparkle { 0%,100%{opacity:.25;transform:scale(.7) rotate(0)} 50%{opacity:1;transform:scale(1.2) rotate(25deg)} }
         @keyframes kapi-proud-pose { 0%,100%{transform:rotate(0)} 50%{transform:rotate(-1.5deg) translateY(-5px)} }
+        @keyframes kapi-radio-image-sway { 0%,100%{transform:translateX(-50%) rotate(-1.6deg)} 50%{transform:translateX(-50%) rotate(1.6deg) translateY(-3px)} }
+        @keyframes kapi-cocoa-image-cozy { 0%,100%{transform:translateX(-50%) translateY(0) scale(1)} 50%{transform:translateX(-50%) translateY(-3px) scale(1.008)} }
+        @keyframes kapi-mirror-image-shine { 0%,100%{transform:translateX(-50%) rotate(-.45deg)} 50%{transform:translateX(-50%) rotate(.45deg) translateY(-3px)} }
+        @keyframes kapi-star-single-nod { 0%,100%{transform:translateX(-50%) rotate(0) translateY(0)} 42%{transform:translateX(-50%) rotate(1.8deg) translateY(7px) scale(.995,1.008)} 72%{transform:translateX(-50%) rotate(-.5deg) translateY(-2px)} }
         .kapi-container.kapi-got-gift .kapi-img {
             animation: kapi-gift-bounce 1.05s cubic-bezier(.22,.9,.32,1.2) both !important;
             transform-origin: 50% 100%;
@@ -645,6 +664,10 @@
             <div id="kapi-accessory" class="kapi-accessory" aria-hidden="true"></div>
             <div id="kapi-activity" class="kapi-activity-layer" aria-hidden="true"><span class="scene-prop"></span><span class="scene-fx"></span></div>
             <img id="kapi-sleep-image" src="assets/kapi-actions/kapi-sleep.png" onerror="this.onerror=null;this.src='kapi-sleep.png';" class="kapi-sleep-image" alt="Kapi đang ngủ cạnh chiếc gối hình tim">
+            <img id="kapi-radio-image" src="assets/kapi-actions/kapi-radio.png" class="kapi-scene-image" alt="Kapi đung đưa cạnh radio">
+            <img id="kapi-cocoa-image" src="assets/kapi-actions/kapi-cocoa.png" class="kapi-scene-image" alt="Kapi ôm cốc cacao">
+            <img id="kapi-mirror-image" src="assets/kapi-actions/kapi-mirror.png" class="kapi-scene-image" alt="Kapi chỉnh quả cam trước gương">
+            <img id="kapi-star-image" src="assets/kapi-actions/kapi-star-glasses.png" class="kapi-scene-image" alt="Kapi đeo kính sao và gật đầu">
             <img src="capy.png" class="kapi-img" alt="Bé Kapi dễ thương">
         <div class="kapi-decor-grass">
                 <span class="decor-item">🌿</span>
@@ -1023,14 +1046,33 @@
             const kapi = document.querySelector('.kapi-container');
             const layer = document.getElementById('kapi-activity');
             if (!kapi || !layer) return;
-            ['radio','cocoa','sleep','mirror'].forEach(scene => kapi.classList.remove(`kapi-scene-${scene}`));
+            ['radio','cocoa','sleep','mirror','star-nod'].forEach(scene => kapi.classList.remove(`kapi-scene-${scene}`));
+            kapi.classList.remove('kapi-full-scene');
             layer.className = 'kapi-activity-layer';
             const item = shopItems.find(entry => entry.id === sysData.equippedItems.activity);
-            if (!item) return;
-            kapi.classList.add(`kapi-scene-${item.look}`);
-            layer.classList.add(`${item.look}-scene`);
-            const fx = layer.querySelector('.scene-fx');
-            if (fx) fx.textContent = item.look === 'radio' ? '♫ ♪' : item.look === 'sleep' ? 'Z z z' : item.look === 'mirror' ? '✦' : '';
+            if (item) {
+                kapi.classList.add(`kapi-scene-${item.look}`);
+                layer.classList.add(`${item.look}-scene`);
+                if (item.look !== 'sleep' && isKapiSceneImageReady(item.look)) kapi.classList.add('kapi-full-scene');
+                const fx = layer.querySelector('.scene-fx');
+                if (fx) fx.textContent = item.look === 'radio' ? '♫ ♪' : item.look === 'sleep' ? 'Z z z' : item.look === 'mirror' ? '✦' : '';
+                return;
+            }
+            const faceItem = shopItems.find(entry => entry.id === sysData.equippedItems.face);
+            if (faceItem && faceItem.look.includes('star-glasses') && isKapiSceneImageReady('star')) {
+                kapi.classList.add('kapi-full-scene');
+                void document.getElementById('kapi-star-image').offsetWidth;
+                kapi.classList.add('kapi-scene-star-nod');
+            }
+        }
+
+        function getKapiSceneImage(look) {
+            return document.getElementById(`kapi-${look}-image`);
+        }
+
+        function isKapiSceneImageReady(look) {
+            const image = getKapiSceneImage(look);
+            return !!(image && image.complete && image.naturalWidth > 0);
         }
 
         let kapiPreviewTimer = null;
@@ -1054,14 +1096,20 @@
                 if (bubble) bubble.textContent = 'Kapi chưa tới nơi, vé xem thử vẫn còn nguyên nhé! 🫩';
                 return;
             }
+            if (item.look !== 'sleep' && !isKapiSceneImageReady(item.look)) {
+                if (bubble) bubble.textContent = 'Đạo cụ chưa tới nơi, vé xem thử vẫn còn nguyên nhé! 🫩';
+                return;
+            }
             const previews = getKapiActivityPreviews();
             previews.push(id);
             localStorage.setItem(KAPI_PREVIEW_KEY, JSON.stringify(previews));
             renderShopUI();
             if (kapiPreviewTimer) window.clearTimeout(kapiPreviewTimer);
-            ['radio','cocoa','sleep','mirror'].forEach(scene => kapi.classList.remove(`kapi-scene-${scene}`));
+            ['radio','cocoa','sleep','mirror','star-nod'].forEach(scene => kapi.classList.remove(`kapi-scene-${scene}`));
+            kapi.classList.remove('kapi-full-scene');
             layer.className = `kapi-activity-layer ${item.look}-scene`;
             kapi.classList.add(`kapi-scene-${item.look}`);
+            if (item.look !== 'sleep') kapi.classList.add('kapi-full-scene');
             const fx = layer.querySelector('.scene-fx');
             if (fx) fx.textContent = item.look === 'radio' ? '♫ ♪' : item.look === 'sleep' ? 'Z z z' : item.look === 'mirror' ? '✦' : '';
             if (bubble) bubble.textContent = 'Bản dùng thử 5 giây thôi nhé! 👀';
