@@ -734,7 +734,8 @@
     <!-- ========================================================================= -->
     <script>
         const STORAGE_KEY = 'kapi_eco_system';
-        const KAPI_PREVIEW_KEY = 'kapi_shop_previews_v2';
+        // v3 hoàn lại lượt xem đã bị ghi nhận khi ảnh hoạt cảnh chưa tải được.
+        const KAPI_PREVIEW_KEY = 'kapi_shop_previews_v3';
         
         let sysData = {
             totalLeaves: 0,
@@ -1047,6 +1048,12 @@
             const kapi = document.querySelector('.kapi-container');
             const layer = document.getElementById('kapi-activity');
             if (!item || !kapi || !layer || hasPreviewedKapiActivity(id)) return;
+            const bubble = kapi.querySelector('.kapi-bubble');
+            const sleepImage = document.getElementById('kapi-sleep-image');
+            if (item.look === 'sleep' && (!sleepImage || !sleepImage.complete || sleepImage.naturalWidth === 0)) {
+                if (bubble) bubble.textContent = 'Kapi chưa tới nơi, vé xem thử vẫn còn nguyên nhé! 🫩';
+                return;
+            }
             const previews = getKapiActivityPreviews();
             previews.push(id);
             localStorage.setItem(KAPI_PREVIEW_KEY, JSON.stringify(previews));
@@ -1057,7 +1064,6 @@
             kapi.classList.add(`kapi-scene-${item.look}`);
             const fx = layer.querySelector('.scene-fx');
             if (fx) fx.textContent = item.look === 'radio' ? '♫ ♪' : item.look === 'sleep' ? 'Z z z' : item.look === 'mirror' ? '✦' : '';
-            const bubble = kapi.querySelector('.kapi-bubble');
             if (bubble) bubble.textContent = 'Bản dùng thử 5 giây thôi nhé! 👀';
             kapiPreviewTimer = window.setTimeout(() => {
                 updateKapiActivity();
