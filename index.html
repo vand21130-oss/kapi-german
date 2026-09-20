@@ -237,6 +237,11 @@
         .kapi-container.kapi-scene-cocoa #kapi-cocoa-image { display:block; animation:kapi-cocoa-image-cozy 2.5s ease-in-out infinite; }
         .kapi-container.kapi-scene-mirror #kapi-mirror-image { display:block; animation:kapi-mirror-image-shine 2.3s ease-in-out infinite; }
         .kapi-container.kapi-scene-star-nod #kapi-star-image { display:block; animation:kapi-star-single-nod 1.05s cubic-bezier(.35,.05,.2,1) 1 both; }
+        .kapi-container.kapi-scene-sunglasses #kapi-sunglasses-image { display:block; animation:kapi-fashion-pop 1.15s ease-in-out 1 both; }
+        .kapi-container.kapi-scene-top-hat #kapi-top-hat-image { display:block; animation:kapi-hat-bow 1.45s ease-in-out 1 both; }
+        .kapi-container.kapi-scene-headband #kapi-headband-image { display:block; animation:kapi-paper-offer 1.4s ease-in-out 1 both; }
+        .kapi-container.kapi-scene-flower #kapi-flower-image { display:block; animation:kapi-sneeze-image 1.35s ease-in-out 1 both; }
+        .kapi-container.kapi-scene-beret #kapi-beret-image { display:block; animation:kapi-painter-show 1.45s ease-in-out 1 both; }
         .kapi-activity-layer .scene-prop,
         .kapi-activity-layer .scene-fx { position:absolute; }
         .kapi-activity-layer.radio-scene { display:block; }
@@ -330,6 +335,11 @@
         @keyframes kapi-cocoa-image-cozy { 0%,100%{transform:translateX(-50%) translateY(0) scale(1)} 50%{transform:translateX(-50%) translateY(-3px) scale(1.008)} }
         @keyframes kapi-mirror-image-shine { 0%,100%{transform:translateX(-50%) rotate(-.45deg)} 50%{transform:translateX(-50%) rotate(.45deg) translateY(-3px)} }
         @keyframes kapi-star-single-nod { 0%,100%{transform:translateX(-50%) rotate(0) translateY(0)} 42%{transform:translateX(-50%) rotate(1.8deg) translateY(7px) scale(.995,1.008)} 72%{transform:translateX(-50%) rotate(-.5deg) translateY(-2px)} }
+        @keyframes kapi-fashion-pop { 0%{opacity:0;transform:translateX(-50%) scale(.92) translateY(12px)} 48%{opacity:1;transform:translateX(-50%) scale(1.025) translateY(-3px)} 100%{opacity:1;transform:translateX(-50%) scale(1)} }
+        @keyframes kapi-hat-bow { 0%,100%{transform:translateX(-50%) rotate(0)} 48%{transform:translateX(-50%) rotate(3deg) translateY(8px)} }
+        @keyframes kapi-paper-offer { 0%{opacity:0;transform:translateX(-50%) translateY(12px)} 45%{opacity:1;transform:translateX(-50%) translateY(-3px) rotate(-1deg)} 100%{opacity:1;transform:translateX(-50%)} }
+        @keyframes kapi-sneeze-image { 0%,38%,100%{transform:translateX(-50%)} 50%{transform:translateX(calc(-50% - 9px)) rotate(-1.5deg)} 61%{transform:translateX(calc(-50% + 10px)) rotate(1.8deg)} 73%{transform:translateX(calc(-50% - 3px))} }
+        @keyframes kapi-painter-show { 0%{opacity:0;transform:translateX(-50%) rotate(-3deg) scale(.94)} 55%{opacity:1;transform:translateX(-50%) rotate(1.5deg) scale(1.015)} 100%{opacity:1;transform:translateX(-50%) scale(1)} }
         .kapi-container.kapi-demo-fashion > .kapi-img { animation:kapi-demo-nod 1.1s ease-in-out 1 !important; transform-origin:50% 100%; }
         .kapi-container.kapi-demo-sunglasses .kapi-accessory { animation:kapi-glasses-check 1.25s ease-in-out 1 !important; }
         .kapi-container.kapi-demo-top-hat .kapi-head,
@@ -679,6 +689,11 @@
             <img id="kapi-cocoa-image" src="assets/kapi-actions/kapi-cocoa.png" class="kapi-scene-image" alt="Kapi ôm cốc cacao">
             <img id="kapi-mirror-image" src="assets/kapi-actions/kapi-mirror.png" class="kapi-scene-image" alt="Kapi chỉnh quả cam trước gương">
             <img id="kapi-star-image" src="assets/kapi-actions/kapi-star-glasses.png" class="kapi-scene-image" alt="Kapi đeo kính sao và gật đầu">
+            <img id="kapi-sunglasses-image" src="assets/kapi-actions/kapi-sunglasses.png" class="kapi-scene-image" alt="Kapi hạ kính râm">
+            <img id="kapi-top-hat-image" src="assets/kapi-actions/kapi-top-hat.png" class="kapi-scene-image" alt="Kapi cầm mũ quý ông cúi chào">
+            <img id="kapi-headband-image" src="assets/kapi-actions/kapi-headband.png" class="kapi-scene-image" alt="Kapi đưa đơn xin nghỉ phép">
+            <img id="kapi-flower-image" src="assets/kapi-actions/kapi-flower.png" class="kapi-scene-image" alt="Kapi cài hoa và hắt xì">
+            <img id="kapi-beret-image" src="assets/kapi-actions/kapi-beret.png" class="kapi-scene-image" alt="Kapi họa sĩ cầm bảng màu">
             <img src="capy.png" class="kapi-img" alt="Bé Kapi dễ thương">
         <div class="kapi-decor-grass">
                 <span class="decor-item">🌿</span>
@@ -769,7 +784,8 @@
     <script>
         const STORAGE_KEY = 'kapi_eco_system';
         // v3 hoàn lại lượt xem đã bị ghi nhận khi ảnh hoạt cảnh chưa tải được.
-        const KAPI_PREVIEW_KEY = 'kapi_shop_previews_v4';
+        // v5 hoàn lại lượt demo sau khi nối ảnh toàn thân cho đồ thời trang.
+        const KAPI_PREVIEW_KEY = 'kapi_shop_previews_v5';
         
         let sysData = {
             totalLeaves: 0,
@@ -1063,7 +1079,7 @@
             const kapi = document.querySelector('.kapi-container');
             const layer = document.getElementById('kapi-activity');
             if (!kapi || !layer) return;
-            ['radio','cocoa','sleep','mirror','star-nod'].forEach(scene => kapi.classList.remove(`kapi-scene-${scene}`));
+            ['radio','cocoa','sleep','mirror','star-nod','sunglasses','top-hat','headband','flower','beret'].forEach(scene => kapi.classList.remove(`kapi-scene-${scene}`));
             kapi.classList.remove('kapi-full-scene');
             layer.className = 'kapi-activity-layer';
             const item = shopItems.find(entry => entry.id === sysData.equippedItems.activity);
@@ -1092,6 +1108,12 @@
             return !!(image && image.complete && image.naturalWidth > 0);
         }
 
+        function getKapiFashionScene(item) {
+            if (!item || item.type === 'activity') return '';
+            if (item.look.includes('star-glasses')) return 'star';
+            return item.look.split(' ')[0];
+        }
+
         let kapiPreviewTimer = null;
         function getKapiActivityPreviews() {
             try { return JSON.parse(localStorage.getItem(KAPI_PREVIEW_KEY)) || []; }
@@ -1118,6 +1140,11 @@
                 if (bubble) bubble.textContent = 'Đạo cụ chưa tới nơi, vé xem thử vẫn còn nguyên nhé! 🫩';
                 return;
             }
+            const fashionScene = getKapiFashionScene(item);
+            if (item.type !== 'activity' && !isKapiSceneImageReady(fashionScene)) {
+                if (bubble) bubble.textContent = 'Ảnh biểu diễn chưa tới nơi, vé xem thử vẫn còn nguyên nhé! 🫩';
+                return;
+            }
             if (!isOwned) {
                 const previews = getKapiActivityPreviews();
                 previews.push(id);
@@ -1133,8 +1160,9 @@
             updateKapiAppearance();
             sysData.equippedItems[item.type] = previousItem;
             ['fashion','sunglasses','top-hat','beret','flower','headband'].forEach(name => kapi.classList.remove(`kapi-demo-${name}`));
-            if (item.type !== 'activity' && !item.look.includes('star-glasses')) {
-                kapi.classList.add('kapi-demo-fashion', `kapi-demo-${item.look.split(' ')[0]}`);
+            if (item.type !== 'activity') {
+                ['star-nod','sunglasses','top-hat','headband','flower','beret'].forEach(scene => kapi.classList.remove(`kapi-scene-${scene}`));
+                kapi.classList.add('kapi-full-scene', `kapi-scene-${fashionScene === 'star' ? 'star-nod' : fashionScene}`);
             }
             if (bubble) bubble.textContent = isOwned ? 'Kapi diễn lại theo yêu cầu! 💗' : 'Bản dùng thử 5 giây thôi nhé! 👀';
             kapiPreviewTimer = window.setTimeout(() => {
