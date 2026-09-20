@@ -108,12 +108,89 @@
 
         /* Phụ kiện Kapi */
         .kapi-head {
-            position: absolute; top: -5px; left: 50%; transform: translateX(-50%);
-            font-size: 65px; z-index: 10; transition: 0.3s; pointer-events: none; display: none;
+            position: absolute; top: 38px; left: 50%; transform: translateX(-50%);
+            width: 150px; height: 80px; z-index: 10; transition: 0.3s; pointer-events: none; display: none;
+        }
+        .kapi-head.flower::before {
+            content: ""; position: absolute; top: 9px; right: 9px; width: 21px; height: 21px;
+            border-radius: 50%; background: #ffd54f; border: 3px solid #7b3d54;
+            box-shadow: 0 -16px 0 2px #ff8fba, 0 16px 0 2px #ff8fba,
+                        16px 0 0 2px #ff8fba, -16px 0 0 2px #ff8fba;
+            transform: rotate(8deg);
+        }
+        .kapi-head.top-hat::before {
+            content: ""; position: absolute; top: -35px; left: 42px; width: 67px; height: 69px;
+            border: 5px solid #24170f; border-radius: 9px 9px 4px 4px;
+            background: linear-gradient(to bottom, #303030 0 68%, #f0a23c 68% 82%, #171717 82%);
+            box-sizing: border-box; transform: rotate(-3deg);
+        }
+        .kapi-head.top-hat::after {
+            content: ""; position: absolute; top: 27px; left: 24px; width: 104px; height: 16px;
+            border: 5px solid #24170f; border-radius: 50%; background: #202020;
+        }
+        .kapi-head.headband::before {
+            content: ""; position: absolute; top: 17px; left: 9px; width: 132px; height: 37px;
+            box-sizing: border-box; border: 7px solid #f7c7a6; border-bottom: 0;
+            border-radius: 70px 70px 0 0; transform: rotate(-2deg);
+            box-shadow: inset 0 5px 0 rgba(255,255,255,.55);
+        }
+        .kapi-head.crown {
+            top: 19px; width: 98px; height: 65px;
+            background: linear-gradient(145deg, #ffe66b, #f4a825); border: 4px solid #8a5100;
+            clip-path: polygon(0 20%, 24% 55%, 40% 5%, 61% 55%, 88% 12%, 100% 100%, 0 100%);
+            filter: drop-shadow(0 4px 0 rgba(91,50,0,.2));
         }
         .kapi-accessory {
-            position: absolute; top: 120px; left: 50%; transform: translateX(-50%);
-            font-size: 90px; z-index: 11; pointer-events: none; display: none;
+            position: absolute; top: 132px; left: 50%; transform: translateX(-50%);
+            width: 132px; height: 52px; z-index: 11; pointer-events: none; display: none;
+        }
+        .kapi-accessory.sunglasses .glass-lens {
+            position: absolute; top: 7px; width: 48px; height: 34px;
+            box-sizing: border-box; background: linear-gradient(145deg, #263238 8%, #111 68%);
+            border: 6px solid #24170f; border-radius: 13px 13px 19px 19px;
+            box-shadow: inset 8px 6px 0 rgba(255,255,255,.16), 0 3px 2px rgba(54,31,16,.2);
+        }
+        .kapi-accessory.sunglasses .glass-lens.left { left: 12px; transform: rotate(2deg); }
+        .kapi-accessory.sunglasses .glass-lens.right { right: 12px; transform: rotate(-2deg); }
+        .kapi-accessory.sunglasses .glass-bridge {
+            position: absolute; top: 20px; left: 56px; width: 20px; height: 8px;
+            border-top: 6px solid #24170f; border-radius: 50%;
+        }
+        .kapi-accessory.sunglasses::before,
+        .kapi-accessory.sunglasses::after {
+            content: ""; position: absolute; top: 14px; width: 19px; height: 6px;
+            background: #24170f; border-radius: 5px;
+        }
+        .kapi-accessory.sunglasses::before { left: -1px; transform: rotate(13deg); }
+        .kapi-accessory.sunglasses::after { right: -1px; transform: rotate(-13deg); }
+        .kapi-accessory.star-glasses {
+            top: 127px; width: 142px; height: 57px;
+        }
+        .kapi-accessory.star-glasses .star-lens {
+            position: absolute; top: 1px; width: 55px; height: 52px;
+            background: linear-gradient(145deg, #fff36b, #ffb300); border: 4px solid #6d3d00;
+            box-sizing: border-box;
+            clip-path: polygon(50% 0,61% 34%,98% 35%,68% 56%,79% 94%,50% 71%,20% 94%,31% 57%,2% 35%,39% 34%);
+            filter: drop-shadow(0 3px 0 rgba(109,61,0,.25));
+        }
+        .kapi-accessory.star-glasses .star-lens.left { left: 9px; transform: rotate(-6deg); }
+        .kapi-accessory.star-glasses .star-lens.right { right: 9px; transform: rotate(6deg); }
+        .kapi-accessory.star-glasses .star-bridge {
+            position: absolute; top: 23px; left: 59px; width: 24px; border-top: 6px solid #6d3d00;
+        }
+        .kapi-heart {
+            position: absolute; top: 112px; left: calc(50% + 64px); z-index: 20;
+            font-size: 42px; pointer-events: none; animation: kapi-heart-float 1.5s ease-out forwards;
+        }
+        .kapi-container.kapi-got-gift .kapi-img { animation: kapi-gift-bounce .55s ease-out; }
+        @keyframes kapi-heart-float {
+            0% { opacity: 0; transform: translate(-8px, 18px) scale(.35) rotate(-12deg); }
+            28% { opacity: 1; transform: translate(0, 0) scale(1.15) rotate(8deg); }
+            100% { opacity: 0; transform: translate(24px, -92px) scale(.8) rotate(16deg); }
+        }
+        @keyframes kapi-gift-bounce {
+            0%, 100% { transform: translateY(0) scale(1); }
+            45% { transform: translateY(-16px) scale(1.035); }
         }
 
         /* ========================================= */
@@ -413,7 +490,7 @@
         <div class="kapi-container">
             <div class="kapi-bubble">Hallo! 👋</div>
             <div id="kapi-head-item" class="kapi-head">👑</div>
-            <div id="kapi-accessory" class="kapi-accessory">😎</div>
+            <div id="kapi-accessory" class="kapi-accessory" aria-hidden="true"></div>
             <img src="capy.png" class="kapi-img" alt="Bé Kapi dễ thương">
         <div class="kapi-decor-grass">
                 <span class="decor-item">🌿</span>
@@ -658,11 +735,34 @@
         function buyItem(id, price) {
             if (sysData.totalLeaves >= price) {
                 sysData.totalLeaves -= price;
-                sysData.inventory.push(id);
+                if (!sysData.inventory.includes(id)) sysData.inventory.push(id);
+                sysData.equippedItem = id;
                 saveData();
                 renderLeavesUI();
                 renderShopUI();
+                updateKapiAppearance();
+                celebrateKapiNewItem();
             }
+        }
+
+        function celebrateKapiNewItem() {
+            const kapi = document.querySelector('.kapi-container');
+            if (!kapi) return;
+            kapi.classList.remove('kapi-got-gift');
+            void kapi.offsetWidth;
+            kapi.classList.add('kapi-got-gift');
+
+            const oldHeart = kapi.querySelector('.kapi-heart');
+            if (oldHeart) oldHeart.remove();
+            const heart = document.createElement('span');
+            heart.className = 'kapi-heart';
+            heart.textContent = '💗';
+            heart.setAttribute('aria-label', 'Kapi rất thích món quà mới');
+            kapi.appendChild(heart);
+            window.setTimeout(() => {
+                heart.remove();
+                kapi.classList.remove('kapi-got-gift');
+            }, 1600);
         }
 
         function equipItem(id) {
@@ -682,10 +782,13 @@
             const isSunday = new Date().getDay() === 0;
 
             if (headItem && isSunday && sysData.weeklyStreak === 7) {
-                headItem.innerText = "👑";
+                headItem.className = "kapi-head crown";
+                headItem.innerHTML = "";
                 headItem.style.display = "block";
                 headItem.style.animation = "bounce 1s infinite alternate";
             } else if(headItem) {
+                headItem.className = "kapi-head";
+                headItem.innerHTML = "";
                 headItem.style.display = "none";
                 headItem.style.animation = "none";
             }
@@ -693,16 +796,30 @@
             if (sysData.equippedItem && accItem && headItem) {
                 const itemDef = shopItems.find(i => i.id === sysData.equippedItem);
                 if (itemDef.type === 'face') {
-                    accItem.innerText = itemDef.emoji;
+                    accItem.className = 'kapi-accessory';
+                    if (itemDef.id === 'item_glass') {
+                        accItem.classList.add('sunglasses');
+                        accItem.innerHTML = '<span class="glass-lens left"></span><span class="glass-bridge"></span><span class="glass-lens right"></span>';
+                    } else {
+                        accItem.classList.add('star-glasses');
+                        accItem.innerHTML = '<span class="star-lens left"></span><span class="star-bridge"></span><span class="star-lens right"></span>';
+                    }
                     accItem.style.display = 'block';
                 } else if (itemDef.type === 'head') {
                     if (!(isSunday && sysData.weeklyStreak === 7)) {
-                        headItem.innerText = itemDef.emoji;
+                        headItem.className = 'kapi-head';
+                        headItem.innerHTML = '';
+                        const headClass = itemDef.id === 'item_flower' ? 'flower' : itemDef.id === 'item_hat' ? 'top-hat' : 'headband';
+                        headItem.classList.add(headClass);
                         headItem.style.display = 'block';
                     }
+                    accItem.className = 'kapi-accessory';
+                    accItem.innerHTML = '';
                     accItem.style.display = 'none';
                 }
             } else if(accItem) {
+                accItem.className = 'kapi-accessory';
+                accItem.innerHTML = '';
                 accItem.style.display = 'none';
             }
         }
