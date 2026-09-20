@@ -106,6 +106,8 @@
         .shop-item button:disabled { background: #f5f5f5; color: #ccc; cursor: not-allowed; }
         .shop-item button.equipped { background: #4CAF50; color: white; }
         .shop-item button.preview-scene { background:#8d6e63; color:white; min-width:38px; }
+        .shop-item-actions { display:flex; align-items:center; gap:4px; flex-shrink:0; }
+        .shop-item button.replay-scene { background:#7e9b64; color:white; min-width:34px; }
 
         /* Phụ kiện Kapi */
         .kapi-head {
@@ -328,6 +330,15 @@
         @keyframes kapi-cocoa-image-cozy { 0%,100%{transform:translateX(-50%) translateY(0) scale(1)} 50%{transform:translateX(-50%) translateY(-3px) scale(1.008)} }
         @keyframes kapi-mirror-image-shine { 0%,100%{transform:translateX(-50%) rotate(-.45deg)} 50%{transform:translateX(-50%) rotate(.45deg) translateY(-3px)} }
         @keyframes kapi-star-single-nod { 0%,100%{transform:translateX(-50%) rotate(0) translateY(0)} 42%{transform:translateX(-50%) rotate(1.8deg) translateY(7px) scale(.995,1.008)} 72%{transform:translateX(-50%) rotate(-.5deg) translateY(-2px)} }
+        .kapi-container.kapi-demo-fashion > .kapi-img { animation:kapi-demo-nod 1.1s ease-in-out 1 !important; transform-origin:50% 100%; }
+        .kapi-container.kapi-demo-sunglasses .kapi-accessory { animation:kapi-glasses-check 1.25s ease-in-out 1 !important; }
+        .kapi-container.kapi-demo-top-hat .kapi-head,
+        .kapi-container.kapi-demo-beret .kapi-head { animation:kapi-hat-tip 1.25s ease-in-out 1 !important; transform-origin:50% 100%; }
+        .kapi-container.kapi-demo-flower > .kapi-img { animation:kapi-flower-sneeze 1.15s ease-in-out 1 !important; }
+        @keyframes kapi-demo-nod { 0%,100%{transform:translateY(0) rotate(0)} 45%{transform:translateY(7px) rotate(1deg)} 72%{transform:translateY(-2px) rotate(-.4deg)} }
+        @keyframes kapi-glasses-check { 0%,100%{transform:translateX(-50%) translateY(0)} 38%{transform:translateX(-50%) translateY(8px) rotate(2deg)} 68%{transform:translateX(-50%) translateY(-2px)} }
+        @keyframes kapi-hat-tip { 0%,100%{transform:translateX(-50%) rotate(0)} 45%{transform:translateX(-43%) rotate(13deg) translateY(-8px)} }
+        @keyframes kapi-flower-sneeze { 0%,35%,100%{transform:translateX(0)} 45%{transform:translateX(-8px) rotate(-2deg)} 55%{transform:translateX(9px) rotate(2deg)} 66%{transform:translateX(-4px)} }
         .kapi-container.kapi-got-gift .kapi-img {
             animation: kapi-gift-bounce 1.05s cubic-bezier(.22,.9,.32,1.2) both !important;
             transform-origin: 50% 100%;
@@ -758,7 +769,7 @@
     <script>
         const STORAGE_KEY = 'kapi_eco_system';
         // v3 hoàn lại lượt xem đã bị ghi nhận khi ảnh hoạt cảnh chưa tải được.
-        const KAPI_PREVIEW_KEY = 'kapi_shop_previews_v3';
+        const KAPI_PREVIEW_KEY = 'kapi_shop_previews_v4';
         
         let sysData = {
             totalLeaves: 0,
@@ -945,13 +956,19 @@
             const isEquipped = sysData.equippedItems[item.type] === item.id;
             const canAfford = sysData.totalLeaves >= item.price;
             const requirement = isOwned ? '' : getItemRequirement(item);
-            let btnHTML = '';
-            if (isEquipped) btnHTML = `<button class="equipped" onclick="equipItem('${item.id}')">Đang mặc</button>`;
-            else if (isOwned) btnHTML = `<button onclick="equipItem('${item.id}')">Mặc</button>`;
-            else if (requirement && item.type === 'activity' && !hasPreviewedKapiActivity(item.id)) btnHTML = `<button class="preview-scene" title="Xem thử một lần" onclick="previewKapiActivity('${item.id}')">👀</button>`;
-            else if (requirement && item.type === 'activity') btnHTML = '<button disabled title="Đã dùng lượt xem thử">✓</button>';
-            else if (requirement) btnHTML = '<button disabled>🔒</button>';
-            else btnHTML = `<button ${!canAfford ? 'disabled' : ''} onclick="buyItem('${item.id}', ${item.price})">${canAfford ? 'Mua (' + item.price + ' 🍃)' : '🔒 ' + item.price + ' 🍃'}</button>`;
+            const wearWord = item.type === 'activity' ? 'Dùng' : 'Mặc';
+            const wearingWord = item.type === 'activity' ? 'Đang dùng' : 'Đang mặc';
+            let primaryButton = '';
+            if (isEquipped) primaryButton = `<button class="equipped" onclick="equipItem('${item.id}')">${wearingWord}</button>`;
+            else if (isOwned) primaryButton = `<button onclick="equipItem('${item.id}')">${wearWord}</button>`;
+            else if (requirement) primaryButton = '<button disabled>🔒</button>';
+            else primaryButton = `<button ${!canAfford ? 'disabled' : ''} onclick="buyItem('${item.id}', ${item.price})">${canAfford ? 'Mua (' + item.price + ' 🍃)' : '🔒 ' + item.price + ' 🍃'}</button>`;
+
+            let previewButton = '';
+            if (isOwned) previewButton = `<button class="replay-scene" title="Cho Kapi diễn lại" onclick="previewKapiItem('${item.id}', true)">▶</button>`;
+            else if (!hasPreviewedKapiActivity(item.id)) previewButton = `<button class="preview-scene" title="Xem thử một lần" onclick="previewKapiItem('${item.id}')">👀</button>`;
+            else previewButton = '<button disabled title="Đã dùng lượt xem thử">✓</button>';
+            const btnHTML = `<span class="shop-item-actions">${previewButton}${primaryButton}</span>`;
             return `<div class="shop-item ${requirement ? 'locked-item' : ''}">
                 <span class="shop-item-info"><span class="shop-item-name">${item.icon} ${item.name}</span>${requirement ? `<small class="shop-item-rule">${requirement}</small>` : ''}</span>${btnHTML}
             </div>`;
@@ -1085,39 +1102,49 @@
             return getKapiActivityPreviews().includes(id);
         }
 
-        function previewKapiActivity(id) {
-            const item = shopItems.find(entry => entry.id === id && entry.type === 'activity');
+        function previewKapiItem(id, replayOwned = false) {
+            const item = shopItems.find(entry => entry.id === id);
             const kapi = document.querySelector('.kapi-container');
             const layer = document.getElementById('kapi-activity');
-            if (!item || !kapi || !layer || hasPreviewedKapiActivity(id)) return;
+            const isOwned = item && sysData.inventory.includes(id);
+            if (!item || !kapi || !layer || (!isOwned && hasPreviewedKapiActivity(id))) return;
             const bubble = kapi.querySelector('.kapi-bubble');
             const sleepImage = document.getElementById('kapi-sleep-image');
-            if (item.look === 'sleep' && (!sleepImage || !sleepImage.complete || sleepImage.naturalWidth === 0)) {
+            if (item.type === 'activity' && item.look === 'sleep' && (!sleepImage || !sleepImage.complete || sleepImage.naturalWidth === 0)) {
                 if (bubble) bubble.textContent = 'Kapi chưa tới nơi, vé xem thử vẫn còn nguyên nhé! 🫩';
                 return;
             }
-            if (item.look !== 'sleep' && !isKapiSceneImageReady(item.look)) {
+            if (item.type === 'activity' && item.look !== 'sleep' && !isKapiSceneImageReady(item.look)) {
                 if (bubble) bubble.textContent = 'Đạo cụ chưa tới nơi, vé xem thử vẫn còn nguyên nhé! 🫩';
                 return;
             }
-            const previews = getKapiActivityPreviews();
-            previews.push(id);
-            localStorage.setItem(KAPI_PREVIEW_KEY, JSON.stringify(previews));
+            if (!isOwned) {
+                const previews = getKapiActivityPreviews();
+                previews.push(id);
+                localStorage.setItem(KAPI_PREVIEW_KEY, JSON.stringify(previews));
+            }
             renderShopUI();
-            if (kapiPreviewTimer) window.clearTimeout(kapiPreviewTimer);
-            ['radio','cocoa','sleep','mirror','star-nod'].forEach(scene => kapi.classList.remove(`kapi-scene-${scene}`));
-            kapi.classList.remove('kapi-full-scene');
-            layer.className = `kapi-activity-layer ${item.look}-scene`;
-            kapi.classList.add(`kapi-scene-${item.look}`);
-            if (item.look !== 'sleep') kapi.classList.add('kapi-full-scene');
-            const fx = layer.querySelector('.scene-fx');
-            if (fx) fx.textContent = item.look === 'radio' ? '♫ ♪' : item.look === 'sleep' ? 'Z z z' : item.look === 'mirror' ? '✦' : '';
-            if (bubble) bubble.textContent = 'Bản dùng thử 5 giây thôi nhé! 👀';
+            if (kapiPreviewTimer) {
+                window.clearTimeout(kapiPreviewTimer);
+                updateKapiAppearance();
+            }
+            const previousItem = sysData.equippedItems[item.type];
+            sysData.equippedItems[item.type] = item.id;
+            updateKapiAppearance();
+            sysData.equippedItems[item.type] = previousItem;
+            ['fashion','sunglasses','top-hat','beret','flower','headband'].forEach(name => kapi.classList.remove(`kapi-demo-${name}`));
+            if (item.type !== 'activity' && !item.look.includes('star-glasses')) {
+                kapi.classList.add('kapi-demo-fashion', `kapi-demo-${item.look.split(' ')[0]}`);
+            }
+            if (bubble) bubble.textContent = isOwned ? 'Kapi diễn lại theo yêu cầu! 💗' : 'Bản dùng thử 5 giây thôi nhé! 👀';
             kapiPreviewTimer = window.setTimeout(() => {
-                updateKapiActivity();
+                ['fashion','sunglasses','top-hat','beret','flower','headband'].forEach(name => kapi.classList.remove(`kapi-demo-${name}`));
+                updateKapiAppearance();
                 if (bubble) bubble.textContent = 'Vali đã thu đạo cụ lại. 🫩';
             }, 5000);
         }
+
+        function previewKapiActivity(id) { previewKapiItem(id); }
 
         function kapiRecordStudyCompletion(skillId) {
             const key = `${toLocalDateKey(new Date())}:${skillId || 'study'}`;
