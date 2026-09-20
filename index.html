@@ -210,21 +210,101 @@
             position: absolute; top: 112px; left: calc(50% + 64px); z-index: 20;
             font-size: 42px; pointer-events: none; animation: kapi-heart-float 1.5s ease-out forwards;
         }
-        .kapi-container.kapi-got-gift .kapi-img { animation: kapi-gift-bounce .55s ease-out; }
+        .kapi-activity-layer {
+            position:absolute; inset:0; z-index:12; pointer-events:none; display:none;
+        }
+        .kapi-activity-layer .scene-prop,
+        .kapi-activity-layer .scene-fx { position:absolute; }
+        .kapi-activity-layer.radio-scene { display:block; }
+        .radio-scene .scene-prop {
+            right:29px; bottom:70px; width:76px; height:55px; border:5px solid #58392b;
+            border-radius:12px; background:linear-gradient(145deg,#f7b85b,#c7773e);
+            box-shadow:0 5px 0 rgba(70,38,27,.18);
+        }
+        .radio-scene .scene-prop::before {
+            content:""; position:absolute; left:9px; top:12px; width:27px; height:27px;
+            border:4px solid #58392b; border-radius:50%; background:repeating-radial-gradient(#67483a 0 2px,#d9a46d 3px 5px);
+        }
+        .radio-scene .scene-prop::after {
+            content:""; position:absolute; right:8px; top:12px; width:18px; height:8px;
+            border-top:4px solid #58392b; border-bottom:4px solid #58392b;
+        }
+        .radio-scene .scene-fx { right:42px; bottom:130px; color:#8e44ad; font-size:29px; animation:kapi-notes 1.7s ease-out infinite; }
+        .kapi-container.kapi-scene-radio .kapi-img { animation:kapi-music-sway 1.1s ease-in-out infinite !important; transform-origin:50% 100%; }
+
+        .kapi-activity-layer.cocoa-scene { display:block; }
+        .cocoa-scene .scene-prop {
+            right:55px; bottom:86px; width:55px; height:42px; border:5px solid #6e3e2b;
+            border-radius:7px 7px 18px 18px; background:#a9e0d1;
+        }
+        .cocoa-scene .scene-prop::before {
+            content:""; position:absolute; right:-22px; top:6px; width:22px; height:21px;
+            border:5px solid #6e3e2b; border-left:0; border-radius:0 50% 50% 0;
+        }
+        .cocoa-scene .scene-prop::after {
+            content:"~  ~"; position:absolute; left:4px; top:-37px; width:55px; color:#fff;
+            font-size:23px; font-weight:900; animation:kapi-steam 1.8s ease-in-out infinite;
+        }
+        .kapi-container.kapi-scene-cocoa .kapi-img { animation:kapi-cocoa-sip 2.3s ease-in-out infinite !important; transform-origin:50% 100%; }
+
+        .kapi-activity-layer.sleep-scene { display:block; }
+        .sleep-scene .scene-prop {
+            left:91px; bottom:50px; width:130px; height:43px; border:5px solid #77556c;
+            border-radius:55% 45% 48% 52%; background:linear-gradient(145deg,#f5c8e0,#dba4cf);
+        }
+        .sleep-scene .scene-fx { right:50px; top:93px; color:#6977ad; font-size:28px; font-weight:900; animation:kapi-zzz 2s ease-in-out infinite; }
+        .kapi-container.kapi-scene-sleep .kapi-img { animation:kapi-sleep-breathe 2.8s ease-in-out infinite !important; transform-origin:50% 100%; }
+
+        .kapi-activity-layer.mirror-scene { display:block; }
+        .mirror-scene .scene-prop {
+            right:35px; bottom:75px; width:66px; height:82px; box-sizing:border-box;
+            border:7px solid #d69b35; border-radius:50%; background:linear-gradient(145deg,#e9fbff,#9ed4df);
+            animation:kapi-mirror-tilt 2.2s ease-in-out infinite;
+        }
+        .mirror-scene .scene-prop::after {
+            content:""; position:absolute; left:24px; bottom:-37px; width:10px; height:38px;
+            border-radius:7px; background:#8b572f;
+        }
+        .mirror-scene .scene-fx { right:20px; top:88px; color:#ffd54f; font-size:31px; animation:kapi-sparkle 1.5s ease-in-out infinite; }
+        .kapi-container.kapi-scene-mirror .kapi-img { animation:kapi-proud-pose 2.2s ease-in-out infinite !important; transform-origin:50% 100%; }
+
+        @keyframes kapi-notes { 0%{opacity:0;transform:translate(0,15px) scale(.7)} 35%{opacity:1} 100%{opacity:0;transform:translate(-25px,-55px) scale(1.15)} }
+        @keyframes kapi-music-sway { 0%,100%{transform:rotate(-1.8deg)} 50%{transform:rotate(1.8deg) translateY(-4px)} }
+        @keyframes kapi-steam { 0%,100%{opacity:.25;transform:translateY(5px)} 50%{opacity:1;transform:translateY(-7px)} }
+        @keyframes kapi-cocoa-sip { 0%,100%{transform:rotate(0)} 38%,55%{transform:rotate(2deg) translate(4px,-3px)} }
+        @keyframes kapi-zzz { 0%{opacity:0;transform:translate(0,12px) scale(.7)} 45%{opacity:1} 100%{opacity:0;transform:translate(22px,-42px) scale(1.15)} }
+        @keyframes kapi-sleep-breathe { 0%,100%{transform:scale(1)} 50%{transform:scale(1.018,.99) translateY(3px)} }
+        @keyframes kapi-mirror-tilt { 0%,100%{transform:rotate(-6deg)} 50%{transform:rotate(7deg) translateY(-5px)} }
+        @keyframes kapi-sparkle { 0%,100%{opacity:.25;transform:scale(.7) rotate(0)} 50%{opacity:1;transform:scale(1.2) rotate(25deg)} }
+        @keyframes kapi-proud-pose { 0%,100%{transform:rotate(0)} 50%{transform:rotate(-1.5deg) translateY(-5px)} }
+        .kapi-container.kapi-got-gift .kapi-img {
+            animation: kapi-gift-bounce 1.05s cubic-bezier(.22,.9,.32,1.2) both !important;
+            transform-origin: 50% 100%;
+        }
         .kapi-container.kapi-got-gift .kapi-accessory,
-        .kapi-container.kapi-got-gift .kapi-head { animation: kapi-worn-gift-bounce .55s ease-out; }
+        .kapi-container.kapi-got-gift .kapi-head {
+            animation: kapi-worn-gift-bounce 1.05s cubic-bezier(.22,.9,.32,1.2) both !important;
+        }
         @keyframes kapi-heart-float {
             0% { opacity: 0; transform: translate(-8px, 18px) scale(.35) rotate(-12deg); }
             28% { opacity: 1; transform: translate(0, 0) scale(1.15) rotate(8deg); }
             100% { opacity: 0; transform: translate(24px, -92px) scale(.8) rotate(16deg); }
         }
         @keyframes kapi-gift-bounce {
-            0%, 100% { transform: translateY(0) scale(1); }
-            45% { transform: translateY(-16px) scale(1.035); }
+            0% { transform: translateY(0) scale(1); }
+            22% { transform: translateY(-34px) scale(1.045) rotate(-1.5deg); }
+            43% { transform: translateY(0) scale(.985) rotate(0); }
+            62% { transform: translateY(-17px) scale(1.02) rotate(1deg); }
+            80% { transform: translateY(0) scale(.995); }
+            100% { transform: translateY(0) scale(1); }
         }
         @keyframes kapi-worn-gift-bounce {
-            0%, 100% { transform: translateX(-50%) translateY(0) scale(1); }
-            45% { transform: translateX(-50%) translateY(-16px) scale(1.035); }
+            0% { transform: translateX(-50%) translateY(0) scale(1); }
+            22% { transform: translateX(-50%) translateY(-34px) scale(1.045) rotate(-1.5deg); }
+            43% { transform: translateX(-50%) translateY(0) scale(.985) rotate(0); }
+            62% { transform: translateX(-50%) translateY(-17px) scale(1.02) rotate(1deg); }
+            80% { transform: translateX(-50%) translateY(0) scale(.995); }
+            100% { transform: translateX(-50%) translateY(0) scale(1); }
         }
 
         /* ========================================= */
@@ -456,6 +536,7 @@
         body.learning-focus .kapi-container > .kapi-bubble,
         body.learning-focus .kapi-container > .kapi-head,
         body.learning-focus .kapi-container > .kapi-accessory,
+        body.learning-focus .kapi-container > .kapi-activity-layer,
         body.learning-focus .kapi-container > .kapi-img,
         body.learning-focus .kapi-container > .kapi-decor-grass {
             display: none !important;
@@ -529,6 +610,7 @@
             <div class="kapi-bubble">Hallo! 👋</div>
             <div id="kapi-head-item" class="kapi-head">👑</div>
             <div id="kapi-accessory" class="kapi-accessory" aria-hidden="true"></div>
+            <div id="kapi-activity" class="kapi-activity-layer" aria-hidden="true"><span class="scene-prop"></span><span class="scene-fx"></span></div>
             <img src="capy.png" class="kapi-img" alt="Bé Kapi dễ thương">
         <div class="kapi-decor-grass">
                 <span class="decor-item">🌿</span>
@@ -626,7 +708,7 @@
             currentWeekStart: getMonday(new Date()).toDateString(),
             inventory: [],
             equippedItem: null,
-            equippedItems: { face: null, head: null },
+            equippedItems: { face: null, head: null, activity: null },
             studyCompletions: 0,
             completedStudyDates: [],
             shopGiftMilestones: []
@@ -641,7 +723,11 @@
             { id:"item_band", name:"Băng đô nghỉ phép", icon:"🩹", price:14, type:"head", look:"headband", need:0, streak:3 },
             { id:"item_star", name:"Kính ngôi sao", icon:"⭐", price:16, type:"face", look:"star-glasses", need:3 },
             { id:"item_beret", name:"Mũ họa sĩ", icon:"🎨", price:18, type:"head", look:"beret", need:4 },
-            { id:"item_glass_rose", name:"Kính hoàng hôn", icon:"🌇", price:20, type:"face", look:"sunglasses rose", need:5 }
+            { id:"item_glass_rose", name:"Kính hoàng hôn", icon:"🌇", price:20, type:"face", look:"sunglasses rose", need:5 },
+            { id:"item_radio", name:"Radio tí hon", icon:"📻", price:16, type:"activity", look:"radio", need:3 },
+            { id:"item_cocoa", name:"Cốc cacao", icon:"☕", price:14, type:"activity", look:"cocoa", need:2 },
+            { id:"item_pillow", name:"Gối ngủ trưa", icon:"🛏️", price:18, type:"activity", look:"sleep", need:4 },
+            { id:"item_mirror", name:"Gương tự tin", icon:"🪞", price:20, type:"activity", look:"mirror", need:5 }
         ];
 
         const KAPI_SHOP_REACTIONS = [
@@ -660,7 +746,8 @@
         function initSystem() {
             let savedData = JSON.parse(localStorage.getItem(STORAGE_KEY));
             if (savedData) sysData = { ...sysData, ...savedData };
-            if (!sysData.equippedItems) sysData.equippedItems = { face:null, head:null };
+            if (!sysData.equippedItems) sysData.equippedItems = { face:null, head:null, activity:null };
+            if (!Object.prototype.hasOwnProperty.call(sysData.equippedItems, 'activity')) sysData.equippedItems.activity = null;
             if (sysData.equippedItem) {
                 const oldItem = shopItems.find(item => item.id === sysData.equippedItem);
                 if (oldItem) sysData.equippedItems[oldItem.type] = oldItem.id;
@@ -778,12 +865,13 @@
         function getWeeklyShopItems() {
             const monday = getMonday(new Date());
             const seed = Number(`${monday.getFullYear()}${String(monday.getMonth()+1).padStart(2,'0')}${String(monday.getDate()).padStart(2,'0')}`);
-            const pool = [...shopItems];
-            for (let i = pool.length - 1; i > 0; i--) {
+            const fashion = shopItems.filter(item => item.type !== 'activity');
+            const activities = shopItems.filter(item => item.type === 'activity');
+            for (let i = fashion.length - 1; i > 0; i--) {
                 const j = (seed + i * 17 + Math.floor(seed / (i + 1))) % (i + 1);
-                [pool[i], pool[j]] = [pool[j], pool[i]];
+                [fashion[i], fashion[j]] = [fashion[j], fashion[i]];
             }
-            return pool.slice(0, 3);
+            return [...fashion.slice(0, 2), activities[seed % activities.length]];
         }
 
         function getItemRequirement(item) {
@@ -840,7 +928,7 @@
             window.setTimeout(() => {
                 heart.remove();
                 kapi.classList.remove('kapi-got-gift');
-            }, 1600);
+            }, 1900);
         }
 
         function equipItem(id) {
@@ -889,6 +977,21 @@
                 headItem.innerHTML = '';
                 headItem.style.display = 'block';
             }
+            updateKapiActivity();
+        }
+
+        function updateKapiActivity() {
+            const kapi = document.querySelector('.kapi-container');
+            const layer = document.getElementById('kapi-activity');
+            if (!kapi || !layer) return;
+            ['radio','cocoa','sleep','mirror'].forEach(scene => kapi.classList.remove(`kapi-scene-${scene}`));
+            layer.className = 'kapi-activity-layer';
+            const item = shopItems.find(entry => entry.id === sysData.equippedItems.activity);
+            if (!item) return;
+            kapi.classList.add(`kapi-scene-${item.look}`);
+            layer.classList.add(`${item.look}-scene`);
+            const fx = layer.querySelector('.scene-fx');
+            if (fx) fx.textContent = item.look === 'radio' ? '♫ ♪' : item.look === 'sleep' ? 'Z z z' : item.look === 'mirror' ? '✦' : '';
         }
 
         function kapiRecordStudyCompletion(skillId) {
