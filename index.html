@@ -105,6 +105,7 @@
         }
         .shop-item button:disabled { background: #f5f5f5; color: #ccc; cursor: not-allowed; }
         .shop-item button.equipped { background: #4CAF50; color: white; }
+        .shop-item button.preview-scene { background:#8d6e63; color:white; min-width:38px; }
 
         /* Phụ kiện Kapi */
         .kapi-head {
@@ -888,6 +889,7 @@
             let btnHTML = '';
             if (isEquipped) btnHTML = `<button class="equipped" onclick="equipItem('${item.id}')">Đang mặc</button>`;
             else if (isOwned) btnHTML = `<button onclick="equipItem('${item.id}')">Mặc</button>`;
+            else if (requirement && item.type === 'activity') btnHTML = `<button class="preview-scene" title="Xem thử hoạt cảnh" onclick="previewKapiActivity('${item.id}')">👀</button>`;
             else if (requirement) btnHTML = '<button disabled>🔒</button>';
             else btnHTML = `<button ${!canAfford ? 'disabled' : ''} onclick="buyItem('${item.id}', ${item.price})">${canAfford ? 'Mua (' + item.price + ' 🍃)' : '🔒 ' + item.price + ' 🍃'}</button>`;
             return `<div class="shop-item ${requirement ? 'locked-item' : ''}">
@@ -992,6 +994,26 @@
             layer.classList.add(`${item.look}-scene`);
             const fx = layer.querySelector('.scene-fx');
             if (fx) fx.textContent = item.look === 'radio' ? '♫ ♪' : item.look === 'sleep' ? 'Z z z' : item.look === 'mirror' ? '✦' : '';
+        }
+
+        let kapiPreviewTimer = null;
+        function previewKapiActivity(id) {
+            const item = shopItems.find(entry => entry.id === id && entry.type === 'activity');
+            const kapi = document.querySelector('.kapi-container');
+            const layer = document.getElementById('kapi-activity');
+            if (!item || !kapi || !layer) return;
+            if (kapiPreviewTimer) window.clearTimeout(kapiPreviewTimer);
+            ['radio','cocoa','sleep','mirror'].forEach(scene => kapi.classList.remove(`kapi-scene-${scene}`));
+            layer.className = `kapi-activity-layer ${item.look}-scene`;
+            kapi.classList.add(`kapi-scene-${item.look}`);
+            const fx = layer.querySelector('.scene-fx');
+            if (fx) fx.textContent = item.look === 'radio' ? '♫ ♪' : item.look === 'sleep' ? 'Z z z' : item.look === 'mirror' ? '✦' : '';
+            const bubble = kapi.querySelector('.kapi-bubble');
+            if (bubble) bubble.textContent = 'Bản dùng thử 5 giây thôi nhé! 👀';
+            kapiPreviewTimer = window.setTimeout(() => {
+                updateKapiActivity();
+                if (bubble) bubble.textContent = 'Vali đã thu đạo cụ lại. 🫩';
+            }, 5000);
         }
 
         function kapiRecordStudyCompletion(skillId) {
