@@ -634,6 +634,7 @@
                 <span class="decor-item">🌿</span>
                 <span class="decor-item">🌿</span>
         </div>
+        </div><!-- /.kapi-container: đóng đúng khung để phụ kiện bám theo Kapi -->
         
         <p id="message" style="font-size:30px; margin:20px;">Guten Morgen! Schön, dich kennenzulernen! 🌟</p>
         <p id="timer" style="font-size:40px; color:#e67e22; font-weight:bold; margin: 0;"></p>
@@ -714,6 +715,7 @@
     <!-- ========================================================================= -->
     <script>
         const STORAGE_KEY = 'kapi_eco_system';
+        const KAPI_PREVIEW_KEY = 'kapi_shop_previews_v1';
         
         let sysData = {
             totalLeaves: 0,
@@ -903,7 +905,8 @@
             let btnHTML = '';
             if (isEquipped) btnHTML = `<button class="equipped" onclick="equipItem('${item.id}')">Đang mặc</button>`;
             else if (isOwned) btnHTML = `<button onclick="equipItem('${item.id}')">Mặc</button>`;
-            else if (requirement && item.type === 'activity') btnHTML = `<button class="preview-scene" title="Xem thử hoạt cảnh" onclick="previewKapiActivity('${item.id}')">👀</button>`;
+            else if (requirement && item.type === 'activity' && !hasPreviewedKapiActivity(item.id)) btnHTML = `<button class="preview-scene" title="Xem thử một lần" onclick="previewKapiActivity('${item.id}')">👀</button>`;
+            else if (requirement && item.type === 'activity') btnHTML = '<button disabled title="Đã dùng lượt xem thử">✓</button>';
             else if (requirement) btnHTML = '<button disabled>🔒</button>';
             else btnHTML = `<button ${!canAfford ? 'disabled' : ''} onclick="buyItem('${item.id}', ${item.price})">${canAfford ? 'Mua (' + item.price + ' 🍃)' : '🔒 ' + item.price + ' 🍃'}</button>`;
             return `<div class="shop-item ${requirement ? 'locked-item' : ''}">
@@ -1011,11 +1014,24 @@
         }
 
         let kapiPreviewTimer = null;
+        function getKapiActivityPreviews() {
+            try { return JSON.parse(localStorage.getItem(KAPI_PREVIEW_KEY)) || []; }
+            catch (_) { return []; }
+        }
+
+        function hasPreviewedKapiActivity(id) {
+            return getKapiActivityPreviews().includes(id);
+        }
+
         function previewKapiActivity(id) {
             const item = shopItems.find(entry => entry.id === id && entry.type === 'activity');
             const kapi = document.querySelector('.kapi-container');
             const layer = document.getElementById('kapi-activity');
-            if (!item || !kapi || !layer) return;
+            if (!item || !kapi || !layer || hasPreviewedKapiActivity(id)) return;
+            const previews = getKapiActivityPreviews();
+            previews.push(id);
+            localStorage.setItem(KAPI_PREVIEW_KEY, JSON.stringify(previews));
+            renderShopUI();
             if (kapiPreviewTimer) window.clearTimeout(kapiPreviewTimer);
             ['radio','cocoa','sleep','mirror'].forEach(scene => kapi.classList.remove(`kapi-scene-${scene}`));
             layer.className = `kapi-activity-layer ${item.look}-scene`;
