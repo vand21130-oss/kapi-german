@@ -85,7 +85,7 @@
         .btn-action:hover:not(:disabled) { background-color: #45a049; transform: translateY(1px); box-shadow: 0 2px 0 #2e7d32; }
 
         #shop-items-container {
-            max-height: 150px; 
+            max-height: 245px; 
             overflow-y: auto;  
             padding-right: 5px;
         }
@@ -111,6 +111,12 @@
             position: absolute; top: 38px; left: 50%; transform: translateX(-50%);
             width: 150px; height: 80px; z-index: 10; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); pointer-events: none; display: none;
         }
+        .shop-item.locked-item { opacity: .72; }
+        .shop-item-info { min-width: 0; padding-right: 6px; }
+        .shop-item-name { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .shop-item-rule { display: block; margin-top: 2px; color: #9b7b6d; font-size: 9px; font-weight: 700; }
+        .shop-week-title { margin: 2px 0 7px; color: #9b6b4b; font-size: 10px; font-weight: 900; text-align: center; letter-spacing: .4px; }
+        .shop-owned-title { margin: 8px 0 5px; padding-top: 6px; border-top: 1px dashed #efc99d; color: #79905a; font-size: 10px; font-weight: 900; text-align: center; }
         .kapi-head.flower::before {
             content: ""; position: absolute; top: 9px; right: 9px; width: 21px; height: 21px;
             border-radius: 50%; background: #ffd54f; border: 3px solid #7b3d54;
@@ -150,6 +156,27 @@
             box-sizing: border-box; background: linear-gradient(145deg, #263238 8%, #111 68%);
             border: 6px solid #24170f; border-radius: 15px 15px 21px 21px;
             box-shadow: inset 8px 6px 0 rgba(255,255,255,.16), 0 3px 2px rgba(54,31,16,.2);
+        }
+        .kapi-accessory.sunglasses.mint .glass-lens { background: linear-gradient(145deg,#b9fff0 5%,#45bda7 72%); border-color:#285b57; }
+        .kapi-accessory.sunglasses.mint .glass-bridge,
+        .kapi-accessory.sunglasses.mint::before,
+        .kapi-accessory.sunglasses.mint::after { border-color:#285b57; background:#285b57; }
+        .kapi-accessory.sunglasses.rose .glass-lens { background: linear-gradient(145deg,#ffd7e5 5%,#ea6f99 72%); border-color:#71364d; }
+        .kapi-accessory.sunglasses.rose .glass-bridge,
+        .kapi-accessory.sunglasses.rose::before,
+        .kapi-accessory.sunglasses.rose::after { border-color:#71364d; background:#71364d; }
+        .kapi-head.flower.blue::before {
+            background:#fff2a5; border-color:#315b79;
+            box-shadow:0 -16px 0 2px #79c9f2,0 16px 0 2px #79c9f2,16px 0 0 2px #79c9f2,-16px 0 0 2px #79c9f2;
+        }
+        .kapi-head.beret::before {
+            content:""; position:absolute; top:-5px; left:29px; width:96px; height:50px;
+            background:linear-gradient(145deg,#d99869,#a95b43); border:5px solid #6d382d;
+            border-radius:60% 45% 38% 40%; transform:rotate(-7deg); box-sizing:border-box;
+        }
+        .kapi-head.beret::after {
+            content:""; position:absolute; top:-13px; left:73px; width:12px; height:17px;
+            background:#6d382d; border-radius:8px 8px 2px 2px; transform:rotate(-12deg);
         }
         .kapi-accessory.sunglasses .glass-lens.left { left: 10px; transform: rotate(2deg); }
         .kapi-accessory.sunglasses .glass-lens.right { right: 10px; transform: rotate(-2deg); }
@@ -598,15 +625,29 @@
             lastClaimDate: null,
             currentWeekStart: getMonday(new Date()).toDateString(),
             inventory: [],
-            equippedItem: null
+            equippedItem: null,
+            equippedItems: { face: null, head: null },
+            studyCompletions: 0,
+            completedStudyDates: [],
+            shopGiftMilestones: []
         };
 
         const shopItems = [
-            { id: "item_glass", name: "Kính râm 😎", price: 5, emoji: "😎", type: "face" },
-            { id: "item_flower", name: "Hoa cài 🌸", price: 10, emoji: "🌸", type: "head" },
-            { id: "item_hat", name: "Mũ chóp 🎩", price: 15, emoji: "🎩", type: "head" },
-            { id: "item_star", name: "Kính sao 🤩", price: 20, emoji: "🤩", type: "face" },
-            { id: "item_band", name: "Băng đô 🤕", price: 25, emoji: "🤕", type: "head" }
+            { id:"item_glass", name:"Kính râm", icon:"🕶️", price:5, type:"face", look:"sunglasses", need:0 },
+            { id:"item_flower", name:"Hoa đào", icon:"🌸", price:8, type:"head", look:"flower", need:1 },
+            { id:"item_glass_mint", name:"Kính bạc hà", icon:"🍃", price:10, type:"face", look:"sunglasses mint", need:1 },
+            { id:"item_hat", name:"Mũ quý ông", icon:"🎩", price:12, type:"head", look:"top-hat", need:2 },
+            { id:"item_flower_blue", name:"Hoa trời xanh", icon:"🪻", price:12, type:"head", look:"flower blue", need:2 },
+            { id:"item_band", name:"Băng đô nghỉ phép", icon:"🩹", price:14, type:"head", look:"headband", need:0, streak:3 },
+            { id:"item_star", name:"Kính ngôi sao", icon:"⭐", price:16, type:"face", look:"star-glasses", need:3 },
+            { id:"item_beret", name:"Mũ họa sĩ", icon:"🎨", price:18, type:"head", look:"beret", need:4 },
+            { id:"item_glass_rose", name:"Kính hoàng hôn", icon:"🌇", price:20, type:"face", look:"sunglasses rose", need:5 }
+        ];
+
+        const KAPI_SHOP_REACTIONS = [
+            'Steht mir gut, oder? 💗', 'Kapi đã soi gương ba lần rồi.',
+            'Một món quà hợp pháp! 💗', 'Heute bin ich besonders schick!',
+            'Kapi đồng ý tiếp tục làm mascot.'
         ];
 
         function getMonday(d) {
@@ -619,6 +660,14 @@
         function initSystem() {
             let savedData = JSON.parse(localStorage.getItem(STORAGE_KEY));
             if (savedData) sysData = { ...sysData, ...savedData };
+            if (!sysData.equippedItems) sysData.equippedItems = { face:null, head:null };
+            if (sysData.equippedItem) {
+                const oldItem = shopItems.find(item => item.id === sysData.equippedItem);
+                if (oldItem) sysData.equippedItems[oldItem.type] = oldItem.id;
+                sysData.equippedItem = null;
+            }
+            if (!Array.isArray(sysData.completedStudyDates)) sysData.completedStudyDates = [];
+            if (!Array.isArray(sysData.shopGiftMilestones)) sysData.shopGiftMilestones = [];
             
             checkResetWeek();
             migrateWeeklyClaims();
@@ -716,38 +765,54 @@
         function renderShopUI() {
             const container = document.getElementById('shop-items-container');
             if(!container) return;
-            container.innerHTML = '';
+            container.innerHTML = '<div class="shop-week-title">✨ BA MÓN GHÉ SHOP TUẦN NÀY</div>';
+            const featured = getWeeklyShopItems();
+            featured.forEach(item => container.insertAdjacentHTML('beforeend', renderShopItem(item)));
+            const owned = shopItems.filter(item => sysData.inventory.includes(item.id) && !featured.some(feature => feature.id === item.id));
+            if (owned.length) {
+                container.insertAdjacentHTML('beforeend','<div class="shop-owned-title">🎒 TỦ ĐỒ CỦA KAPI</div>');
+                owned.forEach(item => container.insertAdjacentHTML('beforeend', renderShopItem(item)));
+            }
+        }
 
-            shopItems.forEach(item => {
-                const isOwned = sysData.inventory.includes(item.id);
-                const isEquipped = sysData.equippedItem === item.id;
-                const canAfford = sysData.totalLeaves >= item.price;
+        function getWeeklyShopItems() {
+            const monday = getMonday(new Date());
+            const seed = Number(`${monday.getFullYear()}${String(monday.getMonth()+1).padStart(2,'0')}${String(monday.getDate()).padStart(2,'0')}`);
+            const pool = [...shopItems];
+            for (let i = pool.length - 1; i > 0; i--) {
+                const j = (seed + i * 17 + Math.floor(seed / (i + 1))) % (i + 1);
+                [pool[i], pool[j]] = [pool[j], pool[i]];
+            }
+            return pool.slice(0, 3);
+        }
 
-                let btnHTML = '';
-                if (isEquipped) {
-                    btnHTML = `<button class="equipped" onclick="equipItem('${item.id}')">Đang mặc</button>`;
-                } else if (isOwned) {
-                    btnHTML = `<button onclick="equipItem('${item.id}')">Mặc</button>`;
-                } else {
-                    btnHTML = `<button ${!canAfford ? 'disabled' : ''} onclick="buyItem('${item.id}', ${item.price})">
-                                ${canAfford ? 'Mua (' + item.price + ' 🍃)' : '🔒 ' + item.price + ' 🍃'}
-                               </button>`;
-                }
+        function getItemRequirement(item) {
+            if (item.streak && sysData.weeklyStreak < item.streak) return `Cần điểm danh ${item.streak} ngày`;
+            if ((sysData.studyCompletions || 0) < (item.need || 0)) return `Cần học thật ${item.need} buổi`;
+            return '';
+        }
 
-                container.innerHTML += `
-                    <div class="shop-item">
-                        <span>${item.name}</span>
-                        ${btnHTML}
-                    </div>
-                `;
-            });
+        function renderShopItem(item) {
+            const isOwned = sysData.inventory.includes(item.id);
+            const isEquipped = sysData.equippedItems[item.type] === item.id;
+            const canAfford = sysData.totalLeaves >= item.price;
+            const requirement = isOwned ? '' : getItemRequirement(item);
+            let btnHTML = '';
+            if (isEquipped) btnHTML = `<button class="equipped" onclick="equipItem('${item.id}')">Đang mặc</button>`;
+            else if (isOwned) btnHTML = `<button onclick="equipItem('${item.id}')">Mặc</button>`;
+            else if (requirement) btnHTML = '<button disabled>🔒</button>';
+            else btnHTML = `<button ${!canAfford ? 'disabled' : ''} onclick="buyItem('${item.id}', ${item.price})">${canAfford ? 'Mua (' + item.price + ' 🍃)' : '🔒 ' + item.price + ' 🍃'}</button>`;
+            return `<div class="shop-item ${requirement ? 'locked-item' : ''}">
+                <span class="shop-item-info"><span class="shop-item-name">${item.icon} ${item.name}</span>${requirement ? `<small class="shop-item-rule">${requirement}</small>` : ''}</span>${btnHTML}
+            </div>`;
         }
 
         function buyItem(id, price) {
-            if (sysData.totalLeaves >= price) {
+            const item = shopItems.find(entry => entry.id === id);
+            if (item && !getItemRequirement(item) && sysData.totalLeaves >= price) {
                 sysData.totalLeaves -= price;
                 if (!sysData.inventory.includes(id)) sysData.inventory.push(id);
-                sysData.equippedItem = id;
+                sysData.equippedItems[item.type] = id;
                 saveData();
                 renderLeavesUI();
                 renderShopUI();
@@ -770,6 +835,8 @@
             heart.textContent = '💗';
             heart.setAttribute('aria-label', 'Kapi rất thích món quà mới');
             kapi.appendChild(heart);
+            const bubble = kapi.querySelector('.kapi-bubble');
+            if (bubble) bubble.textContent = KAPI_SHOP_REACTIONS[Math.floor(Math.random() * KAPI_SHOP_REACTIONS.length)];
             window.setTimeout(() => {
                 heart.remove();
                 kapi.classList.remove('kapi-got-gift');
@@ -777,11 +844,9 @@
         }
 
         function equipItem(id) {
-            if (sysData.equippedItem === id) {
-                sysData.equippedItem = null;
-            } else {
-                sysData.equippedItem = id;
-            }
+            const item = shopItems.find(entry => entry.id === id);
+            if (!item || !sysData.inventory.includes(id)) return;
+            sysData.equippedItems[item.type] = sysData.equippedItems[item.type] === id ? null : id;
             saveData();
             renderShopUI();
             updateKapiAppearance();
@@ -804,36 +869,45 @@
                 headItem.style.animation = "none";
             }
 
-            if (sysData.equippedItem && accItem && headItem) {
-                const itemDef = shopItems.find(i => i.id === sysData.equippedItem);
-                if (itemDef.type === 'face') {
-                    accItem.className = 'kapi-accessory';
-                    if (itemDef.id === 'item_glass') {
-                        accItem.classList.add('sunglasses');
-                        accItem.innerHTML = '<span class="glass-lens left"></span><span class="glass-bridge"></span><span class="glass-lens right"></span>';
-                    } else {
-                        accItem.classList.add('star-glasses');
-                        accItem.innerHTML = '<span class="star-lens left"></span><span class="star-bridge"></span><span class="star-lens right"></span>';
-                    }
-                    accItem.style.display = 'block';
-                } else if (itemDef.type === 'head') {
-                    if (!(isSunday && sysData.weeklyStreak === 7)) {
-                        headItem.className = 'kapi-head';
-                        headItem.innerHTML = '';
-                        const headClass = itemDef.id === 'item_flower' ? 'flower' : itemDef.id === 'item_hat' ? 'top-hat' : 'headband';
-                        headItem.classList.add(headClass);
-                        headItem.style.display = 'block';
-                    }
-                    accItem.className = 'kapi-accessory';
-                    accItem.innerHTML = '';
-                    accItem.style.display = 'none';
-                }
+            const faceItem = shopItems.find(item => item.id === sysData.equippedItems.face);
+            const equippedHead = shopItems.find(item => item.id === sysData.equippedItems.head);
+            if (faceItem && accItem) {
+                accItem.className = 'kapi-accessory';
+                faceItem.look.split(' ').forEach(name => accItem.classList.add(name));
+                accItem.innerHTML = faceItem.look.includes('sunglasses')
+                    ? '<span class="glass-lens left"></span><span class="glass-bridge"></span><span class="glass-lens right"></span>'
+                    : '<span class="star-lens left"></span><span class="star-bridge"></span><span class="star-lens right"></span>';
+                accItem.style.display = 'block';
             } else if(accItem) {
                 accItem.className = 'kapi-accessory';
                 accItem.innerHTML = '';
                 accItem.style.display = 'none';
             }
+            if (equippedHead && headItem && !(isSunday && sysData.weeklyStreak === 7)) {
+                headItem.className = 'kapi-head';
+                equippedHead.look.split(' ').forEach(name => headItem.classList.add(name));
+                headItem.innerHTML = '';
+                headItem.style.display = 'block';
+            }
         }
+
+        function kapiRecordStudyCompletion(skillId) {
+            const key = `${toLocalDateKey(new Date())}:${skillId || 'study'}`;
+            if (sysData.completedStudyDates.includes(key)) return;
+            sysData.completedStudyDates.push(key);
+            sysData.studyCompletions = (sysData.studyCompletions || 0) + 1;
+            const milestone = Math.floor(sysData.studyCompletions / 4);
+            if (milestone > 0 && !sysData.shopGiftMilestones.includes(milestone)) {
+                sysData.shopGiftMilestones.push(milestone);
+                sysData.totalLeaves += 2;
+                const bubble = document.querySelector('.kapi-bubble');
+                if (bubble) bubble.textContent = 'Hộp quà học thật: +2 lá! 🎁';
+            }
+            saveData();
+            renderLeavesUI();
+            renderShopUI();
+        }
+        window.kapiRecordStudyCompletion = kapiRecordStudyCompletion;
 
         // --- HỆ THỐNG QUÉT ẨN/HIỆN WIDGET DỰA TRÊN MÀN HÌNH ---
         function checkAndToggleWidgets() {
