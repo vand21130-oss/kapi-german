@@ -117,6 +117,7 @@ function chooseLesson(lesson) {
         document.getElementById("buttons").innerHTML = `
             <button class="btn-kapi btn-lesson-2" onclick="showTeil1()">🎤 Teil 1</button>
             <button class="btn-kapi" style="background:#b3e5fc;" onclick="showTeil2()">🎤 Teil 2</button>
+            <button class="btn-kapi" style="background:linear-gradient(135deg,#fff0c9,#f7d7ce);color:#704b40;" onclick="showLiveTalkMenu()">☕ LiveTalk-Tagebuch</button>
             <button class="btn-kapi btn-home" onclick="showLessons()">⬅️ Zurück</button>
         `;
     } else if (lesson === "Schreiben") {
@@ -2017,6 +2018,294 @@ function reviewKofferMistakes() {
     currentFlashcardIndex = 0;
     isFlipped = false;
     renderFlashcard();
+}
+
+// ==========================================
+// LIVETALK-TAGEBUCH: GPT PHÂN TÍCH, WEB GHI NHỚ, VALI PHÀN NÀN
+// ==========================================
+const LIVETALK_KEY = 'kapi_livetalk_diary_v1';
+let liveTalkDraftRows = [];
+let liveTalkPractice = null;
+let liveTalkEditIndex = -1;
+
+function getLiveTalkData() {
+    try {
+        const data = JSON.parse(localStorage.getItem(LIVETALK_KEY));
+        return data && Array.isArray(data.sessions) ? data : { sessions:[] };
+    } catch (_) { return { sessions:[] }; }
+}
+
+function saveLiveTalkData(data) {
+    localStorage.setItem(LIVETALK_KEY, JSON.stringify(data));
+}
+
+function getAllLiveTalkRows() {
+    return getLiveTalkData().sessions.flatMap(session => (session.rows || []).map(row => ({...row, sessionDate:session.date, sessionTitle:session.title})));
+}
+
+function newLiveTalkRow(row = {}) {
+    return {
+        id: row.id || `lt_${Date.now()}_${Math.random().toString(36).slice(2,8)}`,
+        target: row.target || '', said: row.said || '', correction: row.correction || '', native: row.native || '',
+        reminder: row.reminder || '', tags: row.tags || '', right: Number(row.right || 0), wrong: Number(row.wrong || 0),
+        level: Number(row.level || 0), nextReview: row.nextReview || todayDateKey(), retired: Boolean(row.retired)
+    };
+}
+
+function showLiveTalkMenu() {
+    setLearningFocus(true, 'koffer');
+    clearInterval(countdown);
+    document.getElementById('timer').innerText = '';
+    const data = getLiveTalkData();
+    const rows = getAllLiveTalkRows();
+    const today = todayDateKey();
+    const due = rows.filter(row => !row.retired && (!row.nextReview || row.nextReview <= today)).length;
+    document.getElementById('message').innerHTML = `
+        <div style="font-size:31px;font-weight:900;color:#694f43;">☕ LiveTalk-Tagebuch</div>
+        <div style="color:#91756a;margin-top:5px;">GPT phân tích · web ghi nhớ · vali không tự nguyện hợp tác.</div>`;
+    document.getElementById('feedback-area').style.display = 'block';
+    document.getElementById('feedback-area').innerHTML = `
+        <div style="max-width:760px;margin:auto;padding:18px;border:2px solid #d9c4ae;border-radius:20px;background:#fffdf8;color:#654f45;text-align:left;line-height:1.65;">
+            <b>🗂️ ${data.sessions.length} biên bản · ${rows.length} mảnh ngôn ngữ</b><br>
+            <span>${due ? `🔔 Có <b>${due}</b> câu đến hạn ôn.` : '🌿 Hiện chưa có câu nào đến hạn.'}</span>
+            <div style="margin-top:10px;padding:11px;background:#f2ece7;border-radius:12px;">🫩 “Tôi không sửa bài. Tôi chỉ trả lại những lỗi bạn tưởng mình đã quên.”</div>
+        </div>`;
+    document.getElementById('buttons').style.display = 'block';
+    document.getElementById('buttons').innerHTML = `
+        <button class="btn-kapi" style="background:#ffe7a8;color:#624b37;" onclick="startLiveTalkEntry()">➕ Nhập biên bản mới</button>
+        <button class="btn-kapi" style="background:#dcedc8;color:#3f5c36;" onclick="startLiveTalkPractice()">🔧 Ôn ${due || 'lỗi cũ'}</button>
+        <button class="btn-kapi" style="background:#d9ecf7;color:#365d73;" onclick="showLiveTalkTopics()">🎤 Chủ đề nói tiếp</button>
+        ${data.sessions.length ? '<button class="btn-kapi" style="background:#efe3f3;color:#684c70;" onclick="showLiveTalkArchive()">🗃️ Kho biên bản</button>' : ''}
+        <button class="btn-kapi btn-home" onclick="chooseLesson('Sprechen')">⬅️ Zurück</button>`;
+}
+
+function startLiveTalkEntry(sessionIndex = -1) {
+    const data = getLiveTalkData();
+    const session = sessionIndex >= 0 ? data.sessions[sessionIndex] : null;
+    liveTalkEditIndex = sessionIndex;
+    liveTalkDraftRows = session ? session.rows.map(newLiveTalkRow) : [newLiveTalkRow(), newLiveTalkRow(), newLiveTalkRow()];
+    renderLiveTalkEditor(sessionIndex, session?.title || 'Cuộc nói chuyện hôm nay');
+}
+
+function renderLiveTalkEditor(sessionIndex = -1, title = '') {
+    document.getElementById('message').innerHTML = '<b>🗣️ Kịch bản luyện nói hằng ngày</b>';
+    document.getElementById('feedback-area').style.display = 'block';
+    document.getElementById('feedback-area').innerHTML = `
+        <style>
+            .lt-editor{max-width:1050px;margin:auto;text-align:left}.lt-head{display:flex;gap:10px;margin-bottom:12px}.lt-title{flex:1;padding:12px;border:2px solid #d9c5b0;border-radius:12px;font-size:16px;background:#fffdf8}
+            .lt-table{overflow-x:auto;border:2px solid #d8c7b9;border-radius:17px;background:#fff}.lt-grid{min-width:850px;display:grid;grid-template-columns:1fr 1.15fr 1.35fr 1.45fr}.lt-cell{padding:10px;border-right:1px solid #d8c7b9;border-bottom:1px solid #d8c7b9}.lt-cell:nth-child(4n){border-right:0}.lt-th{background:#fff8e7;font-weight:900;text-align:center;color:#634e43}.lt-cell textarea{width:100%;min-height:92px;box-sizing:border-box;border:0;outline:0;resize:vertical;background:transparent;font:15px/1.45 Arial,sans-serif}.lt-extra{grid-column:1/-1;display:grid;grid-template-columns:1.5fr 1fr auto;gap:9px;padding:9px;background:#faf6f1;border-bottom:1px solid #d8c7b9}.lt-extra input{padding:9px;border:1px solid #d7c7ba;border-radius:9px;background:#fff}.lt-delete{border:0;border-radius:9px;background:#ffebee;color:#a74450;cursor:pointer;padding:8px 12px}@media(max-width:700px){.lt-head{display:block}.lt-title{width:100%;box-sizing:border-box;margin-bottom:8px}}
+        </style>
+        <div class="lt-editor">
+            <div class="lt-head"><input id="lt-session-title" class="lt-title" value="${escapeSprechenHtml(title)}" placeholder="Tên buổi LiveTalk"><div style="padding:12px;color:#8d6e63;">📅 ${todayDateKey()}</div></div>
+            <div class="lt-table"><div class="lt-grid">
+                <div class="lt-cell lt-th">🌿 Từ mục tiêu</div><div class="lt-cell lt-th">Câu đã nói</div><div class="lt-cell lt-th">❌ Lỗi cần sửa</div><div class="lt-cell lt-th">⭐ Cách nói hay</div>
+                ${liveTalkDraftRows.map((row,index) => renderLiveTalkEditorRow(row,index)).join('')}
+            </div></div>
+            <button class="btn-kapi" style="margin:13px 0 0;background:#eef4df;color:#527048;" onclick="addLiveTalkRow(${sessionIndex})">＋ Thêm dòng</button>
+        </div>`;
+    document.getElementById('buttons').innerHTML = `
+        <button class="btn-kapi btn-green" onclick="saveLiveTalkSession(${sessionIndex})">💾 Lưu biên bản</button>
+        <button class="btn-kapi btn-home" onclick="showLiveTalkMenu()">⬅️ Hủy</button>`;
+}
+
+function renderLiveTalkEditorRow(row, index) {
+    const field = (name, value, placeholder) => `<textarea data-lt-index="${index}" data-lt-field="${name}" oninput="updateLiveTalkDraft(this)" placeholder="${placeholder}">${escapeSprechenHtml(value)}</textarea>`;
+    return `
+        <div class="lt-cell">${field('target',row.target,'auf ein Thema eingehen')}</div>
+        <div class="lt-cell">${field('said',row.said,'Câu cậu đã nói…')}</div>
+        <div class="lt-cell">${field('correction',row.correction,'Câu sai → câu sửa đúng')}</div>
+        <div class="lt-cell">${field('native',row.native,'Cách nói tự nhiên hơn…')}</div>
+        <div class="lt-extra">
+            <input data-lt-index="${index}" data-lt-field="reminder" oninput="updateLiveTalkDraft(this)" value="${escapeSprechenHtml(row.reminder)}" placeholder="🧠 Câu nhắc vô tri, ví dụ: Praktikum không phải tài sản">
+            <input data-lt-index="${index}" data-lt-field="tags" oninput="updateLiveTalkDraft(this)" value="${escapeSprechenHtml(row.tags)}" placeholder="🏷️ Arbeit, Pflege, Gefühle">
+            <button class="lt-delete" onclick="deleteLiveTalkRow(${index})">🗑️</button>
+        </div>`;
+}
+
+function updateLiveTalkDraft(input) {
+    const row = liveTalkDraftRows[Number(input.dataset.ltIndex)];
+    if (row) row[input.dataset.ltField] = input.value;
+}
+
+function addLiveTalkRow(sessionIndex) {
+    liveTalkDraftRows.push(newLiveTalkRow());
+    renderLiveTalkEditor(sessionIndex, document.getElementById('lt-session-title')?.value || 'Cuộc nói chuyện hôm nay');
+}
+
+function deleteLiveTalkRow(index) {
+    liveTalkDraftRows.splice(index,1);
+    if (!liveTalkDraftRows.length) liveTalkDraftRows.push(newLiveTalkRow());
+    renderLiveTalkEditor(liveTalkEditIndex, document.getElementById('lt-session-title')?.value || 'Cuộc nói chuyện hôm nay');
+}
+
+function saveLiveTalkSession(sessionIndex = -1) {
+    const rows = liveTalkDraftRows.filter(row => row.target.trim() || row.said.trim() || row.correction.trim() || row.native.trim());
+    if (!rows.length) return alert('Biên bản đang trống. Vali từ chối lưu không khí 🫩');
+    const data = getLiveTalkData();
+    const session = { id:sessionIndex >= 0 ? data.sessions[sessionIndex].id : `session_${Date.now()}`, date:new Date().toISOString(), title:document.getElementById('lt-session-title')?.value.trim() || 'LiveTalk', rows };
+    if (sessionIndex >= 0) data.sessions[sessionIndex] = session; else data.sessions.unshift(session);
+    saveLiveTalkData(data);
+    showLiveTalkSaved(session);
+}
+
+function getKofferLiveTalkLine(row, outcome) {
+    const reminder = row.reminder.trim() || (row.target ? `Cấu trúc cần dùng là “${row.target}”.` : 'Hồ sơ vẫn yêu cầu sửa câu.');
+    const starts = outcome === 'right'
+        ? ['Không phát hiện vi phạm.','Hồ sơ lần này không gây đau mắt.','Tạm chấp nhận.','Động từ đã đến đúng cửa.','Ngữ pháp hôm nay còn sống.','Câu này được phép nhập cảnh.','Tôi chưa tìm thấy lý do để nói bye.','Bộ phận kiểm tra tạm thời im lặng.','Hồ sơ sạch một cách đáng ngờ.','Lần này bạn và tiếng Đức đã thỏa thuận được.','Không có gì rơi khỏi vali.','Câu nói đã đứng đúng hàng.']
+        : ['Hồ sơ đã bị trả lại.','Không có diễn biến mới.','Tôi đã kiểm tra hai lần. Vẫn sai.','Kiến thức không qua hải quan.','Chúng ta lại gặp nhau ở đây.','Động từ vừa đi nhầm cổng.','Câu này đã tự làm mất hành lý.','Bộ phận ngữ pháp yêu cầu giải trình.','Tôi vừa tìm thấy một vi phạm quen thuộc.','Tiếng Đức đã từ chối ký nhận.','Hồ sơ phát ra âm thanh tuyệt vọng.','Bạn vừa trao cho tôi thêm việc.'];
+    const ends = outcome === 'right'
+        ? ['Đừng làm tôi hối hận.','Có thể tiếp tục tồn tại.','Tôi sẽ ghi nhận trong im lặng.','Một lần đúng chưa phải phép màu.','Bye, theo hướng tích cực.','Quyền sử dụng tạm thời được cấp.','Xin đừng tái phạm theo cách mới.','Tôi sẽ không khen thêm.','Hãy dùng nó trong một câu khác.','Hồ sơ được chuyển sang ngăn ít đáng lo.','Chúng ta coi như chưa từng cãi nhau.','Tiếp tục trước khi tôi đổi ý.']
+        : ['Sửa rồi thử lại.','Tôi không nhận lời giải thích.','Đây không phải quyền tự do sáng tạo.','Vui lòng nhận lại động từ của bạn.','Tôi sẽ trả câu này lại vào ngày mai.','Không, bấm lại cũng không thành đúng.','Hãy đặt câu về đúng hiện thực.','Tôi đã chuẩn bị lịch tái khám.','Câu này chưa được phép rời sân bay.','Xin đừng biến lỗi thành truyền thống.','Tôi sẽ lưu việc này vào hồ sơ.','Bạn đã thua vòng này. Bye.'];
+    const bridges = outcome === 'right'
+        ? [`Quy tắc được dùng đúng: ${reminder}`,`Bản ghi xác nhận: ${reminder}`,`Ít nhất hôm nay bạn nhớ rằng ${reminder}`,`Điều khoản vừa được tuân thủ: ${reminder}`,`Chi tiết đáng ghi nhận: ${reminder}`,`Tôi nhắc lại để lần sau khỏi nhắc: ${reminder}`,`Tình trạng hiện tại: ${reminder}`,`Kết luận chuyên môn: ${reminder}`,`Dữ liệu tạm đồng ý rằng ${reminder}`,`Nội dung qua cửa kiểm tra: ${reminder}`]
+        : [`Nguyên nhân rất quen thuộc: ${reminder}`,`Vấn đề vẫn là: ${reminder}`,`Biên bản ghi rõ: ${reminder}`,`Không có ngoại lệ cho việc này: ${reminder}`,`Đọc lại điều khoản: ${reminder}`,`Tôi buộc phải nhắc rằng ${reminder}`,`Tang vật ngôn ngữ cho thấy: ${reminder}`,`Cửa khẩu yêu cầu: ${reminder}`,`Lý do bị giữ lại: ${reminder}`,`Thông báo lần nữa: ${reminder}`];
+    return `🫩 “${starts[Math.floor(Math.random()*starts.length)]} ${bridges[Math.floor(Math.random()*bridges.length)]} ${ends[Math.floor(Math.random()*ends.length)]}”`;
+}
+
+function showLiveTalkSaved(session) {
+    document.getElementById('message').innerHTML = '<b>✅ Biên bản đã được lưu</b>';
+    document.getElementById('feedback-area').innerHTML = `<div style="max-width:760px;margin:auto;padding:20px;border:2px solid #d8c4b0;border-radius:18px;background:#fffdf8;text-align:left;">
+        <b>${escapeSprechenHtml(session.title)}</b> · ${session.rows.length} dòng<br><br>${getKofferLiveTalkLine(session.rows[0], 'right')}
+    </div>`;
+    document.getElementById('buttons').innerHTML = `
+        <button class="btn-kapi btn-green" onclick="startLiveTalkPractice()">🔧 Luyện ngay</button>
+        <button class="btn-kapi" style="background:#d9ecf7;" onclick="showLiveTalkTopics()">🎤 Gợi ý chủ đề tiếp</button>
+        <button class="btn-kapi btn-home" onclick="showLiveTalkMenu()">⬅️ Menu</button>`;
+}
+
+function getDueLiveTalkRows() {
+    const today = todayDateKey();
+    const due = getAllLiveTalkRows().filter(row => !row.retired && (!row.nextReview || row.nextReview <= today));
+    return due.length ? due : getAllLiveTalkRows().filter(row => !row.retired);
+}
+
+function startLiveTalkPractice() {
+    const rows = getDueLiveTalkRows();
+    if (!rows.length) return alert('Kho lỗi còn trống. Vali chưa có gì để trả lại 🫩');
+    liveTalkPractice = { rows:shuffleArray(rows).slice(0,10), index:0, revealed:false };
+    renderLiveTalkPractice();
+}
+
+function renderLiveTalkPractice() {
+    const row = liveTalkPractice?.rows[liveTalkPractice.index];
+    if (!row) return finishLiveTalkPractice();
+    const isUpgrade = !row.correction.trim() && row.native.trim();
+    const prompt = isUpgrade
+        ? `Hãy nâng cấp câu này theo cách tự nhiên hơn:<br><b>${escapeSprechenHtml(row.said || row.target)}</b>`
+        : `Hãy sửa lại câu/cụm sau:<br><b>${escapeSprechenHtml(row.said || row.correction || row.target)}</b>`;
+    document.getElementById('message').innerHTML = `<b>${isUpgrade ? '⭐ Native Upgrade' : '🔧 Reparieren'} · ${liveTalkPractice.index+1}/${liveTalkPractice.rows.length}</b>`;
+    document.getElementById('feedback-area').style.display = 'block';
+    document.getElementById('feedback-area').innerHTML = `<div style="max-width:720px;margin:auto;padding:23px;border:2px solid #d8c6b7;border-radius:20px;background:#fffdf8;text-align:left;color:#55433b;">
+        <div style="font-size:20px;line-height:1.65;">${prompt}</div>
+        ${row.target ? `<div style="margin-top:12px;color:#7b8f58;">🌿 Gợi ý cấu trúc: ${escapeSprechenHtml(row.target)}</div>` : ''}
+        <textarea id="lt-practice-answer" rows="4" placeholder="Gõ câu sửa hoặc nói thành tiếng rồi ghi lại…" style="width:100%;box-sizing:border-box;margin-top:15px;padding:13px;border:2px solid #dfd1c5;border-radius:13px;font-size:16px;"></textarea>
+        <div id="lt-practice-reveal"></div>
+    </div>`;
+    document.getElementById('buttons').innerHTML = `<button class="btn-kapi" style="background:#ffe0b2;" onclick="revealLiveTalkAnswer()">👁️ Mở hồ sơ đáp án</button><button class="btn-kapi btn-home" onclick="showLiveTalkMenu()">🚪 Dừng ôn</button>`;
+}
+
+function revealLiveTalkAnswer() {
+    const row = liveTalkPractice.rows[liveTalkPractice.index];
+    liveTalkPractice.revealed = true;
+    document.getElementById('lt-practice-reveal').innerHTML = `<div style="margin-top:16px;padding:15px;border-radius:14px;background:#eef5e7;line-height:1.65;">
+        ${row.correction ? `<b>✅ Câu sửa:</b><br>${escapeSprechenHtml(row.correction)}<br>` : ''}
+        ${row.native ? `<b>⭐ Người bản xứ có thể nói:</b><br>${escapeSprechenHtml(row.native)}<br>` : ''}
+        ${row.reminder ? `<b>🧠 Ám thị:</b> ${escapeSprechenHtml(row.reminder)}` : ''}
+    </div>`;
+    document.getElementById('buttons').innerHTML = `
+        <button class="btn-kapi btn-green" onclick="rateLiveTalkCard(true)">✅ Tôi nói được</button>
+        <button class="btn-kapi" style="background:#ffcdd2;color:#7c3f45;" onclick="rateLiveTalkCard(false)">🫩 Vẫn sai</button>`;
+}
+
+function addDaysToDateKey(days) {
+    const date = new Date(); date.setDate(date.getDate()+days); return todayDateKey(date);
+}
+
+function rateLiveTalkCard(correct) {
+    const row = liveTalkPractice.rows[liveTalkPractice.index];
+    const data = getLiveTalkData();
+    let stored = null;
+    data.sessions.some(session => {
+        const found = session.rows.find(item => item.id === row.id);
+        if (found) { stored = found; return true; }
+        return false;
+    });
+    if (stored) {
+        if (correct) {
+            stored.right = Number(stored.right || 0) + 1;
+            stored.level = Math.min(4, Number(stored.level || 0) + 1);
+            stored.nextReview = addDaysToDateKey([1,3,7,14,30][stored.level - 1] || 30);
+            stored.retired = stored.right >= 4 && stored.level >= 4;
+        } else {
+            stored.wrong = Number(stored.wrong || 0) + 1;
+            stored.level = Math.max(0, Number(stored.level || 0) - 1);
+            stored.nextReview = addDaysToDateKey(1);
+            stored.retired = false;
+        }
+        saveLiveTalkData(data);
+    }
+    alert(getKofferLiveTalkLine(row, correct ? 'right' : 'wrong'));
+    liveTalkPractice.index++;
+    renderLiveTalkPractice();
+}
+
+function finishLiveTalkPractice() {
+    document.getElementById('message').innerHTML = '<b>🧳 Zollkontrolle beendet</b>';
+    document.getElementById('feedback-area').innerHTML = `<div style="max-width:650px;margin:auto;padding:22px;border:2px solid #d8c4b2;border-radius:18px;background:#fffdf8;">🫩 “Buổi ôn đã kết thúc. Tôi không bình luận về cảm xúc, nhưng dữ liệu đã được cập nhật.”</div>`;
+    document.getElementById('buttons').innerHTML = `<button class="btn-kapi" style="background:#d9ecf7;" onclick="showLiveTalkTopics()">🎤 Nói tiếp theo chủ đề liên quan</button><button class="btn-kapi btn-home" onclick="showLiveTalkMenu()">⬅️ Menu</button>`;
+}
+
+const LIVETALK_TOPIC_TEMPLATES = {
+    pflege:['Welche Erfahrung im Krankenhaus hat dich am stärksten verändert?','Was macht gute Pflege für dich persönlich aus?','Welche Belastungen im Pflegealltag werden oft unterschätzt?','Wie sollte ein gutes Pflegeteam mit Fehlern umgehen?','Welche Station passt deiner Meinung nach am besten zu dir?','Was würdest du einer neuen Pflegehelferin am ersten Tag raten?','Wie kann man trotz Zeitdruck menschlich mit Patienten umgehen?','Welche Fähigkeit möchtest du vor deiner Arbeit in Deutschland verbessern?'],
+    arbeit:['Welche Arbeitsbedingungen sind dir besonders wichtig?','Wie gehst du mit Stress oder Konflikten am Arbeitsplatz um?','Was hast du durch praktische Arbeit über dich selbst gelernt?','Wann ist Teamarbeit hilfreich und wann anstrengend?','Welche Verantwortung sollte ein Arbeitgeber übernehmen?','Wie sieht für dich ein fairer Dienstplan aus?','Was würdest du an deinem früheren Arbeitsplatz verändern?','Welche Aufgabe gibt dir das Gefühl, etwas Sinnvolles zu tun?'],
+    gefühle:['Wann hattest du zuletzt gemischte Gefühle und warum?','Worauf bist du heute stolz?','Welche Erfahrung musstest du erst einmal sacken lassen?','Wie merkst du, dass du eine Pause brauchst?','Was hilft dir, wenn du dich überfordert fühlst?','Welche Entscheidung ist dir in letzter Zeit schwergefallen?','Wann fühlst du dich an einem neuen Ort wirklich wohl?','Welche kleine Sache hat dich diese Woche gefreut?'],
+    lernen:['Welche Lernmethode funktioniert bei dir wirklich?','Was motiviert dich, auch an schwierigen Tagen weiterzulernen?','Welche sprachliche Gewohnheit möchtest du verändern?','Wie gehst du mit Fehlern beim Sprechen um?','Welche deutsche Redewendung möchtest du aktiv benutzen?','Ist tägliches kurzes Lernen besser als eine lange Sitzung?','Wie könnte Technik beim Sprachenlernen sinnvoll helfen?','Welche Prüfungssituation findest du am schwierigsten?'],
+    default:['Welche Erfahrung hat deine Meinung in letzter Zeit verändert?','Was war diese Woche überraschend schwierig?','Über welches Thema möchtest du heute genauer sprechen?','Welche Gewohnheit würdest du gern verändern?','Was würdest du deinem früheren Ich heute raten?','Welche kleine Entscheidung hat große Folgen gehabt?','Was bedeutet ein guter Alltag für dich?','Welche Sache wird von anderen oft unterschätzt?']
+};
+
+function buildLiveTalkTopicSuggestions() {
+    const rows = getAllLiveTalkRows();
+    const text = rows.map(row => `${row.tags} ${row.target} ${row.said} ${row.native}`).join(' ').toLowerCase();
+    let key = 'default';
+    if (/pflege|krankenhaus|patient/.test(text)) key = 'pflege';
+    else if (/arbeit|praktikum|beruf|firma/.test(text)) key = 'arbeit';
+    else if (/gefühl|stolz|angst|freu/.test(text)) key = 'gefühle';
+    else if (/lern|deutsch|sprache|prüfung/.test(text)) key = 'lernen';
+    const structures = shuffleArray(rows.map(row => row.target || row.native).filter(Boolean)).slice(0,3);
+    return shuffleArray(LIVETALK_TOPIC_TEMPLATES[key]).slice(0,3).map((topic,index) => ({topic, structures:structures.slice(index % 2, index % 2 + 2)}));
+}
+
+function showLiveTalkTopics() {
+    const suggestions = buildLiveTalkTopicSuggestions();
+    document.getElementById('message').innerHTML = '<b>🎤 Wohin sprechen wir jetzt weiter?</b>';
+    document.getElementById('feedback-area').style.display = 'block';
+    document.getElementById('feedback-area').innerHTML = `<div style="max-width:780px;margin:auto;display:grid;gap:13px;text-align:left;">${suggestions.map((item,index) => `
+        <div style="padding:17px;border:2px solid ${['#c8dda9','#b9d9e8','#e4c7d9'][index]};border-radius:17px;background:#fffdf8;">
+            <b>${index+1}. ${escapeSprechenHtml(item.topic)}</b>
+            <div style="margin-top:8px;color:#758560;">${item.structures.length ? `Bắt buộc thử dùng: ${item.structures.map(escapeSprechenHtml).join(' · ')}` : 'Nói tự do trong 90 giây.'}</div>
+        </div>`).join('')}
+        <div style="padding:13px;background:#f1ece8;border-radius:13px;">🫩 “Cấu trúc đã được cấp. Việc tạo thành câu thuộc trách nhiệm của bạn.”</div>
+    </div>`;
+    document.getElementById('buttons').innerHTML = `<button class="btn-kapi" style="background:#ffe0b2;" onclick="showLiveTalkTopics()">🎲 Bốc cách hỏi khác</button><button class="btn-kapi btn-home" onclick="showLiveTalkMenu()">⬅️ Menu</button>`;
+}
+
+function showLiveTalkArchive() {
+    const data = getLiveTalkData();
+    document.getElementById('message').innerHTML = '<b>🗃️ Kho biên bản LiveTalk</b>';
+    document.getElementById('feedback-area').style.display = 'block';
+    document.getElementById('feedback-area').innerHTML = `<div style="max-width:850px;margin:auto;display:grid;gap:11px;text-align:left;">${data.sessions.map((session,index) => `
+        <details style="padding:14px;border:2px solid #dfcdbd;border-radius:15px;background:#fffdf8;">
+            <summary style="cursor:pointer;font-weight:900;color:#624c42;">${escapeSprechenHtml(session.title)} · ${session.rows.length} dòng</summary>
+            <div style="margin-top:10px;display:grid;gap:8px;">${session.rows.map(row => `<div style="padding:10px;border-radius:10px;background:#f8f3ed;"><b>🌿 ${escapeSprechenHtml(row.target || 'Mảnh ngôn ngữ')}</b><br>${row.correction ? `✅ ${escapeSprechenHtml(row.correction)}<br>` : ''}${row.native ? `⭐ ${escapeSprechenHtml(row.native)}` : ''}</div>`).join('')}</div>
+            <button class="btn-kapi" style="font-size:13px;padding:7px 12px;background:#e5eef6;" onclick="startLiveTalkEntry(${index})">✏️ Sửa biên bản</button>
+            <button class="btn-kapi" style="font-size:13px;padding:7px 12px;background:#ffebee;color:#9d4b56;" onclick="deleteLiveTalkSession(${index})">🗑️ Xóa</button>
+        </details>`).join('')}</div>`;
+    document.getElementById('buttons').innerHTML = '<button class="btn-kapi btn-home" onclick="showLiveTalkMenu()">⬅️ Menu</button>';
+}
+
+function deleteLiveTalkSession(index) {
+    if (!confirm('Xóa biên bản này? Những lỗi trong đó cũng sẽ rời sân bay.')) return;
+    const data = getLiveTalkData(); data.sessions.splice(index,1); saveLiveTalkData(data); showLiveTalkArchive();
 }
 
 // 6. SPRECHEN & SCHREIBEN
