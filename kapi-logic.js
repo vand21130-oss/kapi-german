@@ -292,6 +292,9 @@ function completeTodayStudyMission(skillId) {
     const history = readTodayHistory().filter(item => item.date !== mission.date);
     history.unshift({ date:mission.date, skill:mission.skill, completedAt:mission.completedAt });
     localStorage.setItem(TODAY_STUDY_HISTORY_KEY, JSON.stringify(history.slice(0,31)));
+    if (typeof window.kapiRecordStudyCompletion === 'function') {
+        window.kapiRecordStudyCompletion(skillId);
+    }
     setTimeout(() => {
         const buttons = document.getElementById('buttons');
         if (buttons && !document.getElementById('daily-koffer-reward-btn')) {
