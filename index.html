@@ -109,7 +109,7 @@
         /* Phụ kiện Kapi */
         .kapi-head {
             position: absolute; top: 38px; left: 50%; transform: translateX(-50%);
-            width: 150px; height: 80px; z-index: 10; transition: 0.3s; pointer-events: none; display: none;
+            width: 150px; height: 80px; z-index: 10; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); pointer-events: none; display: none;
         }
         .kapi-head.flower::before {
             content: ""; position: absolute; top: 9px; right: 9px; width: 21px; height: 21px;
@@ -141,24 +141,25 @@
             filter: drop-shadow(0 4px 0 rgba(91,50,0,.2));
         }
         .kapi-accessory {
-            position: absolute; top: 132px; left: 50%; transform: translateX(-50%);
-            width: 132px; height: 52px; z-index: 11; pointer-events: none; display: none;
+            position: absolute; top: 127px; left: 50%; transform: translateX(-50%);
+            width: 146px; height: 60px; z-index: 11; pointer-events: none; display: none;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         .kapi-accessory.sunglasses .glass-lens {
-            position: absolute; top: 7px; width: 48px; height: 34px;
+            position: absolute; top: 3px; width: 56px; height: 43px;
             box-sizing: border-box; background: linear-gradient(145deg, #263238 8%, #111 68%);
-            border: 6px solid #24170f; border-radius: 13px 13px 19px 19px;
+            border: 6px solid #24170f; border-radius: 15px 15px 21px 21px;
             box-shadow: inset 8px 6px 0 rgba(255,255,255,.16), 0 3px 2px rgba(54,31,16,.2);
         }
-        .kapi-accessory.sunglasses .glass-lens.left { left: 12px; transform: rotate(2deg); }
-        .kapi-accessory.sunglasses .glass-lens.right { right: 12px; transform: rotate(-2deg); }
+        .kapi-accessory.sunglasses .glass-lens.left { left: 10px; transform: rotate(2deg); }
+        .kapi-accessory.sunglasses .glass-lens.right { right: 10px; transform: rotate(-2deg); }
         .kapi-accessory.sunglasses .glass-bridge {
-            position: absolute; top: 20px; left: 56px; width: 20px; height: 8px;
+            position: absolute; top: 20px; left: 61px; width: 24px; height: 8px;
             border-top: 6px solid #24170f; border-radius: 50%;
         }
         .kapi-accessory.sunglasses::before,
         .kapi-accessory.sunglasses::after {
-            content: ""; position: absolute; top: 14px; width: 19px; height: 6px;
+            content: ""; position: absolute; top: 13px; width: 20px; height: 6px;
             background: #24170f; border-radius: 5px;
         }
         .kapi-accessory.sunglasses::before { left: -1px; transform: rotate(13deg); }
@@ -183,6 +184,8 @@
             font-size: 42px; pointer-events: none; animation: kapi-heart-float 1.5s ease-out forwards;
         }
         .kapi-container.kapi-got-gift .kapi-img { animation: kapi-gift-bounce .55s ease-out; }
+        .kapi-container.kapi-got-gift .kapi-accessory,
+        .kapi-container.kapi-got-gift .kapi-head { animation: kapi-worn-gift-bounce .55s ease-out; }
         @keyframes kapi-heart-float {
             0% { opacity: 0; transform: translate(-8px, 18px) scale(.35) rotate(-12deg); }
             28% { opacity: 1; transform: translate(0, 0) scale(1.15) rotate(8deg); }
@@ -191,6 +194,10 @@
         @keyframes kapi-gift-bounce {
             0%, 100% { transform: translateY(0) scale(1); }
             45% { transform: translateY(-16px) scale(1.035); }
+        }
+        @keyframes kapi-worn-gift-bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0) scale(1); }
+            45% { transform: translateX(-50%) translateY(-16px) scale(1.035); }
         }
 
         /* ========================================= */
@@ -214,6 +221,10 @@
 
         .kapi-container:hover .kapi-img {
             transform: translateY(-15px) scale(1.02); /* Nảy lên 15px và to ra một tẹo */
+        }
+        .kapi-container:hover .kapi-accessory,
+        .kapi-container:hover .kapi-head {
+            transform: translateX(-50%) translateY(-15px) scale(1.02);
         }
 
         /* Bong bóng thoại "Hallo" */
