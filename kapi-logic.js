@@ -2050,9 +2050,60 @@ function newLiveTalkRow(row = {}) {
     return {
         id: row.id || `lt_${Date.now()}_${Math.random().toString(36).slice(2,8)}`,
         target: row.target || '', said: row.said || '', correction: row.correction || '', native: row.native || '',
+        rich: row.rich && typeof row.rich === 'object' ? {...row.rich} : {},
         reminder: row.reminder || '', tags: row.tags || '', right: Number(row.right || 0), wrong: Number(row.wrong || 0),
         level: Number(row.level || 0), nextReview: row.nextReview || todayDateKey(), retired: Boolean(row.retired)
     };
+}
+
+// Chỉ cho phép <mark> và <br> trong nội dung bút nhớ; mọi HTML khác đều bị loại bỏ.
+function sanitizeLiveTalkRichHtml(html, fallback = '') {
+    if (!html) return escapeSprechenHtml(fallback).replace(/\n/g, '<br>');
+    const box = document.createElement('div');
+    box.innerHTML = html;
+    const cleanNode = node => {
+        if (node.nodeType === Node.TEXT_NODE) return document.createTextNode(node.nodeValue || '');
+        if (node.nodeType !== Node.ELEMENT_NODE) return document.createDocumentFragment();
+        const tag = node.tagName.toLowerCase();
+        const isHighlight = tag === 'mark' || Boolean(node.style?.backgroundColor);
+        const out = isHighlight ? document.createElement('mark') : tag === 'br' ? document.createElement('br') : document.createDocumentFragment();
+        if (tag !== 'br') [...node.childNodes].forEach(child => out.appendChild(cleanNode(child)));
+        return out;
+    };
+    const safe = document.createElement('div');
+    [...box.childNodes].forEach(node => safe.appendChild(cleanNode(node)));
+    return safe.innerHTML;
+}
+
+function renderLiveTalkRichField(row, index, name, placeholder) {
+    const html = sanitizeLiveTalkRichHtml(row.rich?.[name], row[name]);
+    return `<div class="lt-rich" contenteditable="true" role="textbox" aria-multiline="true"
+        data-lt-index="${index}" data-lt-field="${name}" data-placeholder="${placeholder}"
+        oninput="updateLiveTalkRich(this)">${html}</div>`;
+}
+
+function updateLiveTalkRich(editor) {
+    const row = liveTalkDraftRows[Number(editor.dataset.ltIndex)];
+    if (!row) return;
+    const field = editor.dataset.ltField;
+    row[field] = editor.innerText.replace(/\n$/, '');
+    row.rich ||= {};
+    row.rich[field] = sanitizeLiveTalkRichHtml(editor.innerHTML, row[field]);
+}
+
+function formatLiveTalkSelection(mode) {
+    const selection = window.getSelection();
+    if (!selection || selection.rangeCount === 0 || selection.isCollapsed) {
+        return alert('Bôi đen một cụm từ trước đã nha bồ câu 🖍️');
+    }
+    const range = selection.getRangeAt(0);
+    const startEditor = range.startContainer.nodeType === Node.ELEMENT_NODE ? range.startContainer.closest?.('.lt-rich') : range.startContainer.parentElement?.closest('.lt-rich');
+    const endEditor = range.endContainer.nodeType === Node.ELEMENT_NODE ? range.endContainer.closest?.('.lt-rich') : range.endContainer.parentElement?.closest('.lt-rich');
+    if (!startEditor || startEditor !== endEditor) return alert('Mỗi lần chỉ tô trong một ô thôi nha 🐦');
+    startEditor.focus();
+    document.execCommand('styleWithCSS', false, false);
+    document.execCommand(mode === 'erase' ? 'removeFormat' : 'hiliteColor', false, mode === 'erase' ? null : '#ff9fc4');
+    updateLiveTalkRich(startEditor);
 }
 
 function showLiveTalkMenu() {
@@ -2096,10 +2147,16 @@ function renderLiveTalkEditor(sessionIndex = -1, title = '') {
     document.getElementById('feedback-area').innerHTML = `
         <style>
             .lt-editor{max-width:1050px;margin:auto;text-align:left}.lt-head{display:flex;gap:10px;margin-bottom:12px}.lt-title{flex:1;padding:12px;border:2px solid #d9c5b0;border-radius:12px;font-size:16px;background:#fffdf8}
-            .lt-table{overflow-x:auto;border:2px solid #d8c7b9;border-radius:17px;background:#fff}.lt-grid{min-width:850px;display:grid;grid-template-columns:1fr 1.15fr 1.35fr 1.45fr}.lt-cell{padding:10px;border-right:1px solid #d8c7b9;border-bottom:1px solid #d8c7b9}.lt-cell:nth-child(4n){border-right:0}.lt-th{background:#fff8e7;font-weight:900;text-align:center;color:#634e43}.lt-cell textarea{width:100%;min-height:92px;box-sizing:border-box;border:0;outline:0;resize:vertical;background:transparent;font:15px/1.45 Arial,sans-serif}.lt-extra{grid-column:1/-1;display:grid;grid-template-columns:1.5fr 1fr auto;gap:9px;padding:9px;background:#faf6f1;border-bottom:1px solid #d8c7b9}.lt-extra input{padding:9px;border:1px solid #d7c7ba;border-radius:9px;background:#fff}.lt-delete{border:0;border-radius:9px;background:#ffebee;color:#a74450;cursor:pointer;padding:8px 12px}@media(max-width:700px){.lt-head{display:block}.lt-title{width:100%;box-sizing:border-box;margin-bottom:8px}}
+            .lt-toolbar{display:flex;align-items:center;gap:8px;margin:0 0 10px;padding:8px 10px;border:1px solid #edc1d0;border-radius:12px;background:#fff4f8;color:#7b5260}.lt-marker,.lt-eraser{border:0;border-radius:999px;padding:8px 13px;font-weight:800;cursor:pointer}.lt-marker{background:#ff9fc4;color:#59273a;box-shadow:0 3px 0 #d9749b}.lt-eraser{background:#fff;color:#765b65;border:1px solid #dbc7ce}.lt-marker:active{transform:translateY(2px);box-shadow:0 1px 0 #d9749b}
+            .lt-table{overflow-x:auto;border:2px solid #d8c7b9;border-radius:17px;background:#fff}.lt-grid{min-width:850px;display:grid;grid-template-columns:1fr 1.15fr 1.35fr 1.45fr}.lt-cell{padding:10px;border-right:1px solid #d8c7b9;border-bottom:1px solid #d8c7b9}.lt-cell:nth-child(4n){border-right:0}.lt-th{background:#fff8e7;font-weight:900;text-align:center;color:#634e43}.lt-rich{width:100%;min-height:92px;box-sizing:border-box;border:0;outline:0;background:transparent;font:15px/1.45 Arial,sans-serif;white-space:pre-wrap;overflow-wrap:anywhere}.lt-rich:empty:before{content:attr(data-placeholder);color:#aaa;pointer-events:none}.lt-rich:focus{background:#fffafd;box-shadow:inset 0 0 0 2px #ffd0e1;border-radius:8px}.lt-rich mark,.lt-rich span[style*="background-color"]{background:#ff9fc4!important;color:inherit;padding:1px 2px;border-radius:4px;box-decoration-break:clone;-webkit-box-decoration-break:clone}.lt-extra{grid-column:1/-1;display:grid;grid-template-columns:1.5fr 1fr auto;gap:9px;padding:9px;background:#faf6f1;border-bottom:1px solid #d8c7b9}.lt-extra input{padding:9px;border:1px solid #d7c7ba;border-radius:9px;background:#fff}.lt-delete{border:0;border-radius:9px;background:#ffebee;color:#a74450;cursor:pointer;padding:8px 12px}@media(max-width:700px){.lt-head{display:block}.lt-title{width:100%;box-sizing:border-box;margin-bottom:8px}.lt-toolbar{align-items:flex-start;flex-wrap:wrap}.lt-toolbar span{width:100%}}
         </style>
         <div class="lt-editor">
             <div class="lt-head"><input id="lt-session-title" class="lt-title" value="${escapeSprechenHtml(title)}" placeholder="Tên buổi LiveTalk"><div style="padding:12px;color:#8d6e63;">📅 ${todayDateKey()}</div></div>
+            <div class="lt-toolbar">
+                <span>🐦 Bôi đen chữ muốn nhớ:</span>
+                <button type="button" class="lt-marker" onmousedown="event.preventDefault();formatLiveTalkSelection('highlight')">🖍️ Tô hồng</button>
+                <button type="button" class="lt-eraser" onmousedown="event.preventDefault();formatLiveTalkSelection('erase')">⌫ Tẩy màu</button>
+            </div>
             <div class="lt-table"><div class="lt-grid">
                 <div class="lt-cell lt-th">🌿 Từ mục tiêu</div><div class="lt-cell lt-th">Câu đã nói</div><div class="lt-cell lt-th">❌ Lỗi cần sửa</div><div class="lt-cell lt-th">⭐ Cách nói hay</div>
                 ${liveTalkDraftRows.map((row,index) => renderLiveTalkEditorRow(row,index)).join('')}
@@ -2112,12 +2169,11 @@ function renderLiveTalkEditor(sessionIndex = -1, title = '') {
 }
 
 function renderLiveTalkEditorRow(row, index) {
-    const field = (name, value, placeholder) => `<textarea data-lt-index="${index}" data-lt-field="${name}" oninput="updateLiveTalkDraft(this)" placeholder="${placeholder}">${escapeSprechenHtml(value)}</textarea>`;
     return `
-        <div class="lt-cell">${field('target',row.target,'auf ein Thema eingehen')}</div>
-        <div class="lt-cell">${field('said',row.said,'Câu cậu đã nói…')}</div>
-        <div class="lt-cell">${field('correction',row.correction,'Câu sai → câu sửa đúng')}</div>
-        <div class="lt-cell">${field('native',row.native,'Cách nói tự nhiên hơn…')}</div>
+        <div class="lt-cell">${renderLiveTalkRichField(row,index,'target','auf ein Thema eingehen')}</div>
+        <div class="lt-cell">${renderLiveTalkRichField(row,index,'said','Câu cậu đã nói…')}</div>
+        <div class="lt-cell">${renderLiveTalkRichField(row,index,'correction','Câu sai → câu sửa đúng')}</div>
+        <div class="lt-cell">${renderLiveTalkRichField(row,index,'native','Cách nói tự nhiên hơn…')}</div>
         <div class="lt-extra">
             <input data-lt-index="${index}" data-lt-field="reminder" oninput="updateLiveTalkDraft(this)" value="${escapeSprechenHtml(row.reminder)}" placeholder="🧠 Câu nhắc vô tri, ví dụ: Praktikum không phải tài sản">
             <input data-lt-index="${index}" data-lt-field="tags" oninput="updateLiveTalkDraft(this)" value="${escapeSprechenHtml(row.tags)}" placeholder="🏷️ Arbeit, Pflege, Gefühle">
