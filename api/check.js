@@ -16,6 +16,9 @@ module.exports = async function handler(req, res) {
         wordCount,
         challenge,
         answer,
+        source,
+        usedChallenges = [],
+        nonce,
         tuViet,
         tuDuc,
         cauVidu
@@ -27,9 +30,43 @@ module.exports = async function handler(req, res) {
     const isSprechen = mode === 'sprechen';
     const isSchreiben = mode === 'schreiben';
     const isSchreibenChallenge = mode === 'schreiben_challenge';
+    const isLiveTalkChallenge = mode === 'livetalk_challenge';
+    let liveTalkCard = {};
     let prompt;
 
-    if (isSprechen) {
+    if (isLiveTalkChallenge) {
+        const card = source && typeof source === 'object' ? source : {};
+        liveTalkCard = card;
+        const learningMaterial = [card.target, card.said, card.correction, card.native].filter(Boolean).join('\n').trim();
+        if (!learningMaterial) return res.status(400).json({ error:'Thẻ LiveTalk trống' });
+        const recent = Array.isArray(usedChallenges) ? usedChallenges.slice(0, 60).map(String) : [];
+        prompt = `Bạn là Voi, người tạo bài tập chuyển giao tiếng Đức Goethe B2. Từ MỘT lỗi/cấu trúc cũ, hãy tạo MỘT thử thách mới khó vừa đủ, tự nhiên và không lặp.
+
+THẺ GỐC (chỉ dùng để hiểu điểm ngôn ngữ; không chép nguyên):
+- Cấu trúc mục tiêu: ${String(card.target || '')}
+- Câu người học đã nói: ${String(card.said || '')}
+- Câu sửa: ${String(card.correction || '')}
+- Cách nói tự nhiên: ${String(card.native || '')}
+- Ghi nhớ: ${String(card.reminder || '')}
+- Nhãn chủ đề: ${String(card.tags || '')}
+
+CÁC THỬ THÁCH GẦN ĐÂY BỊ CẤM LẶP LẠI HOẶC DIỄN ĐẠT LẠI QUÁ GIỐNG:
+${recent.length ? recent.map((item,index) => `${index+1}. ${item}`).join('\n') : '(chưa có)'}
+
+MÃ NGẪU NHIÊN: ${String(nonce || Date.now())}
+
+YÊU CẦU:
+- Trình độ B2 thực, không nâng lên C1 không cần thiết.
+- Mỗi lần đổi ít nhất 3 yếu tố: chủ đề, tình huống, dạng nhiệm vụ, register, ngữ pháp phụ hoặc ràng buộc.
+- Luân phiên giữa: Umformulierung, Lückentext không lộ từ khóa, spontane Reaktion, Präsentation, Diskussion, formelle Situation, Fehlerdetektiv, Satzbau, Registerwechsel.
+- Phần hiện trước khi làm TUYỆT ĐỐI không được chứa cấu trúc mục tiêu, câu sửa, câu native hay từ khóa làm lộ đáp án.
+- prompt phải có đủ ngữ cảnh để người học tự viết một câu trả lời.
+- modelAnswer phải là một đáp án tiếng Đức đúng, tự nhiên, thỏa điều kiện và thực sự luyện điểm trong thẻ gốc.
+- Không dùng Markdown. Chỉ trả về JSON hợp lệ, không thêm bất kỳ chữ nào bên ngoài.
+
+SCHEMA CHÍNH XÁC:
+{"type":"tên dạng bài ngắn bằng tiếng Đức","topic":"chủ đề ngắn","instruction":"hướng dẫn bằng tiếng Việt","prompt":"đề bài/tình huống, có thể xen tiếng Đức","constraints":["2 hoặc 3 ràng buộc ngắn"],"modelAnswer":"một đáp án mẫu tiếng Đức","explanation":"giải thích tiếng Việt tối đa 2 câu","fingerprint":"mã ngắn phân biệt thử thách"}`;
+    } else if (isSprechen) {
         const cleanTranscript = String(transcript || cauVidu || '').trim();
         if (!cleanTranscript) return res.status(400).json({ error: 'Transcript trống' });
 
@@ -122,12 +159,14 @@ Hãy chỉ ra lỗi thật sự, sửa thành câu B2 tự nhiên và cho một 
             },
             body: JSON.stringify({
                 model: 'nvidia/nemotron-3-ultra-550b-a55b:free',
-                temperature: 0.35,
-                max_tokens: isSchreiben ? 1500 : (isSprechen ? 1100 : 700),
+                temperature: isLiveTalkChallenge ? 0.9 : 0.35,
+                max_tokens: isSchreiben ? 1500 : (isSprechen ? 1100 : (isLiveTalkChallenge ? 900 : 700)),
                 messages: [
                     {
                         role: 'system',
-                        content: 'Bạn là Mr. Efa, một chú voi giám khảo tiếng Đức B2 chính xác, điềm tĩnh và hơi hài hước. Bạn phân biệt văn nói với văn viết, không soi vụn vặt và luôn ưu tiên tiếng Đức tự nhiên. Chỉ xuất HTML sạch; riêng khi prompt yêu cầu dấu phân cách thì giữ đúng dấu đó.'
+                        content: isLiveTalkChallenge
+                            ? 'Bạn là Voi, chuyên gia thiết kế bài tập chuyển giao Goethe B2. Bạn tạo đề khó vừa đủ, tự nhiên, không lặp và không làm lộ đáp án. Chỉ xuất một JSON object hợp lệ.'
+                            : 'Bạn là Mr. Efa, một chú voi giám khảo tiếng Đức B2 chính xác, điềm tĩnh và hơi hài hước. Bạn phân biệt văn nói với văn viết, không soi vụn vặt và luôn ưu tiên tiếng Đức tự nhiên. Chỉ xuất HTML sạch; riêng khi prompt yêu cầu dấu phân cách thì giữ đúng dấu đó.'
                     },
                     { role: 'user', content: prompt }
                 ]
@@ -143,8 +182,31 @@ Hãy chỉ ra lỗi thật sự, sửa thành câu B2 tự nhiên và cho một 
 
         const cleaned = data.choices[0].message.content
             .replace(/```html/gi, '')
+            .replace(/```json/gi, '')
             .replace(/```/g, '')
             .trim();
+        if (isLiveTalkChallenge) {
+            let parsed;
+            try { parsed = JSON.parse(cleaned); }
+            catch (_) {
+                const match = cleaned.match(/\{[\s\S]*\}/);
+                if (!match) return res.status(502).json({ error:'Voi gửi sai định dạng đề' });
+                try { parsed = JSON.parse(match[0]); }
+                catch (_) { return res.status(502).json({ error:'Voi gửi JSON bị móp' }); }
+            }
+            const result = {
+                type:String(parsed.type || 'B2-Transfer').slice(0,80),
+                topic:String(parsed.topic || liveTalkCard.tags || 'Alltag').slice(0,120),
+                instruction:String(parsed.instruction || 'Hoàn thành nhiệm vụ sau.').slice(0,500),
+                prompt:String(parsed.prompt || '').slice(0,1200),
+                constraints:Array.isArray(parsed.constraints) ? parsed.constraints.slice(0,4).map(item => String(item).slice(0,150)) : [],
+                modelAnswer:String(parsed.modelAnswer || '').slice(0,1200),
+                explanation:String(parsed.explanation || '').slice(0,600),
+                fingerprint:String(parsed.fingerprint || parsed.prompt || '').toLowerCase().replace(/\s+/g,' ').slice(0,500)
+            };
+            if (!result.prompt || !result.modelAnswer) return res.status(502).json({ error:'Voi làm rơi mất đề hoặc đáp án' });
+            return res.status(200).json({ challenge:result });
+        }
         if (isSchreiben) {
             const [html, ...challengeParts] = cleaned.split('|||CHALLENGE|||');
             return res.status(200).json({
@@ -158,4 +220,3 @@ Hãy chỉ ra lỗi thật sự, sửa thành câu B2 tự nhiên và cho một 
         return res.status(500).json({ error: error.message });
     }
 };
-
