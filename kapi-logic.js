@@ -599,6 +599,7 @@ function renderUsageBadge(word) {
 }
 
 function showVokabelHauptmenu() {
+    syncHoerActiveWords();
     setLearningFocus(true, 'koffer');
     dailyMissionActive = false;
     document.getElementById("feedback-area").style.display = "none";
@@ -613,6 +614,7 @@ function showVokabelHauptmenu() {
             <button class="btn-grid btn-full" style="background:linear-gradient(135deg,#e8f5e9,#fff8e1);border:3px solid #8bc34a;text-align:center;color:#47733c;font-weight:800;padding:20px;box-shadow:0 7px 15px rgba(76,125,55,.15);" onclick="startDailyVocabMission()">${dailyStatus.completed ? '✅ Nhiệm vụ hôm nay đã xong · Ôn lại' : '🐦 Bắt đầu nhiệm vụ hôm nay · khoảng 7 phút'}<br><small style="font-weight:normal;color:#71856a;">5 từ mới + 3 từ cần ôn + 5 câu kiểm tra</small></button>
             ${warningHtml}
             <button class="btn-grid btn-full" style="background:linear-gradient(135deg,#fff8e1,#fce4ec);border:2px solid #ffcc80;text-align:center;color:#8d6e63;font-weight:bold;" onclick="showVocabWeeklyJournal()">📒 Nhật ký tuần này · ${weeklyJournal.learnedWords.length} từ · ${weeklyJournal.correctAnswers} đúng</button>
+            ${vokabelGruppen.hoerenAktiv.woerter.length ? `<button class="btn-grid btn-full" style="background:#e3f2fd;" onclick="showLernenScreen('hoerenAktiv')">⭐ Aus Hören · ${vokabelGruppen.hoerenAktiv.woerter.length} từ học chủ động</button>` : ''}
             <button class="btn-grid" onclick="showLernenScreen('arbeit')">💼 Arbeit</button>
             <button class="btn-grid" style="background:#e8f5e9;" onclick="showLernenScreen('umwelt')">🌍 Umwelt</button>
             <button class="btn-grid" style="background:#fff8e1;" onclick="showLernenScreen('kulinarik')">🍽️ Kulinarik</button>
@@ -3345,6 +3347,12 @@ function showHoerenMenu() {
                 <div style="font-size:15px;line-height:1.55;margin-top:9px;color:#795548;">Nghe hội thoại tiếng Đức B1+/B2 tự nhiên cùng Kapi trên YouTube.</div>
                 <div style="display:inline-block;margin-top:15px;padding:7px 13px;border-radius:999px;background:#ff0000;color:white;font-size:13px;font-weight:bold;">▶ Mở YouTube</div>
             </a>
+            <button onclick="showHoerWortschatz()" style="flex:1 1 280px;max-width:350px;min-height:220px;padding:24px;border:2px solid #91b5d1;border-radius:24px;background:linear-gradient(145deg,#eaf5ff,#f4f7e8);box-shadow:0 8px 18px rgba(63,108,150,.13);cursor:pointer;text-align:left;color:#2c3e50;">
+                <div style="font-size:48px;margin-bottom:12px;">👂🔊</div>
+                <div style="font-size:23px;font-weight:800;color:#346d92;">Hör-Wortschatz</div>
+                <div style="font-size:15px;line-height:1.55;margin-top:9px;">Nghe trước, đoán rồi mới lật chữ. Mỗi ngày một ít từ do cậu chọn.</div>
+                <div style="display:inline-block;margin-top:15px;padding:7px 13px;border-radius:999px;background:#5791b5;color:white;font-size:13px;font-weight:bold;">Vào luyện nghe ➜</div>
+            </button>
         </div>
         <button class="btn-kapi btn-home" style="margin-top:24px;" onclick="showLessons()">⬅️ Zurück</button>
     `;
@@ -3875,6 +3883,245 @@ document.addEventListener('mouseup', function(e) {
 // 10. HÀM CHUYỂN TRANG TRANSCRIPT & LƯU GHI CHÚ
 // ==========================================
 
+// Hör-Wortschatz is an independent listening collection. Only ⭐ joins active Vokabeln.
+const HOER_WORDS_KEY = 'kapi_hoer_words_v1';
+const HOER_DAILY_KEY = 'kapi_hoer_daily_v1';
+let hoerSession = null;
+let hoerSuggestionNonce = 0;
+
+function hoerReadWords() {
+    try {
+        const words = JSON.parse(localStorage.getItem(HOER_WORDS_KEY) || '[]');
+        return Array.isArray(words) ? words.filter(w => w && typeof w.de === 'string' && typeof w.vi === 'string') : [];
+    } catch (_) { return []; }
+}
+function hoerWriteWords(words) {
+    localStorage.setItem(HOER_WORDS_KEY, JSON.stringify(words));
+    syncHoerActiveWords();
+}
+function hoerKey(de) { return String(de || '').trim().toLocaleLowerCase('de-DE').replace(/\s+/g, ' '); }
+function syncHoerActiveWords() {
+    if (typeof vokabelGruppen === 'undefined') return;
+    vokabelGruppen.hoerenAktiv = {
+        titel: '⭐ Aus Hören – aktiv',
+        woerter: hoerReadWords().filter(w => w.active).map(w => ({de:w.de,vi:w.vi}))
+    };
+}
+function hoerSpeak(de) {
+    if (!('speechSynthesis' in window)) {
+        alert('Trình duyệt này chưa hỗ trợ giọng đọc tiếng Đức. Hãy thử Chrome hoặc Edge.');
+        return;
+    }
+    speechSynthesis.cancel();
+    const speech = new SpeechSynthesisUtterance(de);
+    speech.lang = 'de-DE';
+    speech.rate = 0.82;
+    const voice = speechSynthesis.getVoices().find(v => v.lang.toLowerCase().startsWith('de'));
+    if (voice) speech.voice = voice;
+    speechSynthesis.speak(speech);
+}
+function hoerSuggestionMessage(message) {
+    const box = document.getElementById('hoer-suggestions');
+    if (box) box.textContent = message;
+}
+async function loadHoerSuggestions() {
+    const box = document.getElementById('hoer-suggestions');
+    if (!box) return;
+    const nonce = ++hoerSuggestionNonce;
+    const content = document.getElementById('transcript-text').textContent.trim();
+    if (!content || content.startsWith('Kein Transkript')) {
+        hoerSuggestionMessage('Chưa có transcript. Cậu vẫn có thể thêm từ thủ công ở Hör-Wortschatz.');
+        return;
+    }
+    hoerSuggestionMessage('🐘 Voi đang đọc transcript để chọn vài cụm đáng nghe…');
+    try {
+        const response = await fetch('/api/check', {
+            method:'POST', headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({mode:'hoeren_vocab_suggest',transcript:content.slice(0,11000)})
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || 'Voi chưa lấy được gợi ý');
+        if (nonce !== hoerSuggestionNonce || document.getElementById('transcript-page').style.display === 'none') return;
+        const suggestions = Array.isArray(data.suggestions) ? data.suggestions.slice(0,8) : [];
+        const words = hoerReadWords();
+        box.replaceChildren();
+        if (!suggestions.length) { hoerSuggestionMessage('Voi chưa tìm được cụm phù hợp. Cậu có thể thêm từ thủ công.'); return; }
+        suggestions.forEach(item => {
+            const de = String(item.de || '').trim(), vi = String(item.vi || '').trim();
+            if (!de || !vi) return;
+            const row = document.createElement('div');
+            row.style.cssText = 'display:flex;align-items:center;gap:10px;margin:8px 0;padding:9px 12px;border-radius:12px;background:white;flex-wrap:wrap';
+            const label = document.createElement('span');
+            label.textContent = de + ' · ' + vi;
+            label.style.flex = '1';
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.textContent = words.some(w => hoerKey(w.de) === hoerKey(de)) ? '✓ Đã lưu' : '+ Lưu';
+            button.disabled = button.textContent !== '+ Lưu';
+            button.style.cssText = 'border:0;border-radius:10px;background:#dff0cb;padding:7px 12px;cursor:pointer';
+            button.onclick = () => {
+                if (hoerAddWord(de,vi)) { button.textContent = '✓ Đã lưu'; button.disabled = true; }
+            };
+            row.append(label,button);
+            box.append(row);
+        });
+    } catch (error) {
+        if (nonce === hoerSuggestionNonce) hoerSuggestionMessage('🐘 ' + error.message + '. Có thể thêm từ thủ công trong Hör-Wortschatz.');
+    }
+}
+function hoerAddWord(de,vi) {
+    de = String(de || '').trim().slice(0,180);
+    vi = String(vi || '').trim().slice(0,260);
+    if (!de || !vi) return false;
+    const words = hoerReadWords();
+    if (words.some(w => hoerKey(w.de) === hoerKey(de))) return false;
+    words.push({de,vi,status:'new',streak:0,lastSuccess:'',lastAttempt:'',active:false,added:Date.now()});
+    hoerWriteWords(words);
+    return true;
+}
+function hoerManualAdd() {
+    const de = document.getElementById('hoer-new-de').value;
+    const vi = document.getElementById('hoer-new-vi').value;
+    if (!hoerAddWord(de,vi)) { alert('Điền đủ từ và nghĩa nhé; từ này có thể đã lưu rồi.'); return; }
+    showHoerWortschatz();
+}
+function hoerDailyQueue(words) {
+    const today = getLocalDateKey(new Date());
+    let saved;
+    try { saved = JSON.parse(localStorage.getItem(HOER_DAILY_KEY) || '{}'); } catch (_) { saved = {}; }
+    const known = new Set(words.map(w => hoerKey(w.de)));
+    if (saved.date !== today || !Array.isArray(saved.keys)) saved = {date:today,keys:[]};
+    saved.keys = saved.keys.filter(key => known.has(key)).slice(0,6);
+    const picked = new Set(saved.keys);
+    const candidates = words.filter(w => w.status !== 'graduated' && w.lastAttempt !== today && !picked.has(hoerKey(w.de)))
+        .sort((a,b) => (a.status === 'listening' ? -1 : 0) - (b.status === 'listening' ? -1 : 0) || (a.lastAttempt || '').localeCompare(b.lastAttempt || '') || a.added - b.added);
+    for (const word of candidates) {
+        if (saved.keys.length >= 6) break;
+        saved.keys.push(hoerKey(word.de));
+    }
+    localStorage.setItem(HOER_DAILY_KEY, JSON.stringify(saved));
+    return saved.keys;
+}
+function showHoerWortschatz() {
+    setLearningFocus(true);
+    document.getElementById('feedback-area').style.display = 'none';
+    const words = hoerReadWords();
+    const queue = hoerDailyQueue(words);
+    const today = getLocalDateKey(new Date());
+    const due = queue.filter(key => words.some(w => hoerKey(w.de) === key && w.lastAttempt !== today));
+    document.getElementById('message').textContent = '👂 Hör-Wortschatz';
+    document.getElementById('buttons').innerHTML = `
+        <div style="max-width:740px;margin:auto;padding:23px;border:2px solid #b6d2e0;border-radius:24px;background:#f5faff;text-align:left;">
+            <h3 style="margin-top:0;">🐘 Voi giữ kho nghe</h3>
+            <p>🔊 Nghe → đoán → lật chữ + nghĩa. Hôm nay tối đa 6 cụm, nghe ra 3 ngày khác nhau thì tốt nghiệp.</p>
+            <p>🆕 Mới: ${words.filter(w=>w.status==='new').length} · 👂 Đang luyện: ${words.filter(w=>w.status==='listening').length} · 🎓 Đã nghe ra: ${words.filter(w=>w.status==='graduated').length}</p>
+            <p><b>${due.length}</b> cụm còn luyện hôm nay · ${words.filter(w=>w.active).length} từ đã chọn ⭐ học chủ động</p>
+            <button class="btn-kapi" onclick="startHoerPractice()" ${due.length ? '' : 'disabled'}>🔊 ${due.length ? 'Bắt đầu nghe' : 'Hôm nay đã xong'}</button>
+            <details style="margin-top:18px;"><summary>+ Tự thêm từ / cụm đã nghe</summary>
+                <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;">
+                    <input id="hoer-new-de" maxlength="180" placeholder="Từ / cụm tiếng Đức" style="flex:1 1 180px;padding:10px;">
+                    <input id="hoer-new-vi" maxlength="260" placeholder="Nghĩa tiếng Việt" style="flex:1 1 180px;padding:10px;">
+                    <button class="btn-kapi" onclick="hoerManualAdd()">+ Lưu</button>
+                </div>
+            </details>
+            <details style="margin-top:18px;"><summary>📚 Xem kho đã lưu và chọn ⭐ học chủ động</summary>
+                <div id="hoer-inventory" style="margin-top:12px;"></div>
+            </details>
+        </div>
+        <button class="btn-kapi btn-home" onclick="showHoerenMenu()">⬅️ Hörtraining</button>`;
+    renderHoerInventory();
+}
+function renderHoerInventory() {
+    const box = document.getElementById('hoer-inventory');
+    if (!box) return;
+    box.replaceChildren();
+    const words = hoerReadWords();
+    if (!words.length) { box.textContent = 'Chưa lưu từ nào. Mở transcript và bấm + nhé.'; return; }
+    words.slice().reverse().forEach(word => {
+        const row = document.createElement('div');
+        row.style.cssText = 'padding:10px;margin:6px 0;border-radius:10px;background:white;display:flex;gap:8px;align-items:center;flex-wrap:wrap';
+        const label = document.createElement('span');
+        label.style.flex = '1';
+        label.textContent = (word.status === 'graduated' ? '🎓' : word.status === 'listening' ? '👂' : '🆕') + ' ' + word.de + ' · ' + word.vi;
+        const star = document.createElement('button');
+        star.type = 'button';
+        star.textContent = word.active ? '⭐ Đã thêm' : '☆ Auch aktiv lernen';
+        star.disabled = !!word.active;
+        star.onclick = () => { hoerPromote(word.de); renderHoerInventory(); };
+        row.append(label,star);
+        box.append(row);
+    });
+}
+function hoerPromote(de) {
+    const words = hoerReadWords();
+    const word = words.find(w => hoerKey(w.de) === hoerKey(de));
+    if (!word) return;
+    word.active = true;
+    hoerWriteWords(words);
+}
+function openHoerWortschatzFromTranscript() {
+    window.closeTranscriptPage();
+    showHoerWortschatz();
+}
+function startHoerPractice() {
+    const words = hoerReadWords(), today = getLocalDateKey(new Date());
+    hoerSession = {keys:hoerDailyQueue(words).filter(key => words.some(w => hoerKey(w.de) === key && w.lastAttempt !== today)),index:0,revealed:false};
+    renderHoerPractice();
+}
+function renderHoerPractice() {
+    if (!hoerSession || hoerSession.index >= hoerSession.keys.length) { hoerSession = null; showHoerWortschatz(); return; }
+    const word = hoerReadWords().find(w => hoerKey(w.de) === hoerSession.keys[hoerSession.index]);
+    if (!word) { hoerSession.index++; renderHoerPractice(); return; }
+    hoerSession.revealed = false;
+    document.getElementById('message').textContent = '👂 Nghe trước, chữ hiện sau';
+    document.getElementById('buttons').innerHTML = `
+      <div style="max-width:620px;margin:auto;padding:30px;border-radius:25px;border:2px solid #b6d2e0;background:#f5faff;">
+        <p>${hoerSession.index+1} / ${hoerSession.keys.length} · Bấm loa và thử đoán</p>
+        <button class="btn-kapi" onclick="hoerPlayCurrent()">🔊 Nghe / nghe lại</button>
+        <input id="hoer-guess" autocomplete="off" placeholder="Thử gõ điều cậu nghe được (không bắt buộc)" style="display:block;width:90%;margin:20px auto;padding:12px;">
+        <button id="hoer-reveal-button" class="btn-kapi" onclick="hoerReveal()">👀 Lật chữ + nghĩa</button>
+        <div id="hoer-answer" aria-live="polite"></div>
+      </div>
+      <button class="btn-kapi btn-home" onclick="showHoerWortschatz()">⬅️ Dừng ôn</button>`;
+    hoerPlayCurrent();
+}
+function hoerPlayCurrent() {
+    if (!hoerSession) return;
+    const word = hoerReadWords().find(w => hoerKey(w.de) === hoerSession.keys[hoerSession.index]);
+    if (word) hoerSpeak(word.de);
+}
+function hoerReveal() {
+    if (!hoerSession || hoerSession.revealed) return;
+    const word = hoerReadWords().find(w => hoerKey(w.de) === hoerSession.keys[hoerSession.index]);
+    if (!word) return;
+    hoerSession.revealed = true;
+    document.getElementById('hoer-reveal-button').style.display = 'none';
+    document.getElementById('hoer-answer').innerHTML = `
+       <div style="margin:22px 0;padding:18px;border-radius:14px;background:white;">
+         <strong>${escapeVocabHtml(word.de)}</strong><br>${escapeVocabHtml(word.vi)}
+       </div>
+       <p>Nghe ra thật rồi chứ? Chỉ tính một lần mỗi ngày.</p>
+       <button class="btn-kapi" onclick="hoerMark(true)">✅ Nghe ra</button>
+       <button class="btn-kapi" onclick="hoerMark(false)">🔁 Chưa nghe ra</button>`;
+}
+function hoerMark(success) {
+    if (!hoerSession || !hoerSession.revealed) return;
+    const words = hoerReadWords(), today = getLocalDateKey(new Date());
+    const word = words.find(w => hoerKey(w.de) === hoerSession.keys[hoerSession.index]);
+    if (word && word.lastAttempt !== today) {
+        word.status = 'listening';
+        word.streak = success ? (word.lastSuccess === today ? word.streak : (Number(word.streak) || 0) + 1) : 0;
+        if (success) word.lastSuccess = today;
+        word.lastAttempt = today;
+        if (word.streak >= 3) word.status = 'graduated';
+        hoerWriteWords(words);
+    }
+    hoerSession.index++;
+    renderHoerPractice();
+}
+
+syncHoerActiveWords();
+
 window.openTranscriptPage = function() {
     document.getElementById("container").style.display = "none"; 
     document.getElementById("transcript-page").style.display = "block";
@@ -3883,6 +4130,7 @@ window.openTranscriptPage = function() {
     document.getElementById("transcript-title").innerText = teil.teilName;
     document.getElementById("transcript-audio").src = teil.audioSrc;
     document.getElementById("transcript-text").innerHTML = teil.transcript || "<i>Kein Transkript verfügbar (Chưa có Transkript).</i>";
+    loadHoerSuggestions();
 
     // KAPI TỰ ĐỘNG TÌM LẠI GHI CHÚ CŨ (Nếu có)
     let noteKey = `kapi_note_exam_${currentPruefungIndex}_teil_${currentTeilIndex}`;
@@ -3892,6 +4140,7 @@ window.openTranscriptPage = function() {
 };
 
 window.closeTranscriptPage = function() {
+    hoerSuggestionNonce++;
     let audioEl = document.getElementById("transcript-audio");
     if(audioEl) {
         audioEl.pause();
