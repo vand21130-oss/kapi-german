@@ -2027,9 +2027,26 @@ function reviewKofferMistakes() {
 // LIVETALK-TAGEBUCH: GPT PHÂN TÍCH, WEB GHI NHỚ, VALI PHÀN NÀN
 // ==========================================
 const LIVETALK_KEY = 'kapi_livetalk_diary_v1';
+const LIVETALK_CHALLENGE_HISTORY_KEY = 'kapi_livetalk_challenges_v1';
 let liveTalkDraftRows = [];
 let liveTalkPractice = null;
 let liveTalkEditIndex = -1;
+
+function getLiveTalkChallengeHistory() {
+    try {
+        const history = JSON.parse(localStorage.getItem(LIVETALK_CHALLENGE_HISTORY_KEY));
+        return Array.isArray(history) ? history : [];
+    } catch (_) { return []; }
+}
+
+function rememberLiveTalkChallenge(challenge) {
+    const history = getLiveTalkChallengeHistory();
+    const fingerprint = [challenge.type, challenge.topic, challenge.prompt, ...(challenge.constraints || [])].filter(Boolean).join('|').trim().toLowerCase().replace(/\s+/g, ' ').slice(0, 700);
+    if (!fingerprint || history.some(item => item.fingerprint === fingerprint)) return false;
+    history.unshift({ fingerprint, prompt:challenge.prompt, date:new Date().toISOString() });
+    localStorage.setItem(LIVETALK_CHALLENGE_HISTORY_KEY, JSON.stringify(history.slice(0, 500)));
+    return true;
+}
 
 function getLiveTalkData() {
     try {
@@ -2238,35 +2255,103 @@ function getDueLiveTalkRows() {
     return due.length ? due : getAllLiveTalkRows().filter(row => !row.retired);
 }
 
-function startLiveTalkPractice() {
+async function startLiveTalkPractice() {
     const rows = getDueLiveTalkRows();
     if (!rows.length) return alert('Kho lỗi còn trống. Vali chưa có gì để trả lại 🫩');
-    liveTalkPractice = { rows:shuffleArray(rows).slice(0,10), index:0, revealed:false };
-    renderLiveTalkPractice();
+    liveTalkPractice = { rows:shuffleArray(rows).slice(0,10), index:0, revealed:false, challenge:null, loading:false };
+    await prepareLiveTalkChallenge();
 }
 
 function renderLiveTalkPractice() {
     const row = liveTalkPractice?.rows[liveTalkPractice.index];
     if (!row) return finishLiveTalkPractice();
-    const isUpgrade = !row.correction.trim() && row.native.trim();
-    const prompt = isUpgrade
-        ? `Hãy nâng cấp câu này theo cách tự nhiên hơn:<br><b>${escapeSprechenHtml(row.said || row.target)}</b>`
-        : `Hãy sửa lại câu/cụm sau:<br><b>${escapeSprechenHtml(row.said || row.correction || row.target)}</b>`;
-    document.getElementById('message').innerHTML = `<b>${isUpgrade ? '⭐ Native Upgrade' : '🔧 Reparieren'} · ${liveTalkPractice.index+1}/${liveTalkPractice.rows.length}</b>`;
+    const challenge = liveTalkPractice.challenge;
+    document.getElementById('message').innerHTML = `<b>🐘 Voi ra đề · ${liveTalkPractice.index+1}/${liveTalkPractice.rows.length}</b>`;
     document.getElementById('feedback-area').style.display = 'block';
+    if (liveTalkPractice.loading || !challenge) {
+        document.getElementById('feedback-area').innerHTML = `<div style="max-width:720px;margin:auto;padding:28px;border:2px solid #b9d8e8;border-radius:20px;background:#f2f9ff;color:#476777;"><b>🫪 Voi đang trộn chủ đề, ngữ cảnh và bẫy B2…</b><br><small>Vali đang đứng canh để voi không làm lộ đáp án.</small></div>`;
+        document.getElementById('buttons').innerHTML = `<button class="btn-kapi btn-home" onclick="showLiveTalkMenu()">🚪 Dừng ôn</button>`;
+        return;
+    }
     document.getElementById('feedback-area').innerHTML = `<div style="max-width:720px;margin:auto;padding:23px;border:2px solid #d8c6b7;border-radius:20px;background:#fffdf8;text-align:left;color:#55433b;">
-        <div style="font-size:20px;line-height:1.65;">${prompt}</div>
-        ${row.target ? `<div style="margin-top:12px;color:#7b8f58;">🌿 Gợi ý cấu trúc: ${escapeSprechenHtml(row.target)}</div>` : ''}
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:13px;"><span style="padding:5px 10px;border-radius:999px;background:#e7f1ff;color:#45647a;font-weight:bold;">🐘 ${escapeSprechenHtml(challenge.type || 'B2-Transfer')}</span><span style="padding:5px 10px;border-radius:999px;background:#fff0c9;color:#7a643a;">🎯 ${escapeSprechenHtml(challenge.topic || row.tags || 'Alltag')}</span></div>
+        <div style="font-size:18px;line-height:1.65;color:#6d5145;">${escapeSprechenHtml(challenge.instruction || 'Hãy hoàn thành nhiệm vụ B2 sau:')}</div>
+        <div style="margin-top:12px;padding:16px;border-radius:14px;background:#f5f1ec;font-size:20px;line-height:1.6;font-weight:700;white-space:pre-wrap;">${escapeSprechenHtml(challenge.prompt)}</div>
+        ${challenge.constraints?.length ? `<div style="margin-top:12px;color:#8a6f62;"><b>📌 Điều kiện:</b> ${challenge.constraints.map(escapeSprechenHtml).join(' · ')}</div>` : ''}
         <textarea id="lt-practice-answer" rows="4" placeholder="Gõ câu sửa hoặc nói thành tiếng rồi ghi lại…" style="width:100%;box-sizing:border-box;margin-top:15px;padding:13px;border:2px solid #dfd1c5;border-radius:13px;font-size:16px;"></textarea>
         <div id="lt-practice-reveal"></div>
     </div>`;
-    document.getElementById('buttons').innerHTML = `<button class="btn-kapi" style="background:#ffe0b2;" onclick="revealLiveTalkAnswer()">👁️ Mở hồ sơ đáp án</button><button class="btn-kapi btn-home" onclick="showLiveTalkMenu()">🚪 Dừng ôn</button>`;
+    document.getElementById('buttons').innerHTML = `<button class="btn-kapi" style="background:#ffe0b2;" onclick="revealLiveTalkAnswer()">👁️ Mở hồ sơ đáp án</button><button class="btn-kapi" style="background:#dcecf6;color:#46687b;" onclick="requestAnotherLiveTalkChallenge()">🎲 Voi đổi đề</button><button class="btn-kapi btn-home" onclick="showLiveTalkMenu()">🚪 Dừng ôn</button>`;
+}
+
+function buildOfflineLiveTalkChallenge(row) {
+    const types = [
+        ['B2-Präsentation','Mở đầu một phần trình bày B2 phù hợp với tình huống sau.'],
+        ['Umformulierung','Viết lại ý sau theo cách tự nhiên và trang trọng hơn.'],
+        ['Spontane Antwort','Trả lời ngay như trong một cuộc thảo luận Goethe B2.'],
+        ['Transfer','Tự tạo một câu mới cho tình huống sau, dùng đúng cấu trúc đã học.'],
+        ['Registerwechsel','Chuyển ý sau sang văn phong phù hợp với kỳ thi B2.']
+    ];
+    const topics = ['KI im Pflegealltag','eine Vier-Tage-Woche','Lebensmittelverschwendung','Stress am Arbeitsplatz','Online-Unterricht','öffentliche Verkehrsmittel','ehrenamtliche Arbeit','soziale Medien','Weiterbildung im Beruf','umweltfreundliches Reisen'];
+    const contexts = ['Du leitest eine Diskussion ein.','Du widersprichst höflich.','Du fasst deine Meinung zusammen.','Du nennst einen Vorteil und eine Einschränkung.','Du reagierst auf die Meinung eines Kollegen.','Du beginnst den Hauptteil einer Präsentation.'];
+    const constraints = ['12–20 Wörter','mindestens ein Nebensatz','keine Wiederholung von „ich denke“','natürliches B2-Deutsch','nur ein Satz'];
+    const history = getLiveTalkChallengeHistory();
+    for (let attempt=0; attempt<80; attempt++) {
+        const type = types[Math.floor(Math.random()*types.length)];
+        const topic = topics[Math.floor(Math.random()*topics.length)];
+        const context = contexts[Math.floor(Math.random()*contexts.length)];
+        const picked = shuffleArray(constraints).slice(0,2);
+        const prompt = `${context}\nThema: ${topic}`;
+        const fingerprint = `offline|${type[0]}|${prompt}|${picked.join('|')}`.toLowerCase();
+        if (!history.some(item => item.fingerprint === fingerprint)) return { type:type[0], instruction:type[1], topic, prompt, constraints:picked, modelAnswer:row.native || row.correction || row.target, explanation:'Dùng cấu trúc mục tiêu trong một ngữ cảnh mới.', fingerprint, offline:true };
+    }
+    return { type:'Freie Produktion', instruction:'Tự tạo một câu B2 hoàn toàn mới bằng cấu trúc đã học.', topic:row.tags || 'Alltag', prompt:'Nói một ý có quan điểm, lý do và hệ quả trong một câu.', constraints:['không chép câu cũ','tự nhiên ở trình độ B2'], modelAnswer:row.native || row.correction || row.target, explanation:'Đây là bài tập chuyển giao, không phải học thuộc.', fingerprint:`free|${Date.now()}`, offline:true };
+}
+
+async function prepareLiveTalkChallenge(forceNew = false) {
+    const row = liveTalkPractice?.rows[liveTalkPractice.index];
+    if (!row) return finishLiveTalkPractice();
+    liveTalkPractice.loading = true;
+    liveTalkPractice.revealed = false;
+    liveTalkPractice.challenge = null;
+    renderLiveTalkPractice();
+    const history = getLiveTalkChallengeHistory();
+    let challenge = null;
+    for (let attempt=0; attempt<3 && !challenge; attempt++) {
+        try {
+            const response = await fetch('/api/check', {
+                method:'POST', headers:{'Content-Type':'application/json'},
+                body:JSON.stringify({ mode:'livetalk_challenge', source:{ target:row.target, said:row.said, correction:row.correction, native:row.native, reminder:row.reminder, tags:row.tags }, usedChallenges:history.slice(0,60).map(item => item.prompt || item.fingerprint), nonce:`${Date.now()}_${Math.random()}_${attempt}_${forceNew}` })
+            });
+            const data = await response.json();
+            if (!response.ok || !data.challenge?.prompt) throw new Error(data.error || 'Voi không gửi đề về');
+            const candidate = data.challenge;
+            candidate.fingerprint = [candidate.type,candidate.topic,candidate.prompt,...(candidate.constraints || [])].filter(Boolean).join('|').trim().toLowerCase().replace(/\s+/g,' ').slice(0,700);
+            if (rememberLiveTalkChallenge(candidate)) challenge = candidate;
+        } catch (_) { break; }
+    }
+    if (!challenge) {
+        challenge = buildOfflineLiveTalkChallenge(row);
+        rememberLiveTalkChallenge(challenge);
+    }
+    liveTalkPractice.challenge = challenge;
+    liveTalkPractice.loading = false;
+    renderLiveTalkPractice();
+}
+
+async function requestAnotherLiveTalkChallenge() {
+    if (!liveTalkPractice || liveTalkPractice.loading) return;
+    await prepareLiveTalkChallenge(true);
 }
 
 function revealLiveTalkAnswer() {
     const row = liveTalkPractice.rows[liveTalkPractice.index];
+    const challenge = liveTalkPractice.challenge || {};
     liveTalkPractice.revealed = true;
     document.getElementById('lt-practice-reveal').innerHTML = `<div style="margin-top:16px;padding:15px;border-radius:14px;background:#eef5e7;line-height:1.65;">
+        ${challenge.modelAnswer ? `<b>🐘 Đáp án gợi ý của voi:</b><br>${escapeSprechenHtml(challenge.modelAnswer)}<br>` : ''}
+        ${challenge.explanation ? `<span style="color:#62715a;">${escapeSprechenHtml(challenge.explanation)}</span><br>` : ''}
+        ${row.target ? `<b>🌿 Cấu trúc mục tiêu:</b><br>${escapeSprechenHtml(row.target)}<br>` : ''}
         ${row.correction ? `<b>✅ Câu sửa:</b><br>${escapeSprechenHtml(row.correction)}<br>` : ''}
         ${row.native ? `<b>⭐ Người bản xứ có thể nói:</b><br>${escapeSprechenHtml(row.native)}<br>` : ''}
         ${row.reminder ? `<b>🧠 Ám thị:</b> ${escapeSprechenHtml(row.reminder)}` : ''}
@@ -2305,7 +2390,7 @@ function rateLiveTalkCard(correct) {
     }
     alert(getKofferLiveTalkLine(row, correct ? 'right' : 'wrong'));
     liveTalkPractice.index++;
-    renderLiveTalkPractice();
+    prepareLiveTalkChallenge();
 }
 
 function finishLiveTalkPractice() {
