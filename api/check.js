@@ -31,10 +31,18 @@ module.exports = async function handler(req, res) {
     const isSchreiben = mode === 'schreiben';
     const isSchreibenChallenge = mode === 'schreiben_challenge';
     const isLiveTalkChallenge = mode === 'livetalk_challenge';
+    const isHoerSuggestions = mode === 'hoeren_vocab_suggest';
     let liveTalkCard = {};
     let prompt;
 
-    if (isLiveTalkChallenge) {
+    if (isHoerSuggestions) {
+        const cleanTranscript = String(transcript || '').trim().slice(0,11000);
+        if (cleanTranscript.length < 30) return res.status(400).json({error:'Transcript quá ngắn'});
+        prompt = `Bạn là Voi, giúp học viên B1+/B2 luyện nghe tiếng Đức. Từ TRANSCRIPT sau, gợi ý tối đa 8 cụm từ thực sự hữu ích cho việc nghe hiểu.
+Quy tắc: mỗi de là một từ/cụm ngắn có mặt NGUYÊN VĂN trong transcript, không bịa từ, ưu tiên cụm có nghĩa trong ngữ cảnh; vi là nghĩa tiếng Việt ngắn gọn. Không đưa đáp án bài thi hay lời giải. Chỉ trả JSON hợp lệ dạng {"suggestions":[{"de":"...","vi":"..."}]}.
+TRANSCRIPT:
+${cleanTranscript}`;
+    } else if (isLiveTalkChallenge) {
         const card = source && typeof source === 'object' ? source : {};
         liveTalkCard = card;
         const learningMaterial = [card.target, card.said, card.correction, card.native].filter(Boolean).join('\n').trim();
@@ -160,11 +168,13 @@ Hãy chỉ ra lỗi thật sự, sửa thành câu B2 tự nhiên và cho một 
             body: JSON.stringify({
                 model: 'nvidia/nemotron-3-ultra-550b-a55b:free',
                 temperature: isLiveTalkChallenge ? 0.9 : 0.35,
-                max_tokens: isSchreiben ? 1500 : (isSprechen ? 1100 : (isLiveTalkChallenge ? 900 : 700)),
+                max_tokens: isSchreiben ? 1500 : (isSprechen ? 1100 : ((isLiveTalkChallenge || isHoerSuggestions) ? 900 : 700)),
                 messages: [
                     {
                         role: 'system',
-                        content: isLiveTalkChallenge
+                        content: isHoerSuggestions
+                            ? 'Bạn là Voi, trợ lý chọn cụm từ để luyện nghe. Chỉ xuất JSON object hợp lệ.'
+                            : isLiveTalkChallenge
                             ? 'Bạn là Voi, chuyên gia thiết kế bài tập chuyển giao Goethe B2. Bạn tạo đề khó vừa đủ, tự nhiên, không lặp và không làm lộ đáp án. Chỉ xuất một JSON object hợp lệ.'
                             : 'Bạn là Mr. Efa, một chú voi giám khảo tiếng Đức B2 chính xác, điềm tĩnh và hơi hài hước. Bạn phân biệt văn nói với văn viết, không soi vụn vặt và luôn ưu tiên tiếng Đức tự nhiên. Chỉ xuất HTML sạch; riêng khi prompt yêu cầu dấu phân cách thì giữ đúng dấu đó.'
                     },
@@ -185,6 +195,19 @@ Hãy chỉ ra lỗi thật sự, sửa thành câu B2 tự nhiên và cho một 
             .replace(/```json/gi, '')
             .replace(/```/g, '')
             .trim();
+        if (isHoerSuggestions) {
+            let parsed;
+            try { parsed = JSON.parse(cleaned); }
+            catch (_) { return res.status(502).json({error:'Voi gửi gợi ý sai định dạng'}); }
+            const original = String(transcript || '').toLocaleLowerCase('de-DE').replace(/\s+/g,' ');
+            const suggestions = (Array.isArray(parsed.suggestions) ? parsed.suggestions : [])
+                .slice(0,20)
+                .map(item => ({de:String(item?.de || '').trim().slice(0,180),vi:String(item?.vi || '').trim().slice(0,260)}))
+                .filter(item => item.de && item.vi && original.includes(item.de.toLocaleLowerCase('de-DE').replace(/\s+/g,' ')))
+                .filter((item,index,all) => all.findIndex(other => other.de.toLocaleLowerCase('de-DE') === item.de.toLocaleLowerCase('de-DE')) === index)
+                .slice(0,8);
+            return res.status(200).json({suggestions});
+        }
         if (isLiveTalkChallenge) {
             let parsed;
             try { parsed = JSON.parse(cleaned); }
