@@ -345,7 +345,7 @@ Hãy chỉ ra lỗi thật sự, sửa thành câu B2 tự nhiên và cho một 
                     'Content-Type':'application/json'
                 },
                 body:JSON.stringify({
-                    model:process.env.GEMINI_MODEL || 'gemini-3.7-flash',
+                    model:process.env.GEMINI_MODEL || 'gemini-3.1-flash-lite',
                     store:false,
                     input:`${systemInstruction}\n\nYÊU CẦU:\n${prompt}`,
                     ...(wantsJson ? {response_format:{
