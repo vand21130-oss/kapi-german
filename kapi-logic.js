@@ -2260,7 +2260,7 @@ function getDueLiveTalkRows() {
 async function startLiveTalkPractice() {
     const rows = getDueLiveTalkRows();
     if (!rows.length) return alert('Kho lỗi còn trống. Vali chưa có gì để trả lại 🫩');
-    liveTalkPractice = { rows:shuffleArray(rows).slice(0,10), index:0, revealed:false, challenge:null, loading:false };
+    liveTalkPractice = { rows:shuffleArray(rows).slice(0,10), index:0, revealed:false, challenge:null, loading:false, error:'', evaluating:false, evaluation:null, answerDraft:'' };
     await prepareLiveTalkChallenge();
 }
 
@@ -2270,55 +2270,44 @@ function renderLiveTalkPractice() {
     const challenge = liveTalkPractice.challenge;
     document.getElementById('message').innerHTML = `<b>🐘 Voi ra đề · ${liveTalkPractice.index+1}/${liveTalkPractice.rows.length}</b>`;
     document.getElementById('feedback-area').style.display = 'block';
-    if (liveTalkPractice.loading || !challenge) {
+    if (liveTalkPractice.loading) {
         document.getElementById('feedback-area').innerHTML = `<div style="max-width:720px;margin:auto;padding:28px;border:2px solid #b9d8e8;border-radius:20px;background:#f2f9ff;color:#476777;"><b>🫪 Voi đang trộn chủ đề, ngữ cảnh và bẫy B2…</b><br><small>Vali đang đứng canh để voi không làm lộ đáp án.</small></div>`;
         document.getElementById('buttons').innerHTML = `<button class="btn-kapi btn-home" onclick="showLiveTalkMenu()">🚪 Dừng ôn</button>`;
         return;
     }
+    if (liveTalkPractice.error || !challenge) {
+        document.getElementById('message').innerHTML = '<b>🫪 Voi chưa gửi được đề</b>';
+        document.getElementById('feedback-area').innerHTML = `<div style="max-width:720px;margin:auto;padding:24px;border:2px solid #efb1aa;border-radius:20px;background:#fff7f5;color:#744b46;text-align:left;">
+            <b>Không dùng đề offline giả làm Voi nữa.</b>
+            <p style="margin-bottom:0;">${escapeSprechenHtml(liveTalkPractice.error || 'Kết nối AI chưa phản hồi.')} Cậu có thể gọi lại mà không mất thẻ đang ôn.</p>
+        </div>`;
+        document.getElementById('buttons').innerHTML = `<button class="btn-kapi" style="background:#d9ecf7;" onclick="requestAnotherLiveTalkChallenge()">🫪 Gọi lại Voi</button><button class="btn-kapi btn-home" onclick="showLiveTalkMenu()">🚪 Dừng ôn</button>`;
+        return;
+    }
     document.getElementById('feedback-area').innerHTML = `<div style="max-width:720px;margin:auto;padding:23px;border:2px solid #d8c6b7;border-radius:20px;background:#fffdf8;text-align:left;color:#55433b;">
         <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:13px;"><span style="padding:5px 10px;border-radius:999px;background:#e7f1ff;color:#45647a;font-weight:bold;">🐘 ${escapeSprechenHtml(challenge.type || 'B2-Transfer')}</span><span style="padding:5px 10px;border-radius:999px;background:#fff0c9;color:#7a643a;">🎯 ${escapeSprechenHtml(challenge.topic || row.tags || 'Alltag')}</span></div>
-        <div style="font-size:18px;line-height:1.65;color:#6d5145;">${escapeSprechenHtml(challenge.instruction || 'Hãy hoàn thành nhiệm vụ B2 sau:')}</div>
-        <div style="margin-top:12px;padding:16px;border-radius:14px;background:#f5f1ec;font-size:20px;line-height:1.6;font-weight:700;white-space:pre-wrap;">${escapeSprechenHtml(challenge.prompt)}</div>
+        <div style="margin-top:12px;"><b style="color:#795548;">🎬 Tình huống</b><div style="margin-top:6px;padding:16px;border-radius:14px;background:#f5f1ec;font-size:18px;line-height:1.65;font-weight:650;white-space:pre-wrap;">${escapeSprechenHtml(challenge.prompt)}</div></div>
+        <div style="margin-top:14px;padding:13px 15px;border-left:5px solid #78a5bd;background:#f2f8fb;border-radius:10px;line-height:1.6;"><b>🎯 Cậu cần làm gì?</b><br>${escapeSprechenHtml(challenge.instruction || 'Hãy hoàn thành nhiệm vụ B2 sau:')}</div>
         ${challenge.constraints?.length ? `<div style="margin-top:12px;color:#8a6f62;"><b>📌 Điều kiện:</b> ${challenge.constraints.map(escapeSprechenHtml).join(' · ')}</div>` : ''}
-        <textarea id="lt-practice-answer" rows="4" placeholder="Gõ câu sửa hoặc nói thành tiếng rồi ghi lại…" style="width:100%;box-sizing:border-box;margin-top:15px;padding:13px;border:2px solid #dfd1c5;border-radius:13px;font-size:16px;"></textarea>
+        <textarea id="lt-practice-answer" rows="4" oninput="liveTalkPractice.answerDraft=this.value" placeholder="Tự nói hoặc viết câu trả lời của cậu ở đây…" style="width:100%;box-sizing:border-box;margin-top:15px;padding:13px;border:2px solid #dfd1c5;border-radius:13px;font-size:16px;">${escapeSprechenHtml(liveTalkPractice.answerDraft || '')}</textarea>
         <div id="lt-practice-reveal"></div>
     </div>`;
-    document.getElementById('buttons').innerHTML = `<button class="btn-kapi" style="background:#ffe0b2;" onclick="revealLiveTalkAnswer()">👁️ Mở hồ sơ đáp án</button><button class="btn-kapi" style="background:#dcecf6;color:#46687b;" onclick="requestAnotherLiveTalkChallenge()">🎲 Voi đổi đề</button><button class="btn-kapi btn-home" onclick="showLiveTalkMenu()">🚪 Dừng ôn</button>`;
-}
-
-function buildOfflineLiveTalkChallenge(row) {
-    const types = [
-        ['B2-Präsentation','Mở đầu một phần trình bày B2 phù hợp với tình huống sau.'],
-        ['Umformulierung','Viết lại ý sau theo cách tự nhiên và trang trọng hơn.'],
-        ['Spontane Antwort','Trả lời ngay như trong một cuộc thảo luận Goethe B2.'],
-        ['Transfer','Tự tạo một câu mới cho tình huống sau, dùng đúng cấu trúc đã học.'],
-        ['Registerwechsel','Chuyển ý sau sang văn phong phù hợp với kỳ thi B2.']
-    ];
-    const topics = ['KI im Pflegealltag','eine Vier-Tage-Woche','Lebensmittelverschwendung','Stress am Arbeitsplatz','Online-Unterricht','öffentliche Verkehrsmittel','ehrenamtliche Arbeit','soziale Medien','Weiterbildung im Beruf','umweltfreundliches Reisen'];
-    const contexts = ['Du leitest eine Diskussion ein.','Du widersprichst höflich.','Du fasst deine Meinung zusammen.','Du nennst einen Vorteil und eine Einschränkung.','Du reagierst auf die Meinung eines Kollegen.','Du beginnst den Hauptteil einer Präsentation.'];
-    const constraints = ['12–20 Wörter','mindestens ein Nebensatz','keine Wiederholung von „ich denke“','natürliches B2-Deutsch','nur ein Satz'];
-    const history = getLiveTalkChallengeHistory();
-    for (let attempt=0; attempt<80; attempt++) {
-        const type = types[Math.floor(Math.random()*types.length)];
-        const topic = topics[Math.floor(Math.random()*topics.length)];
-        const context = contexts[Math.floor(Math.random()*contexts.length)];
-        const picked = shuffleArray(constraints).slice(0,2);
-        const prompt = `${context}\nThema: ${topic}`;
-        const fingerprint = `offline|${type[0]}|${prompt}|${picked.join('|')}`.toLowerCase();
-        if (!history.some(item => item.fingerprint === fingerprint)) return { type:type[0], instruction:type[1], topic, prompt, constraints:picked, modelAnswer:row.native || row.correction || row.target, explanation:'Dùng cấu trúc mục tiêu trong một ngữ cảnh mới.', fingerprint, offline:true };
-    }
-    return { type:'Freie Produktion', instruction:'Tự tạo một câu B2 hoàn toàn mới bằng cấu trúc đã học.', topic:row.tags || 'Alltag', prompt:'Nói một ý có quan điểm, lý do và hệ quả trong một câu.', constraints:['không chép câu cũ','tự nhiên ở trình độ B2'], modelAnswer:row.native || row.correction || row.target, explanation:'Đây là bài tập chuyển giao, không phải học thuộc.', fingerprint:`free|${Date.now()}`, offline:true };
+    document.getElementById('buttons').innerHTML = `<button class="btn-kapi" style="background:#dceecf;color:#42613e;" onclick="submitLiveTalkAnswer()">🐘 Gửi Voi chấm</button><button class="btn-kapi" style="background:#dcecf6;color:#46687b;" onclick="requestAnotherLiveTalkChallenge()">🎲 Voi đổi đề</button><button class="btn-kapi btn-home" onclick="showLiveTalkMenu()">🚪 Dừng ôn</button>`;
 }
 
 async function prepareLiveTalkChallenge(forceNew = false) {
     const row = liveTalkPractice?.rows[liveTalkPractice.index];
     if (!row) return finishLiveTalkPractice();
     liveTalkPractice.loading = true;
+    liveTalkPractice.error = '';
     liveTalkPractice.revealed = false;
+    liveTalkPractice.evaluation = null;
+    liveTalkPractice.answerDraft = '';
     liveTalkPractice.challenge = null;
     renderLiveTalkPractice();
     const history = getLiveTalkChallengeHistory();
     let challenge = null;
+    let lastError = '';
     for (let attempt=0; attempt<3 && !challenge; attempt++) {
         try {
             const response = await fetch('/api/check', {
@@ -2328,13 +2317,22 @@ async function prepareLiveTalkChallenge(forceNew = false) {
             const data = await response.json();
             if (!response.ok || !data.challenge?.prompt) throw new Error(data.error || 'Voi không gửi đề về');
             const candidate = data.challenge;
+            const normalize = value => String(value || '').toLocaleLowerCase('de-DE').replace(/[“”„"'.,!?;:()[\]{}]/g,'').replace(/\s+/g,' ').trim();
+            const copiedOldAnswer = [row.target,row.correction,row.native].map(normalize).filter(Boolean).includes(normalize(candidate.modelAnswer));
+            if (String(candidate.prompt || '').trim().length < 80 || String(candidate.instruction || '').trim().length < 35 || copiedOldAnswer) {
+                throw new Error('Voi vừa gửi một đề còn mơ hồ hoặc chép lại câu cũ');
+            }
             candidate.fingerprint = [candidate.type,candidate.topic,candidate.prompt,...(candidate.constraints || [])].filter(Boolean).join('|').trim().toLowerCase().replace(/\s+/g,' ').slice(0,700);
             if (rememberLiveTalkChallenge(candidate)) challenge = candidate;
-        } catch (_) { break; }
+        } catch (error) {
+            lastError = error?.message || 'Voi chưa phản hồi';
+        }
     }
     if (!challenge) {
-        challenge = buildOfflineLiveTalkChallenge(row);
-        rememberLiveTalkChallenge(challenge);
+        liveTalkPractice.loading = false;
+        liveTalkPractice.error = lastError || 'Không tạo được đề đạt yêu cầu sau ba lần thử.';
+        renderLiveTalkPractice();
+        return;
     }
     liveTalkPractice.challenge = challenge;
     liveTalkPractice.loading = false;
@@ -2342,25 +2340,79 @@ async function prepareLiveTalkChallenge(forceNew = false) {
 }
 
 async function requestAnotherLiveTalkChallenge() {
-    if (!liveTalkPractice || liveTalkPractice.loading) return;
+    if (!liveTalkPractice || liveTalkPractice.loading || liveTalkPractice.evaluating) return;
     await prepareLiveTalkChallenge(true);
 }
 
-function revealLiveTalkAnswer() {
+function renderLiveTalkEvaluation(evaluation, row, learnerAnswer) {
+    const verdicts = {
+        pass:{label:'✅ Đạt nhiệm vụ',color:'#2e7d32',background:'#e8f5e9'},
+        almost:{label:'🟡 Gần đúng',color:'#8a641d',background:'#fff8df'},
+        retry:{label:'🔁 Nên thử lại',color:'#a2463e',background:'#fff0ee'}
+    };
+    const verdict = verdicts[evaluation.verdict] || verdicts.almost;
+    const worked = Array.isArray(evaluation.whatWorked) && evaluation.whatWorked.length
+        ? `<ul style="margin:7px 0 0;padding-left:22px;">${evaluation.whatWorked.map(item => `<li>${escapeSprechenHtml(item)}</li>`).join('')}</ul>`
+        : '<p style="margin:7px 0 0;">Voi chưa ghi nhận điểm riêng nào.</p>';
+    const issues = Array.isArray(evaluation.issues) && evaluation.issues.length
+        ? evaluation.issues.map(item => `<div style="margin-top:9px;padding:11px;border-radius:10px;background:#fff;">
+            ${item.original ? `<s>${escapeSprechenHtml(item.original)}</s> → ` : ''}<b>${escapeSprechenHtml(item.correction || 'Cần diễn đạt lại')}</b>
+            ${item.why ? `<br><small style="color:#6c625d;">${escapeSprechenHtml(item.why)}</small>` : ''}
+        </div>`).join('')
+        : '<div style="margin-top:7px;color:#2e7d32;">Không có lỗi quan trọng cần bịa thêm 🎉</div>';
+    return `<div style="margin-top:17px;padding:17px;border-radius:16px;background:${verdict.background};line-height:1.65;text-align:left;">
+        <div style="display:inline-block;padding:4px 10px;border-radius:999px;background:#fff;color:${verdict.color};font-weight:900;">${verdict.label}</div>
+        <div style="margin-top:13px;padding:11px;background:rgba(255,255,255,.72);border-radius:10px;"><b>🐦 Câu của cậu</b><br>${escapeSprechenHtml(learnerAnswer)}</div>
+        <h4 style="margin:15px 0 5px;">🎯 Đúng nhiệm vụ chưa?</h4>
+        <div>${escapeSprechenHtml(evaluation.taskFulfillment)}</div>
+        <h4 style="margin:15px 0 5px;">🌱 Điểm làm tốt</h4>
+        ${worked}
+        <h4 style="margin:15px 0 5px;">🔧 Chỗ cần sửa</h4>
+        ${issues}
+        <h4 style="margin:15px 0 5px;">⭐ Cách nói tự nhiên hơn</h4>
+        <div style="padding:12px;background:#fff;border-radius:10px;font-weight:700;">${escapeSprechenHtml(evaluation.betterAnswer)}</div>
+        <h4 style="margin:15px 0 5px;">🌿 Điểm ngôn ngữ đang luyện</h4>
+        <div><b>${escapeSprechenHtml(row.target || 'Cấu trúc trong hồ sơ')}</b><br>${escapeSprechenHtml(evaluation.targetCheck)}</div>
+        ${evaluation.nextStep ? `<div style="margin-top:14px;padding:11px;border-left:4px solid #759b62;background:#fff;border-radius:8px;"><b>🐘 Lần sau:</b> ${escapeSprechenHtml(evaluation.nextStep)}</div>` : ''}
+    </div>`;
+}
+
+async function submitLiveTalkAnswer() {
+    if (!liveTalkPractice || liveTalkPractice.loading || liveTalkPractice.evaluating) return;
     const row = liveTalkPractice.rows[liveTalkPractice.index];
     const challenge = liveTalkPractice.challenge || {};
-    liveTalkPractice.revealed = true;
-    document.getElementById('lt-practice-reveal').innerHTML = `<div style="margin-top:16px;padding:15px;border-radius:14px;background:#eef5e7;line-height:1.65;">
-        ${challenge.modelAnswer ? `<b>🐘 Đáp án gợi ý của voi:</b><br>${escapeSprechenHtml(challenge.modelAnswer)}<br>` : ''}
-        ${challenge.explanation ? `<span style="color:#62715a;">${escapeSprechenHtml(challenge.explanation)}</span><br>` : ''}
-        ${row.target ? `<b>🌿 Cấu trúc mục tiêu:</b><br>${escapeSprechenHtml(row.target)}<br>` : ''}
-        ${row.correction ? `<b>✅ Câu sửa:</b><br>${escapeSprechenHtml(row.correction)}<br>` : ''}
-        ${row.native ? `<b>⭐ Người bản xứ có thể nói:</b><br>${escapeSprechenHtml(row.native)}<br>` : ''}
-        ${row.reminder ? `<b>🧠 Ám thị:</b> ${escapeSprechenHtml(row.reminder)}` : ''}
-    </div>`;
-    document.getElementById('buttons').innerHTML = `
-        <button class="btn-kapi btn-green" onclick="rateLiveTalkCard(true)">✅ Tôi nói được</button>
-        <button class="btn-kapi" style="background:#ffcdd2;color:#7c3f45;" onclick="rateLiveTalkCard(false)">🫩 Vẫn sai</button>`;
+    const input = document.getElementById('lt-practice-answer');
+    const learnerAnswer = String(input?.value || liveTalkPractice.answerDraft || '').trim();
+    if (!learnerAnswer) return alert('Cậu phải tự nói hoặc viết một câu trước đã. Voi không chấm không khí 🫪');
+    liveTalkPractice.answerDraft = learnerAnswer;
+    liveTalkPractice.evaluating = true;
+    document.getElementById('lt-practice-reveal').innerHTML = '<div style="margin-top:16px;padding:16px;border-radius:14px;background:#eef6fb;color:#4d6977;"><b>🫪 Voi đang đọc đúng câu cậu vừa viết…</b><br><small>Kiểm tra nhiệm vụ, cấu trúc và cách nói tự nhiên.</small></div>';
+    document.getElementById('buttons').innerHTML = '<button class="btn-kapi" disabled>🐘 Đang chấm…</button><button class="btn-kapi btn-home" onclick="showLiveTalkMenu()">🚪 Dừng ôn</button>';
+    try {
+        const response = await fetch('/api/check', {
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({
+                mode:'livetalk_evaluate',
+                source:{target:row.target,said:row.said,correction:row.correction,native:row.native,reminder:row.reminder,tags:row.tags},
+                challenge:{type:challenge.type,topic:challenge.topic,instruction:challenge.instruction,prompt:challenge.prompt,constraints:challenge.constraints},
+                answer:learnerAnswer
+            })
+        });
+        const data = await response.json();
+        if (!response.ok || !data.evaluation) throw new Error(data.error || 'Voi chưa gửi phiếu chấm');
+        liveTalkPractice.evaluation = data.evaluation;
+        liveTalkPractice.revealed = true;
+        document.getElementById('lt-practice-reveal').innerHTML = renderLiveTalkEvaluation(data.evaluation,row,learnerAnswer);
+        document.getElementById('buttons').innerHTML = `
+            <button class="btn-kapi btn-green" onclick="rateLiveTalkCard(true)">✅ Tôi đã hiểu và nói được</button>
+            <button class="btn-kapi" style="background:#ffcdd2;color:#7c3f45;" onclick="rateLiveTalkCard(false)">🔁 Tôi cần gặp lại câu này</button>`;
+    } catch (error) {
+        document.getElementById('lt-practice-reveal').innerHTML = `<div style="margin-top:16px;padding:15px;border:2px solid #efb1aa;border-radius:14px;background:#fff7f5;color:#744b46;"><b>🫪 Voi chưa gửi được phiếu chấm.</b><br>${escapeSprechenHtml(error?.message || 'Lỗi kết nối')}. Câu của cậu vẫn được giữ nguyên.</div>`;
+        document.getElementById('buttons').innerHTML = '<button class="btn-kapi" style="background:#d9ecf7;" onclick="submitLiveTalkAnswer()">🫪 Gửi lại cho Voi</button><button class="btn-kapi btn-home" onclick="showLiveTalkMenu()">🚪 Dừng ôn</button>';
+    } finally {
+        liveTalkPractice.evaluating = false;
+    }
 }
 
 function addDaysToDateKey(days) {
@@ -3886,7 +3938,10 @@ document.addEventListener('mouseup', function(e) {
 // Hör-Wortschatz is an independent listening collection. Only ⭐ joins active Vokabeln.
 const HOER_WORDS_KEY = 'kapi_hoer_words_v1';
 const HOER_DAILY_KEY = 'kapi_hoer_daily_v1';
+const HOER_CONTEXT_DAILY_KEY = 'kapi_hoer_context_daily_v1';
 let hoerSession = null;
+let hoerContextSession = null;
+let hoerContextAudio = null;
 let hoerSuggestionNonce = 0;
 
 function hoerReadWords() {
@@ -3919,6 +3974,23 @@ function hoerSpeak(de) {
     const voice = speechSynthesis.getVoices().find(v => v.lang.toLowerCase().startsWith('de'));
     if (voice) speech.voice = voice;
     speechSynthesis.speak(speech);
+}
+function hoerStopContextAudio() {
+    if (hoerContextAudio) {
+        hoerContextAudio.pause();
+        hoerContextAudio.currentTime = 0;
+        hoerContextAudio = null;
+    }
+}
+function hoerSafeAudioPath(path) {
+    const value = String(path || '').trim();
+    if (!value || value.startsWith('//') || /[\\<>\x00-\x1f]/.test(value)) return '';
+    try {
+        const url = new URL(value, location.href);
+        if (!['http:', 'https:'].includes(url.protocol)) return '';
+        if (url.origin !== location.origin && !value.startsWith('https://')) return '';
+        return url.href;
+    } catch (_) { return ''; }
 }
 function hoerSuggestionMessage(message) {
     const box = document.getElementById('hoer-suggestions');
@@ -4003,28 +4075,42 @@ function hoerDailyQueue(words) {
     return saved.keys;
 }
 function showHoerWortschatz() {
+    hoerStopContextAudio();
+    if ('speechSynthesis' in window) speechSynthesis.cancel();
     setLearningFocus(true);
     document.getElementById('feedback-area').style.display = 'none';
     const words = hoerReadWords();
     const queue = hoerDailyQueue(words);
     const today = getLocalDateKey(new Date());
     const due = queue.filter(key => words.some(w => hoerKey(w.de) === key && w.lastAttempt !== today));
+    const withContext = words.filter(w => w.context && w.context.audio && w.context.dialogue);
     document.getElementById('message').textContent = '👂 Hör-Wortschatz';
     document.getElementById('buttons').innerHTML = `
-        <div style="max-width:740px;margin:auto;padding:23px;border:2px solid #b6d2e0;border-radius:24px;background:#f5faff;text-align:left;">
-            <h3 style="margin-top:0;">🐘 Voi giữ kho nghe</h3>
-            <p>🔊 Nghe → đoán → lật chữ + nghĩa. Hôm nay tối đa 6 cụm, nghe ra 3 ngày khác nhau thì tốt nghiệp.</p>
-            <p>🆕 Mới: ${words.filter(w=>w.status==='new').length} · 👂 Đang luyện: ${words.filter(w=>w.status==='listening').length} · 🎓 Đã nghe ra: ${words.filter(w=>w.status==='graduated').length}</p>
-            <p><b>${due.length}</b> cụm còn luyện hôm nay · ${words.filter(w=>w.active).length} từ đã chọn ⭐ học chủ động</p>
-            <button class="btn-kapi" onclick="startHoerPractice()" ${due.length ? '' : 'disabled'}>🔊 ${due.length ? 'Bắt đầu nghe' : 'Hôm nay đã xong'}</button>
-            <details style="margin-top:18px;"><summary>+ Tự thêm từ / cụm đã nghe</summary>
-                <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;">
-                    <input id="hoer-new-de" maxlength="180" placeholder="Từ / cụm tiếng Đức" style="flex:1 1 180px;padding:10px;">
-                    <input id="hoer-new-vi" maxlength="260" placeholder="Nghĩa tiếng Việt" style="flex:1 1 180px;padding:10px;">
-                    <button class="btn-kapi" onclick="hoerManualAdd()">+ Lưu</button>
+        <div style="max-width:940px;margin:auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:18px;text-align:left;">
+            <section style="padding:24px;border:2px solid #b6d2e0;border-radius:22px;background:#f5faff;display:flex;flex-direction:column;gap:12px;">
+                <div style="font-size:13px;font-weight:800;color:#527799;letter-spacing:.04em;">🔊 CỤM TỪ</div>
+                <h3 style="margin:0;color:#264a65;">Hôm nay còn ${due.length} lượt</h3>
+                <p style="margin:0;color:#536678;">Nghe cụm · tự đoán · lật chữ và nghĩa</p>
+                <button class="btn-kapi" style="margin:8px 0 0;align-self:flex-start;background:#d6eaf7;" onclick="startHoerPractice()" ${due.length ? '' : 'disabled'}>${due.length ? '▶ Bắt đầu nghe' : '✓ Hôm nay đã xong'}</button>
+                <small style="color:#718394;">Tối đa 6 cụm/ngày · nghe ra 3 ngày khác nhau thì tốt nghiệp.</small>
+            </section>
+            <section style="padding:24px;border:2px solid #b8d7a4;border-radius:22px;background:#f4faee;display:flex;flex-direction:column;gap:12px;">
+                <div style="font-size:13px;font-weight:800;color:#618047;letter-spacing:.04em;">🎧 NGHE TRONG NGỮ CẢNH</div>
+                <h3 style="margin:0;color:#44643b;">${withContext.length} hội thoại đã gắn</h3>
+                <p style="margin:0;color:#59704f;">Nghe MP3 Clipchamp của cậu, đoán cụm trong lời thoại rồi mới lật đáp án.</p>
+                <button class="btn-kapi" style="margin:8px 0 0;align-self:flex-start;background:#dceecb;" onclick="startHoerContextPractice()" ${withContext.length ? '' : 'disabled'}>${withContext.length ? '▶ Nghe hội thoại' : 'Chưa có audio'}</button>
+                <small style="color:#718468;">Gắn hội thoại và link MP3 trong “Quản lý kho nghe” bên dưới.</small>
+            </section>
+        </div>
+        <div style="max-width:940px;margin:18px auto 0;text-align:left;">
+            <details style="padding:14px 18px;background:#fff;border:1px solid #d6e1e6;border-radius:16px;">
+                <summary style="cursor:pointer;font-weight:700;color:#405a63;">📚 Quản lý kho nghe · 🆕 ${words.filter(w=>w.status==='new').length} · 👂 ${words.filter(w=>w.status==='listening').length} · 🎓 ${words.filter(w=>w.status==='graduated').length}</summary>
+                <p style="color:#67767b;font-size:14px;">Chọn ⭐ để học từ này trong Vokabeln. Hội thoại chỉ được phát khi cậu chủ động gắn audio.</p>
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:8px;margin:12px 0;">
+                    <input id="hoer-new-de" maxlength="180" placeholder="Từ / cụm tiếng Đức" style="padding:10px;border:1px solid #d6e1e6;border-radius:10px;">
+                    <input id="hoer-new-vi" maxlength="260" placeholder="Nghĩa tiếng Việt" style="padding:10px;border:1px solid #d6e1e6;border-radius:10px;">
                 </div>
-            </details>
-            <details style="margin-top:18px;"><summary>📚 Xem kho đã lưu và chọn ⭐ học chủ động</summary>
+                <button type="button" onclick="hoerManualAdd()" style="padding:9px 15px;border:0;border-radius:10px;background:#e4f2d8;cursor:pointer;">+ Thêm cụm</button>
                 <div id="hoer-inventory" style="margin-top:12px;"></div>
             </details>
         </div>
@@ -4048,9 +4134,74 @@ function renderHoerInventory() {
         star.textContent = word.active ? '⭐ Đã thêm' : '☆ Auch aktiv lernen';
         star.disabled = !!word.active;
         star.onclick = () => { hoerPromote(word.de); renderHoerInventory(); };
-        row.append(label,star);
+        const edit = document.createElement('button');
+        edit.type = 'button';
+        edit.textContent = word.context?.audio ? '🎬 Sửa hội thoại' : '🎬 Gắn hội thoại';
+        edit.onclick = () => hoerOpenContextEditor(word.de, row);
+        row.append(label,star,edit);
         box.append(row);
     });
+}
+function hoerOpenContextEditor(de,row) {
+    const word = hoerReadWords().find(w => hoerKey(w.de) === hoerKey(de));
+    if (!word) return;
+    const old = row.querySelector('.hoer-context-editor');
+    if (old) { old.remove(); return; }
+    const editor = document.createElement('div');
+    editor.className = 'hoer-context-editor';
+    editor.style.cssText = 'flex:1 0 100%;display:grid;gap:8px;padding:12px;border:1px dashed #a8c8ad;border-radius:12px;background:#f6fbf4';
+    const dialogue = document.createElement('textarea');
+    dialogue.placeholder = 'Câu / hội thoại tiếng Đức có chứa cụm này';
+    dialogue.value = word.context?.dialogue || '';
+    dialogue.maxLength = 2400;
+    dialogue.rows = 3;
+    const translation = document.createElement('textarea');
+    translation.placeholder = 'Nghĩa hội thoại tiếng Việt (có thể để trống)';
+    translation.value = word.context?.translation || '';
+    translation.maxLength = 2400;
+    translation.rows = 2;
+    const audioPath = document.createElement('input');
+    audioPath.placeholder = 'audio/hoer-dialoge/doan-01.mp3 hoặc https://…mp3';
+    audioPath.value = word.context?.audio || '';
+    audioPath.maxLength = 800;
+    const note = document.createElement('small');
+    note.textContent = 'Tải MP3 từ Clipchamp lên GitHub cùng web, rồi dán đường dẫn file vào đây. Giữ nguyên tên file, kể cả chữ hoa/chữ thường.';
+    const save = document.createElement('button');
+    save.type = 'button';
+    save.textContent = '💾 Lưu hội thoại';
+    save.onclick = () => {
+        const audio = audioPath.value.trim();
+        const text = dialogue.value.trim();
+        if (!text || !hoerSafeAudioPath(audio)) {
+            alert('Cần có lời thoại và đường dẫn MP3 hợp lệ (https:// hoặc đường dẫn file trên web).');
+            return;
+        }
+        if (!text.toLocaleLowerCase('de-DE').includes(de.toLocaleLowerCase('de-DE'))) {
+            alert('Lời thoại cần chứa đúng cụm tiếng Đức trên thẻ để cậu nghe nó trong ngữ cảnh.');
+            return;
+        }
+        const words = hoerReadWords();
+        const target = words.find(w => hoerKey(w.de) === hoerKey(de));
+        if (!target) return;
+        target.context = {dialogue:text.slice(0,2400),translation:translation.value.trim().slice(0,2400),audio:audio.slice(0,800)};
+        hoerWriteWords(words);
+        showHoerWortschatz();
+    };
+    editor.append(dialogue,translation,audioPath,note,save);
+    if (word.context) {
+        const remove = document.createElement('button');
+        remove.type = 'button';
+        remove.textContent = '🗑️ Gỡ hội thoại';
+        remove.onclick = () => {
+            const words = hoerReadWords(), target = words.find(w => hoerKey(w.de) === hoerKey(de));
+            if (!target) return;
+            delete target.context;
+            hoerWriteWords(words);
+            showHoerWortschatz();
+        };
+        editor.append(remove);
+    }
+    row.append(editor);
 }
 function hoerPromote(de) {
     const words = hoerReadWords();
@@ -4058,6 +4209,76 @@ function hoerPromote(de) {
     if (!word) return;
     word.active = true;
     hoerWriteWords(words);
+}
+function startHoerContextPractice() {
+    const words = hoerReadWords().filter(w => w.context?.audio && w.context?.dialogue);
+    if (!words.length) return showHoerWortschatz();
+    const today = getLocalDateKey(new Date());
+    let saved;
+    try { saved = JSON.parse(localStorage.getItem(HOER_CONTEXT_DAILY_KEY) || '{}'); } catch (_) { saved = {}; }
+    const available = new Set(words.map(w => hoerKey(w.de)));
+    if (saved.date !== today || !Array.isArray(saved.keys)) {
+        saved = {date:today,keys:shuffleArray(words).slice(0,6).map(w => hoerKey(w.de))};
+    }
+    saved.keys = saved.keys.filter(key => available.has(key)).slice(0,6);
+    localStorage.setItem(HOER_CONTEXT_DAILY_KEY, JSON.stringify(saved));
+    hoerContextSession = {keys:saved.keys,index:0,revealed:false};
+    renderHoerContextPractice();
+}
+function renderHoerContextPractice() {
+    hoerStopContextAudio();
+    if (!hoerContextSession || hoerContextSession.index >= hoerContextSession.keys.length) {
+        hoerContextSession = null;
+        showHoerWortschatz();
+        return;
+    }
+    const word = hoerReadWords().find(w => hoerKey(w.de) === hoerContextSession.keys[hoerContextSession.index]);
+    if (!word?.context) { hoerContextSession.index++; renderHoerContextPractice(); return; }
+    hoerContextSession.revealed = false;
+    document.getElementById('message').textContent = '🎧 Nghe trong ngữ cảnh';
+    document.getElementById('buttons').innerHTML = `
+       <div style="max-width:660px;margin:auto;padding:30px;border:2px solid #b8d7a4;border-radius:22px;background:#f4faee;">
+           <p>${hoerContextSession.index + 1} / ${hoerContextSession.keys.length} · Hội thoại Clipchamp</p>
+           <p>Nghe đoạn ngắn rồi đoán cụm cần bắt.</p>
+           <button class="btn-kapi" onclick="hoerPlayContext()">▶ Phát / nghe lại</button>
+           <input id="hoer-context-guess" autocomplete="off" placeholder="Cậu nghe được cụm gì? (không bắt buộc)" style="display:block;width:90%;margin:18px auto;padding:12px;">
+           <button id="hoer-context-reveal" class="btn-kapi" onclick="hoerRevealContext()">👀 Lật lời thoại</button>
+           <div id="hoer-context-answer" aria-live="polite"></div>
+       </div>
+       <button class="btn-kapi btn-home" onclick="showHoerWortschatz()">⬅️ Dừng ôn</button>`;
+}
+function hoerPlayContext() {
+    if (!hoerContextSession) return;
+    const word = hoerReadWords().find(w => hoerKey(w.de) === hoerContextSession.keys[hoerContextSession.index]);
+    const path = hoerSafeAudioPath(word?.context?.audio);
+    if (!path) { alert('Đường dẫn audio không hợp lệ. Sửa trong Quản lý kho nghe nhé.'); return; }
+    hoerStopContextAudio();
+    hoerContextAudio = new Audio(path);
+    hoerContextAudio.play().catch(() => alert('Không tải được audio. Kiểm tra file MP3 trên web và đường dẫn trong kho nghe nhé.'));
+}
+function hoerRevealContext() {
+    if (!hoerContextSession || hoerContextSession.revealed) return;
+    const word = hoerReadWords().find(w => hoerKey(w.de) === hoerContextSession.keys[hoerContextSession.index]);
+    if (!word?.context) return;
+    hoerContextSession.revealed = true;
+    const escaped = escapeVocabHtml(word.context.dialogue);
+    const safeWord = escapeVocabHtml(word.de);
+    const match = escaped.toLocaleLowerCase('de-DE').indexOf(safeWord.toLocaleLowerCase('de-DE'));
+    const highlighted = match < 0 ? escaped : escaped.slice(0,match) + '<mark style="background:#ffdf95;border-radius:4px;">' + escaped.slice(match, match + safeWord.length) + '</mark>' + escaped.slice(match + safeWord.length);
+    document.getElementById('hoer-context-reveal').style.display = 'none';
+    document.getElementById('hoer-context-answer').innerHTML = `
+        <div style="margin:18px 0;padding:18px;border-radius:14px;background:white;white-space:pre-wrap;text-align:left;line-height:1.7;">
+            ${highlighted}
+            <hr style="border:0;border-top:1px solid #e5eadf;">
+            <strong>${safeWord}</strong> — ${escapeVocabHtml(word.vi)}
+            ${word.context.translation ? '<p style="color:#57675b;">' + escapeVocabHtml(word.context.translation) + '</p>' : ''}
+        </div>
+        <button class="btn-kapi" onclick="hoerNextContext()">➡ Hội thoại tiếp</button>`;
+}
+function hoerNextContext() {
+    if (!hoerContextSession || !hoerContextSession.revealed) return;
+    hoerContextSession.index++;
+    renderHoerContextPractice();
 }
 function openHoerWortschatzFromTranscript() {
     window.closeTranscriptPage();
