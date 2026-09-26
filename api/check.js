@@ -24,8 +24,13 @@ module.exports = async function handler(req, res) {
         cauVidu
     } = req.body || {};
 
-    const apiKey = process.env.OPENROUTER_API_KEY;
-    if (!apiKey) return res.status(500).json({ error: 'Thiếu OPENROUTER_API_KEY' });
+    const geminiApiKey = process.env.GEMINI_API_KEY;
+    const openRouterApiKey = process.env.OPENROUTER_API_KEY;
+    if (!geminiApiKey && !openRouterApiKey) {
+        return res.status(500).json({
+            error: 'Voi chưa có đường dây AI: hãy thêm GEMINI_API_KEY hoặc OPENROUTER_API_KEY'
+        });
+    }
 
     const isSprechen = mode === 'sprechen';
     const isSchreiben = mode === 'schreiben';
@@ -196,50 +201,243 @@ Hãy chỉ ra lỗi thật sự, sửa thành câu B2 tự nhiên và cho một 
         prompt = `Kiểm tra cặp từ Việt–Đức sau: "${String(tuViet || '')}" = "${String(tuDuc || '')}". Xác nhận hoặc sửa, rồi cho một ví dụ B2 tự nhiên. Trả lời ngắn bằng tiếng Việt và HTML sạch.`;
     }
 
-    try {
-        const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-            method: 'POST',
-            headers: {
-                Authorization: `Bearer ${apiKey}`,
-                'Content-Type': 'application/json',
-                'HTTP-Referer': 'https://kapi-deutsch.vercel.app',
-                'X-Title': 'Kapi Deutsch'
+    const wantsJson = isLiveTalkChallenge || isLiveTalkEvaluate || isHoerSuggestions;
+    const temperature = isLiveTalkChallenge ? 0.72 : (isLiveTalkEvaluate ? 0.2 : 0.35);
+    const maxOutputTokens = isSchreiben ? 1500 : (isSprechen ? 1100 : (wantsJson ? 1100 : 700));
+    const geminiJsonSchema = isHoerSuggestions ? {
+        type:'object',
+        properties:{
+            suggestions:{
+                type:'array',
+                items:{
+                    type:'object',
+                    properties:{de:{type:'string'},vi:{type:'string'}},
+                    required:['de','vi']
+                }
+            }
+        },
+        required:['suggestions']
+    } : isLiveTalkEvaluate ? {
+        type:'object',
+        properties:{
+            verdict:{type:'string',enum:['pass','almost','retry']},
+            taskFulfillment:{type:'string'},
+            whatWorked:{type:'array',items:{type:'string'}},
+            issues:{
+                type:'array',
+                items:{
+                    type:'object',
+                    properties:{original:{type:'string'},correction:{type:'string'},why:{type:'string'}},
+                    required:['original','correction','why']
+                }
             },
-            body: JSON.stringify({
-                model: process.env.OPENROUTER_MODEL || 'openrouter/free',
-                temperature: isLiveTalkChallenge ? 0.72 : (isLiveTalkEvaluate ? 0.2 : 0.35),
-                max_tokens: isSchreiben ? 1500 : (isSprechen ? 1100 : ((isLiveTalkChallenge || isLiveTalkEvaluate || isHoerSuggestions) ? 1100 : 700)),
-                ...((isLiveTalkChallenge || isLiveTalkEvaluate || isHoerSuggestions) ? {response_format:{type:'json_object'}} : {}),
-                messages: [
-                    {
-                        role: 'system',
-                        content: isHoerSuggestions
-                            ? 'Bạn là Voi, trợ lý chọn cụm từ để luyện nghe. Chỉ xuất JSON object hợp lệ.'
-                            : (isLiveTalkChallenge || isLiveTalkEvaluate)
-                            ? 'Bạn là Voi, chuyên gia tiếng Đức Goethe B2. Bạn tạo và chấm bài tập chuyển giao có ngữ cảnh rõ ràng, nhất quán, tự nhiên; không bịa lỗi và không làm lộ đáp án trước khi học viên làm. Chỉ xuất một JSON object hợp lệ.'
-                            : 'Bạn là Mr. Efa, một chú voi giám khảo tiếng Đức B2 chính xác, điềm tĩnh và hơi hài hước. Bạn phân biệt văn nói với văn viết, không soi vụn vặt và luôn ưu tiên tiếng Đức tự nhiên. Chỉ xuất HTML sạch; riêng khi prompt yêu cầu dấu phân cách thì giữ đúng dấu đó.'
-                    },
-                    { role: 'user', content: prompt }
-                ]
-            })
-        });
+            betterAnswer:{type:'string'},
+            targetCheck:{type:'string'},
+            nextStep:{type:'string'}
+        },
+        required:['verdict','taskFulfillment','whatWorked','issues','betterAnswer','targetCheck','nextStep']
+    } : isLiveTalkChallenge ? {
+        type:'object',
+        properties:{
+            type:{type:'string'},
+            topic:{type:'string'},
+            instruction:{type:'string'},
+            prompt:{type:'string'},
+            constraints:{type:'array',items:{type:'string'}},
+            modelAnswer:{type:'string'},
+            explanation:{type:'string'},
+            fingerprint:{type:'string'}
+        },
+        required:['type','topic','instruction','prompt','constraints','modelAnswer','explanation','fingerprint']
+    } : null;
+    const systemInstruction = isHoerSuggestions
+        ? 'Bạn là Voi, trợ lý chọn cụm từ để luyện nghe. Chỉ xuất JSON object hợp lệ.'
+        : (isLiveTalkChallenge || isLiveTalkEvaluate)
+        ? 'Bạn là Voi, chuyên gia tiếng Đức Goethe B2. Bạn tạo và chấm bài tập chuyển giao có ngữ cảnh rõ ràng, nhất quán, tự nhiên; không bịa lỗi và không làm lộ đáp án trước khi học viên làm. Chỉ xuất một JSON object hợp lệ.'
+        : 'Bạn là Mr. Efa, một chú voi giám khảo tiếng Đức B2 chính xác, điềm tĩnh và hơi hài hước. Bạn phân biệt văn nói với văn viết, không soi vụn vặt và luôn ưu tiên tiếng Đức tự nhiên. Chỉ xuất HTML sạch; riêng khi prompt yêu cầu dấu phân cách thì giữ đúng dấu đó.';
 
-        const data = await response.json();
-        if (!response.ok || !data.choices?.[0]?.message?.content) {
-            return res.status(response.status || 502).json({
-                error: data.error?.message || 'OpenRouter không phản hồi'
-            });
+    const cleanProviderMessage = value => String(value || '')
+        .replace(/<[^>]+>/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim()
+        .slice(0, 260);
+
+    const providerError = (provider, status, detail) => {
+        const suffix = cleanProviderMessage(detail) || 'không trả về nội dung hợp lệ';
+        const error = new Error(`${provider}${status ? ` ${status}` : ''}: ${suffix}`);
+        error.provider = provider;
+        error.status = Number(status) || 502;
+        return error;
+    };
+
+    const stripModelFences = value => String(value || '')
+        .replace(/^\uFEFF/, '')
+        .replace(/```(?:html|json)?/gi, '')
+        .replace(/```/g, '')
+        .trim();
+
+    const parseProviderJson = (content, provider) => {
+        const normalized = stripModelFences(content);
+        const firstBrace = normalized.indexOf('{');
+        const lastBrace = normalized.lastIndexOf('}');
+        const candidates = [normalized];
+        if (firstBrace >= 0 && lastBrace > firstBrace) {
+            const extracted = normalized.slice(firstBrace,lastBrace + 1);
+            if (extracted !== normalized) candidates.push(extracted);
         }
+        for (const candidate of candidates) {
+            try {
+                let parsed = JSON.parse(candidate);
+                if (typeof parsed === 'string') parsed = JSON.parse(parsed);
+                if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) return parsed;
+            } catch (_) {}
+        }
+        throw providerError(provider,502,'trả về JSON sai định dạng');
+    };
 
-        const cleaned = data.choices[0].message.content
+    const validateProviderPayload = (parsed,provider) => {
+        if (isHoerSuggestions && !Array.isArray(parsed?.suggestions)) {
+            throw providerError(provider,502,'JSON gợi ý nghe thiếu danh sách suggestions');
+        }
+        if (isLiveTalkEvaluate && (!String(parsed?.taskFulfillment || '').trim() || !String(parsed?.betterAnswer || '').trim() || !String(parsed?.targetCheck || '').trim())) {
+            throw providerError(provider,502,'JSON phiếu chấm thiếu trường bắt buộc');
+        }
+        if (isLiveTalkChallenge && (!String(parsed?.prompt || '').trim() || !String(parsed?.instruction || '').trim() || !String(parsed?.modelAnswer || '').trim())) {
+            throw providerError(provider,502,'JSON đề luyện thiếu trường bắt buộc');
+        }
+        return parsed;
+    };
+
+    async function fetchProviderJson(provider, url, options) {
+        const timeoutMs = Math.max(5000, Math.min(25000, Number(process.env.AI_TIMEOUT_MS) || 14000));
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), timeoutMs);
+        try {
+            const response = await fetch(url, {...options, signal:controller.signal});
+            const raw = await response.text();
+            let data = {};
+            try { data = raw ? JSON.parse(raw) : {}; }
+            catch (_) { data = {message:raw}; }
+            if (!response.ok) {
+                const detail = data?.error?.message || data?.error || data?.message || response.statusText;
+                throw providerError(provider, response.status, detail);
+            }
+            return data;
+        } catch (error) {
+            if (error?.provider) throw error;
+            if (error?.name === 'AbortError') {
+                throw providerError(provider, 504, `quá ${Math.round(timeoutMs / 1000)} giây chưa trả lời`);
+            }
+            throw providerError(provider, 502, error?.message || 'lỗi kết nối');
+        } finally {
+            clearTimeout(timeout);
+        }
+    }
+
+    async function callGemini() {
+        const data = await fetchProviderJson(
+            'Gemini',
+            'https://generativelanguage.googleapis.com/v1beta/interactions',
+            {
+                method:'POST',
+                headers:{
+                    'x-goog-api-key':geminiApiKey,
+                    'Content-Type':'application/json'
+                },
+                body:JSON.stringify({
+                    model:process.env.GEMINI_MODEL || 'gemini-3.7-flash',
+                    store:false,
+                    input:`${systemInstruction}\n\nYÊU CẦU:\n${prompt}`,
+                    ...(wantsJson ? {response_format:{
+                        type:'text',
+                        mime_type:'application/json',
+                        schema:geminiJsonSchema
+                    }} : {})
+                })
+            }
+        );
+        const stepText = (Array.isArray(data?.steps) ? data.steps : [])
+            .filter(step => step?.type === 'model_output')
+            .flatMap(step => Array.isArray(step?.content) ? step.content : [])
+            .filter(block => block?.type === 'text' && block?.text)
+            .map(block => String(block.text))
+            .join('\n')
+            .trim();
+        const content = cleanProviderMessage(data?.output_text) ? String(data.output_text).trim() : stepText;
+        if (!content) throw providerError('Gemini', 502, 'phản hồi không có phần văn bản');
+        return {content, provider:'Gemini'};
+    }
+
+    async function callOpenRouter() {
+        const data = await fetchProviderJson(
+            'OpenRouter',
+            'https://openrouter.ai/api/v1/chat/completions',
+            {
+                method:'POST',
+                headers:{
+                    Authorization:`Bearer ${openRouterApiKey}`,
+                    'Content-Type':'application/json',
+                    'HTTP-Referer':'https://kapi-deutsch.vercel.app',
+                    'X-Title':'Kapi Deutsch'
+                },
+                body:JSON.stringify({
+                    model:process.env.OPENROUTER_MODEL || 'openrouter/free',
+                    temperature,
+                    max_tokens:maxOutputTokens,
+                    ...(wantsJson ? {response_format:{type:'json_object'}} : {}),
+                    messages:[
+                        {role:'system',content:systemInstruction},
+                        {role:'user',content:prompt}
+                    ]
+                })
+            }
+        );
+        const content = String(data?.choices?.[0]?.message?.content || '').trim();
+        if (!content) throw providerError('OpenRouter', 502, 'phản hồi không có phần văn bản');
+        return {content, provider:'OpenRouter'};
+    }
+
+    async function callVoi() {
+        const failures = [];
+        const accept = async request => {
+            const response = await request();
+            if (wantsJson) {
+                response.parsed = validateProviderPayload(
+                    parseProviderJson(response.content,response.provider),
+                    response.provider
+                );
+            }
+            return response;
+        };
+        if (geminiApiKey) {
+            try { return await accept(callGemini); }
+            catch (error) {
+                failures.push(error);
+                console.warn('Kapi AI fallback:', error.message);
+            }
+        }
+        if (openRouterApiKey) {
+            try { return await accept(callOpenRouter); }
+            catch (error) {
+                failures.push(error);
+                console.warn('Kapi AI failed:', error.message);
+            }
+        }
+        const finalError = new Error(failures.map(item => item.message).join(' · ') || 'Không có nhà cung cấp AI khả dụng');
+        finalError.status = failures.some(item => item.status === 429) ? 429 : 502;
+        throw finalError;
+    }
+
+    try {
+        const aiResponse = await callVoi();
+        if (typeof res.setHeader === 'function') res.setHeader('X-Kapi-AI-Provider', aiResponse.provider);
+        const cleaned = aiResponse.content
             .replace(/```html/gi, '')
             .replace(/```json/gi, '')
             .replace(/```/g, '')
             .trim();
         if (isHoerSuggestions) {
-            let parsed;
-            try { parsed = JSON.parse(cleaned); }
-            catch (_) { return res.status(502).json({error:'Voi gửi gợi ý sai định dạng'}); }
+            const parsed = aiResponse.parsed;
             const original = String(transcript || '').toLocaleLowerCase('de-DE').replace(/\s+/g,' ');
             const suggestions = (Array.isArray(parsed.suggestions) ? parsed.suggestions : [])
                 .slice(0,20)
@@ -250,9 +448,7 @@ Hãy chỉ ra lỗi thật sự, sửa thành câu B2 tự nhiên và cho một 
             return res.status(200).json({suggestions});
         }
         if (isLiveTalkEvaluate) {
-            let parsed;
-            try { parsed = JSON.parse(cleaned); }
-            catch (_) { return res.status(502).json({error:'Voi gửi phiếu chấm sai định dạng'}); }
+            const parsed = aiResponse.parsed;
             const verdict = ['pass','almost','retry'].includes(parsed.verdict) ? parsed.verdict : 'almost';
             const issues = (Array.isArray(parsed.issues) ? parsed.issues : []).slice(0,2).map(item => ({
                 original:String(item?.original || '').trim().slice(0,300),
@@ -274,14 +470,7 @@ Hãy chỉ ra lỗi thật sự, sửa thành câu B2 tự nhiên và cho một 
             return res.status(200).json({evaluation});
         }
         if (isLiveTalkChallenge) {
-            let parsed;
-            try { parsed = JSON.parse(cleaned); }
-            catch (_) {
-                const match = cleaned.match(/\{[\s\S]*\}/);
-                if (!match) return res.status(502).json({ error:'Voi gửi sai định dạng đề' });
-                try { parsed = JSON.parse(match[0]); }
-                catch (_) { return res.status(502).json({ error:'Voi gửi JSON bị móp' }); }
-            }
+            const parsed = aiResponse.parsed;
             const result = {
                 type:String(parsed.type || 'B2-Transfer').slice(0,80),
                 topic:String(parsed.topic || liveTalkCard.tags || 'Alltag').slice(0,120),
@@ -311,6 +500,9 @@ Hãy chỉ ra lỗi thật sự, sửa thành câu B2 tự nhiên và cho một 
         return res.status(200).json({ result: cleaned });
     } catch (error) {
         console.error('check.js:', error);
-        return res.status(500).json({ error: error.message });
+        const status = Number(error?.status);
+        return res.status(status >= 400 && status <= 599 ? status : 500).json({
+            error:error?.message || 'Voi gặp lỗi chưa xác định'
+        });
     }
 };
