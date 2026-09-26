@@ -31,11 +31,46 @@ module.exports = async function handler(req, res) {
     const isSchreiben = mode === 'schreiben';
     const isSchreibenChallenge = mode === 'schreiben_challenge';
     const isLiveTalkChallenge = mode === 'livetalk_challenge';
+    const isLiveTalkEvaluate = mode === 'livetalk_evaluate';
     const isHoerSuggestions = mode === 'hoeren_vocab_suggest';
     let liveTalkCard = {};
     let prompt;
 
-    if (isHoerSuggestions) {
+    if (isLiveTalkEvaluate) {
+        const card = source && typeof source === 'object' ? source : {};
+        const task = challenge && typeof challenge === 'object' ? challenge : {};
+        const learnerAnswer = String(answer || '').trim().slice(0,2400);
+        if (!learnerAnswer) return res.status(400).json({error:'Câu trả lời đang trống'});
+        if (!String(task.prompt || '').trim()) return res.status(400).json({error:'Thiếu đề bài để chấm'});
+        liveTalkCard = card;
+        prompt = `Bạn là Voi, giáo viên tiếng Đức B2 đang chấm MỘT câu trả lời chuyển giao. Hãy đọc đúng nhiệm vụ, không chấm theo đáp án mẫu một cách máy móc và tuyệt đối không bịa lỗi.
+
+ĐIỂM NGÔN NGỮ GỐC CẦN LUYỆN (không nhất thiết phải lặp y nguyên từng chữ nếu người học dùng biến thể đúng):
+- Cấu trúc: ${String(card.target || '')}
+- Câu sửa cũ: ${String(card.correction || '')}
+- Cách nói cũ: ${String(card.native || '')}
+- Ghi nhớ: ${String(card.reminder || '')}
+
+THỬ THÁCH:
+- Dạng: ${String(task.type || '')}
+- Chủ đề: ${String(task.topic || '')}
+- Yêu cầu bằng tiếng Việt: ${String(task.instruction || '')}
+- Tình huống: ${String(task.prompt || '')}
+- Điều kiện: ${Array.isArray(task.constraints) ? task.constraints.join(' | ') : ''}
+
+CÂU TRẢ LỜI CỦA NGƯỜI HỌC:
+${learnerAnswer}
+
+Hãy kiểm tra theo thứ tự:
+1. Câu có thực sự trả lời đúng tình huống và hành động giao tiếp được yêu cầu không?
+2. Câu có chuyển được điểm ngôn ngữ gốc sang ngữ cảnh mới không?
+3. Ngữ pháp, kết hợp từ, trật tự từ và register có tự nhiên ở B2 không?
+4. Nếu câu đúng, phải công nhận là đúng; không tạo lỗi giả chỉ để có nhận xét.
+5. Chỉ chọn tối đa 2 vấn đề quan trọng. betterAnswer phải bám đúng chủ đề và tình huống; nếu câu người học đã tự nhiên thì có thể giữ gần nguyên.
+
+Chỉ trả JSON hợp lệ, không Markdown, theo schema:
+{"verdict":"pass|almost|retry","taskFulfillment":"nhận xét tiếng Việt cụ thể về việc có làm đúng nhiệm vụ hay không","whatWorked":["1-3 điểm làm tốt, tiếng Việt"],"issues":[{"original":"phần cần sửa","correction":"cách sửa","why":"giải thích ngắn bằng tiếng Việt"}],"betterAnswer":"một phiên bản tiếng Đức tự nhiên, đúng chính nhiệm vụ","targetCheck":"đã dùng/chưa dùng điểm mục tiêu như thế nào","nextStep":"một việc rất cụ thể cho lần thử sau"}`;
+    } else if (isHoerSuggestions) {
         const cleanTranscript = String(transcript || '').trim().slice(0,11000);
         if (cleanTranscript.length < 30) return res.status(400).json({error:'Transcript quá ngắn'});
         prompt = `Bạn là Voi, giúp học viên B1+/B2 luyện nghe tiếng Đức. Từ TRANSCRIPT sau, gợi ý tối đa 8 cụm từ thực sự hữu ích cho việc nghe hiểu.
@@ -65,11 +100,16 @@ MÃ NGẪU NHIÊN: ${String(nonce || Date.now())}
 
 YÊU CẦU:
 - Trình độ B2 thực, không nâng lên C1 không cần thiết.
-- Mỗi lần đổi ít nhất 3 yếu tố: chủ đề, tình huống, dạng nhiệm vụ, register, ngữ pháp phụ hoặc ràng buộc.
+- Tạo MỘT tình huống giao tiếp cụ thể, có câu chuyện nhỏ và một mục đích nói rõ ràng; không ghép ngẫu nhiên những mảnh không liên quan.
+- Chủ đề, tình huống, yêu cầu và modelAnswer phải nhất quán hoàn toàn.
+- prompt gồm 2–4 câu, cho biết chuyện gì vừa xảy ra/người kia vừa nói gì và người học cần phản hồi để làm gì.
+- instruction viết bằng tiếng Việt thật dễ hiểu: nói chính xác người học phải tạo loại câu nào, nhằm mục đích gì và dài bao nhiêu câu.
+- modelAnswer phải trực tiếp trả lời prompt, nhắc đến đúng nội dung của topic và chuyển được điểm ngôn ngữ cũ sang ngữ cảnh mới.
+- modelAnswer TUYỆT ĐỐI không được chép lại câu sửa, câu native hay câu mục tiêu cũ.
 - Luân phiên giữa: Umformulierung, Lückentext không lộ từ khóa, spontane Reaktion, Präsentation, Diskussion, formelle Situation, Fehlerdetektiv, Satzbau, Registerwechsel.
 - Phần hiện trước khi làm TUYỆT ĐỐI không được chứa cấu trúc mục tiêu, câu sửa, câu native hay từ khóa làm lộ đáp án.
-- prompt phải có đủ ngữ cảnh để người học tự viết một câu trả lời.
-- modelAnswer phải là một đáp án tiếng Đức đúng, tự nhiên, thỏa điều kiện và thực sự luyện điểm trong thẻ gốc.
+- explanation phải giải thích cụ thể vì sao modelAnswer vừa khớp tình huống vừa luyện đúng điểm mục tiêu; cấm câu chung chung kiểu "dùng cấu trúc trong ngữ cảnh mới".
+- Trước khi xuất JSON, tự kiểm tra lại sự ăn khớp giữa prompt và modelAnswer. Nếu đáp án không trả lời đúng prompt, hãy viết lại.
 - Không dùng Markdown. Chỉ trả về JSON hợp lệ, không thêm bất kỳ chữ nào bên ngoài.
 
 SCHEMA CHÍNH XÁC:
@@ -166,16 +206,17 @@ Hãy chỉ ra lỗi thật sự, sửa thành câu B2 tự nhiên và cho một 
                 'X-Title': 'Kapi Deutsch'
             },
             body: JSON.stringify({
-                model: 'nvidia/nemotron-3-ultra-550b-a55b:free',
-                temperature: isLiveTalkChallenge ? 0.9 : 0.35,
-                max_tokens: isSchreiben ? 1500 : (isSprechen ? 1100 : ((isLiveTalkChallenge || isHoerSuggestions) ? 900 : 700)),
+                model: process.env.OPENROUTER_MODEL || 'openrouter/free',
+                temperature: isLiveTalkChallenge ? 0.72 : (isLiveTalkEvaluate ? 0.2 : 0.35),
+                max_tokens: isSchreiben ? 1500 : (isSprechen ? 1100 : ((isLiveTalkChallenge || isLiveTalkEvaluate || isHoerSuggestions) ? 1100 : 700)),
+                ...((isLiveTalkChallenge || isLiveTalkEvaluate || isHoerSuggestions) ? {response_format:{type:'json_object'}} : {}),
                 messages: [
                     {
                         role: 'system',
                         content: isHoerSuggestions
                             ? 'Bạn là Voi, trợ lý chọn cụm từ để luyện nghe. Chỉ xuất JSON object hợp lệ.'
-                            : isLiveTalkChallenge
-                            ? 'Bạn là Voi, chuyên gia thiết kế bài tập chuyển giao Goethe B2. Bạn tạo đề khó vừa đủ, tự nhiên, không lặp và không làm lộ đáp án. Chỉ xuất một JSON object hợp lệ.'
+                            : (isLiveTalkChallenge || isLiveTalkEvaluate)
+                            ? 'Bạn là Voi, chuyên gia tiếng Đức Goethe B2. Bạn tạo và chấm bài tập chuyển giao có ngữ cảnh rõ ràng, nhất quán, tự nhiên; không bịa lỗi và không làm lộ đáp án trước khi học viên làm. Chỉ xuất một JSON object hợp lệ.'
                             : 'Bạn là Mr. Efa, một chú voi giám khảo tiếng Đức B2 chính xác, điềm tĩnh và hơi hài hước. Bạn phân biệt văn nói với văn viết, không soi vụn vặt và luôn ưu tiên tiếng Đức tự nhiên. Chỉ xuất HTML sạch; riêng khi prompt yêu cầu dấu phân cách thì giữ đúng dấu đó.'
                     },
                     { role: 'user', content: prompt }
@@ -208,6 +249,30 @@ Hãy chỉ ra lỗi thật sự, sửa thành câu B2 tự nhiên và cho một 
                 .slice(0,8);
             return res.status(200).json({suggestions});
         }
+        if (isLiveTalkEvaluate) {
+            let parsed;
+            try { parsed = JSON.parse(cleaned); }
+            catch (_) { return res.status(502).json({error:'Voi gửi phiếu chấm sai định dạng'}); }
+            const verdict = ['pass','almost','retry'].includes(parsed.verdict) ? parsed.verdict : 'almost';
+            const issues = (Array.isArray(parsed.issues) ? parsed.issues : []).slice(0,2).map(item => ({
+                original:String(item?.original || '').trim().slice(0,300),
+                correction:String(item?.correction || '').trim().slice(0,500),
+                why:String(item?.why || '').trim().slice(0,500)
+            })).filter(item => item.correction || item.why);
+            const evaluation = {
+                verdict,
+                taskFulfillment:String(parsed.taskFulfillment || '').trim().slice(0,700),
+                whatWorked:(Array.isArray(parsed.whatWorked) ? parsed.whatWorked : []).slice(0,3).map(item => String(item).trim().slice(0,350)).filter(Boolean),
+                issues,
+                betterAnswer:String(parsed.betterAnswer || '').trim().slice(0,1200),
+                targetCheck:String(parsed.targetCheck || '').trim().slice(0,600),
+                nextStep:String(parsed.nextStep || '').trim().slice(0,500)
+            };
+            if (!evaluation.taskFulfillment || !evaluation.betterAnswer || !evaluation.targetCheck) {
+                return res.status(502).json({error:'Phiếu chấm của Voi còn thiếu phần quan trọng'});
+            }
+            return res.status(200).json({evaluation});
+        }
         if (isLiveTalkChallenge) {
             let parsed;
             try { parsed = JSON.parse(cleaned); }
@@ -227,7 +292,13 @@ Hãy chỉ ra lỗi thật sự, sửa thành câu B2 tự nhiên và cho một 
                 explanation:String(parsed.explanation || '').slice(0,600),
                 fingerprint:String(parsed.fingerprint || parsed.prompt || '').toLowerCase().replace(/\s+/g,' ').slice(0,500)
             };
-            if (!result.prompt || !result.modelAnswer) return res.status(502).json({ error:'Voi làm rơi mất đề hoặc đáp án' });
+            const normalize = value => String(value || '').toLocaleLowerCase('de-DE').replace(/[“”„"'.,!?;:()[\]{}]/g,'').replace(/\s+/g,' ').trim();
+            const oldAnswers = [liveTalkCard.native,liveTalkCard.correction,liveTalkCard.target].map(normalize).filter(Boolean);
+            const answerWasCopied = oldAnswers.includes(normalize(result.modelAnswer));
+            const genericExplanation = /dùng cấu trúc mục tiêu trong (một )?ngữ cảnh mới/i.test(result.explanation);
+            if (result.prompt.length < 80 || result.instruction.length < 35 || result.modelAnswer.length < 18 || result.explanation.length < 30 || answerWasCopied || genericExplanation) {
+                return res.status(422).json({error:'Voi tự kiểm tra thấy đề chưa đủ rõ hoặc đáp án chưa khớp; hãy gọi lại'});
+            }
             return res.status(200).json({ challenge:result });
         }
         if (isSchreiben) {
