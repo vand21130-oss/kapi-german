@@ -88,6 +88,35 @@ ${cleanTranscript}`;
         const learningMaterial = [card.target, card.said, card.correction, card.native].filter(Boolean).join('\n').trim();
         if (!learningMaterial) return res.status(400).json({ error:'Thẻ LiveTalk trống' });
         const recent = Array.isArray(usedChallenges) ? usedChallenges.slice(0, 60).map(String) : [];
+        const lifeScenarios = [
+            'đổi hoặc trả một món đồ mua nhầm',
+            'hàng xóm gây ồn vào buổi tối',
+            'tàu hoặc xe buýt bị trễ',
+            'xin đổi ca với đồng nghiệp',
+            'cuộc hẹn khám bệnh bị dời',
+            'quên đồ ở quán cà phê',
+            'chia việc nhà trong WG',
+            'đặt nhầm ngày khách sạn',
+            'điện thoại hỏng đúng lúc cần liên lạc',
+            'một người bạn hủy kế hoạch vào phút cuối',
+            'mua đồ second-hand và hỏi về bảo hành',
+            'quản lý tiền vào cuối tháng',
+            'nhận nhầm món ăn hoặc đơn giao hàng',
+            'lên kế hoạch cho chuyến đi cuối tuần',
+            'mạng Internet hỏng khi đang làm việc',
+            'hỏi việc trong ngày đầu đi làm',
+            'giải quyết hiểu lầm nhỏ với đồng nghiệp',
+            'chọn quà sinh nhật cho một người khó tính',
+            'trả sách thư viện muộn',
+            'bưu kiện báo đã giao nhưng chưa nhận được',
+            'rủ bạn tham gia một sở thích mới',
+            'thống nhất cách tiết kiệm điện trong nhà',
+            'xin lỗi vì đến muộn một cuộc hẹn',
+            'nhờ ai đó trông thú cưng trong hai ngày'
+        ];
+        const scenarioKey = String(nonce || Date.now());
+        const scenarioSeed = Array.from(scenarioKey).reduce((value,char) => ((value * 31) + char.charCodeAt(0)) >>> 0,0);
+        const requiredLifeScenario = lifeScenarios[scenarioSeed % lifeScenarios.length];
         prompt = `Bạn là Voi, người tạo bài tập chuyển giao tiếng Đức Goethe B2. Từ MỘT lỗi/cấu trúc cũ, hãy tạo MỘT thử thách mới khó vừa đủ, tự nhiên và không lặp.
 
 THẺ GỐC (chỉ dùng để hiểu điểm ngôn ngữ; không chép nguyên):
@@ -102,13 +131,18 @@ CÁC THỬ THÁCH GẦN ĐÂY BỊ CẤM LẶP LẠI HOẶC DIỄN ĐẠT LẠI 
 ${recent.length ? recent.map((item,index) => `${index+1}. ${item}`).join('\n') : '(chưa có)'}
 
 MÃ NGẪU NHIÊN: ${String(nonce || Date.now())}
+BỐI CẢNH ĐỜI SỐNG BẮT BUỘC LẦN NÀY: ${requiredLifeScenario}
 
 YÊU CẦU:
 - Trình độ B2 thực, không nâng lên C1 không cần thiết.
+- Độ khó B2 phải nằm ở cách diễn đạt, lập luận và phản ứng; KHÔNG biến đề thành chủ đề học thuật, nghiên cứu, chính sách vĩ mô hay hội thảo.
+- Dùng đúng bối cảnh đời sống bắt buộc ở trên. Nếu thẻ gốc trừu tượng, hãy chuyển điểm ngôn ngữ sang một sự việc hằng ngày cụ thể.
 - Tạo MỘT tình huống giao tiếp cụ thể, có câu chuyện nhỏ và một mục đích nói rõ ràng; không ghép ngẫu nhiên những mảnh không liên quan.
 - Chủ đề, tình huống, yêu cầu và modelAnswer phải nhất quán hoàn toàn.
 - prompt gồm 2–4 câu, cho biết chuyện gì vừa xảy ra/người kia vừa nói gì và người học cần phản hồi để làm gì.
-- instruction viết bằng tiếng Việt thật dễ hiểu: nói chính xác người học phải tạo loại câu nào, nhằm mục đích gì và dài bao nhiêu câu.
+- instruction viết bằng tiếng Việt thật dễ hiểu: nói chính xác người học phải tạo loại câu nào và nhằm mục đích gì; KHÔNG tự ghi số câu hoặc số từ.
+- Độ dài được hệ thống tự gắn theo dạng bài: Umformulierung/Lückentext/Fehlerdetektiv/Satzbau = 1–2 câu, 20–35 từ; spontane Reaktion/formelle Situation/Registerwechsel = 2–4 câu, 35–60 từ; Präsentation/Diskussion = 4–6 câu, 60–90 từ.
+- constraints không được tự tạo thêm giới hạn số câu hoặc số từ.
 - instruction và constraints TUYỆT ĐỐI không được viết ra, trích lại hoặc đặt trong ngoặc cấu trúc mục tiêu, câu sửa hay cách nói cũ.
 - Nếu cần nhắc đến kiến thức phải dùng, chỉ được gọi chung là "mẫu câu đã học"; hãy mô tả chức năng giao tiếp thay vì tiết lộ từ khóa.
 - modelAnswer phải trực tiếp trả lời prompt, nhắc đến đúng nội dung của topic và chuyển được điểm ngôn ngữ cũ sang ngữ cảnh mới.
@@ -483,6 +517,17 @@ Hãy chỉ ra lỗi thật sự, sửa thành câu B2 tự nhiên và cho một 
                 explanation:String(parsed.explanation || '').slice(0,600),
                 fingerprint:String(parsed.fingerprint || parsed.prompt || '').toLowerCase().replace(/\s+/g,' ').slice(0,500)
             };
+            const typeForLength = result.type.toLocaleLowerCase('de-DE');
+            const lengthGuide = /präsentation|diskussion/.test(typeForLength)
+                ? '4–6 câu, khoảng 60–90 từ'
+                : /umformulierung|lückentext|fehlerdetektiv|satzbau/.test(typeForLength)
+                    ? '1–2 câu, khoảng 20–35 từ'
+                    : '2–4 câu, khoảng 35–60 từ';
+            const lengthMarkers = [' từ','wörter','worte',' câu','sätze','sätzen','satz lang'];
+            result.constraints = result.constraints
+                .filter(item => !lengthMarkers.some(marker => item.toLocaleLowerCase('de-DE').includes(marker)))
+                .slice(0,2);
+            result.constraints.unshift(`Độ dài: ${lengthGuide}`);
             const hiddenBeforeAnswer = [liveTalkCard.target,liveTalkCard.correction,liveTalkCard.native]
                 .map(item => String(item || '').trim())
                 .filter(item => item.length >= 4)
