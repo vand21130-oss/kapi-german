@@ -109,6 +109,8 @@ YÊU CẦU:
 - Chủ đề, tình huống, yêu cầu và modelAnswer phải nhất quán hoàn toàn.
 - prompt gồm 2–4 câu, cho biết chuyện gì vừa xảy ra/người kia vừa nói gì và người học cần phản hồi để làm gì.
 - instruction viết bằng tiếng Việt thật dễ hiểu: nói chính xác người học phải tạo loại câu nào, nhằm mục đích gì và dài bao nhiêu câu.
+- instruction và constraints TUYỆT ĐỐI không được viết ra, trích lại hoặc đặt trong ngoặc cấu trúc mục tiêu, câu sửa hay cách nói cũ.
+- Nếu cần nhắc đến kiến thức phải dùng, chỉ được gọi chung là "mẫu câu đã học"; hãy mô tả chức năng giao tiếp thay vì tiết lộ từ khóa.
 - modelAnswer phải trực tiếp trả lời prompt, nhắc đến đúng nội dung của topic và chuyển được điểm ngôn ngữ cũ sang ngữ cảnh mới.
 - modelAnswer TUYỆT ĐỐI không được chép lại câu sửa, câu native hay câu mục tiêu cũ.
 - Luân phiên giữa: Umformulierung, Lückentext không lộ từ khóa, spontane Reaktion, Präsentation, Diskussion, formelle Situation, Fehlerdetektiv, Satzbau, Registerwechsel.
@@ -481,6 +483,33 @@ Hãy chỉ ra lỗi thật sự, sửa thành câu B2 tự nhiên và cho một 
                 explanation:String(parsed.explanation || '').slice(0,600),
                 fingerprint:String(parsed.fingerprint || parsed.prompt || '').toLowerCase().replace(/\s+/g,' ').slice(0,500)
             };
+            const hiddenBeforeAnswer = [liveTalkCard.target,liveTalkCard.correction,liveTalkCard.native]
+                .map(item => String(item || '').trim())
+                .filter(item => item.length >= 4)
+                .sort((a,b) => b.length - a.length);
+            const redactSecret = (value,secret) => {
+                let current = String(value || '');
+                const needle = String(secret || '').toLocaleLowerCase('de-DE');
+                if (!needle) return current;
+                let lowered = current.toLocaleLowerCase('de-DE');
+                let from = 0;
+                let index = lowered.indexOf(needle,from);
+                while (index >= 0) {
+                    current = `${current.slice(0,index)}_____${current.slice(index + needle.length)}`;
+                    lowered = current.toLocaleLowerCase('de-DE');
+                    from = index + 5;
+                    index = lowered.indexOf(needle,from);
+                }
+                return current;
+            };
+            const redactBeforeAnswer = value => hiddenBeforeAnswer.reduce(
+                (current,secret) => redactSecret(current,secret),
+                String(value || '')
+            );
+            ['type','topic','instruction','prompt'].forEach(field => {
+                result[field] = redactBeforeAnswer(result[field]);
+            });
+            result.constraints = result.constraints.map(redactBeforeAnswer);
             const normalize = value => String(value || '').toLocaleLowerCase('de-DE').replace(/[“”„"'.,!?;:()[\]{}]/g,'').replace(/\s+/g,' ').trim();
             const oldAnswers = [liveTalkCard.native,liveTalkCard.correction,liveTalkCard.target].map(normalize).filter(Boolean);
             const answerWasCopied = oldAnswers.includes(normalize(result.modelAnswer));
