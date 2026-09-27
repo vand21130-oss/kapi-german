@@ -54,6 +54,7 @@ CỤM TIẾNG ĐỨC BẮT BUỘC PHẢI DÙNG:
 - Cấu trúc: ${String(card.target || '')}
 - Câu sửa cũ: ${String(card.correction || '')}
 - Cách nói cũ: ${String(card.native || '')}
+- Câu Voi đã chữa gần nhất: ${String(card.lastCorrectedAnswer || '')}
 - Ghi nhớ: ${String(card.reminder || '')}
 
 THỬ THÁCH:
@@ -86,7 +87,7 @@ ${cleanTranscript}`;
         const card = source && typeof source === 'object' ? source : {};
         liveTalkCard = card;
         const requiredPhrase = String(card.target || '').split('=')[0].split(' – ')[0].split(' — ')[0].trim();
-        const learningMaterial = [card.target, card.said, card.correction, card.native].filter(Boolean).join('\n').trim();
+        const learningMaterial = [card.target, card.said, card.correction, card.native, card.lastCorrectedAnswer].filter(Boolean).join('\n').trim();
         if (!learningMaterial) return res.status(400).json({ error:'Thẻ LiveTalk trống' });
         if (!requiredPhrase) return res.status(400).json({ error:'Thẻ này chưa có Từ mục tiêu để Voi giao ôn' });
         const recent = Array.isArray(usedChallenges) ? usedChallenges.slice(0, 60).map(String) : [];
@@ -126,6 +127,7 @@ THẺ GỐC (chỉ dùng để hiểu điểm ngôn ngữ; không chép nguyên)
 - Câu người học đã nói: ${String(card.said || '')}
 - Câu sửa: ${String(card.correction || '')}
 - Cách nói tự nhiên: ${String(card.native || '')}
+- Câu Voi đã chữa gần nhất: ${String(card.lastCorrectedAnswer || '')}
 - Ghi nhớ: ${String(card.reminder || '')}
 - Nhãn chủ đề: ${String(card.tags || '')}
 
@@ -532,7 +534,7 @@ Hãy chỉ ra lỗi thật sự, sửa thành câu B2 tự nhiên và cho một 
                 .filter(item => !lengthMarkers.some(marker => item.toLocaleLowerCase('de-DE').includes(marker)))
                 .slice(0,2);
             result.constraints.unshift(`Độ dài: ${lengthGuide}`);
-            const hiddenBeforeAnswer = [liveTalkCard.target,liveTalkCard.correction,liveTalkCard.native]
+            const hiddenBeforeAnswer = [liveTalkCard.target,liveTalkCard.correction,liveTalkCard.native,liveTalkCard.lastCorrectedAnswer]
                 .map(item => String(item || '').trim())
                 .filter(item => item.length >= 4)
                 .sort((a,b) => b.length - a.length);
@@ -560,7 +562,7 @@ Hãy chỉ ra lỗi thật sự, sửa thành câu B2 tự nhiên và cho một 
             });
             result.constraints = result.constraints.map(redactBeforeAnswer);
             const normalize = value => String(value || '').toLocaleLowerCase('de-DE').replace(/[“”„"'.,!?;:()[\]{}]/g,'').replace(/\s+/g,' ').trim();
-            const oldAnswers = [liveTalkCard.native,liveTalkCard.correction,liveTalkCard.target].map(normalize).filter(Boolean);
+            const oldAnswers = [liveTalkCard.native,liveTalkCard.correction,liveTalkCard.target,liveTalkCard.lastCorrectedAnswer].map(normalize).filter(Boolean);
             const answerWasCopied = oldAnswers.includes(normalize(result.modelAnswer));
             const genericExplanation = /dùng cấu trúc mục tiêu trong (một )?ngữ cảnh mới/i.test(result.explanation);
             if (result.prompt.length < 80 || result.instruction.length < 35 || result.modelAnswer.length < 18 || result.explanation.length < 30 || answerWasCopied || genericExplanation) {
