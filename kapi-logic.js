@@ -2240,7 +2240,8 @@ function getLiveTalkGateBacklog() {
         const rowDate = getLiveTalkGateDateKey(row);
         const isFromEarlierDay = !rowDate || rowDate < today;
         const isDue = !row.nextReview || row.nextReview <= today;
-        return isFromEarlierDay && isDue;
+        const hasTargetPhrase = Boolean(getLiveTalkGateTargetPhrase(row));
+        return hasTargetPhrase && isFromEarlierDay && isDue;
     });
 }
 
@@ -2362,6 +2363,7 @@ function renderLiveTalkGateShell(body, actions, state = 'annoyed') {
             .lt-gate-line{margin:12px auto 16px;padding:12px 16px;max-width:640px;border-radius:14px;background:#f2ece6;font-size:17px;font-weight:750;line-height:1.5}
             .lt-gate-stamps{display:flex;justify-content:center;gap:12px;margin:12px 0 20px}.lt-gate-stamps span{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;border:3px solid #c8b7a8;color:#9a877a;font-weight:1000}.lt-gate-stamps span.done{border-color:#6e9d56;background:#e7f3dc;color:#477137;transform:rotate(-7deg)}
             .lt-gate-work{padding:18px;border:2px solid #d7c6b7;border-radius:18px;background:#fff;text-align:left;line-height:1.6}.lt-gate-work textarea,.lt-gate-work input{width:100%;box-sizing:border-box;margin-top:13px;padding:13px;border:2px solid #d8c8bc;border-radius:13px;background:#fff;font:16px/1.5 Arial,sans-serif}
+            .lt-gate-required{margin:0 0 15px;padding:13px 15px;border:2px solid #f0c36f;border-radius:14px;background:#fff8dc;color:#674b24}.lt-gate-required strong{display:block;margin-top:4px;color:#563a18;font-size:21px;line-height:1.35}.lt-gate-required small{display:block;margin-top:5px;color:#846b48}
             .lt-gate-topic{display:inline-block;margin-bottom:10px;padding:5px 10px;border-radius:999px;background:#e8f3fb;color:#46697c;font-weight:850}.lt-gate-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:17px}.lt-gate-actions button{border:0;border-radius:15px;padding:12px 18px;font-size:16px;font-weight:850;cursor:pointer;box-shadow:0 5px 12px rgba(75,48,29,.12)}
             .lt-gate-primary{background:#7fa96a;color:white}.lt-gate-secondary{background:#dcecf5;color:#3f6578}.lt-gate-exit{background:#eee9e5;color:#715d52}.lt-gate-warn{background:#ffe0b2;color:#74552d}
             .lt-gate-feedback{margin-top:14px;padding:15px;border-radius:14px;background:#f7f3ee}.lt-gate-feedback.pass{background:#edf7e6;border:2px solid #a9ca91}.lt-gate-feedback.retry{background:#fff0ed;border:2px solid #e2aaa2}
@@ -2402,8 +2404,10 @@ function renderLiveTalkGate() {
     if (gate.evaluation) return renderLiveTalkGateEvaluation();
     const challenge = gate.challenge;
     if (!challenge) return prepareLiveTalkGateCard(true);
+    const requiredPhrase = challenge.requiredPhrase || getLiveTalkGateTargetPhrase(gate.currentRow);
     const body = `<div class="lt-gate-work">
         <span class="lt-gate-topic">🐘 ${escapeSprechenHtml(challenge.type || 'B2-Transfer')} · ${escapeSprechenHtml(challenge.topic || 'Alltag')}</span>
+        <div class="lt-gate-required"><b>🎯 Cụm tiếng Đức bắt buộc</b><strong>${escapeSprechenHtml(requiredPhrase || 'Thẻ này chưa có Từ mục tiêu')}</strong><small>Phải dùng trong câu trả lời. Được chia động từ, đổi đại từ và thay etw./jdm./jdn. cho đúng ngữ cảnh.</small></div>
         <div><b>🎬 Tình huống</b><br>${escapeSprechenHtml(challenge.prompt)}</div>
         <div style="margin-top:12px;padding:11px;border-left:5px solid #7da5ba;background:#f1f7fa;border-radius:9px;"><b>🎯 Cậu phải làm gì?</b><br>${escapeSprechenHtml(challenge.instruction)}</div>
         ${challenge.constraints?.length ? `<div style="margin-top:10px;color:#806f65;"><b>📌 Điều kiện:</b> ${challenge.constraints.map(escapeSprechenHtml).join(' · ')}</div>` : ''}
@@ -2943,7 +2947,7 @@ function renderLiveTalkPractice() {
     document.getElementById('message').innerHTML = `<b>🐘 Voi ra đề · ${liveTalkPractice.index+1}/${liveTalkPractice.rows.length}</b>`;
     document.getElementById('feedback-area').style.display = 'block';
     if (liveTalkPractice.loading) {
-        document.getElementById('feedback-area').innerHTML = `<div style="max-width:720px;margin:auto;padding:28px;border:2px solid #b9d8e8;border-radius:20px;background:#f2f9ff;color:#476777;"><b>🫪 Voi đang trộn chủ đề, ngữ cảnh và bẫy B2…</b><br><small>Vali đang đứng canh để voi không làm lộ đáp án.</small></div>`;
+        document.getElementById('feedback-area').innerHTML = `<div style="max-width:720px;margin:auto;padding:28px;border:2px solid #b9d8e8;border-radius:20px;background:#f2f9ff;color:#476777;"><b>🫪 Voi đang trộn chủ đề, ngữ cảnh và bẫy B2…</b><br><small>Cụm cần ôn sẽ được đưa rõ ràng; chỉ câu đáp án mẫu bị giấu.</small></div>`;
         document.getElementById('buttons').innerHTML = `<button class="btn-kapi btn-home" onclick="showLiveTalkMenu()">🚪 Dừng ôn</button>`;
         return;
     }
@@ -2956,8 +2960,10 @@ function renderLiveTalkPractice() {
         document.getElementById('buttons').innerHTML = `<button class="btn-kapi" style="background:#d9ecf7;" onclick="requestAnotherLiveTalkChallenge()">🫪 Gọi lại Voi</button><button class="btn-kapi btn-home" onclick="showLiveTalkMenu()">🚪 Dừng ôn</button>`;
         return;
     }
+    const requiredPhrase = challenge.requiredPhrase || getLiveTalkGateTargetPhrase(row);
     document.getElementById('feedback-area').innerHTML = `<div style="max-width:720px;margin:auto;padding:23px;border:2px solid #d8c6b7;border-radius:20px;background:#fffdf8;text-align:left;color:#55433b;">
         <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:13px;"><span style="padding:5px 10px;border-radius:999px;background:#e7f1ff;color:#45647a;font-weight:bold;">🐘 ${escapeSprechenHtml(challenge.type || 'B2-Transfer')}</span><span style="padding:5px 10px;border-radius:999px;background:#fff0c9;color:#7a643a;">🎯 ${escapeSprechenHtml(challenge.topic || row.tags || 'Alltag')}</span></div>
+        <div style="margin:0 0 15px;padding:13px 15px;border:2px solid #f0c36f;border-radius:14px;background:#fff8dc;color:#674b24;"><b>🎯 Cụm tiếng Đức bắt buộc</b><div style="margin-top:4px;color:#563a18;font-size:21px;font-weight:900;line-height:1.35;">${escapeSprechenHtml(requiredPhrase || 'Thẻ này chưa có Từ mục tiêu')}</div><small style="display:block;margin-top:5px;color:#846b48;">Phải dùng trong câu trả lời. Được chia động từ, đổi đại từ và thay etw./jdm./jdn. cho đúng ngữ cảnh.</small></div>
         <div style="margin-top:12px;"><b style="color:#795548;">🎬 Tình huống</b><div style="margin-top:6px;padding:16px;border-radius:14px;background:#f5f1ec;font-size:18px;line-height:1.65;font-weight:650;white-space:pre-wrap;">${escapeSprechenHtml(challenge.prompt)}</div></div>
         <div style="margin-top:14px;padding:13px 15px;border-left:5px solid #78a5bd;background:#f2f8fb;border-radius:10px;line-height:1.6;"><b>🎯 Cậu cần làm gì?</b><br>${escapeSprechenHtml(challenge.instruction || 'Hãy hoàn thành nhiệm vụ B2 sau:')}</div>
         ${challenge.constraints?.length ? `<div style="margin-top:12px;color:#8a6f62;"><b>📌 Điều kiện:</b> ${challenge.constraints.map(escapeSprechenHtml).join(' · ')}</div>` : ''}
