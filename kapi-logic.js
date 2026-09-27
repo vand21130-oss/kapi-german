@@ -2281,10 +2281,13 @@ function getLiveTalkGateWeight(row) {
 function chooseLiveTalkGateRow() {
     const pool = liveTalkGate?.pool || [];
     if (!pool.length) return null;
+    const cleared = new Set(liveTalkGate?.clearedCardIds || []);
+    const available = pool.filter(row => !cleared.has(row.id));
+    if (!available.length) return null;
     const stored = readLiveTalkGateStorage();
     const recent = [...(stored.recentCardIds || []), ...(liveTalkGate.recentCardIds || [])].slice(-6);
-    let candidates = pool.filter(row => !recent.slice(-2).includes(row.id));
-    if (!candidates.length) candidates = pool;
+    let candidates = available.filter(row => !recent.slice(-2).includes(row.id));
+    if (!candidates.length) candidates = available;
     const weighted = candidates.map(row => ({row, weight:getLiveTalkGateWeight(row)}));
     const total = weighted.reduce((sum,item) => sum + item.weight, 0);
     let ticket = Math.random() * total;
@@ -2362,6 +2365,7 @@ function requestLiveTalkCustomsGate(pending) {
         currentCardFailures:0,
         mercy:false,
         deferredCount:0,
+        clearedCardIds:[],
         recentCardIds:[],
         lastValiLine:'',
         valiLine:randomLiveTalkGateLine('intro')
@@ -2652,6 +2656,7 @@ function acceptLiveTalkGateResult() {
     const gate = liveTalkGate;
     if (!gate || gate.evaluation?.verdict !== 'pass') return;
     gate.passed++;
+    if (gate.currentRow?.id && !gate.clearedCardIds.includes(gate.currentRow.id)) gate.clearedCardIds.push(gate.currentRow.id);
     gate.evaluation = null;
     gate.challenge = null;
     gate.answerDraft = '';
@@ -2673,6 +2678,7 @@ function acceptLiveTalkGateMercy() {
     if (!gate || !gate.mercy || gate.evaluation?.verdict === 'pass') return;
     gate.passed++;
     gate.deferredCount = Number(gate.deferredCount || 0) + 1;
+    if (gate.currentRow?.id && !gate.clearedCardIds.includes(gate.currentRow.id)) gate.clearedCardIds.push(gate.currentRow.id);
     gate.evaluation = null;
     gate.challenge = null;
     gate.answerDraft = '';
