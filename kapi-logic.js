@@ -2685,14 +2685,13 @@ function acceptLiveTalkGateMercy() {
     gate.currentRow = null;
     gate.currentCardFailures = 0;
     gate.mercy = false;
-    if (gate.passed >= gate.required) {
-        grantLiveTalkGatePermit(false);
-        gate.completed = true;
-        gate.temporary = false;
-        gate.valiLine = 'Tạm thông quan. Hồ sơ chưa thuộc đã có giấy hẹn ngày mai.';
-        return renderLiveTalkGate();
-    }
-    prepareLiveTalkGateCard(false);
+    // Ba lần thử chưa đạt là điểm dừng chống căng thẳng: cấp đúng một lượt
+    // cho thao tác đang chờ, còn thẻ này vẫn quay lại theo lịch ngày mai.
+    grantLiveTalkGatePermit(true);
+    gate.completed = true;
+    gate.temporary = true;
+    gate.valiLine = 'Tạm cho qua đúng lượt này. Hồ sơ chưa thuộc đã có giấy hẹn ngày mai.';
+    return continueAfterLiveTalkGate();
 }
 
 function retryLiveTalkGateCard() {
