@@ -50,7 +50,7 @@ module.exports = async function handler(req, res) {
         liveTalkCard = card;
         prompt = `Bạn là Voi, giáo viên tiếng Đức B2 đang chấm MỘT câu trả lời chuyển giao. Hãy đọc đúng nhiệm vụ, không chấm theo đáp án mẫu một cách máy móc và tuyệt đối không bịa lỗi.
 
-ĐIỂM NGÔN NGỮ GỐC CẦN LUYỆN (không nhất thiết phải lặp y nguyên từng chữ nếu người học dùng biến thể đúng):
+CỤM TIẾNG ĐỨC BẮT BUỘC PHẢI DÙNG:
 - Cấu trúc: ${String(card.target || '')}
 - Câu sửa cũ: ${String(card.correction || '')}
 - Cách nói cũ: ${String(card.native || '')}
@@ -68,10 +68,10 @@ ${learnerAnswer}
 
 Hãy kiểm tra theo thứ tự:
 1. Câu có thực sự trả lời đúng tình huống và hành động giao tiếp được yêu cầu không?
-2. Câu có chuyển được điểm ngôn ngữ gốc sang ngữ cảnh mới không?
+2. Câu có dùng cụm tiếng Đức bắt buộc trong ngữ cảnh mới không? Nếu thẻ dùng dạng từ điển như "sich ...", "jdm.", "jdn.", "etw." hoặc động từ nguyên mẫu thì cho phép chia động từ, đổi đại từ và thay chỗ trống cho đúng câu. Dùng một từ đồng nghĩa để né hoàn toàn cụm bắt buộc thì chưa đạt.
 3. Ngữ pháp, kết hợp từ, trật tự từ và register có tự nhiên ở B2 không?
 4. Nếu câu đúng, phải công nhận là đúng; không tạo lỗi giả chỉ để có nhận xét.
-5. Chỉ chọn tối đa 2 vấn đề quan trọng. betterAnswer phải bám đúng chủ đề và tình huống; nếu câu người học đã tự nhiên thì có thể giữ gần nguyên.
+5. Chỉ trả verdict "pass" khi cụm bắt buộc đã được dùng đúng. Chỉ chọn tối đa 2 vấn đề quan trọng. betterAnswer phải bám đúng chủ đề, tình huống và cũng dùng cụm bắt buộc; nếu câu người học đã tự nhiên thì có thể giữ gần nguyên.
 
 Chỉ trả JSON hợp lệ, không Markdown, theo schema:
 {"verdict":"pass|almost|retry","taskFulfillment":"nhận xét tiếng Việt cụ thể về việc có làm đúng nhiệm vụ hay không","whatWorked":["1-3 điểm làm tốt, tiếng Việt"],"issues":[{"original":"phần cần sửa","correction":"cách sửa","why":"giải thích ngắn bằng tiếng Việt"}],"betterAnswer":"một phiên bản tiếng Đức tự nhiên, đúng chính nhiệm vụ","targetCheck":"đã dùng/chưa dùng điểm mục tiêu như thế nào","nextStep":"một việc rất cụ thể cho lần thử sau"}`;
@@ -85,8 +85,10 @@ ${cleanTranscript}`;
     } else if (isLiveTalkChallenge) {
         const card = source && typeof source === 'object' ? source : {};
         liveTalkCard = card;
+        const requiredPhrase = String(card.target || '').split('=')[0].split(' – ')[0].split(' — ')[0].trim();
         const learningMaterial = [card.target, card.said, card.correction, card.native].filter(Boolean).join('\n').trim();
         if (!learningMaterial) return res.status(400).json({ error:'Thẻ LiveTalk trống' });
+        if (!requiredPhrase) return res.status(400).json({ error:'Thẻ này chưa có Từ mục tiêu để Voi giao ôn' });
         const recent = Array.isArray(usedChallenges) ? usedChallenges.slice(0, 60).map(String) : [];
         const lifeScenarios = [
             'đổi hoặc trả một món đồ mua nhầm',
@@ -143,12 +145,13 @@ YÊU CẦU:
 - instruction viết bằng tiếng Việt thật dễ hiểu: nói chính xác người học phải tạo loại câu nào và nhằm mục đích gì; KHÔNG tự ghi số câu hoặc số từ.
 - Độ dài được hệ thống tự gắn theo dạng bài: Umformulierung/Lückentext/Fehlerdetektiv/Satzbau = 1–2 câu, 20–35 từ; spontane Reaktion/formelle Situation/Registerwechsel = 2–4 câu, 35–60 từ; Präsentation/Diskussion = 4–6 câu, 60–90 từ.
 - constraints không được tự tạo thêm giới hạn số câu hoặc số từ.
-- instruction và constraints TUYỆT ĐỐI không được viết ra, trích lại hoặc đặt trong ngoặc cấu trúc mục tiêu, câu sửa hay cách nói cũ.
-- Nếu cần nhắc đến kiến thức phải dùng, chỉ được gọi chung là "mẫu câu đã học"; hãy mô tả chức năng giao tiếp thay vì tiết lộ từ khóa.
+- Giao diện sẽ tự hiện riêng cụm tiếng Đức bắt buộc lấy nguyên từ ô "Từ mục tiêu". Vì vậy instruction chỉ cần nói thật rõ người học phải phản hồi điều gì và nhằm mục đích gì.
+- Không viết câu mơ hồ như "hãy dùng mẫu câu đã học". Không nhét thêm từ/cụm đồng nghĩa mới để thay thế cụm bắt buộc.
 - modelAnswer phải trực tiếp trả lời prompt, nhắc đến đúng nội dung của topic và chuyển được điểm ngôn ngữ cũ sang ngữ cảnh mới.
+- modelAnswer phải sử dụng đúng cấu trúc mục tiêu; được phép chia động từ, đổi đại từ và thay etw./jdm./jdn. cho phù hợp.
 - modelAnswer TUYỆT ĐỐI không được chép lại câu sửa, câu native hay câu mục tiêu cũ.
 - Luân phiên giữa: Umformulierung, Lückentext không lộ từ khóa, spontane Reaktion, Präsentation, Diskussion, formelle Situation, Fehlerdetektiv, Satzbau, Registerwechsel.
-- Phần hiện trước khi làm TUYỆT ĐỐI không được chứa cấu trúc mục tiêu, câu sửa, câu native hay từ khóa làm lộ đáp án.
+- Ngoài ô "Cụm bắt buộc" do hệ thống tự gắn, phần hiện trước khi làm không được chép câu sửa, câu native hay câu đáp án mẫu.
 - explanation phải giải thích cụ thể vì sao modelAnswer vừa khớp tình huống vừa luyện đúng điểm mục tiêu; cấm câu chung chung kiểu "dùng cấu trúc trong ngữ cảnh mới".
 - Trước khi xuất JSON, tự kiểm tra lại sự ăn khớp giữa prompt và modelAnswer. Nếu đáp án không trả lời đúng prompt, hãy viết lại.
 - Không dùng Markdown. Chỉ trả về JSON hợp lệ, không thêm bất kỳ chữ nào bên ngoài.
@@ -289,7 +292,7 @@ Hãy chỉ ra lỗi thật sự, sửa thành câu B2 tự nhiên và cho một 
     const systemInstruction = isHoerSuggestions
         ? 'Bạn là Voi, trợ lý chọn cụm từ để luyện nghe. Chỉ xuất JSON object hợp lệ.'
         : (isLiveTalkChallenge || isLiveTalkEvaluate)
-        ? 'Bạn là Voi, chuyên gia tiếng Đức Goethe B2. Bạn tạo và chấm bài tập chuyển giao có ngữ cảnh rõ ràng, nhất quán, tự nhiên; không bịa lỗi và không làm lộ đáp án trước khi học viên làm. Chỉ xuất một JSON object hợp lệ.'
+        ? 'Bạn là Voi, chuyên gia tiếng Đức Goethe B2. Bạn tạo và chấm bài tập chuyển giao có ngữ cảnh rõ ràng, nhất quán, tự nhiên; cụm mục tiêu được nêu rõ để ôn nhưng câu đáp án mẫu phải được giấu trước khi học viên làm; không bịa lỗi. Chỉ xuất một JSON object hợp lệ.'
         : 'Bạn là Mr. Efa, một chú voi giám khảo tiếng Đức B2 chính xác, điềm tĩnh và hơi hài hước. Bạn phân biệt văn nói với văn viết, không soi vụn vặt và luôn ưu tiên tiếng Đức tự nhiên. Chỉ xuất HTML sạch; riêng khi prompt yêu cầu dấu phân cách thì giữ đúng dấu đó.';
 
     const cleanProviderMessage = value => String(value || '')
@@ -510,6 +513,7 @@ Hãy chỉ ra lỗi thật sự, sửa thành câu B2 tự nhiên và cho một 
             const result = {
                 type:String(parsed.type || 'B2-Transfer').slice(0,80),
                 topic:String(parsed.topic || liveTalkCard.tags || 'Alltag').slice(0,120),
+                requiredPhrase:String(liveTalkCard.target || '').split('=')[0].split(' – ')[0].split(' — ')[0].trim().slice(0,300),
                 instruction:String(parsed.instruction || 'Hoàn thành nhiệm vụ sau.').slice(0,500),
                 prompt:String(parsed.prompt || '').slice(0,1200),
                 constraints:Array.isArray(parsed.constraints) ? parsed.constraints.slice(0,4).map(item => String(item).slice(0,150)) : [],
