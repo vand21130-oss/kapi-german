@@ -1443,7 +1443,7 @@ function getKofferMoodLine() {
 }
 
 function renderKofferMascot(state = 'calm', elementId = '') {
-    const safeState = ['calm', 'annoyed', 'done', 'leaving'].includes(state) ? state : 'calm';
+    const safeState = ['calm', 'annoyed', 'done', 'leaving', 'sigh'].includes(state) ? state : 'calm';
     return `
         <style>
             @keyframes kofferBlink {
@@ -1453,6 +1453,15 @@ function renderKofferMascot(state = 'calm', elementId = '') {
             @keyframes kofferSigh {
                 0%,100% { transform:translateY(0) rotate(-1deg); }
                 50% { transform:translateY(3px) rotate(1deg); }
+            }
+            @keyframes kofferDeepSigh {
+                0%,18%,100% { transform:translateY(0) scaleY(1); }
+                45%,70% { transform:translateY(7px) scaleY(.94); }
+            }
+            @keyframes kofferSighPuff {
+                0% { opacity:0;transform:translate(0,5px) scale(.7); }
+                35% { opacity:1; }
+                100% { opacity:0;transform:translate(28px,-13px) scale(1.18); }
             }
             @keyframes kofferTalk {
                 0%,100% { height:5px;transform:scaleX(1); }
@@ -1472,14 +1481,15 @@ function renderKofferMascot(state = 'calm', elementId = '') {
             .koffer-mascot.annoyed .koffer-eye,.koffer-mascot.leaving .koffer-eye{height:13px;top:28px;}
             .koffer-mascot.annoyed .koffer-bag,.koffer-mascot.leaving .koffer-bag{top:39px;height:12px;opacity:.9;}
             .koffer-mascot.annoyed .koffer-mouth,.koffer-mascot.leaving .koffer-mouth{height:4px;transform:rotate(-3deg)}
+            .koffer-mascot.sigh{animation:kofferDeepSigh 1.8s ease-in-out infinite}.koffer-mascot.sigh .koffer-eye{height:8px;top:31px}.koffer-mascot.sigh .koffer-bag{top:40px;height:13px;opacity:.95}.koffer-mascot.sigh .koffer-mouth{left:40px;top:55px;width:16px;height:9px;border-radius:50%;transform:none}.koffer-sigh-puff{display:none;position:absolute;left:75px;top:47px;z-index:8;color:#8f796b;font-size:15px;font-weight:900;white-space:nowrap;pointer-events:none}.koffer-mascot.sigh .koffer-sigh-puff{display:block;animation:kofferSighPuff 1.8s ease-out infinite}
             .koffer-mascot.talking .koffer-mouth{animation:kofferTalk .24s ease-in-out 5;background:#4e342e;border-radius:4px 4px 12px 12px;transform-origin:center top;}
             .koffer-mascot.done .koffer-mouth{height:10px;background:transparent;border-bottom:4px solid #4e342e;border-radius:0 0 18px 18px;top:48px;}
             .koffer-wheel{position:absolute;bottom:-9px;width:15px;height:10px;background:#4e342e;border-radius:0 0 6px 6px;}.koffer-wheel.left{left:13px}.koffer-wheel.right{right:13px}
         </style>
-        <div ${elementId ? `id="${elementId}"` : ''} class="koffer-mascot ${safeState}" role="img" aria-label="Vali Kapi đang ${safeState === 'done' ? 'hài lòng' : safeState === 'calm' ? 'chớp mắt' : 'bất mãn'}">
+        <div ${elementId ? `id="${elementId}"` : ''} class="koffer-mascot ${safeState}" role="img" aria-label="Vali Kapi đang ${safeState === 'done' ? 'hài lòng' : safeState === 'calm' ? 'chớp mắt' : safeState === 'sigh' ? 'thở dài' : 'bất mãn'}">
             <span class="koffer-eye left"><span></span></span><span class="koffer-eye right"><span></span></span>
             <span class="koffer-bag left"></span><span class="koffer-bag right"></span>
-            <span class="koffer-mouth"></span><span class="koffer-wheel left"></span><span class="koffer-wheel right"></span>
+            <span class="koffer-mouth"></span><span class="koffer-sigh-puff">hừ…</span><span class="koffer-wheel left"></span><span class="koffer-wheel right"></span>
         </div>`;
 }
 
@@ -2094,6 +2104,9 @@ function newLiveTalkRow(row = {}) {
         native: row.native || '',
         audioUrl: row.audioUrl || '',
         rich: row.rich && typeof row.rich === 'object' ? {...row.rich} : {},
+        reviewNotes: Array.isArray(row.reviewNotes) ? row.reviewNotes.filter(note => note && typeof note === 'object').slice(0,60) : [],
+        lastCorrectedAnswer: row.lastCorrectedAnswer || '',
+        lastCorrectionAt: row.lastCorrectionAt || '',
         reminder: row.reminder || '',
         tags: row.tags || '',
         right: Number(row.right || 0),
@@ -2189,6 +2202,14 @@ const LIVE_TALK_GATE_LINES = {
         'Không, đổi vẻ mặt cũng không thành đúng.',
         'Kiến thức chưa qua hải quan. Một ngữ cảnh khác đang được chuẩn bị.',
         'Bạn vừa trao cho tôi thêm việc. Xin cảm ơn theo nghĩa hành chính.'
+    ],
+    mercy:[
+        'Hừ… lần này tạm cho qua. Tôi đã ghi vào sổ. Mai hỏi lại.',
+        'Ba lần rồi. Tôi không mềm lòng; tôi chỉ đang bảo vệ thời gian của cả hai.',
+        'Tạm đóng hồ sơ hôm nay. Dòng mực đỏ này sẽ quay lại vào ngày mai.',
+        'Được, đi tiếp. Nhưng câu Voi vừa chữa đã nằm trong hồ sơ tái khám.',
+        'Tôi thở dài không phải vì tha thứ. Đây là giấy hẹn ngày mai.',
+        'Tạm qua cửa, chưa được công nhận là đã thuộc. Hai việc này hoàn toàn khác nhau.'
     ],
     done:[
         'Ba con dấu. Bàn nhập được mở trong thời gian có hạn.',
@@ -2338,6 +2359,9 @@ function requestLiveTalkCustomsGate(pending) {
         manualError:'',
         completed:false,
         temporary:false,
+        currentCardFailures:0,
+        mercy:false,
+        deferredCount:0,
         recentCardIds:[],
         lastValiLine:'',
         valiLine:randomLiveTalkGateLine('intro')
@@ -2366,7 +2390,7 @@ function renderLiveTalkGateShell(body, actions, state = 'annoyed') {
             .lt-gate-required{margin:0 0 15px;padding:13px 15px;border:2px solid #f0c36f;border-radius:14px;background:#fff8dc;color:#674b24}.lt-gate-required strong{display:block;margin-top:4px;color:#563a18;font-size:21px;line-height:1.35}.lt-gate-required small{display:block;margin-top:5px;color:#846b48}
             .lt-gate-topic{display:inline-block;margin-bottom:10px;padding:5px 10px;border-radius:999px;background:#e8f3fb;color:#46697c;font-weight:850}.lt-gate-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:17px}.lt-gate-actions button{border:0;border-radius:15px;padding:12px 18px;font-size:16px;font-weight:850;cursor:pointer;box-shadow:0 5px 12px rgba(75,48,29,.12)}
             .lt-gate-primary{background:#7fa96a;color:white}.lt-gate-secondary{background:#dcecf5;color:#3f6578}.lt-gate-exit{background:#eee9e5;color:#715d52}.lt-gate-warn{background:#ffe0b2;color:#74552d}
-            .lt-gate-feedback{margin-top:14px;padding:15px;border-radius:14px;background:#f7f3ee}.lt-gate-feedback.pass{background:#edf7e6;border:2px solid #a9ca91}.lt-gate-feedback.retry{background:#fff0ed;border:2px solid #e2aaa2}
+            .lt-gate-feedback{margin-top:14px;padding:15px;border-radius:14px;background:#f7f3ee}.lt-gate-feedback.pass{background:#edf7e6;border:2px solid #a9ca91}.lt-gate-feedback.retry{background:#fff0ed;border:2px solid #e2aaa2}.lt-gate-feedback.mercy{background:#fff8df;border:2px solid #e2c477;color:#6f592b}
             @media(max-width:600px){.lt-gate-mask{padding:12px 8px;place-items:start center}.lt-gate-panel{padding:15px;border-radius:20px}.lt-gate-koffer-space{height:145px}.lt-gate-koffer-scale{transform:scale(1.65)}.lt-gate-title{font-size:23px}.lt-gate-work{padding:14px}}
         </style>
         <div class="lt-gate-mask"><div class="lt-gate-panel">
@@ -2386,7 +2410,7 @@ function renderLiveTalkGate() {
     if (gate.completed) {
         const permitText = gate.temporary
             ? 'Vé tạm mở đúng một thao tác. Thẻ vừa xem vẫn còn nguyên lịch ôn.'
-            : 'Bàn nhập được mở trong 30 phút hoặc 5 thao tác thêm mới. Những thẻ này vẫn sẽ quay lại đúng lịch ôn.';
+            : `Bàn nhập được mở trong 30 phút hoặc 5 thao tác thêm mới.${Number(gate.deferredCount || 0) ? ` ${gate.deferredCount} hồ sơ tạm cho qua đã được hẹn hỏi lại ngày mai.` : ' Những thẻ này vẫn sẽ quay lại đúng lịch ôn.'}`;
         const body = `<div class="lt-gate-work" style="text-align:center;background:#f1f8e9;"><b>✅ ${gate.temporary ? 'ĐÃ CẤP VÉ TẠM' : 'ĐÃ THÔNG QUAN'}</b><br>${permitText}</div>`;
         return renderLiveTalkGateShell(body, '<button class="lt-gate-primary" onclick="continueAfterLiveTalkGate()">📂 Mở bàn nhập</button>', 'done');
     }
@@ -2452,6 +2476,7 @@ async function prepareLiveTalkGateCard(forceNew = false) {
                         said:row.said,
                         correction:row.correction,
                         native:row.native,
+                        lastCorrectedAnswer:row.lastCorrectedAnswer,
                         reminder:row.reminder,
                         tags:row.tags,
                         sourceType:getLiveTalkSource(row)
@@ -2464,7 +2489,7 @@ async function prepareLiveTalkGateCard(forceNew = false) {
             if (!response.ok || !data.challenge?.prompt) throw new Error(data.error || 'Voi không gửi đề về');
             const candidate = data.challenge;
             const normalize = value => String(value || '').toLocaleLowerCase('de-DE').replace(/[“”„"'.,!?;:()[\]{}]/g,'').replace(/\s+/g,' ').trim();
-            const copiedOldAnswer = [row.target,row.correction,row.native].map(normalize).filter(Boolean).includes(normalize(candidate.modelAnswer));
+            const copiedOldAnswer = [row.target,row.correction,row.native,row.lastCorrectedAnswer].map(normalize).filter(Boolean).includes(normalize(candidate.modelAnswer));
             if (String(candidate.prompt || '').trim().length < 80 || String(candidate.instruction || '').trim().length < 35 || copiedOldAnswer) {
                 throw new Error('Voi vừa gửi một đề còn mơ hồ hoặc chép lại câu cũ');
             }
@@ -2503,7 +2528,7 @@ async function submitLiveTalkGateAnswer() {
             headers:{'Content-Type':'application/json'},
             body:JSON.stringify({
                 mode:'livetalk_evaluate',
-                source:{target:row.target,said:row.said,correction:row.correction,native:row.native,reminder:row.reminder,tags:row.tags,sourceType:getLiveTalkSource(row)},
+                source:{target:row.target,said:row.said,correction:row.correction,native:row.native,lastCorrectedAnswer:row.lastCorrectedAnswer,reminder:row.reminder,tags:row.tags,sourceType:getLiveTalkSource(row)},
                 challenge:{type:challenge.type,topic:challenge.topic,instruction:challenge.instruction,prompt:challenge.prompt,constraints:challenge.constraints},
                 answer
             })
@@ -2514,8 +2539,13 @@ async function submitLiveTalkGateAnswer() {
         gate.evaluating = false;
         gate.attempts++;
         const passed = data.evaluation.verdict === 'pass';
+        if (!passed) gate.currentCardFailures = Number(gate.currentCardFailures || 0) + 1;
+        gate.mercy = !passed && gate.currentCardFailures >= 3;
+        noteLiveTalkCorrection(row.id,answer,data.evaluation,challenge,{source:'gate',deferred:gate.mercy});
+        row.lastCorrectedAnswer = String(data.evaluation.betterAnswer || row.lastCorrectedAnswer || '');
+        row.lastCorrectionAt = new Date().toISOString();
         updateLiveTalkGateStoredRow(row.id, passed);
-        gate.valiLine = randomLiveTalkGateLine(passed ? 'pass' : 'fail');
+        gate.valiLine = randomLiveTalkGateLine(passed ? 'pass' : gate.mercy ? 'mercy' : 'fail');
         renderLiveTalkGate();
     } catch (error) {
         gate.evaluating = false;
@@ -2558,10 +2588,42 @@ function updateLiveTalkGateStoredRow(rowId, correct) {
     saveLiveTalkData(data);
 }
 
+function noteLiveTalkCorrection(rowId, learnerAnswer, evaluation, challenge = {}, options = {}) {
+    const corrected = String(evaluation?.betterAnswer || '').trim();
+    if (!rowId || !corrected) return false;
+    const data = getLiveTalkData();
+    let stored = null;
+    data.sessions.some(session => {
+        const found = (session.rows || []).find(item => item.id === rowId);
+        if (found) { stored = found; return true; }
+        return false;
+    });
+    if (!stored) return false;
+    const now = new Date().toISOString();
+    const notes = Array.isArray(stored.reviewNotes) ? stored.reviewNotes : [];
+    notes.unshift({
+        id:`review_${Date.now()}_${Math.random().toString(36).slice(2,7)}`,
+        date:now,
+        source:options.source === 'gate' ? 'gate' : 'practice',
+        deferred:Boolean(options.deferred),
+        verdict:String(evaluation?.verdict || 'almost'),
+        answer:String(learnerAnswer || '').trim().slice(0,1400),
+        corrected:corrected.slice(0,1400),
+        targetCheck:String(evaluation?.targetCheck || '').trim().slice(0,700),
+        prompt:String(challenge?.prompt || '').trim().slice(0,1000)
+    });
+    stored.reviewNotes = notes.slice(0,60);
+    stored.lastCorrectedAnswer = corrected.slice(0,1400);
+    stored.lastCorrectionAt = now;
+    saveLiveTalkData(data);
+    return true;
+}
+
 function renderLiveTalkGateEvaluation() {
     const gate = liveTalkGate;
     const evaluation = gate.evaluation || {};
     const passed = evaluation.verdict === 'pass';
+    const mercy = !passed && Boolean(gate.mercy);
     const worked = Array.isArray(evaluation.whatWorked) && evaluation.whatWorked.length
         ? `<ul style="margin:7px 0 0;padding-left:22px;">${evaluation.whatWorked.map(item => `<li>${escapeSprechenHtml(item)}</li>`).join('')}</ul>`
         : '<div style="margin-top:7px;">Voi chưa ghi nhận điểm riêng nào.</div>';
@@ -2569,17 +2631,21 @@ function renderLiveTalkGateEvaluation() {
         ? evaluation.issues.slice(0,2).map(item => `<div style="margin-top:8px;padding:10px;border-radius:9px;background:#fff;">${item.original ? `<s>${escapeSprechenHtml(item.original)}</s> → ` : ''}<b>${escapeSprechenHtml(item.correction || 'Cần diễn đạt lại')}</b>${item.why ? `<br><small>${escapeSprechenHtml(item.why)}</small>` : ''}</div>`).join('')
         : '<div style="margin-top:7px;color:#477137;">Không có lỗi quan trọng cần bịa thêm.</div>';
     const body = `<div class="lt-gate-work">
-        <div class="lt-gate-feedback ${passed ? 'pass' : 'retry'}"><b>${passed ? '✅ VOI CHO QUA' : '🔁 CHƯA ĐƯỢC ĐÓNG DẤU'}</b><br>${escapeSprechenHtml(evaluation.taskFulfillment || '')}</div>
+        <div class="lt-gate-feedback ${passed ? 'pass' : mercy ? 'mercy' : 'retry'}"><b>${passed ? '✅ VOI CHO QUA' : mercy ? '🫩 VALI THỞ DÀI: TẠM CHO QUA' : '🔁 CHƯA ĐƯỢC ĐÓNG DẤU'}</b><br>${escapeSprechenHtml(evaluation.taskFulfillment || '')}${!passed ? `<br><small>Lần thử chưa đạt: ${Math.min(3,Number(gate.currentCardFailures || 0))}/3</small>` : ''}</div>
+        ${mercy ? '<div style="margin-top:11px;padding:12px;border-left:5px solid #c8a950;background:#fff8df;border-radius:10px;"><b>📅 Đã ghi giấy hẹn ngày mai</b><br>Cụm này được đi tiếp hôm nay nhưng không được tính là đã thuộc. Câu Voi chữa đã được lưu vào hồ sơ.</div>' : ''}
         <div style="margin-top:13px;padding:11px;border-radius:10px;background:#f7f3ee;"><b>🐦 Câu của cậu</b><br>${escapeSprechenHtml(gate.answerDraft)}</div>
         <h4 style="margin:14px 0 4px;">🌱 Điểm làm tốt</h4>${worked}
         <h4 style="margin:14px 0 4px;">🔧 Chỗ cần sửa</h4>${issues}
         <h4 style="margin:14px 0 4px;">⭐ Cách nói tự nhiên hơn</h4><div style="padding:11px;border-radius:10px;background:#fff8e8;font-weight:700;">${escapeSprechenHtml(evaluation.betterAnswer || '')}</div>
+        <div style="margin-top:9px;color:#6f7d55;font-size:14px;font-weight:750;">📝 Câu chữa này đã được ghi vào Kho biên bản.</div>
         <h4 style="margin:14px 0 4px;">🌿 Mảnh cũ đang bị kiểm tra</h4><div><b>${escapeSprechenHtml(gate.currentRow?.target || 'Cấu trúc trong hồ sơ')}</b><br>${escapeSprechenHtml(evaluation.targetCheck || '')}</div>
     </div>`;
     const actions = passed
         ? '<button class="lt-gate-primary" onclick="acceptLiveTalkGateResult()">🛃 Vali đóng dấu</button><button class="lt-gate-exit" onclick="cancelLiveTalkGate()">🚪 Dừng tại đây</button>'
-        : '<button class="lt-gate-secondary" onclick="retryLiveTalkGateCard()">🔁 Thử lại bằng ngữ cảnh khác</button><button class="lt-gate-exit" onclick="cancelLiveTalkGate()">🚪 Dừng tại đây</button>';
-    renderLiveTalkGateShell(body, actions, passed ? 'calm' : 'annoyed');
+        : mercy
+            ? '<button class="lt-gate-warn" onclick="acceptLiveTalkGateMercy()">🫩 Tạm cho qua · mai hỏi lại</button><button class="lt-gate-exit" onclick="cancelLiveTalkGate()">🚪 Dừng tại đây</button>'
+            : '<button class="lt-gate-secondary" onclick="retryLiveTalkGateCard()">🔁 Thử lại bằng ngữ cảnh khác</button><button class="lt-gate-exit" onclick="cancelLiveTalkGate()">🚪 Dừng tại đây</button>';
+    renderLiveTalkGateShell(body, actions, passed ? 'calm' : mercy ? 'sigh' : 'annoyed');
 }
 
 function acceptLiveTalkGateResult() {
@@ -2590,11 +2656,34 @@ function acceptLiveTalkGateResult() {
     gate.challenge = null;
     gate.answerDraft = '';
     gate.currentRow = null;
+    gate.currentCardFailures = 0;
+    gate.mercy = false;
     if (gate.passed >= gate.required) {
         grantLiveTalkGatePermit(false);
         gate.completed = true;
         gate.temporary = false;
         gate.valiLine = randomLiveTalkGateLine('done');
+        return renderLiveTalkGate();
+    }
+    prepareLiveTalkGateCard(false);
+}
+
+function acceptLiveTalkGateMercy() {
+    const gate = liveTalkGate;
+    if (!gate || !gate.mercy || gate.evaluation?.verdict === 'pass') return;
+    gate.passed++;
+    gate.deferredCount = Number(gate.deferredCount || 0) + 1;
+    gate.evaluation = null;
+    gate.challenge = null;
+    gate.answerDraft = '';
+    gate.currentRow = null;
+    gate.currentCardFailures = 0;
+    gate.mercy = false;
+    if (gate.passed >= gate.required) {
+        grantLiveTalkGatePermit(false);
+        gate.completed = true;
+        gate.temporary = false;
+        gate.valiLine = 'Tạm thông quan. Hồ sơ chưa thuộc đã có giấy hẹn ngày mai.';
         return renderLiveTalkGate();
     }
     prepareLiveTalkGateCard(false);
@@ -2784,6 +2873,7 @@ function renderLiveTalkEditorRow(row, index) {
             <input data-lt-index="${index}" data-lt-field="reminder" oninput="updateLiveTalkDraft(this)" value="${escapeSprechenHtml(row.reminder)}" placeholder="${isHoeren ? '🧠 Mẹo tai nghe, âm nối hoặc bẫy nghĩa' : '🧠 Câu nhắc vô tri, ví dụ: Praktikum không phải tài sản'}">
             <input data-lt-index="${index}" data-lt-field="tags" oninput="updateLiveTalkDraft(this)" value="${escapeSprechenHtml(row.tags)}" placeholder="🏷️ Arbeit, Pflege, Gefühle">
             ${isHoeren ? `<input data-lt-index="${index}" data-lt-field="audioUrl" oninput="updateLiveTalkDraft(this)" value="${escapeSprechenHtml(row.audioUrl)}" placeholder="🔊 /audio/clip.mp3 hoặc URL audio (không bắt buộc)">` : ''}
+            ${row.reviewNotes?.length ? `<span style="align-self:center;padding:7px 10px;border-radius:999px;background:#fff1bd;color:#72572e;font-size:13px;font-weight:850;">📝 ${row.reviewNotes.length} câu Voi đã ghi</span>` : ''}
             <button class="lt-delete" onclick="deleteLiveTalkRow(${index})">🗑️</button>
         </div>`;
 }
@@ -3001,13 +3091,13 @@ async function prepareLiveTalkChallenge(forceNew = false) {
         try {
             const response = await fetch('/api/check', {
                 method:'POST', headers:{'Content-Type':'application/json'},
-                body:JSON.stringify({ mode:'livetalk_challenge', source:{ target:row.target, said:row.said, correction:row.correction, native:row.native, reminder:row.reminder, tags:row.tags }, usedChallenges:history.slice(0,60).map(item => item.prompt || item.fingerprint), nonce:`${Date.now()}_${Math.random()}_${attempt}_${forceNew}` })
+                body:JSON.stringify({ mode:'livetalk_challenge', source:{ target:row.target, said:row.said, correction:row.correction, native:row.native, lastCorrectedAnswer:row.lastCorrectedAnswer, reminder:row.reminder, tags:row.tags }, usedChallenges:history.slice(0,60).map(item => item.prompt || item.fingerprint), nonce:`${Date.now()}_${Math.random()}_${attempt}_${forceNew}` })
             });
             const data = await response.json();
             if (!response.ok || !data.challenge?.prompt) throw new Error(data.error || 'Voi không gửi đề về');
             const candidate = data.challenge;
             const normalize = value => String(value || '').toLocaleLowerCase('de-DE').replace(/[“”„"'.,!?;:()[\]{}]/g,'').replace(/\s+/g,' ').trim();
-            const copiedOldAnswer = [row.target,row.correction,row.native].map(normalize).filter(Boolean).includes(normalize(candidate.modelAnswer));
+            const copiedOldAnswer = [row.target,row.correction,row.native,row.lastCorrectedAnswer].map(normalize).filter(Boolean).includes(normalize(candidate.modelAnswer));
             if (String(candidate.prompt || '').trim().length < 80 || String(candidate.instruction || '').trim().length < 35 || copiedOldAnswer) {
                 throw new Error('Voi vừa gửi một đề còn mơ hồ hoặc chép lại câu cũ');
             }
@@ -3060,6 +3150,7 @@ function renderLiveTalkEvaluation(evaluation, row, learnerAnswer) {
         ${issues}
         <h4 style="margin:15px 0 5px;">⭐ Cách nói tự nhiên hơn</h4>
         <div style="padding:12px;background:#fff;border-radius:10px;font-weight:700;">${escapeSprechenHtml(evaluation.betterAnswer)}</div>
+        <div style="margin-top:9px;color:#6f7d55;font-size:14px;font-weight:750;">📝 Câu chữa này đã được ghi vào Kho biên bản.</div>
         <h4 style="margin:15px 0 5px;">🌿 Điểm ngôn ngữ đang luyện</h4>
         <div><b>${escapeSprechenHtml(row.target || 'Cấu trúc trong hồ sơ')}</b><br>${escapeSprechenHtml(evaluation.targetCheck)}</div>
         ${evaluation.nextStep ? `<div style="margin-top:14px;padding:11px;border-left:4px solid #759b62;background:#fff;border-radius:8px;"><b>🐘 Lần sau:</b> ${escapeSprechenHtml(evaluation.nextStep)}</div>` : ''}
@@ -3083,7 +3174,7 @@ async function submitLiveTalkAnswer() {
             headers:{'Content-Type':'application/json'},
             body:JSON.stringify({
                 mode:'livetalk_evaluate',
-                source:{target:row.target,said:row.said,correction:row.correction,native:row.native,reminder:row.reminder,tags:row.tags},
+                source:{target:row.target,said:row.said,correction:row.correction,native:row.native,lastCorrectedAnswer:row.lastCorrectedAnswer,reminder:row.reminder,tags:row.tags},
                 challenge:{type:challenge.type,topic:challenge.topic,instruction:challenge.instruction,prompt:challenge.prompt,constraints:challenge.constraints},
                 answer:learnerAnswer
             })
@@ -3092,6 +3183,9 @@ async function submitLiveTalkAnswer() {
         if (!response.ok || !data.evaluation) throw new Error(data.error || 'Voi chưa gửi phiếu chấm');
         liveTalkPractice.evaluation = data.evaluation;
         liveTalkPractice.revealed = true;
+        noteLiveTalkCorrection(row.id,learnerAnswer,data.evaluation,challenge,{source:'practice',deferred:false});
+        row.lastCorrectedAnswer = String(data.evaluation.betterAnswer || row.lastCorrectedAnswer || '');
+        row.lastCorrectionAt = new Date().toISOString();
         document.getElementById('lt-practice-reveal').innerHTML = renderLiveTalkEvaluation(data.evaluation,row,learnerAnswer);
         document.getElementById('buttons').innerHTML = `
             <button class="btn-kapi btn-green" onclick="rateLiveTalkCard(true)">✅ Tôi đã hiểu và nói được</button>
@@ -3178,14 +3272,30 @@ function showLiveTalkTopics() {
     document.getElementById('buttons').innerHTML = `<button class="btn-kapi" style="background:#ffe0b2;" onclick="showLiveTalkTopics()">🎲 Bốc cách hỏi khác</button><button class="btn-kapi btn-home" onclick="showLiveTalkMenu()">⬅️ Menu</button>`;
 }
 
+function renderLiveTalkReviewNotes(row) {
+    const notes = Array.isArray(row?.reviewNotes) ? row.reviewNotes : [];
+    if (!notes.length) return '';
+    return `<details style="margin-top:9px;padding:8px 10px;border:1px dashed #c9b7a8;border-radius:9px;background:#fffdf9;">
+        <summary style="cursor:pointer;font-weight:850;color:#725c50;">📝 ${notes.length} câu Voi đã chữa và ghi lại</summary>
+        <div style="display:grid;gap:8px;margin-top:9px;">${notes.map(note => {
+            const status = note.deferred ? '🫩 Tạm qua · hỏi lại ngày mai' : note.verdict === 'pass' ? '✅ Đã đạt' : '🔁 Cần ôn tiếp';
+            return `<div style="padding:9px;border-radius:9px;background:#f7f3ee;line-height:1.55;">
+                <small style="color:#8b786c;">${escapeSprechenHtml(String(note.date || '').slice(0,10))} · ${status}</small>
+                ${note.answer ? `<br><b>🐦 Cậu viết:</b> ${escapeSprechenHtml(note.answer)}` : ''}
+                <br><b>⭐ Voi chữa:</b> ${escapeSprechenHtml(note.corrected || '')}
+            </div>`;
+        }).join('')}</div>
+    </details>`;
+}
+
 function renderLiveTalkArchiveGroup(rows, source) {
     if (!rows.length) return '';
     const isHoeren = source === 'hoeren';
     return `<div style="margin-top:12px;padding-top:10px;border-top:1px dashed #d8c7b9;">
         <b style="color:${isHoeren ? '#456d83' : '#665047'};">${isHoeren ? '🎧 AUS DEM HÖREN' : '🗣️ AUS DEM SPRECHEN'}</b>
         <div style="margin-top:8px;display:grid;gap:8px;">${rows.map(row => isHoeren
-            ? `<div style="padding:10px;border-radius:10px;background:#f2f8fb;"><b>🌿 ${escapeSprechenHtml(row.target || 'Mảnh nghe')}</b><br>${row.said ? `🧾 ${escapeSprechenHtml(row.said)}<br>` : ''}${row.correction ? `👂 ${escapeSprechenHtml(row.correction)}<br>` : ''}${row.native ? `⭐ ${escapeSprechenHtml(row.native)}` : ''}</div>`
-            : `<div style="padding:10px;border-radius:10px;background:#f8f3ed;"><b>🌿 ${escapeSprechenHtml(row.target || 'Mảnh ngôn ngữ')}</b><br>${row.correction ? `✅ ${escapeSprechenHtml(row.correction)}<br>` : ''}${row.native ? `⭐ ${escapeSprechenHtml(row.native)}` : ''}</div>`
+            ? `<div style="padding:10px;border-radius:10px;background:#f2f8fb;"><b>🌿 ${escapeSprechenHtml(row.target || 'Mảnh nghe')}</b><br>${row.said ? `🧾 ${escapeSprechenHtml(row.said)}<br>` : ''}${row.correction ? `👂 ${escapeSprechenHtml(row.correction)}<br>` : ''}${row.native ? `⭐ ${escapeSprechenHtml(row.native)}` : ''}${renderLiveTalkReviewNotes(row)}</div>`
+            : `<div style="padding:10px;border-radius:10px;background:#f8f3ed;"><b>🌿 ${escapeSprechenHtml(row.target || 'Mảnh ngôn ngữ')}</b><br>${row.correction ? `✅ ${escapeSprechenHtml(row.correction)}<br>` : ''}${row.native ? `⭐ ${escapeSprechenHtml(row.native)}` : ''}${renderLiveTalkReviewNotes(row)}</div>`
         ).join('')}</div>
     </div>`;
 }
