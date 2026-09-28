@@ -2043,8 +2043,7 @@ const LIVETALK_BACKUP_KEY = 'kapi_livetalk_diary_v1_backup_before_sources';
 const LIVETALK_CHALLENGE_HISTORY_KEY = 'kapi_livetalk_challenges_v1';
 const LIVETALK_GATE_KEY = 'kapi_livetalk_customs_gate_v1';
 const LIVETALK_GATE_REQUIRED_PASSES = 3;
-const LIVETALK_GATE_PERMIT_MS = 30 * 60 * 1000;
-const LIVETALK_GATE_PERMIT_ACTIONS = 5;
+const LIVETALK_GATE_DAY_PERMIT_MS = 24 * 60 * 60 * 1000;
 let liveTalkDraftRows = [];
 let liveTalkPractice = null;
 let liveTalkGate = null;
@@ -2204,11 +2203,11 @@ const LIVE_TALK_GATE_LINES = {
         'Bạn vừa trao cho tôi thêm việc. Xin cảm ơn theo nghĩa hành chính.'
     ],
     mercy:[
-        'Hừ… lần này tạm cho qua. Tôi đã ghi vào sổ. Mai hỏi lại.',
+        'Hừ… lần này tạm cho qua. Tôi đã ghi vào sổ. Hết 24 giờ hỏi lại.',
         'Ba lần rồi. Tôi không mềm lòng; tôi chỉ đang bảo vệ thời gian của cả hai.',
-        'Tạm đóng hồ sơ hôm nay. Dòng mực đỏ này sẽ quay lại vào ngày mai.',
+        'Tạm đóng hồ sơ 24 giờ. Dòng mực đỏ này vẫn còn nguyên.',
         'Được, đi tiếp. Nhưng câu Voi vừa chữa đã nằm trong hồ sơ tái khám.',
-        'Tôi thở dài không phải vì tha thứ. Đây là giấy hẹn ngày mai.',
+        'Tôi thở dài không phải vì tha thứ. Đây là giấy hẹn sau khi vé hết hạn.',
         'Tạm qua cửa, chưa được công nhận là đã thuộc. Hai việc này hoàn toàn khác nhau.'
     ],
     done:[
@@ -2303,21 +2302,27 @@ function chooseLiveTalkGateRow() {
 
 function hasLiveTalkGatePermit() {
     const state = readLiveTalkGateStorage();
-    return Number(state.permitUntil || 0) > Date.now() && Number(state.remainingActions || 0) > 0;
+    const remaining = Number(state.remainingActions || 0);
+    return Number(state.permitUntil || 0) > Date.now() && (remaining === -1 || remaining > 0);
 }
 
 function consumeLiveTalkGatePermit() {
     const state = readLiveTalkGateStorage();
-    if (Number(state.permitUntil || 0) <= Date.now() || Number(state.remainingActions || 0) <= 0) return false;
-    writeLiveTalkGateStorage({remainingActions:Number(state.remainingActions) - 1});
+    const remaining = Number(state.remainingActions || 0);
+    if (Number(state.permitUntil || 0) <= Date.now() || (remaining !== -1 && remaining <= 0)) return false;
+    if (remaining === -1) return true;
+    writeLiveTalkGateStorage({remainingActions:remaining - 1});
     return true;
 }
 
-function grantLiveTalkGatePermit(temporary = false) {
+function grantLiveTalkGatePermit(type = 'standard') {
+    const permitType = type === 'manual' || type === 'mercy' ? type : 'session';
+    const isManual = permitType === 'manual';
     writeLiveTalkGateStorage({
-        permitUntil:Date.now() + (temporary ? 10 * 60 * 1000 : LIVETALK_GATE_PERMIT_MS),
-        remainingActions:temporary ? 1 : LIVETALK_GATE_PERMIT_ACTIONS,
-        temporary,
+        permitUntil:Date.now() + (isManual ? 10 * 60 * 1000 : LIVETALK_GATE_DAY_PERMIT_MS),
+        remainingActions:isManual ? 1 : -1,
+        temporary:isManual || permitType === 'mercy',
+        permitType,
         clearedAt:new Date().toISOString()
     });
 }
@@ -2412,9 +2417,11 @@ function renderLiveTalkGate() {
     const gate = liveTalkGate;
     if (!gate) return showLiveTalkMenu();
     if (gate.completed) {
-        const permitText = gate.temporary
-            ? 'Vé tạm mở đúng một thao tác. Thẻ vừa xem vẫn còn nguyên lịch ôn.'
-            : `Bàn nhập được mở trong 30 phút hoặc 5 thao tác thêm mới.${Number(gate.deferredCount || 0) ? ` ${gate.deferredCount} hồ sơ tạm cho qua đã được hẹn hỏi lại ngày mai.` : ' Những thẻ này vẫn sẽ quay lại đúng lịch ôn.'}`;
+        const permitText = gate.permitType === 'mercy'
+            ? 'Vali đã cho qua toàn bộ bàn nhập trong đúng 24 giờ. Thẻ vừa xem vẫn được hẹn hỏi lại sau khi vé hết hạn.'
+            : gate.temporary
+            ? 'Vé thủ công mở đúng một thao tác. Thẻ vừa xem vẫn còn nguyên lịch ôn.'
+            : `Ba con dấu đã mở toàn bộ bàn nhập trong đúng 24 giờ.${Number(gate.deferredCount || 0) ? ` ${gate.deferredCount} hồ sơ tạm cho qua vẫn được hẹn hỏi lại sau khi vé hết hạn.` : ' Những thẻ này vẫn sẽ quay lại đúng lịch ôn.'}`;
         const body = `<div class="lt-gate-work" style="text-align:center;background:#f1f8e9;"><b>✅ ${gate.temporary ? 'ĐÃ CẤP VÉ TẠM' : 'ĐÃ THÔNG QUAN'}</b><br>${permitText}</div>`;
         return renderLiveTalkGateShell(body, '<button class="lt-gate-primary" onclick="continueAfterLiveTalkGate()">📂 Mở bàn nhập</button>', 'done');
     }
@@ -2453,7 +2460,7 @@ async function prepareLiveTalkGateCard(forceNew = false) {
     if (!row) {
         gate.completed = true;
         gate.valiLine = randomLiveTalkGateLine('done');
-        grantLiveTalkGatePermit(false);
+        grantLiveTalkGatePermit('session');
         return renderLiveTalkGate();
     }
     gate.loading = true;
@@ -2636,7 +2643,7 @@ function renderLiveTalkGateEvaluation() {
         : '<div style="margin-top:7px;color:#477137;">Không có lỗi quan trọng cần bịa thêm.</div>';
     const body = `<div class="lt-gate-work">
         <div class="lt-gate-feedback ${passed ? 'pass' : mercy ? 'mercy' : 'retry'}"><b>${passed ? '✅ VOI CHO QUA' : mercy ? '🫩 VALI THỞ DÀI: TẠM CHO QUA' : '🔁 CHƯA ĐƯỢC ĐÓNG DẤU'}</b><br>${escapeSprechenHtml(evaluation.taskFulfillment || '')}${!passed ? `<br><small>Lần thử chưa đạt: ${Math.min(3,Number(gate.currentCardFailures || 0))}/3</small>` : ''}</div>
-        ${mercy ? '<div style="margin-top:11px;padding:12px;border-left:5px solid #c8a950;background:#fff8df;border-radius:10px;"><b>📅 Đã ghi giấy hẹn ngày mai</b><br>Cụm này được đi tiếp hôm nay nhưng không được tính là đã thuộc. Câu Voi chữa đã được lưu vào hồ sơ.</div>' : ''}
+        ${mercy ? '<div style="margin-top:11px;padding:12px;border-left:5px solid #c8a950;background:#fff8df;border-radius:10px;"><b>📅 Đã ghi giấy hẹn sau vé 24 giờ</b><br>Cụm này được đi tiếp trong 24 giờ nhưng không được tính là đã thuộc. Câu Voi chữa đã được lưu vào hồ sơ.</div>' : ''}
         <div style="margin-top:13px;padding:11px;border-radius:10px;background:#f7f3ee;"><b>🐦 Câu của cậu</b><br>${escapeSprechenHtml(gate.answerDraft)}</div>
         <h4 style="margin:14px 0 4px;">🌱 Điểm làm tốt</h4>${worked}
         <h4 style="margin:14px 0 4px;">🔧 Chỗ cần sửa</h4>${issues}
@@ -2647,7 +2654,7 @@ function renderLiveTalkGateEvaluation() {
     const actions = passed
         ? '<button class="lt-gate-primary" onclick="acceptLiveTalkGateResult()">🛃 Vali đóng dấu</button><button class="lt-gate-exit" onclick="cancelLiveTalkGate()">🚪 Dừng tại đây</button>'
         : mercy
-            ? '<button class="lt-gate-warn" onclick="acceptLiveTalkGateMercy()">🫩 Tạm cho qua · mai hỏi lại</button><button class="lt-gate-exit" onclick="cancelLiveTalkGate()">🚪 Dừng tại đây</button>'
+            ? '<button class="lt-gate-warn" onclick="acceptLiveTalkGateMercy()">🫩 Tạm cho qua 24 giờ</button><button class="lt-gate-exit" onclick="cancelLiveTalkGate()">🚪 Dừng tại đây</button>'
             : '<button class="lt-gate-secondary" onclick="retryLiveTalkGateCard()">🔁 Thử lại bằng ngữ cảnh khác</button><button class="lt-gate-exit" onclick="cancelLiveTalkGate()">🚪 Dừng tại đây</button>';
     renderLiveTalkGateShell(body, actions, passed ? 'calm' : mercy ? 'sigh' : 'annoyed');
 }
@@ -2664,7 +2671,7 @@ function acceptLiveTalkGateResult() {
     gate.currentCardFailures = 0;
     gate.mercy = false;
     if (gate.passed >= gate.required) {
-        grantLiveTalkGatePermit(false);
+        grantLiveTalkGatePermit('session');
         gate.completed = true;
         gate.temporary = false;
         gate.valiLine = randomLiveTalkGateLine('done');
@@ -2685,12 +2692,13 @@ function acceptLiveTalkGateMercy() {
     gate.currentRow = null;
     gate.currentCardFailures = 0;
     gate.mercy = false;
-    // Ba lần thử chưa đạt là điểm dừng chống căng thẳng: cấp đúng một lượt
-    // cho thao tác đang chờ, còn thẻ này vẫn quay lại theo lịch ngày mai.
-    grantLiveTalkGatePermit(true);
+    // Ba lần thử chưa đạt là điểm dừng chống căng thẳng: mở toàn bộ bàn nhập
+    // trong 24 giờ, còn thẻ này vẫn quay lại sau khi vé thở dài hết hạn.
+    grantLiveTalkGatePermit('mercy');
     gate.completed = true;
     gate.temporary = true;
-    gate.valiLine = 'Tạm cho qua đúng lượt này. Hồ sơ chưa thuộc đã có giấy hẹn ngày mai.';
+    gate.permitType = 'mercy';
+    gate.valiLine = 'Tạm cho qua 24 giờ. Hồ sơ chưa thuộc vẫn còn nguyên giấy hẹn.';
     return continueAfterLiveTalkGate();
 }
 
@@ -2749,10 +2757,11 @@ function checkLiveTalkGateManual() {
         gate.valiLine = randomLiveTalkGateLine('fail');
         return renderLiveTalkGate();
     }
-    grantLiveTalkGatePermit(true);
+    grantLiveTalkGatePermit('manual');
     gate.manual = false;
     gate.completed = true;
     gate.temporary = true;
+    gate.permitType = 'manual';
     gate.valiLine = 'Vé tạm được cấp. Thẻ này chưa được coi là đã thuộc.';
     renderLiveTalkGate();
 }
@@ -2784,6 +2793,11 @@ function showLiveTalkMenu() {
     const sprechenCount = rows.filter(row => getLiveTalkSource(row) === 'sprechen').length;
     const gateBacklogCount = getLiveTalkGateBacklog().length;
     const gatePermitActive = hasLiveTalkGatePermit();
+    const gatePermitState = readLiveTalkGateStorage();
+    const gatePermitHours = Math.max(1,Math.ceil((Number(gatePermitState.permitUntil || 0) - Date.now()) / 3600000));
+    const gatePermitText = gatePermitState.permitType === 'mercy' || Number(gatePermitState.remainingActions) === -1
+        ? `🟢 Vali đã thông quan toàn bộ bàn nhập · vé 24 giờ còn khoảng ${gatePermitHours} giờ.`
+        : `🟢 Đã thông quan tạm thời · còn ${Number(gatePermitState.remainingActions || 0)} lượt thêm.`;
     document.getElementById('message').innerHTML = `
         <div style="font-size:31px;font-weight:900;color:#694f43;">☕ LiveTalk-Tagebuch</div>
         <div style="color:#91756a;margin-top:5px;">GPT phân tích · web ghi nhớ · vali không tự nguyện hợp tác.</div>`;
@@ -2793,7 +2807,7 @@ function showLiveTalkMenu() {
             <b>🗂️ ${data.sessions.length} biên bản · ${rows.length} mảnh ngôn ngữ</b><br>
             <span>🎧 ${hoerenCount} Hören · 🗣️ ${sprechenCount} Sprechen</span><br>
             <span>${due ? `🔔 Có <b>${due}</b> câu đến hạn ôn.` : '🌿 Hiện chưa có câu nào đến hạn.'}</span><br>
-            <span>${gateBacklogCount ? (gatePermitActive ? `🟢 Đã thông quan tạm thời · còn ${readLiveTalkGateStorage().remainingActions || 0} lượt thêm.` : `🛃 Vali đang giữ <b>${gateBacklogCount}</b> hồ sơ cũ trước cửa nhập mới.`) : '🛃 Cửa nhập mới đang thông thoáng.'}</span>
+            <span>${gateBacklogCount ? (gatePermitActive ? gatePermitText : `🛃 Vali đang giữ <b>${gateBacklogCount}</b> hồ sơ cũ trước cửa nhập mới.`) : '🛃 Cửa nhập mới đang thông thoáng.'}</span>
             <div style="margin-top:10px;padding:11px;background:#f2ece7;border-radius:12px;">🫩 “Tôi không sửa bài. Tôi chỉ trả lại những lỗi bạn tưởng mình đã quên.”</div>
         </div>`;
     document.getElementById('buttons').style.display = 'block';
@@ -3283,7 +3297,7 @@ function renderLiveTalkReviewNotes(row) {
     return `<details style="margin-top:9px;padding:8px 10px;border:1px dashed #c9b7a8;border-radius:9px;background:#fffdf9;">
         <summary style="cursor:pointer;font-weight:850;color:#725c50;">📝 ${notes.length} câu Voi đã chữa và ghi lại</summary>
         <div style="display:grid;gap:8px;margin-top:9px;">${notes.map(note => {
-            const status = note.deferred ? '🫩 Tạm qua · hỏi lại ngày mai' : note.verdict === 'pass' ? '✅ Đã đạt' : '🔁 Cần ôn tiếp';
+            const status = note.deferred ? '🫩 Tạm qua · hỏi lại sau vé 24 giờ' : note.verdict === 'pass' ? '✅ Đã đạt' : '🔁 Cần ôn tiếp';
             return `<div style="padding:9px;border-radius:9px;background:#f7f3ee;line-height:1.55;">
                 <small style="color:#8b786c;">${escapeSprechenHtml(String(note.date || '').slice(0,10))} · ${status}</small>
                 ${note.answer ? `<br><b>🐦 Cậu viết:</b> ${escapeSprechenHtml(note.answer)}` : ''}
