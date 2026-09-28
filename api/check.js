@@ -70,12 +70,18 @@ ${learnerAnswer}
 Hãy kiểm tra theo thứ tự:
 1. Câu có thực sự trả lời đúng tình huống và hành động giao tiếp được yêu cầu không?
 2. Câu có dùng cụm tiếng Đức bắt buộc trong ngữ cảnh mới không? Nếu thẻ dùng dạng từ điển như "sich ...", "jdm.", "jdn.", "etw." hoặc động từ nguyên mẫu thì cho phép chia động từ, đổi đại từ và thay chỗ trống cho đúng câu. Dùng một từ đồng nghĩa để né hoàn toàn cụm bắt buộc thì chưa đạt.
-3. Ngữ pháp, kết hợp từ, trật tự từ và register có tự nhiên ở B2 không?
+3. Câu có dễ hiểu và không có lỗi nghiêm trọng làm đổi nghĩa không? Vẫn ghi nhận lỗi ngữ pháp, kết hợp từ, trật tự từ và register, nhưng không đòi câu phải hoàn hảo.
 4. Nếu câu đúng, phải công nhận là đúng; không tạo lỗi giả chỉ để có nhận xét.
-5. Chỉ trả verdict "pass" khi cụm bắt buộc đã được dùng đúng. Chỉ chọn tối đa 2 vấn đề quan trọng. betterAnswer phải bám đúng chủ đề, tình huống và cũng dùng cụm bắt buộc; nếu câu người học đã tự nhiên thì có thể giữ gần nguyên.
+5. Đây là kiểm tra KHẢ NĂNG DÙNG CỤM, không phải bài thi viết câu hoàn hảo. Hãy đặt ba cờ độc lập:
+   - targetUsedCorrectly=true khi cụm bắt buộc được dùng đúng nghĩa và đúng cấu trúc; cho phép biến đổi ngữ pháp hợp lệ.
+   - taskCompleted=true khi câu thực hiện đúng hành động giao tiếp trong tình huống.
+   - meaningClear=true khi người đọc hiểu ngay ý định dù còn một vài lỗi nhỏ.
+6. Bắt buộc trả verdict "pass" khi cả ba cờ trên đều true. Lỗi nhỏ ở mạo từ, đuôi từ, chính tả, thì hoặc cách diễn đạt không liên quan trực tiếp đến cụm mục tiêu KHÔNG được hạ xuống "almost"; hãy vẫn ghi lỗi vào issues và sửa trong betterAnswer.
+7. Dùng "almost" khi đã cố dùng đúng cụm nhưng chính cụm còn lỗi nhỏ, nhiệm vụ mới hoàn thành một phần hoặc ý cần đoán thêm. Chỉ dùng "retry" khi thiếu/sai chính cụm, sai nghĩa/ngữ cảnh, lạc nhiệm vụ hoặc câu khó hiểu.
+8. Chỉ chọn tối đa 2 vấn đề quan trọng. betterAnswer phải bám đúng chủ đề, tình huống và cũng dùng cụm bắt buộc; nếu câu người học đã tự nhiên thì có thể giữ gần nguyên. Một verdict "pass" vẫn được và nên có issues nếu thật sự còn lỗi.
 
 Chỉ trả JSON hợp lệ, không Markdown, theo schema:
-{"verdict":"pass|almost|retry","taskFulfillment":"nhận xét tiếng Việt cụ thể về việc có làm đúng nhiệm vụ hay không","whatWorked":["1-3 điểm làm tốt, tiếng Việt"],"issues":[{"original":"phần cần sửa","correction":"cách sửa","why":"giải thích ngắn bằng tiếng Việt"}],"betterAnswer":"một phiên bản tiếng Đức tự nhiên, đúng chính nhiệm vụ","targetCheck":"đã dùng/chưa dùng điểm mục tiêu như thế nào","nextStep":"một việc rất cụ thể cho lần thử sau"}`;
+{"verdict":"pass|almost|retry","targetUsedCorrectly":true,"taskCompleted":true,"meaningClear":true,"taskFulfillment":"nhận xét tiếng Việt cụ thể về việc có làm đúng nhiệm vụ hay không","whatWorked":["1-3 điểm làm tốt, tiếng Việt"],"issues":[{"original":"phần cần sửa","correction":"cách sửa","why":"giải thích ngắn bằng tiếng Việt"}],"betterAnswer":"một phiên bản tiếng Đức tự nhiên, đúng chính nhiệm vụ","targetCheck":"đã dùng/chưa dùng điểm mục tiêu như thế nào","nextStep":"một việc rất cụ thể cho lần thử sau"}`;
     } else if (isHoerSuggestions) {
         const cleanTranscript = String(transcript || '').trim().slice(0,11000);
         if (cleanTranscript.length < 30) return res.status(400).json({error:'Transcript quá ngắn'});
@@ -262,6 +268,9 @@ Hãy chỉ ra lỗi thật sự, sửa thành câu B2 tự nhiên và cho một 
         type:'object',
         properties:{
             verdict:{type:'string',enum:['pass','almost','retry']},
+            targetUsedCorrectly:{type:'boolean'},
+            taskCompleted:{type:'boolean'},
+            meaningClear:{type:'boolean'},
             taskFulfillment:{type:'string'},
             whatWorked:{type:'array',items:{type:'string'}},
             issues:{
@@ -276,7 +285,7 @@ Hãy chỉ ra lỗi thật sự, sửa thành câu B2 tự nhiên và cho một 
             targetCheck:{type:'string'},
             nextStep:{type:'string'}
         },
-        required:['verdict','taskFulfillment','whatWorked','issues','betterAnswer','targetCheck','nextStep']
+        required:['verdict','targetUsedCorrectly','taskCompleted','meaningClear','taskFulfillment','whatWorked','issues','betterAnswer','targetCheck','nextStep']
     } : isLiveTalkChallenge ? {
         type:'object',
         properties:{
@@ -490,7 +499,17 @@ Hãy chỉ ra lỗi thật sự, sửa thành câu B2 tự nhiên và cho một 
         }
         if (isLiveTalkEvaluate) {
             const parsed = aiResponse.parsed;
-            const verdict = ['pass','almost','retry'].includes(parsed.verdict) ? parsed.verdict : 'almost';
+            const rawVerdict = ['pass','almost','retry'].includes(parsed.verdict) ? parsed.verdict : 'almost';
+            const hasFunctionalCriteria = ['targetUsedCorrectly','taskCompleted','meaningClear']
+                .every(field => typeof parsed[field] === 'boolean');
+            const functionalPass = hasFunctionalCriteria
+                && parsed.targetUsedCorrectly
+                && parsed.taskCompleted
+                && parsed.meaningClear;
+            let verdict = functionalPass ? 'pass' : rawVerdict;
+            if (hasFunctionalCriteria && rawVerdict === 'pass' && !functionalPass) {
+                verdict = parsed.targetUsedCorrectly && parsed.meaningClear ? 'almost' : 'retry';
+            }
             const issues = (Array.isArray(parsed.issues) ? parsed.issues : []).slice(0,2).map(item => ({
                 original:String(item?.original || '').trim().slice(0,300),
                 correction:String(item?.correction || '').trim().slice(0,500),
@@ -498,6 +517,11 @@ Hãy chỉ ra lỗi thật sự, sửa thành câu B2 tự nhiên và cho một 
             })).filter(item => item.correction || item.why);
             const evaluation = {
                 verdict,
+                criteria:hasFunctionalCriteria ? {
+                    targetUsedCorrectly:parsed.targetUsedCorrectly,
+                    taskCompleted:parsed.taskCompleted,
+                    meaningClear:parsed.meaningClear
+                } : null,
                 taskFulfillment:String(parsed.taskFulfillment || '').trim().slice(0,700),
                 whatWorked:(Array.isArray(parsed.whatWorked) ? parsed.whatWorked : []).slice(0,3).map(item => String(item).trim().slice(0,350)).filter(Boolean),
                 issues,
