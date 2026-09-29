@@ -15,6 +15,7 @@ import {
   serializeCookie,
   verifySessionToken
 } from '../lib/gate-auth.mjs';
+import { parseWebCookies, verifyWebSessionToken } from '../lib/gate-session-web.mjs';
 
 const PASSWORD = 'a-long-secret-that-never-enters-browser-code';
 const NOW = Date.UTC(2026, 8, 29, 12, 0, 0);
@@ -25,6 +26,18 @@ test('session token is valid until expiry and rejects tampering', () => {
   assert.equal(verifySessionToken(token, 'wrong-secret', NOW), false);
   assert.equal(verifySessionToken(`${token}x`, PASSWORD, NOW), false);
   assert.equal(verifySessionToken(token, PASSWORD, NOW + 31 * 24 * 60 * 60 * 1000), false);
+});
+
+test('edge-compatible verifier accepts the Node-issued session token', async () => {
+  const token = createSessionToken(PASSWORD, NOW);
+  assert.equal(await verifyWebSessionToken(token, PASSWORD, NOW), true);
+  assert.equal(await verifyWebSessionToken(token, 'wrong-secret', NOW), false);
+  assert.equal(await verifyWebSessionToken(`${token}x`, PASSWORD, NOW), false);
+  assert.equal(
+    await verifyWebSessionToken(token, PASSWORD, NOW + 31 * 24 * 60 * 60 * 1000),
+    false
+  );
+  assert.equal(parseWebCookies(`hello=world; ${SESSION_COOKIE}=${encodeURIComponent(token)}`)[SESSION_COOKIE], token);
 });
 
 test('password comparison is exact', () => {
