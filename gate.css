@@ -95,7 +95,7 @@ input { font: inherit; }
   inset: 0;
   width: 100%;
   height: 100%;
-  background-image: url("assets/gate/chick-moods.png");
+  background-image: url("assets/gate/chick-moods.png?v=d3ae3216");
   background-repeat: no-repeat;
   background-size: 300% 300%;
   background-position: 50% 100%;
