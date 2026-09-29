@@ -83,237 +83,25 @@ input { font: inherit; }
 
 .gate-scene {
   position: relative;
-  width: 245px;
-  height: 144px;
-  margin: 0 auto 8px;
-}
-
-.door {
-  position: absolute;
-  top: 1px;
-  right: 9px;
-  width: 79px;
-  height: 130px;
-  border: 5px solid #9d6749;
-  border-bottom-width: 8px;
-  border-radius: 38px 38px 7px 7px;
-  background: linear-gradient(90deg, #dba070, #edbd8c 48%, #d89566 49%);
-  box-shadow: inset 8px 0 rgba(255,255,255,.15), 0 8px 0 rgba(105,72,51,.12);
-  transform-origin: right center;
-  transition: transform .5s cubic-bezier(.2,.8,.2,1), opacity .35s;
-}
-
-.door::before {
-  content: "";
-  position: absolute;
-  inset: 12px 12px 54px;
-  border: 3px solid rgba(119, 73, 48, .24);
-  border-radius: 22px 22px 8px 8px;
-}
-
-.door-sign {
-  position: absolute;
-  right: 8px;
-  bottom: 24px;
-  width: 54px;
-  padding: 3px 1px;
-  color: #7c4e35;
-  border: 2px solid #b97953;
-  border-radius: 6px;
-  background: #ffe4a9;
-  font-size: 9px;
-  font-weight: 900;
-  line-height: 1.05;
-  letter-spacing: .9px;
-  transform: rotate(-2deg);
-}
-
-.door-knob {
-  position: absolute;
-  right: 9px;
-  top: 67px;
-  width: 9px;
-  height: 9px;
-  border: 2px solid #805135;
-  border-radius: 50%;
-  background: #ffd463;
-}
-
-.chick-wrap {
-  position: absolute;
-  left: 7px;
-  bottom: 5px;
-  width: 176px;
-  height: 105px;
+  width: 286px;
+  height: 191px;
+  margin: -12px auto -5px;
+  overflow: hidden;
   transform-origin: center bottom;
 }
 
-.chick-wrap::after {
-  content: "";
+.chick-sprite {
   position: absolute;
-  z-index: 0;
-  left: 17px;
-  right: 4px;
-  bottom: -2px;
-  height: 16px;
-  border-radius: 50%;
-  background: rgba(100, 71, 47, .12);
-  filter: blur(2px);
-}
-
-.chick {
-  position: absolute;
-  z-index: 1;
-  left: 5px;
-  bottom: 5px;
-  width: 166px;
-  height: 86px;
-  border: 5px solid #88522f;
-  border-radius: 56% 57% 43% 46% / 60% 62% 38% 40%;
-  background-color: var(--yellow);
-  background-image:
-    radial-gradient(circle at 33% 30%, rgba(255,255,255,.5) 0 6px, transparent 7px),
-    linear-gradient(160deg, var(--yellow-light), var(--yellow) 65%, #efa73b);
-  box-shadow: inset -8px -9px rgba(211, 132, 39, .13), inset 8px 7px rgba(255,255,255,.14);
-  transform: rotate(-3deg);
-  transition: transform .35s cubic-bezier(.2,.8,.2,1), filter .3s;
-}
-
-.chick-wing {
-  position: absolute;
-  left: 19px;
-  bottom: 13px;
-  width: 55px;
-  height: 31px;
-  border: 4px solid #9a5d31;
-  border-top: 0;
-  border-radius: 18% 18% 60% 56%;
-  transform: rotate(7deg);
-  opacity: .74;
-}
-
-.chick-tuft {
-  position: absolute;
-  top: -18px;
-  width: 30px;
-  height: 26px;
-  border: 5px solid #88522f;
-  border-right: 0;
-  border-bottom: 0;
-  border-radius: 100% 0 0;
-  background: var(--yellow-light);
-}
-
-.tuft-one { left: 84px; transform: rotate(31deg); }
-.tuft-two { left: 103px; top: -13px; transform: rotate(66deg) scale(.78); }
-
-.chick-eye {
-  position: absolute;
-  top: 30px;
-  width: 12px;
-  height: 15px;
-  border-radius: 50%;
-  background: #503225;
-  box-shadow: inset 3px 3px #fff9dc;
-  transition: height .25s, transform .25s, border-radius .25s;
-}
-
-.eye-left { left: 91px; }
-.eye-right { left: 127px; }
-
-.chick-brow {
-  position: absolute;
-  z-index: 3;
-  top: 24px;
-  width: 17px;
-  height: 4px;
-  border-radius: 6px;
-  background: #7b462b;
-  opacity: 0;
-  transition: opacity .2s, transform .2s;
-}
-
-.brow-left { left: 88px; transform: rotate(13deg); }
-.brow-right { left: 125px; transform: rotate(-13deg); }
-
-.chick-beak {
-  position: absolute;
-  z-index: 2;
-  top: 48px;
-  left: 108px;
-  width: 22px;
-  height: 15px;
-  border: 3px solid #9f592c;
-  border-radius: 55% 45% 54% 46%;
-  background: #f28a3f;
-  transform: rotate(2deg);
-}
-
-.chick-beak::after {
-  content: "";
-  position: absolute;
-  left: 2px;
-  right: 2px;
-  top: 5px;
-  border-top: 2px solid rgba(143,70,34,.55);
-}
-
-.chick-blush {
-  position: absolute;
-  top: 52px;
-  width: 20px;
-  height: 9px;
-  border-radius: 50%;
-  background: rgba(239, 125, 145, .56);
-}
-
-.blush-left { left: 72px; }
-.blush-right { left: 136px; }
-
-.chick-foot {
-  position: absolute;
-  bottom: -10px;
-  width: 28px;
-  height: 14px;
-  border: 4px solid #a45b2d;
-  border-top: 0;
-  border-radius: 0 0 50% 50%;
-  background: #f39843;
-}
-
-.foot-left { left: 31px; transform: rotate(7deg); }
-.foot-right { left: 69px; transform: rotate(-4deg); }
-
-.mood-mark {
-  position: absolute;
-  z-index: 5;
-  display: none;
-  font-weight: 900;
-  pointer-events: none;
-}
-
-.mood-question {
-  top: -12px;
-  left: 22px;
-  color: #c67c36;
-  font-size: 31px;
-  transform: rotate(-12deg);
-}
-
-.mood-steam {
-  top: -13px;
-  left: 11px;
-  color: #9e7767;
-  font-size: 42px;
-  transform: rotate(80deg);
-}
-
-.mood-heart {
-  top: -18px;
-  left: 19px;
-  color: var(--pink);
-  font-size: 31px;
-  animation: heart-float .8s ease-in-out infinite alternate;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("assets/gate/chick-moods.png");
+  background-repeat: no-repeat;
+  background-size: 300% 300%;
+  background-position: 50% 100%;
+  filter: drop-shadow(0 7px 5px rgba(103, 66, 43, .12));
+  transform-origin: center bottom;
+  transition: filter .25s ease, transform .25s ease;
 }
 
 .gate-kicker {
@@ -473,51 +261,35 @@ input:disabled {
   animation: dot-pulse .8s infinite;
 }
 
-.gate-card.is-confused .mood-question { display: block; }
-.gate-card.is-confused .chick { transform: rotate(2deg) translateY(-2px); }
-.gate-card.is-confused .eye-right { height: 8px; transform: translateY(4px); }
-
-.gate-card.is-angry .mood-steam { display: block; }
-.gate-card.is-angry .chick { animation: tiny-rumble .34s ease-in-out 2; }
-.gate-card.is-angry .chick-brow { opacity: 1; }
-.gate-card.is-angry .brow-left { transform: rotate(18deg); }
-.gate-card.is-angry .brow-right { transform: rotate(-18deg); }
-
-.gate-card.is-locked .chick { filter: saturate(.68); }
-.gate-card.is-locked .chick-eye {
-  height: 4px;
-  border-radius: 7px;
-  box-shadow: none;
-  transform: translateY(6px);
+.gate-card.is-confused .chick-sprite {
+  background-position: 50% 0;
+  transform: rotate(1deg) translateY(-2px);
 }
-.gate-card.is-locked .chick-beak { transform: translateY(3px) rotate(2deg); }
 
-.gate-card.is-open .door {
-  opacity: .62;
-  transform: perspective(300px) rotateY(-58deg);
+.gate-card.is-angry .chick-sprite {
+  background-position: 100% 0;
+  animation: tiny-rumble .34s ease-in-out 2;
 }
-.gate-card.is-open .mood-heart { display: block; }
-.gate-card.is-open .chick { animation: welcome-bob .6s ease-in-out 2; }
-.gate-card.is-open .chick-eye {
-  height: 5px;
-  border-radius: 8px 8px 2px 2px;
-  box-shadow: none;
-  transform: translateY(5px);
+
+.gate-card.is-locked .chick-sprite {
+  background-position: 100% 50%;
+  filter: saturate(.78) drop-shadow(0 7px 5px rgba(103, 66, 43, .12));
+}
+
+.gate-card.is-open .chick-sprite {
+  background-position: 100% 100%;
+  animation: welcome-bob .6s ease-in-out 2;
 }
 
 @keyframes tiny-rumble {
-  0%, 100% { transform: rotate(-3deg) translateX(0); }
-  33% { transform: rotate(-4deg) translateX(-3px); }
-  66% { transform: rotate(-2deg) translateX(3px); }
+  0%, 100% { transform: rotate(0) translateX(0); }
+  33% { transform: rotate(-1deg) translateX(-3px); }
+  66% { transform: rotate(1deg) translateX(3px); }
 }
 
 @keyframes welcome-bob {
-  0%, 100% { transform: rotate(-3deg) translateY(0); }
-  50% { transform: rotate(0) translateY(-8px); }
-}
-
-@keyframes heart-float {
-  to { transform: translateY(-7px) rotate(8deg) scale(1.08); }
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-7px); }
 }
 
 @keyframes dot-pulse {
