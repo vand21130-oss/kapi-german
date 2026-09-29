@@ -102,6 +102,7 @@ function showLessons() {
     document.getElementById("buttons").innerHTML = `
         <button class="btn-kapi" style="background:linear-gradient(135deg,#6f9d63,#9bbb72);color:white;border:3px solid #eef6df;box-shadow:0 8px 18px rgba(77,112,63,.22);" onclick="showTodayMission()">🎲 Hôm nay học gì?</button>
         <button class="btn-kapi btn-lesson-1" onclick="chooseLesson('Hören')">🎧 Hören</button>
+        <button class="btn-kapi" style="background:linear-gradient(135deg,#ffe7ef,#ffd0df);color:#714858;" onclick="chooseLesson('Lesen')">📖 Lesen</button>
         <button class="btn-kapi btn-lesson-2" onclick="chooseLesson('Sprechen')">🗣️ Sprechen</button>
         <button class="btn-kapi btn-lesson-3" onclick="chooseLesson('Schreiben')">✍️ Schreiben</button>
         <button class="btn-kapi btn-lesson-5" onclick="chooseLesson('Vokabeln')">📝 Vokabeln & Spiele</button>
@@ -124,6 +125,8 @@ function chooseLesson(lesson) {
         showSchreibenMenu();
     } else if (lesson === "Hören") {
         showHoerenMenu();
+    } else if (lesson === "Lesen") {
+        showLesenMenu();
     } else if (lesson === "Vokabeln") {
         showVokabelHauptmenu();
     }
@@ -168,7 +171,7 @@ let activeTodayMission = null;
 
 const TODAY_SKILLS = [
     { id:'hoeren', icon:'🎧', name:'Hören', minutes:30, detail:'Hoàn thành một Teil, xem lỗi và đọc lại transcript.' },
-    { id:'lesen', icon:'📖', name:'Lesen', minutes:40, detail:'Đọc một tập truyện và vượt qua Mini-Quiz Sprachschätze.' },
+    { id:'lesen', icon:'📖', name:'Lesen', minutes:40, detail:'Làm một Teil Goethe B2 và đánh dấu từ ngay trong kho cũ.' },
     { id:'sprechen', icon:'🗣️', name:'Sprechen', minutes:30, detail:'Hoàn thành một Teil và nhận phiếu chấm của Mr. Efa.' },
     { id:'schreiben', icon:'✍️', name:'Schreiben', minutes:45, detail:'Viết trong 45 phút. Hết giờ ting ting và tự khóa bài.' },
     { id:'vokabeln', icon:'🧳', name:'Wortschatz', minutes:25, detail:'Học 8 từ và hoàn thành 5 câu kiểm tra cuối buổi.' }
@@ -266,10 +269,7 @@ function startTodayMission() {
     if (mission.skill === 'hoeren') return showGoetheHoerenMenu();
     if (mission.skill === 'sprechen') return chooseLesson('Sprechen');
     if (mission.skill === 'vokabeln') return startDailyVocabMission();
-    if (mission.skill === 'lesen') {
-        const chapter = 1 + ([...mission.date].reduce((n,c)=>n+c.charCodeAt(0),0) % 7);
-        return showKapiStory('B2', chapter);
-    }
+    if (mission.skill === 'lesen') return showLesenMenu();
     if (mission.skill === 'schreiben') {
         const teil = Math.random() < .65 ? 1 : 2;
         const pool = teil === 1 ? schreibenTeil1 : schreibenTeil2;
@@ -4712,6 +4712,784 @@ function showKapiStory(level, chapter = 1) {
 }
 
 // ==========================================
+// GOETHE B2 LESEN – ĐỀ HẰNG NGÀY + ÔN TỪ TRONG KHO CŨ
+// ==========================================
+const LESEN_DAILY_KEY = 'kapi_lesen_daily_plan_v1';
+const LESEN_ROTATION_KEY = 'kapi_lesen_rotation_v1';
+const LESEN_HISTORY_KEY = 'kapi_lesen_history_v1';
+const LESEN_HIGHLIGHTS_KEY = 'kapi_lesen_highlights_v1';
+const LESEN_PENDING_KEY = 'kapi_lesen_pending_words_v1';
+const LESEN_GATE_KEY = 'kapi_lesen_gate_v1';
+
+let lesenCurrent = null;
+let lesenReviewGate = null;
+let lesenClock = null;
+
+function lesenReadJson(key, fallback) {
+    try {
+        const value = JSON.parse(localStorage.getItem(key));
+        return value === null || value === undefined ? fallback : value;
+    } catch (_) {
+        return fallback;
+    }
+}
+
+function lesenWriteJson(key, value) {
+    localStorage.setItem(key, JSON.stringify(value));
+}
+
+function lesenTasks() {
+    return typeof LESEN_B2_TASKS === 'undefined' ? [] : LESEN_B2_TASKS;
+}
+
+function lesenFindTask(taskId) {
+    return lesenTasks().find(task => task.id === taskId);
+}
+
+function lesenHistory() {
+    const history = lesenReadJson(LESEN_HISTORY_KEY, []);
+    return Array.isArray(history) ? history : [];
+}
+
+function lesenDrawTeil(rotation, excluded = []) {
+    if (!Array.isArray(rotation.bag)) rotation.bag = [];
+    if (!rotation.bag.length) rotation.bag = shuffleArray([1, 2, 3, 4, 5]);
+    let index = rotation.bag.findIndex(teil => !excluded.includes(teil));
+    if (index < 0) {
+        rotation.bag.push(...shuffleArray([1, 2, 3, 4, 5]));
+        index = rotation.bag.findIndex(teil => !excluded.includes(teil));
+    }
+    return rotation.bag.splice(index, 1)[0];
+}
+
+function lesenPickTaskForTeil(teil, usedIds = []) {
+    const recentIds = lesenHistory().slice(0, 5).map(item => item.taskId);
+    const pool = lesenTasks().filter(task => task.teil === teil && !usedIds.includes(task.id));
+    const fresh = pool.filter(task => !recentIds.includes(task.id));
+    return shuffleArray(fresh.length ? fresh : pool)[0] || null;
+}
+
+function lesenGetDailyPlan() {
+    const today = todayDateKey();
+    const saved = lesenReadJson(LESEN_DAILY_KEY, null);
+    if (saved && saved.date === today && lesenFindTask(saved.required) && lesenFindTask(saved.bonus)) return saved;
+
+    const rotation = lesenReadJson(LESEN_ROTATION_KEY, { bag: [] });
+    const firstTeil = lesenDrawTeil(rotation);
+    const secondTeil = lesenDrawTeil(rotation, [firstTeil]);
+    const required = lesenPickTaskForTeil(firstTeil);
+    const bonus = lesenPickTaskForTeil(secondTeil, required ? [required.id] : []);
+    const fallback = lesenTasks()[0];
+    const plan = {
+        date: today,
+        required: (required || fallback || {}).id || '',
+        bonus: (bonus || fallback || {}).id || ''
+    };
+    lesenWriteJson(LESEN_ROTATION_KEY, rotation);
+    lesenWriteJson(LESEN_DAILY_KEY, plan);
+    return plan;
+}
+
+function lesenCompletion(taskId, date = todayDateKey()) {
+    return lesenHistory().find(item => item.taskId === taskId && item.date === date);
+}
+
+function lesenGateStatus() {
+    const gate = lesenReadJson(LESEN_GATE_KEY, {});
+    return {
+        ...gate,
+        active: Number(gate.permitUntil || 0) > Date.now()
+    };
+}
+
+function lesenPendingWords() {
+    const pending = lesenReadJson(LESEN_PENDING_KEY, []);
+    return Array.isArray(pending) ? pending : [];
+}
+
+function lesenRenderDailyCard(task, label, isBonus) {
+    if (!task) return '';
+    const done = lesenCompletion(task.id);
+    const buttonLabel = done ? '↻ Làm lại Teil này' : (isBonus ? '🍰 Làm bài bonus' : '▶ Bắt đầu bài chính');
+    return `<article class="lesen-daily-card">
+        <div style="font-size:12px;font-weight:900;letter-spacing:.8px;color:${isBonus ? '#a56b7d' : '#6d8658'};">${label}</div>
+        <h3 style="margin:6px 0 4px;">Teil ${task.teil} · ${escapeVocabHtml(task.title)}</h3>
+        <div style="color:#836f62;margin-bottom:12px;">${escapeVocabHtml(task.topic)} · khoảng ${task.suggestedMinutes} phút</div>
+        ${done ? `<div style="margin-bottom:10px;color:#558441;font-weight:800;">✅ Đã làm: ${done.score}/${done.total}</div>` : ''}
+        <button class="btn-kapi" style="margin:0;background:${isBonus ? '#ffe0ea' : '#dceecb'};color:#574840;" onclick="startLesenTask('${task.id}')">${buttonLabel}</button>
+    </article>`;
+}
+
+function lesenRenderPendingTray() {
+    const pending = lesenPendingWords();
+    if (!pending.length) return '';
+    return `<details style="max-width:850px;margin:16px auto 0;text-align:left;">
+        <summary style="cursor:pointer;font-weight:800;color:#8c6271;">🧺 ${pending.length} từ chưa có trong kho · đang nằm ở khay chờ</summary>
+        <div class="lesen-panel" style="margin-top:8px;">
+            ${pending.slice().reverse().slice(0, 8).map(item => `<div class="lesen-highlight-item">
+                <b>${escapeVocabHtml(item.text)}</b>
+                <small style="display:block;color:#8a7770;">${escapeVocabHtml(item.context || '')}</small>
+                <button type="button" style="margin-top:6px;border:0;border-radius:8px;padding:5px 9px;cursor:pointer;" onclick="lesenRemovePending('${item.id}')">Đã xử lý · bỏ khỏi khay</button>
+            </div>`).join('')}
+        </div>
+    </details>`;
+}
+
+function showLesenMenu() {
+    clearInterval(countdown);
+    clearInterval(lesenClock);
+    lesenCurrent = null;
+    setLearningFocus(true);
+    const area = document.getElementById('feedback-area');
+    area.style.display = 'block';
+    area.classList.add('lesen-wide');
+    document.getElementById('timer').innerText = '';
+    const plan = lesenGetDailyPlan();
+    const required = lesenFindTask(plan.required);
+    const bonus = lesenFindTask(plan.bonus);
+    const gate = lesenGateStatus();
+    const recent = lesenHistory().slice(0, 3);
+    const gateText = gate.active
+        ? `🫩 Vali đã mở bàn đọc đến ${new Date(gate.permitUntil).toLocaleTimeString('vi-VN', {hour:'2-digit', minute:'2-digit'})}.`
+        : '🧳 Trước bài mới, Vali có thể hỏi 3 từ của bài hôm qua.';
+
+    document.getElementById('message').innerHTML = '<b>📖 Goethe B2 Lesen</b><br><small>Mỗi ngày một bài chính; bài thứ hai là bonus, không phải nghĩa vụ.</small>';
+    area.innerHTML = `<div class="lesen-shell">
+        <div class="lesen-toolbar">
+            <span>📅 ${plan.date}</span>
+            <span>${gateText}</span>
+            <span>🖍️ Bôi hồng ngay trên bài đọc để soi kho từ cũ.</span>
+        </div>
+        <div class="lesen-daily-grid">
+            ${lesenRenderDailyCard(required, 'BÀI CHÍNH HÔM NAY', false)}
+            ${lesenRenderDailyCard(bonus, 'BÀI BONUS · CHỈ KHI CÒN SỨC', true)}
+        </div>
+        ${lesenRenderPendingTray()}
+        ${recent.length ? `<div class="lesen-panel" style="max-width:850px;margin:16px auto 0;text-align:left;">
+            <b>📚 Ba bài gần nhất</b>
+            ${recent.map(item => {
+                const task = lesenFindTask(item.taskId);
+                return `<div style="margin-top:8px;color:#74655d;">${item.date} · Teil ${item.teil} · ${task ? escapeVocabHtml(task.title) : item.taskId} · <b>${item.score}/${item.total}</b></div>`;
+            }).join('')}
+        </div>` : ''}
+    </div>`;
+    document.getElementById('buttons').innerHTML = '<button class="btn-kapi btn-home" onclick="leaveLesen()">⬅️ Kỹ năng B2</button>';
+}
+
+function leaveLesen() {
+    clearInterval(lesenClock);
+    clearInterval(countdown);
+    lesenCurrent = null;
+    lesenReviewGate = null;
+    const area = document.getElementById('feedback-area');
+    area.classList.remove('lesen-wide');
+    showLessons();
+}
+
+function lesenLatestReviewSource() {
+    const today = todayDateKey();
+    return lesenHistory().find(item => item.date < today && Array.isArray(item.reviewWords) && item.reviewWords.length >= 3);
+}
+
+function startLesenTask(taskId) {
+    const task = lesenFindTask(taskId);
+    if (!task) return alert('Voi làm rơi đề đọc mất rồi. Tải lại trang giúp tớ nhé 🐘');
+    if (lesenGateStatus().active) return launchLesenTask(taskId);
+    const source = lesenLatestReviewSource();
+    if (!source) return launchLesenTask(taskId);
+    lesenStartReviewGate(taskId, source);
+}
+
+function lesenBuildGateQuestions(source) {
+    const pool = source.reviewWords
+        .map(item => lesenFindVocabEntry(item.de || item.text || '')?.word || item)
+        .filter(item => item && item.de && item.vi);
+    const unique = [];
+    const seen = new Set();
+    shuffleArray(pool).forEach(item => {
+        const key = lesenNormalizeGerman(item.de);
+        if (!seen.has(key)) {
+            seen.add(key);
+            unique.push({ de:item.de, vi:item.vi });
+        }
+    });
+    const all = getAllUniqueVocabWords();
+    return unique.slice(0, 3).map(word => {
+        const seenMeanings = new Set([word.vi]);
+        const distractors = shuffleArray(all.filter(item => item.vi && item.de !== word.de)).reduce((list, item) => {
+            if (list.length < 3 && !seenMeanings.has(item.vi)) {
+                seenMeanings.add(item.vi);
+                list.push(item.vi);
+            }
+            return list;
+        }, []);
+        return { word, options:shuffleArray([word.vi, ...distractors]), selected:-1 };
+    });
+}
+
+function lesenStartReviewGate(taskId, source) {
+    const questions = lesenBuildGateQuestions(source);
+    if (questions.length < 3) return launchLesenTask(taskId);
+    lesenReviewGate = { taskId, source, questions, index:0, score:0 };
+    lesenRenderReviewGate();
+}
+
+function lesenRenderReviewGate() {
+    if (!lesenReviewGate) return;
+    setLearningFocus(true, 'koffer');
+    const area = document.getElementById('feedback-area');
+    area.style.display = 'block';
+    area.classList.add('lesen-wide');
+    const gate = lesenReviewGate;
+    const lines = [
+        '“Bài mới đang ở phía sau tôi. Thật trùng hợp.”',
+        '“Ba từ cũ trước. Lòng tham kiến thức để sau.”',
+        '“Kho hôm qua còn mở. Bạn chưa được giả vờ mất trí nhớ.”',
+        '“Ôn xong tôi tự tránh đường. Có thể.”'
+    ];
+    document.getElementById('message').innerHTML = '<b>🧳 Vali chặn cửa bàn Lesen</b>';
+    if (gate.index >= gate.questions.length) {
+        const passed = gate.score >= 2;
+        area.innerHTML = `<div class="lesen-panel" style="max-width:720px;margin:auto;text-align:left;">
+            <h2 style="margin-top:0;">${passed ? '✅ Ổn, được đọc bài mới' : '🫩 Vali vừa thở dài rất có tổ chức'}</h2>
+            <p>Cậu nhận ra <b>${gate.score}/${gate.questions.length}</b> từ của bài đọc trước.</p>
+            ${gate.questions.map(q => `<div class="lesen-result-row" style="background:${q.selected >= 0 && q.options[q.selected] === q.word.vi ? '#edf7e7' : '#fff0f1'};">
+                <b>${escapeVocabHtml(q.word.de)}</b> — ${escapeVocabHtml(q.word.vi)}
+            </div>`).join('')}
+            ${passed
+                ? '<button class="btn-kapi btn-green" onclick="lesenGrantGate(false)">Mở bài Lesen →</button>'
+                : '<button class="btn-kapi" style="background:#ece7e3;" onclick="lesenStartReviewGate(lesenReviewGate.taskId, lesenReviewGate.source)">Thử lại 3 từ khác</button><button class="btn-kapi" style="background:#d9c8bd;" onclick="lesenGrantGate(true)">🫩 Tạm cho qua 24 giờ</button>'}
+        </div>`;
+        document.getElementById('buttons').innerHTML = '<button class="btn-kapi btn-home" onclick="showLesenMenu()">⬅️ Bàn Lesen</button>';
+        return;
+    }
+
+    const q = gate.questions[gate.index];
+    const answered = q.selected >= 0;
+    area.innerHTML = `<div class="lesen-panel" style="max-width:720px;margin:auto;text-align:left;">
+        <div style="font-size:14px;color:#8c776d;">${lines[(gate.index + gate.source.date.length) % lines.length]}</div>
+        <div style="height:8px;background:#eee7df;border-radius:999px;margin:14px 0 22px;"><div style="height:100%;width:${Math.round(gate.index/gate.questions.length*100)}%;background:#9bbd76;border-radius:999px;"></div></div>
+        <div style="color:#8c776d;">Từ ${gate.index + 1}/${gate.questions.length} · Chọn nghĩa đã nằm trong kho</div>
+        <h2 style="font-size:30px;">${escapeVocabHtml(q.word.de)}</h2>
+        <div class="lesen-radio-grid">
+            ${q.options.map((option, index) => {
+                const chosen = q.selected === index;
+                const correct = option === q.word.vi;
+                const bg = answered && correct ? '#e6f4dc' : answered && chosen ? '#ffe4e7' : '#fff';
+                return `<button type="button" style="text-align:left;padding:12px;border:2px solid ${chosen ? '#a88d7c' : '#dfd7cf'};border-radius:11px;background:${bg};cursor:pointer;font:inherit;" ${answered ? 'disabled' : ''} onclick="lesenAnswerGate(${index})">${String.fromCharCode(65+index)}. ${escapeVocabHtml(option)}</button>`;
+            }).join('')}
+        </div>
+        ${answered ? `<div style="margin-top:14px;font-weight:800;color:${q.options[q.selected] === q.word.vi ? '#4f7e3b' : '#b35160'};">${q.options[q.selected] === q.word.vi ? '✅ Nhận ra rồi.' : `❌ Đáp án: ${escapeVocabHtml(q.word.vi)}`}</div><button class="btn-kapi btn-green" onclick="lesenNextGate()">Từ tiếp theo →</button>` : ''}
+    </div>`;
+    document.getElementById('buttons').innerHTML = '<button class="btn-kapi btn-home" onclick="showLesenMenu()">⬅️ Dừng ôn</button>';
+}
+
+function lesenAnswerGate(optionIndex) {
+    if (!lesenReviewGate) return;
+    const q = lesenReviewGate.questions[lesenReviewGate.index];
+    if (!q || q.selected >= 0) return;
+    q.selected = optionIndex;
+    const correct = q.options[optionIndex] === q.word.vi;
+    if (correct) lesenReviewGate.score++;
+    recordVocabAnswer(q.word, correct);
+    lesenRenderReviewGate();
+}
+
+function lesenNextGate() {
+    if (!lesenReviewGate) return;
+    const q = lesenReviewGate.questions[lesenReviewGate.index];
+    if (!q || q.selected < 0) return;
+    lesenReviewGate.index++;
+    lesenRenderReviewGate();
+}
+
+function lesenGrantGate(pityPass) {
+    if (!lesenReviewGate) return;
+    const taskId = lesenReviewGate.taskId;
+    lesenWriteJson(LESEN_GATE_KEY, {
+        permitUntil: Date.now() + 24 * 60 * 60 * 1000,
+        grantedAt: Date.now(),
+        pityPass: Boolean(pityPass),
+        sourceDate: lesenReviewGate.source.date
+    });
+    if (pityPass) {
+        const missed = getSavedMissed();
+        lesenReviewGate.questions.filter(q => q.options[q.selected] !== q.word.vi).forEach(q => {
+            if (!missed.some(item => lesenNormalizeGerman(item.de) === lesenNormalizeGerman(q.word.de))) missed.push(q.word);
+        });
+        saveMissed(missed);
+    }
+    lesenReviewGate = null;
+    launchLesenTask(taskId);
+}
+
+function lesenRemovePending(id) {
+    lesenWriteJson(LESEN_PENDING_KEY, lesenPendingWords().filter(item => item.id !== id));
+    showLesenMenu();
+}
+
+function launchLesenTask(taskId) {
+    const task = lesenFindTask(taskId);
+    if (!task) return showLesenMenu();
+    clearInterval(countdown);
+    clearInterval(lesenClock);
+    lesenReviewGate = null;
+    lesenCurrent = {
+        task,
+        answers: {},
+        submitted: false,
+        startedAt: Date.now(),
+        result: null
+    };
+    setLearningFocus(true);
+    renderLesenTask();
+    lesenStartClock();
+}
+
+function lesenStartClock() {
+    clearInterval(lesenClock);
+    const update = () => {
+        if (!lesenCurrent) return;
+        const elapsed = Math.max(0, Math.floor((Date.now() - lesenCurrent.startedAt) / 1000));
+        const minutes = Math.floor(elapsed / 60);
+        const seconds = String(elapsed % 60).padStart(2, '0');
+        const target = lesenCurrent.task.suggestedMinutes;
+        const timer = document.getElementById('timer');
+        timer.innerText = `📖 ${minutes}:${seconds} / gợi ý ${target}:00`;
+        timer.style.color = elapsed > target * 60 ? '#a85c66' : '#758d55';
+    };
+    update();
+    lesenClock = setInterval(update, 1000);
+}
+
+function lesenSaveAnswer(number, value) {
+    if (!lesenCurrent || lesenCurrent.submitted) return;
+    lesenCurrent.answers[String(number)] = value;
+}
+
+function lesenAnswerValue(number) {
+    return lesenCurrent ? (lesenCurrent.answers[String(number)] || '') : '';
+}
+
+function lesenQuestionClass(question) {
+    if (!lesenCurrent || !lesenCurrent.submitted) return 'lesen-question';
+    return `lesen-question ${lesenAnswerValue(question.number) === question.answer ? 'lesen-correct' : 'lesen-wrong'}`;
+}
+
+function lesenSelect(question, options, extraClass = '') {
+    const selected = lesenAnswerValue(question.number);
+    return `<select class="lesen-select ${extraClass}" aria-label="Aufgabe ${question.number}" onchange="lesenSaveAnswer(${question.number},this.value)" ${lesenCurrent.submitted ? 'disabled' : ''}>
+        <option value="">– chọn –</option>
+        ${options.map(option => `<option value="${option.id}" ${selected === option.id ? 'selected' : ''}>${escapeVocabHtml(option.label || option.id)}</option>`).join('')}
+    </select>`;
+}
+
+function lesenFeedback(question, correctLabel = '') {
+    if (!lesenCurrent || !lesenCurrent.submitted) return '';
+    const chosen = lesenAnswerValue(question.number);
+    const correct = chosen === question.answer;
+    return `<div style="margin-top:9px;font-size:14px;color:${correct ? '#4f783e' : '#a44d5a'};">
+        <b>${correct ? '✅ Đúng' : `❌ Cậu chọn ${escapeVocabHtml(chosen || '—')} · đáp án ${escapeVocabHtml(question.answer)}${correctLabel ? ` (${escapeVocabHtml(correctLabel)})` : ''}`}</b><br>
+        <span style="color:#6d625c;">🐘 ${escapeVocabHtml(question.why || '')}</span>
+    </div>`;
+}
+
+function lesenRenderTeil1(task) {
+    const options = task.people.map(person => ({ id:person.id, label:`${person.id} · ${person.name}` }));
+    return `<div class="lesen-task-grid">
+        <section class="lesen-panel lesen-readable-text">
+            <h3>Texte a–d</h3>
+            ${task.people.map(person => `<article class="lesen-person"><span class="lesen-letter">${person.id}</span><b>${escapeVocabHtml(person.name)}</b><p>${escapeVocabHtml(person.text)}</p></article>`).join('')}
+        </section>
+        <section class="lesen-panel">
+            <h3>Aufgaben 1–9</h3>
+            ${task.questions.map(question => {
+                const answerPerson = task.people.find(person => person.id === question.answer);
+                return `<div id="lesen-q-${question.number}" class="${lesenQuestionClass(question)}"><b>${question.number}. ${escapeVocabHtml(question.text)}</b><br>${lesenSelect(question, options)}${lesenFeedback(question, answerPerson?.name || '')}</div>`;
+            }).join('')}
+        </section>
+    </div>`;
+}
+
+function lesenRenderTeil2(task) {
+    const options = task.options.map(option => ({ id:option.id, label:option.id }));
+    const optionText = Object.fromEntries(task.options.map(option => [option.id, option.text]));
+    return `<section class="lesen-panel">
+        <h3>Sätze a–h</h3>
+        <div style="text-align:left;">
+            ${task.options.map(option => `<div style="margin:8px 0;"><span class="lesen-letter">${option.id}</span>${escapeVocabHtml(option.text)}</div>`).join('')}
+        </div>
+    </section>
+    <section class="lesen-panel lesen-readable-text">
+        <h3>Artikel</h3>
+        ${task.segments.map((segment, index) => {
+            const question = task.questions[index];
+            const gap = question ? `<span id="lesen-q-${question.number}" class="${lesenQuestionClass(question)}" style="display:inline-block;padding:4px 7px;margin:2px;">[${question.number}] ${lesenSelect(question, options, 'lesen-gap-select')}${lesenFeedback(question, optionText[question.answer])}</span>` : '';
+            return `<p>${escapeVocabHtml(segment)} ${gap}</p>`;
+        }).join('')}
+    </section>`;
+}
+
+function lesenRenderTeil3(task) {
+    return `<section class="lesen-panel lesen-readable-text">
+        <h3>Artikel</h3>
+        ${task.article.map(paragraph => `<p>${escapeVocabHtml(paragraph)}</p>`).join('')}
+    </section>
+    <section class="lesen-panel">
+        <h3>Aufgaben 16–21</h3>
+        ${task.questions.map(question => `<div id="lesen-q-${question.number}" class="${lesenQuestionClass(question)}">
+            <b>${question.number}. ${escapeVocabHtml(question.text)}</b>
+            <div class="lesen-radio-grid">
+                ${Object.entries(question.options).map(([id, text]) => `<label><input type="radio" name="lesen-${question.number}" value="${id}" ${lesenAnswerValue(question.number) === id ? 'checked' : ''} ${lesenCurrent.submitted ? 'disabled' : ''} onchange="lesenSaveAnswer(${question.number},this.value)"> <b>${id}</b> · ${escapeVocabHtml(text)}</label>`).join('')}
+            </div>
+            ${lesenFeedback(question, question.options[question.answer])}
+        </div>`).join('')}
+    </section>`;
+}
+
+function lesenRenderTeil4(task) {
+    const options = task.opinions.map(opinion => ({ id:opinion.id, label:opinion.id }));
+    const optionText = Object.fromEntries(task.opinions.map(opinion => [opinion.id, opinion.text]));
+    return `<div class="lesen-task-grid">
+        <section class="lesen-panel lesen-readable-text">
+            <h3>Meinungen a–h</h3>
+            ${task.opinions.map(opinion => `<article class="lesen-opinion"><span class="lesen-letter">${opinion.id}</span>${escapeVocabHtml(opinion.text)}</article>`).join('')}
+        </section>
+        <section class="lesen-panel">
+            <h3>Überschriften 22–27</h3>
+            <div class="lesen-question" style="background:#eef3e9;"><b>Beispiel: ${escapeVocabHtml(task.example.text)}</b><br>→ ${task.example.answer}</div>
+            ${task.questions.map(question => `<div id="lesen-q-${question.number}" class="${lesenQuestionClass(question)}"><b>${question.number}. ${escapeVocabHtml(question.text)}</b><br>${lesenSelect(question, options)}${lesenFeedback(question, optionText[question.answer])}</div>`).join('')}
+        </section>
+    </div>`;
+}
+
+function lesenRenderTeil5(task) {
+    const options = task.headings.map(heading => ({ id:heading.id, label:`${heading.id} · ${heading.text}` }));
+    const headingText = Object.fromEntries(task.headings.map(heading => [heading.id, heading.text]));
+    return `<section class="lesen-panel">
+        <h3>Überschriften a–h</h3>
+        <div style="text-align:left;columns:2;column-gap:24px;">
+            ${task.headings.map(heading => `<div style="break-inside:avoid;margin:7px 0;"><span class="lesen-letter">${heading.id}</span>${escapeVocabHtml(heading.text)}</div>`).join('')}
+        </div>
+    </section>
+    <section class="lesen-panel lesen-readable-text">
+        <h3>Regeln</h3>
+        <article class="lesen-rule" style="background:#eef3e9;"><b>Beispiel → ${task.example.answer}</b><p>${escapeVocabHtml(task.example.text)}</p></article>
+        ${task.sections.map(section => {
+            const question = task.questions.find(item => item.number === section.number);
+            return `<article id="lesen-q-${section.number}" class="lesen-rule ${lesenQuestionClass(question)}"><b>§ ${section.number}</b><p>${escapeVocabHtml(section.text)}</p>${lesenSelect(question, options)}${lesenFeedback(question, headingText[question.answer])}</article>`;
+        }).join('')}
+    </section>`;
+}
+
+function lesenTaskBody(task) {
+    if (task.teil === 1) return lesenRenderTeil1(task);
+    if (task.teil === 2) return lesenRenderTeil2(task);
+    if (task.teil === 3) return lesenRenderTeil3(task);
+    if (task.teil === 4) return lesenRenderTeil4(task);
+    return lesenRenderTeil5(task);
+}
+
+function renderLesenTask() {
+    if (!lesenCurrent) return;
+    const task = lesenCurrent.task;
+    const area = document.getElementById('feedback-area');
+    area.style.display = 'block';
+    area.classList.add('lesen-wide');
+    document.getElementById('message').innerHTML = `<b>📖 Teil ${task.teil} · ${escapeVocabHtml(task.title)}</b><br><small>${escapeVocabHtml(task.topic)}</small>`;
+    const result = lesenCurrent.result;
+    area.innerHTML = `<main class="lesen-shell" data-lesentask="${task.id}">
+        <div class="lesen-toolbar">
+            <span><b>Goethe B2 · Teil ${task.teil}</b></span>
+            <span>⏱️ Mốc gợi ý: ${task.suggestedMinutes} phút · đồng hồ không khóa bài</span>
+            <span>🖍️ Chọn chữ + bấm Highlight</span>
+        </div>
+        <section class="lesen-panel" style="text-align:left;background:#fff8e9;">
+            <b>Aufgabe</b><br>${escapeVocabHtml(task.instruction)}
+        </section>
+        ${result ? `<section class="lesen-panel" style="border-color:${result.score === result.total ? '#85b86c' : '#d4a8af'};text-align:left;">
+            <h2 style="margin-top:0;">${result.score === result.total ? '🌿 Trọn điểm luôn' : '🐘 Phiếu đọc hiểu'}</h2>
+            <p><b>${result.score}/${result.total}</b> câu đúng. Các lời giải nằm ngay dưới từng câu.</p>
+            <p style="color:#7d6d65;">Từ bôi hồng giờ mới được lật nghĩa; từ chưa có có thể đưa vào khay chờ.</p>
+        </section>` : ''}
+        ${lesenTaskBody(task)}
+        <div id="lesen-highlight-drawer"></div>
+    </main>`;
+    lesenRenderHighlightDrawer();
+    lesenRestoreHighlights(task.id);
+    document.getElementById('buttons').innerHTML = lesenCurrent.submitted
+        ? '<button class="btn-kapi" style="background:#ffe0ea;" onclick="startLesenVocabGame()">🎮 Ném 5 từ bài này vào game</button><button class="btn-kapi btn-home" onclick="showLesenMenu()">⬅️ Bàn Lesen</button>'
+        : '<button class="btn-kapi btn-green" onclick="submitLesenTask()">✅ Nộp bài đọc</button><button class="btn-kapi btn-home" onclick="showLesenMenu()">💾 Dừng và về bàn Lesen</button>';
+}
+
+function lesenBuildReviewWords(task) {
+    const words = [];
+    const seen = new Set();
+    const add = word => {
+        if (!word || !word.de || !word.vi) return;
+        const key = lesenNormalizeGerman(word.de);
+        if (seen.has(key)) return;
+        seen.add(key);
+        words.push({ de:word.de, vi:word.vi });
+    };
+    (task.targetWords || []).forEach(text => add(lesenFindVocabEntry(text)?.word));
+    lesenTaskHighlights(task.id).forEach(item => {
+        if (item.matchedDe) add({ de:item.matchedDe, vi:item.matchedVi });
+    });
+    return words;
+}
+
+function submitLesenTask() {
+    if (!lesenCurrent || lesenCurrent.submitted) return;
+    const missing = lesenCurrent.task.questions.filter(question => !lesenAnswerValue(question.number));
+    if (missing.length) {
+        const first = document.getElementById(`lesen-q-${missing[0].number}`);
+        if (first) first.scrollIntoView({ behavior:'smooth', block:'center' });
+        return alert(`Còn ${missing.length} câu chưa chọn. Vali chưa thu bài trắng đâu 🫩`);
+    }
+    const task = lesenCurrent.task;
+    const score = task.questions.filter(question => lesenAnswerValue(question.number) === question.answer).length;
+    const reviewWords = lesenBuildReviewWords(task);
+    reviewWords.forEach(recordLearnedWord);
+    const completion = {
+        taskId:task.id,
+        date:todayDateKey(),
+        completedAt:new Date().toISOString(),
+        teil:task.teil,
+        score,
+        total:task.questions.length,
+        reviewWords
+    };
+    const history = lesenHistory().filter(item => !(item.taskId === task.id && item.date === completion.date));
+    history.unshift(completion);
+    lesenWriteJson(LESEN_HISTORY_KEY, history.slice(0, 60));
+    lesenCurrent.submitted = true;
+    lesenCurrent.result = completion;
+    completeTodayStudyMission('lesen');
+    renderLesenTask();
+    window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+function startLesenVocabGame() {
+    if (!lesenCurrent || !lesenCurrent.submitted) return;
+    const pool = shuffleArray(lesenBuildReviewWords(lesenCurrent.task)).slice(0, 5);
+    if (!pool.length) return alert('Bài này chưa bắt được từ nào trong kho để mở game.');
+    vokabelGruppen.lesenHeute = { titel:'📖 Từ bài Lesen hôm nay', woerter:pool };
+    miniGame.type = 'mc';
+    beginMiniGame('lesenHeute');
+}
+
+function lesenNormalizeGerman(value) {
+    return String(value || '')
+        .normalize('NFC')
+        .toLocaleLowerCase('de-DE')
+        .replace(/[„“”"‚‘’']/g, '')
+        .replace(/[–—/:;,.!?()[\]{}]/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+}
+
+function lesenCoreGerman(value) {
+    const stop = new Set(['der','die','das','den','dem','des','ein','eine','einen','einem','einer','eines','sich','etw','etwas','jdn','jdm','zu']);
+    return lesenNormalizeGerman(value).split(' ').filter(token => token && !stop.has(token)).join(' ');
+}
+
+function lesenTokenStem(token) {
+    if (token.length < 6) return token;
+    return token.replace(/(ungen|ung|heiten|heit|keiten|keit|ern|en|er|es|em|e|n|s)$/u, '');
+}
+
+function lesenGroupForWord(word) {
+    for (const [groupName, group] of Object.entries(vokabelGruppen)) {
+        if ((group.woerter || []).some(item => item.de === word.de)) {
+            return { key:groupName, title:group.titel || groupName };
+        }
+    }
+    return { key:'khac', title:'Kho khác' };
+}
+
+function lesenFindVocabEntry(text) {
+    const normal = lesenNormalizeGerman(text);
+    const core = lesenCoreGerman(text);
+    if (!normal) return null;
+    let best = null;
+    getAllUniqueVocabWords().forEach(word => {
+        const wordNormal = lesenNormalizeGerman(word.de);
+        const wordCore = lesenCoreGerman(word.de);
+        let score = 0;
+        if (normal === wordNormal) score = 100;
+        else if (core && core === wordCore) score = 96;
+        else if (normal.length >= 5 && (normal.includes(wordNormal) || wordNormal.includes(normal)) && Math.abs(normal.split(' ').length - wordNormal.split(' ').length) <= 2) score = 84;
+        else {
+            const selectedTokens = core.split(' ').filter(token => token.length >= 4);
+            const wordTokens = wordCore.split(' ').filter(token => token.length >= 4);
+            const matched = selectedTokens.filter(token => wordTokens.some(other => {
+                const a = lesenTokenStem(token);
+                const b = lesenTokenStem(other);
+                return a.length >= 4 && b.length >= 4 && (a === b || a.startsWith(b) || b.startsWith(a));
+            })).length;
+            const needed = Math.max(1, Math.ceil(selectedTokens.length * .7));
+            if (matched >= needed && selectedTokens.length && wordTokens.length) score = 60 + matched;
+        }
+        if (score && (!best || score > best.score)) {
+            best = { word, group:lesenGroupForWord(word), score };
+        }
+    });
+    return best && best.score >= 61 ? best : null;
+}
+
+function lesenWordStatus(word) {
+    const week = loadVocabJournal().current;
+    const key = word.de.toLocaleLowerCase('de-DE');
+    const stat = (week.wordStats || {})[key];
+    if (stat) return `đã ôn ${stat.correct + stat.wrong} lần tuần này · ${stat.correct} đúng / ${stat.wrong} sai`;
+    if ((week.learnedWords || []).some(item => item.de === word.de)) return 'đã gặp trong tuần này';
+    return 'đã có trong kho · chưa luyện tuần này';
+}
+
+function lesenHighlightStore() {
+    const store = lesenReadJson(LESEN_HIGHLIGHTS_KEY, {});
+    return store && typeof store === 'object' ? store : {};
+}
+
+function lesenTaskHighlights(taskId) {
+    const list = lesenHighlightStore()[taskId];
+    return Array.isArray(list) ? list : [];
+}
+
+function lesenSaveTaskHighlights(taskId, list) {
+    const store = lesenHighlightStore();
+    store[taskId] = list;
+    lesenWriteJson(LESEN_HIGHLIGHTS_KEY, store);
+}
+
+function lesenCaptureHighlight(selection, range, selectedText) {
+    const startNode = range.startContainer.nodeType === Node.TEXT_NODE ? range.startContainer.parentElement : range.startContainer;
+    const endNode = range.endContainer.nodeType === Node.TEXT_NODE ? range.endContainer.parentElement : range.endContainer;
+    const readable = startNode?.closest?.('.lesen-readable-text');
+    if (!readable) return false;
+    if (!readable.contains(endNode)) {
+        alert('Bút hồng chỉ bắt một đoạn trong cùng ô đọc thôi nhé 🖍️');
+        return true;
+    }
+    if (startNode.closest?.('.lesen-user-highlight')) {
+        selection.removeAllRanges();
+        return true;
+    }
+    const root = readable.closest('[data-lesentask]');
+    const taskId = root?.dataset.lesentask;
+    if (!taskId) return false;
+    const id = `lesen-hl-${Date.now()}-${Math.random().toString(36).slice(2,7)}`;
+    const contextNode = startNode.closest?.('.lesen-person,.lesen-opinion,.lesen-rule,p,li') || readable;
+    const context = String(contextNode.innerText || contextNode.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 360);
+    const match = lesenFindVocabEntry(selectedText);
+    try {
+        const span = document.createElement('span');
+        span.className = 'lesen-user-highlight';
+        span.dataset.lesenHighlightId = id;
+        range.surroundContents(span);
+        selection.removeAllRanges();
+    } catch (_) {
+        alert('Đoạn này vắt qua hai khối chữ nên bút bị kẹt. Bôi ngắn lại một chút nha 🖍️');
+        return true;
+    }
+    const list = lesenTaskHighlights(taskId);
+    list.push({
+        id,
+        text:selectedText,
+        context,
+        matchedDe:match?.word.de || '',
+        matchedVi:match?.word.vi || '',
+        groupKey:match?.group.key || '',
+        groupTitle:match?.group.title || '',
+        createdAt:new Date().toISOString(),
+        queued:false
+    });
+    lesenSaveTaskHighlights(taskId, list);
+    lesenRenderHighlightDrawer();
+    return true;
+}
+
+function lesenRenderHighlightDrawer() {
+    const drawer = document.getElementById('lesen-highlight-drawer');
+    if (!drawer || !lesenCurrent) return;
+    const list = lesenTaskHighlights(lesenCurrent.task.id);
+    const revealed = lesenCurrent.submitted;
+    drawer.className = 'lesen-highlight-drawer';
+    if (!list.length) {
+        drawer.innerHTML = '<b>🖍️ Bút hồng soi kho từ</b><p style="margin-bottom:0;color:#806f68;">Gặp từ không nhớ: bôi đen → bấm Highlight. Voi chỉ báo vị trí trong kho; nghĩa được giấu đến lúc nộp bài.</p>';
+        return;
+    }
+    drawer.innerHTML = `<b>🖍️ Những chỗ cậu vừa đánh dấu (${list.length})</b>
+        ${list.map(item => {
+            if (item.matchedDe) {
+                const match = lesenFindVocabEntry(item.matchedDe);
+                const status = match ? lesenWordStatus(match.word) : 'đã có trong kho';
+                return `<div class="lesen-highlight-item"><b>${escapeVocabHtml(item.text)}</b><br>
+                    <span style="color:#587b45;">✅ Có trong kho · ${escapeVocabHtml(item.groupTitle)} · ${escapeVocabHtml(status)}</span>
+                    ${revealed ? `<div style="margin-top:6px;padding:7px 9px;border-radius:8px;background:#fff1f6;"><b>${escapeVocabHtml(item.matchedDe)}</b> — ${escapeVocabHtml(item.matchedVi)}</div>` : '<div style="font-size:12px;color:#a17c88;">🔒 Nghĩa mở sau khi nộp bài</div>'}
+                </div>`;
+            }
+            return `<div class="lesen-highlight-item"><b>${escapeVocabHtml(item.text)}</b><br>
+                <span style="color:#a06b78;">🌫️ Chưa tìm thấy trong kho từ hiện tại.</span>
+                ${revealed
+                    ? (item.queued ? '<div style="font-size:12px;color:#7d8c62;">✅ Đang nằm trong khay chờ</div>' : `<button type="button" style="margin-top:7px;border:0;border-radius:9px;padding:7px 10px;background:#f7d5e1;cursor:pointer;" onclick="lesenAddPending('${item.id}')">+ Đưa vào khay chờ</button>`)
+                    : '<div style="font-size:12px;color:#a17c88;">Sau khi nộp, cậu mới quyết định có giữ nó không.</div>'}
+            </div>`;
+        }).join('')}`;
+}
+
+function lesenAddPending(highlightId) {
+    if (!lesenCurrent) return;
+    const list = lesenTaskHighlights(lesenCurrent.task.id);
+    const item = list.find(entry => entry.id === highlightId);
+    if (!item) return;
+    const pending = lesenPendingWords();
+    const key = lesenNormalizeGerman(item.text);
+    if (!pending.some(entry => lesenNormalizeGerman(entry.text) === key)) {
+        pending.push({
+            id:`pending-${Date.now()}-${Math.random().toString(36).slice(2,7)}`,
+            text:item.text,
+            context:item.context,
+            sourceTask:lesenCurrent.task.id,
+            addedAt:new Date().toISOString()
+        });
+        lesenWriteJson(LESEN_PENDING_KEY, pending);
+    }
+    item.queued = true;
+    lesenSaveTaskHighlights(lesenCurrent.task.id, list);
+    lesenRenderHighlightDrawer();
+}
+
+function lesenWrapFirstText(root, text, id) {
+    if (!root || !text) return false;
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    let node;
+    while ((node = walker.nextNode())) {
+        if (node.parentElement?.closest('.lesen-user-highlight,select,button')) continue;
+        const index = node.nodeValue.indexOf(text);
+        if (index < 0) continue;
+        const range = document.createRange();
+        range.setStart(node, index);
+        range.setEnd(node, index + text.length);
+        const span = document.createElement('span');
+        span.className = 'lesen-user-highlight';
+        span.dataset.lesenHighlightId = id;
+        range.surroundContents(span);
+        return true;
+    }
+    return false;
+}
+
+function lesenRestoreHighlights(taskId) {
+    const root = document.querySelector(`[data-lesentask="${taskId}"]`);
+    if (!root) return;
+    lesenTaskHighlights(taskId).forEach(item => {
+        if (!root.querySelector(`[data-lesen-highlight-id="${item.id}"]`)) lesenWrapFirstText(root, item.text, item.id);
+    });
+}
+
+// ==========================================
 // 9. BÚT NHỚ HIGHLIGHT (HỖ TRỢ CẢ PC & MOBILE) 🍑✨
 // ==========================================
 
@@ -4747,6 +5525,7 @@ window.applyPinkHighlight = function() {
     if (selectedText.length > 0) {
         try {
             let range = selection.getRangeAt(0);
+            if (typeof lesenCaptureHighlight === 'function' && lesenCaptureHighlight(selection, range, selectedText)) return;
             let span = document.createElement('span');
             
             span.style.backgroundColor = '#FFD1DC'; 

@@ -8,6 +8,7 @@
     <!-- Gọi 3 "bộ não" của Kapi (thêm defer để tránh lỗi Timeout) -->
     <script src="vokabel-data.js" defer></script>
     <script src="horen-data.js" defer></script>
+    <script src="lesen-data.js" defer></script>
     <script src="kapi-logic.js" defer></script>
     
     <style>
@@ -523,6 +524,84 @@
             white-space: nowrap;
             z-index: 10;
             box-shadow: 0px 4px 6px rgba(0,0,0,0.1);
+        }
+
+        /* ========================================= */
+        /* GOETHE B2 LESEN – 5 TEILE                 */
+        /* ========================================= */
+        #feedback-area.lesen-wide { max-width: 1050px !important; }
+        .lesen-shell { color:#3f3834; line-height:1.65; }
+        .lesen-toolbar {
+            display:flex; flex-wrap:wrap; justify-content:space-between; gap:10px;
+            margin-bottom:14px; padding:11px 14px; border-radius:14px;
+            background:#fff8e8; border:1px solid #ead7b4; color:#735f4f;
+        }
+        .lesen-panel {
+            padding:20px; margin:14px 0; border:2px solid #dbc9b7;
+            border-radius:20px; background:rgba(255,253,248,.97);
+            box-shadow:0 6px 16px rgba(99,76,58,.07);
+        }
+        .lesen-readable-text { font-size:18px; text-align:left; }
+        .lesen-readable-text p { margin:0 0 15px; }
+        .lesen-person, .lesen-opinion, .lesen-rule {
+            margin:12px 0; padding:15px 17px; border-radius:15px;
+            background:#fff; border:1px solid #eadfd4;
+        }
+        .lesen-letter {
+            display:inline-flex; align-items:center; justify-content:center;
+            width:30px; height:30px; margin-right:7px; border-radius:50%;
+            background:#8bad78; color:white; font-weight:900; text-transform:lowercase;
+        }
+        .lesen-question {
+            margin:10px 0; padding:13px 15px; border-radius:13px;
+            background:#f8f7f4; border:2px solid transparent;
+        }
+        .lesen-question.lesen-correct { background:#edf7e7; border-color:#8fbd74; }
+        .lesen-question.lesen-wrong { background:#fff0f1; border-color:#e19aa3; }
+        .lesen-select {
+            width:auto; max-width:100%; min-width:76px; margin:8px 0 0;
+            padding:8px 11px; border:2px solid #cbb9a8; border-radius:10px;
+            background:white; font:inherit;
+        }
+        .lesen-gap-select { margin:0 5px; vertical-align:middle; }
+        .lesen-radio-grid { display:grid; gap:7px; margin-top:9px; }
+        .lesen-radio-grid label {
+            display:block; padding:9px 11px; border-radius:10px;
+            background:white; border:1px solid #dfd7cf; cursor:pointer;
+        }
+        .lesen-user-highlight {
+            background:#ffb2cf; color:#352a2d; border-radius:4px;
+            padding:1px 3px; box-shadow:inset 0 -1px 0 rgba(130,44,76,.12);
+        }
+        .lesen-highlight-drawer {
+            margin-top:18px; padding:16px; border:2px dashed #efa7c2;
+            border-radius:16px; background:#fff7fb;
+        }
+        .lesen-highlight-item {
+            margin:8px 0; padding:10px 12px; border-radius:11px;
+            background:white; border:1px solid #f0d4df;
+        }
+        .lesen-result-row { margin:8px 0; padding:11px 13px; border-radius:11px; }
+        .lesen-daily-grid {
+            display:grid; grid-template-columns:repeat(2,minmax(0,1fr));
+            gap:14px; max-width:850px; margin:0 auto;
+        }
+        .lesen-task-grid {
+            display:grid; grid-template-columns:minmax(0,1.25fr) minmax(300px,.75fr);
+            gap:16px; align-items:start;
+        }
+        .lesen-daily-card {
+            padding:20px; border-radius:20px; text-align:left;
+            border:2px solid #d7c6b1; background:rgba(255,253,247,.95);
+            box-shadow:0 7px 17px rgba(91,70,52,.09);
+        }
+        @media (max-width:700px) {
+            .lesen-daily-grid { grid-template-columns:1fr; }
+            .lesen-task-grid { grid-template-columns:1fr; }
+            .lesen-panel { padding:14px; }
+            .lesen-readable-text { font-size:16px; }
+            .lesen-select { width:100%; }
+            .lesen-gap-select { width:auto; min-width:65px; }
         }
     /* ========================================= */
         /* HIỆU ỨNG CỎ ĐUNG ĐƯA BÊN DƯỚI KAPI        */
