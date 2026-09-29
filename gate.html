@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <title>Gà nằm dài · Cổng Nhà Kapi</title>
+  <link rel="stylesheet" href="/gate.css">
+</head>
+<body>
+  <main class="gate-shell">
+    <section class="gate-card" aria-labelledby="gate-title">
+      <div class="gate-scene" aria-hidden="true">
+        <div class="door">
+          <span class="door-sign">NHÀ<br>KAPI</span>
+          <span class="door-knob"></span>
+        </div>
+
+        <div class="chick-wrap" id="chick-wrap">
+          <span class="mood-mark mood-question">?</span>
+          <span class="mood-mark mood-steam">⌁</span>
+          <span class="mood-mark mood-heart">♥</span>
+          <div class="chick">
+            <span class="chick-tuft tuft-one"></span>
+            <span class="chick-tuft tuft-two"></span>
+            <span class="chick-wing"></span>
+            <span class="chick-eye eye-left"></span>
+            <span class="chick-eye eye-right"></span>
+            <span class="chick-brow brow-left"></span>
+            <span class="chick-brow brow-right"></span>
+            <span class="chick-beak"></span>
+            <span class="chick-blush blush-left"></span>
+            <span class="chick-blush blush-right"></span>
+            <span class="chick-foot foot-left"></span>
+            <span class="chick-foot foot-right"></span>
+          </div>
+        </div>
+      </div>
+
+      <p class="gate-kicker">CỔNG NHÀ KAPI</p>
+      <h1 id="gate-title">Gà nằm dài</h1>
+      <p class="gate-face" aria-hidden="true">(•ө•)♡</p>
+      <p class="gate-message" id="gate-message" role="status" aria-live="polite">
+        Đứng lại. Mật khẩu người nhà đâu?
+      </p>
+
+      <form id="gate-form" autocomplete="off">
+        <label for="gate-password">Mật khẩu người nhà</label>
+        <div class="password-row">
+          <input
+            id="gate-password"
+            name="password"
+            type="password"
+            inputmode="text"
+            autocomplete="current-password"
+            maxlength="512"
+            required
+            autofocus
+          >
+          <button class="peek-button" id="peek-button" type="button" aria-label="Hiện mật khẩu" aria-pressed="false">
+            <span aria-hidden="true">👀</span>
+          </button>
+        </div>
+        <button class="enter-button" id="enter-button" type="submit">
+          <span class="button-label">Cốc cốc, cho tớ vào</span>
+          <span aria-hidden="true">→</span>
+        </button>
+      </form>
+
+      <div class="countdown" id="countdown" hidden>
+        <span class="countdown-label">Gà sẽ ngó lại sau</span>
+        <strong id="countdown-value">00:10</strong>
+      </div>
+
+      <p class="gate-note" id="gate-note">
+        Chìa khóa chỉ được đối chiếu ở phía server. Gà không cất nó trong trình duyệt.
+      </p>
+    </section>
+  </main>
+
+  <script src="/gate.js" defer></script>
+</body>
+</html>
