@@ -1,6 +1,11 @@
 {
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "check": "node --check api/gate.mjs && node --check gate.js && node --check lib/gate-auth.mjs"
+  },
   "dependencies": {
-    "formidable": "^3.5.1",
-    "form-data": "^4.0.0"
+    "@vercel/functions": "^3.9.9",
+    "form-data": "^4.0.0",
+    "formidable": "^3.5.1"
   }
 }
