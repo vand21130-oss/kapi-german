@@ -15,6 +15,7 @@ const PUBLIC_PATHS = new Set([
   '/gate.html',
   '/gate.css',
   '/gate.js',
+  '/assets/gate/chick-moods.png',
   '/api/gate',
   '/favicon.ico'
 ]);
