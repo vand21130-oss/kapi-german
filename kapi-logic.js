@@ -191,6 +191,64 @@ function todayDateKey(date = new Date()) {
     return `${y}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
 }
 
+// Cầu nối chỉ gửi trạng thái nhiệm vụ hôm nay cho extension Vali.
+// Không gửi từ vựng, câu trả lời, ghi chú hay bất kỳ nội dung học nào khác.
+const KAPI_REMINDER_PAGE_SOURCE = 'kapi-house';
+const KAPI_REMINDER_EXTENSION_SOURCE = 'kapi-vali-extension';
+
+function getKapiReminderSnapshot(mission) {
+    if (!mission) return null;
+    const skill = getTodaySkill(mission);
+    return {
+        date: mission.date,
+        skill: skill.id,
+        skillName: skill.name,
+        icon: skill.icon,
+        minutes: skill.minutes,
+        completed: Boolean(mission.completed),
+        completedAt: mission.completedAt || null
+    };
+}
+
+function announceKapiReminderState(mission) {
+    const snapshot = getKapiReminderSnapshot(mission);
+    if (!snapshot) return;
+    const targetOrigin = window.location.origin === 'null' ? '*' : window.location.origin;
+    window.postMessage({
+        source: KAPI_REMINDER_PAGE_SOURCE,
+        type: 'KAPI_REMINDER_STATE',
+        payload: snapshot
+    }, targetOrigin);
+}
+
+function consumeKapiReminderDeepLink() {
+    const url = new URL(window.location.href);
+    if (url.searchParams.get('open') !== 'today') return false;
+    url.searchParams.delete('open');
+    const cleanUrl = `${url.pathname}${url.search}${url.hash}`;
+    window.history.replaceState({}, document.title, cleanUrl);
+    return true;
+}
+
+window.addEventListener('message', event => {
+    if (event.source !== window) return;
+    if (window.location.origin !== 'null' && event.origin !== window.location.origin) return;
+    const data = event.data;
+    if (!data || data.source !== KAPI_REMINDER_EXTENSION_SOURCE || data.type !== 'KAPI_REMINDER_REQUEST_STATE') return;
+    announceKapiReminderState(getTodayStudyMission());
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    const mission = getTodayStudyMission();
+    announceKapiReminderState(mission);
+    if (consumeKapiReminderDeepLink()) {
+        window.setTimeout(() => {
+            currentLevel = 'B2';
+            showTodayMission();
+        }, 0);
+    }
+});
+
 function readTodayHistory() {
     try { return JSON.parse(localStorage.getItem(TODAY_STUDY_HISTORY_KEY)) || []; } catch (_) { return []; }
 }
@@ -209,12 +267,14 @@ function getTodayStudyMission() {
     const picked = pool[seed % pool.length];
     const mission = { date:today, skill:picked.id, changed:false, completed:false, storyOpened:false };
     localStorage.setItem(TODAY_STUDY_KEY, JSON.stringify(mission));
+    window.queueMicrotask(() => announceKapiReminderState(mission));
     return mission;
 }
 
 function saveTodayStudyMission(mission) {
     localStorage.setItem(TODAY_STUDY_KEY, JSON.stringify(mission));
     activeTodayMission = mission;
+    announceKapiReminderState(mission);
 }
 
 function getTodaySkill(mission = getTodayStudyMission()) {
