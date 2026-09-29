@@ -1,0 +1,39 @@
+{
+  "manifest_version": 3,
+  "name": "Vali nhắc học — Nhà Kapi",
+  "version": "1.0.0",
+  "description": "Vali nhắc đúng một nhiệm vụ Nhà Kapi mỗi ngày, biết hoãn 10 phút và biết dỗi.",
+  "minimum_chrome_version": "120",
+  "permissions": [
+    "alarms",
+    "notifications",
+    "scripting",
+    "storage"
+  ],
+  "host_permissions": [
+    "https://kapi-german.vercel.app/*"
+  ],
+  "optional_host_permissions": [
+    "http://*/*",
+    "https://*/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "Vali nhắc học",
+    "default_popup": "options.html"
+  },
+  "options_page": "options.html",
+  "content_scripts": [
+    {
+      "matches": [
+        "https://kapi-german.vercel.app/*"
+      ],
+      "js": [
+        "site-bridge.js"
+      ],
+      "run_at": "document_start"
+    }
+  ]
+}

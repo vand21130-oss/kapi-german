@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vali nhắc học</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <main class="settings-card">
+    <header class="hero">
+      <div class="vali" aria-label="Vali đang nhìn với vẻ thiếu kiên nhẫn" role="img">
+        <span class="handle"></span>
+        <span class="seam"></span>
+        <span class="eye left"><i></i></span>
+        <span class="eye right"><i></i></span>
+        <span class="bag left"></span>
+        <span class="bag right"></span>
+        <span class="mouth"></span>
+        <span class="wheel left"></span>
+        <span class="wheel right"></span>
+      </div>
+      <div>
+        <p class="eyebrow">NHÂN VIÊN NHẮC HỌC NGOÀI GIỜ</p>
+        <h1>Vali nhắc học</h1>
+        <p class="subtitle">“Tôi xuất hiện vì lịch. Đừng suy diễn.”</p>
+      </div>
+    </header>
+
+    <section class="section">
+      <label class="toggle-row">
+        <span>
+          <strong>Bật lịch nhắc</strong>
+          <small>Mỗi ngày tối đa một lần chính và một lần hoãn.</small>
+        </span>
+        <input id="enabled" type="checkbox">
+        <i class="toggle" aria-hidden="true"></i>
+      </label>
+
+      <label class="field-row" for="reminder-time">
+        <span>
+          <strong>Giờ Vali lòi xuống</strong>
+          <small>Theo giờ hiện tại của máy tính.</small>
+        </span>
+        <input id="reminder-time" type="time" value="19:00" required>
+      </label>
+
+      <fieldset>
+        <legend>Những ngày phải làm việc</legend>
+        <div class="day-grid">
+          <label><input type="checkbox" name="day" value="1"><span>T2</span></label>
+          <label><input type="checkbox" name="day" value="2"><span>T3</span></label>
+          <label><input type="checkbox" name="day" value="3"><span>T4</span></label>
+          <label><input type="checkbox" name="day" value="4"><span>T5</span></label>
+          <label><input type="checkbox" name="day" value="5"><span>T6</span></label>
+          <label><input type="checkbox" name="day" value="6"><span>T7</span></label>
+          <label><input type="checkbox" name="day" value="0"><span>CN</span></label>
+        </div>
+      </fieldset>
+    </section>
+
+    <section class="section permission-section">
+      <label class="toggle-row">
+        <span>
+          <strong>Cho Vali thò vào trang đang xem</strong>
+          <small>Nếu tắt, Vali dùng thông báo Windows thay thế.</small>
+        </span>
+        <input id="overlay-enabled" type="checkbox">
+        <i class="toggle" aria-hidden="true"></i>
+      </label>
+      <p class="privacy-note">🔒 Extension chỉ thêm hộp Vali cố định. Nó không đọc nội dung trang, mật khẩu, lịch sử hay ô đang gõ.</p>
+    </section>
+
+    <section id="status-card" class="status-card" aria-live="polite">
+      <strong>Đang hỏi lịch làm việc của Vali…</strong>
+    </section>
+
+    <div class="actions">
+      <button id="save" class="primary" type="button">💾 Lưu lịch</button>
+      <button id="test" class="secondary" type="button">👀 Thử ngay</button>
+    </div>
+    <p id="feedback" class="feedback" aria-live="polite"></p>
+
+    <footer>
+      <a href="https://kapi-german.vercel.app/?open=today" target="_blank" rel="noreferrer">Mở Nhà Kapi ↗</a>
+      <span>Vali không nhắc riêng Lesen: hắn nhắc kỹ năng được chọn hôm nay.</span>
+    </footer>
+  </main>
+  <script src="options.js"></script>
+</body>
+</html>
