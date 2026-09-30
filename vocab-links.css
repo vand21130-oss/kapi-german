@@ -1,0 +1,52 @@
+/* Scoped additions only: no overrides of the existing modules, cards or buttons. */
+.vocab-links-strip,
+.vocab-links-history,
+.vocab-links-week {
+    box-sizing: border-box;
+    margin: 14px auto 0;
+    padding: 10px 12px;
+    max-width: 760px;
+    width: 100%;
+    border: 1px solid #dacbb8;
+    border-radius: 12px;
+    background: #fffcf5;
+    color: #695d4e;
+    text-align: left;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.6;
+}
+.vocab-links-history { font-size: 12px; }
+.vocab-links-strip > summary,
+.vocab-links-history > summary { cursor: pointer; }
+.vocab-links-word-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 8px;
+    max-height: 180px;
+    overflow-y: auto;
+}
+.vocab-links-button {
+    display: inline-block;
+    box-sizing: border-box;
+    max-width: 100%;
+    margin: 5px 4px 0 0;
+    padding: 5px 9px;
+    border: 1px solid #c9d8be;
+    border-radius: 9px;
+    background: #f1f6ec;
+    color: #49613e;
+    font: inherit;
+    text-align: left;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+    cursor: pointer;
+}
+.vocab-links-button:hover { background: #e2edd9; }
+.vocab-links-button:focus-visible,
+.vocab-links-strip > summary:focus-visible,
+.vocab-links-history > summary:focus-visible { outline: 2px solid #71985a; outline-offset: 2px; }
+.vocab-links-muted,
+.vocab-links-source { display: block; margin-top: 5px; color: #746854; }
+.vocab-links-transcript { margin: 0 auto 16px; }
