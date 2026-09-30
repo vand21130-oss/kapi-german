@@ -1,0 +1,24 @@
+.lesen-sentence { display:block; margin:0 0 10px; }
+.lesen-de-sentence { display:block; }
+.lesen-vi-sentence { display:block; margin:4px 0 8px; color:#776b62; font-size:.91em; font-weight:400; line-height:1.6; }
+.lesen-evidence { text-decoration:underline solid #547b3e 2px; text-underline-offset:4px; }
+.lesen-evidence-focused { background:#fff0b5; outline:2px solid #ddbc68; border-radius:3px; }
+.lesen-proof { margin-top:12px; padding:12px; color:#51483f; background:#f7faf1; border-left:3px solid #9cb882; border-radius:8px; overflow-wrap:anywhere; }
+.lesen-proof blockquote { margin:8px 0; padding:8px 10px; background:white; border-radius:8px; }
+.lesen-proof p { margin:9px 0; }
+.lesen-proof-link { border:1px solid #d9c8b5; border-radius:10px; padding:9px 12px; background:#fffdf7; color:#654e40; cursor:pointer; font:inherit; line-height:1.5; max-width:100%; overflow-wrap:anywhere; }
+.lesen-proof-link:hover { background:#f2f6e9; border-color:#9cb882; }
+.lesen-proof-link:focus-visible { outline:3px solid #547b3e; outline-offset:2px; }
+.lesen-proof-link:disabled { opacity:.55; cursor:default; }
+.lesen-word-summary { margin:14px 0 0; border-top:1px dashed #d9c8b5; padding-top:12px; }
+.lesen-word-summary summary, .daily-story-translation summary, .daily-story-glossary summary { cursor:pointer; font-weight:750; }
+.lesen-review-words { display:flex; flex-wrap:wrap; gap:8px; }
+.lesen-review-words small { display:block; color:#82715e; font-size:.8em; }
+.daily-story-player { display:flex; flex-wrap:wrap; gap:8px; margin:18px 0; font-size:16px; }
+#daily-story-audio-status { width:100%; font-size:14px; color:#7e6a5e; }
+.daily-story-translation, .daily-story-glossary { padding:12px 0; border-top:1px dashed #d9c8b5; }
+.daily-story-meaning { padding:14px; margin:10px 0; border-radius:12px; background:#fff0df; font-size:16px; line-height:1.6; }
+.daily-story-meaning p { margin:8px 0; }
+.daily-story-glossary p { padding:10px 0; border-bottom:1px solid #eee5d8; }
+#focus-mascot-slot .koffer-mascot.talking .koffer-mouth { animation:kofferTalk .24s ease-in-out infinite; }
+@media(max-width:600px) { .lesen-proof { padding:10px; } .lesen-proof-link { font-size:15px; } }

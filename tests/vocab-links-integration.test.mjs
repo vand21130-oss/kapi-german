@@ -35,7 +35,7 @@ function app(initial = {}, withBridge = true) {
     sandbox.window = sandbox;
     const context = vm.createContext(sandbox);
     const run = code => vm.runInContext(code, context);
-    for (const name of ['vokabel-data.js', 'horen-data.js', 'lesen-data.js']) vm.runInContext(source(name), context, { filename: name });
+    for (const name of ['vokabel-data.js', 'horen-data.js', 'lesen-data.js', 'lesen-review-data.js', 'daily-story-review-data.js', 'lesen-review.js']) vm.runInContext(source(name), context, { filename: name });
     const snapshot = run('JSON.stringify(vokabelGruppen)');
     const sourceKeys = run('Object.keys(vokabelGruppen)');
     run('for (const g of Object.values(vokabelGruppen)) { g.woerter.forEach(Object.freeze); Object.freeze(g.woerter); Object.freeze(g); }');

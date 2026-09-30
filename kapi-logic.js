@@ -16,6 +16,8 @@ let gameScore = 0;
 
 // 1. ĐIỀU HƯỚNG CƠ BẢN
 function setLearningFocus(enabled, mascot = '') {
+    if (typeof stopDailyStoryAudio === 'function') stopDailyStoryAudio();
+    if (typeof lesenClock !== 'undefined' && lesenClock) lesenStopClock();
     document.body.classList.toggle('learning-focus', Boolean(enabled));
     let slot = document.getElementById('focus-mascot-slot');
     const message = document.getElementById('message');
@@ -377,12 +379,15 @@ function openDailyKofferStory() {
     document.getElementById('feedback-area').innerHTML = `<div style="max-width:700px;margin:auto;padding:25px;border:2px solid #d7c3ae;border-radius:22px;background:#fffdf8;box-shadow:0 9px 20px rgba(80,60,47,.12);text-align:left;line-height:1.85;font-size:19px;color:#493b35;">
         <div style="font-size:13px;color:#9a8174;margin-bottom:10px;">🫩 EINE VÖLLIG NOTWENDIGE GESCHICHTE</div>
         <p>${story.text}</p><div style="border-top:1px dashed #cdb8a6;padding-top:13px;color:#795548;font-style:italic;">${story.end}</div>
-        <small style="display:block;margin-top:12px;color:#9b8b82;">Chạm hoặc rê vào từ in đậm để xem nghĩa.</small>
+        ${dailyStoryReviewHtml(story, index)}
     </div>`;
     document.querySelectorAll('#feedback-area b[data-vi]').forEach(word => {
         word.style.cssText = 'color:#d26939;border-bottom:2px dotted #d26939;cursor:help;';
         word.title = word.dataset.vi;
-        word.onclick = () => alert(`${word.textContent}: ${word.dataset.vi}`);
+        word.onclick = () => showDailyStoryMeaning(word);
+        word.tabIndex = 0;
+        word.setAttribute('role', 'button');
+        word.onkeydown = event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); showDailyStoryMeaning(word); } };
     });
     document.getElementById('buttons').innerHTML = `<button class="btn-kapi btn-home" onclick="showTodayMission()">⬅️ Hồ sơ hôm nay</button>`;
 }
@@ -5106,10 +5111,17 @@ function launchLesenTask(taskId) {
     lesenStartClock();
 }
 
+function lesenStopClock() {
+    clearInterval(lesenClock);
+    lesenClock = null;
+    const timer = document.getElementById('timer');
+    if (timer) { timer.innerText = ''; timer.style.color = ''; }
+}
+
 function lesenStartClock() {
     clearInterval(lesenClock);
     const update = () => {
-        if (!lesenCurrent) return;
+        if (!lesenCurrent || lesenCurrent.submitted || !document.querySelector(`[data-lesentask="${lesenCurrent.task.id}"]`)) return lesenStopClock();
         const elapsed = Math.max(0, Math.floor((Date.now() - lesenCurrent.startedAt) / 1000));
         const minutes = Math.floor(elapsed / 60);
         const seconds = String(elapsed % 60).padStart(2, '0');
@@ -5150,7 +5162,7 @@ function lesenFeedback(question, correctLabel = '') {
     const correct = chosen === question.answer;
     return `<div style="margin-top:9px;font-size:14px;color:${correct ? '#4f783e' : '#a44d5a'};">
         <b>${correct ? '✅ Đúng' : `❌ Cậu chọn ${escapeVocabHtml(chosen || '—')} · đáp án ${escapeVocabHtml(question.answer)}${correctLabel ? ` (${escapeVocabHtml(correctLabel)})` : ''}`}</b><br>
-        <span style="color:#6d625c;">🐘 ${escapeVocabHtml(question.why || '')}</span>
+        <span style="color:#6d625c;">🐘 ${escapeVocabHtml(question.why || '')}</span>${lesenReviewEvidence(question)}
     </div>`;
 }
 
@@ -5159,13 +5171,13 @@ function lesenRenderTeil1(task) {
     return `<div class="lesen-task-grid">
         <section class="lesen-panel lesen-readable-text">
             <h3>Texte a–d</h3>
-            ${task.people.map(person => `<article class="lesen-person"><span class="lesen-letter">${person.id}</span><b>${escapeVocabHtml(person.name)}</b><p>${escapeVocabHtml(person.text)}</p></article>`).join('')}
+            ${task.people.map(person => `<article class="lesen-person"><span class="lesen-letter">${person.id}</span><b>${escapeVocabHtml(person.name)}</b><p>${lesenReviewPassage(person.text, `people.${person.id}`)}</p></article>`).join('')}
         </section>
         <section class="lesen-panel">
             <h3>Aufgaben 1–9</h3>
             ${task.questions.map(question => {
                 const answerPerson = task.people.find(person => person.id === question.answer);
-                return `<div id="lesen-q-${question.number}" class="${lesenQuestionClass(question)}"><b>${question.number}. ${escapeVocabHtml(question.text)}</b><br>${lesenSelect(question, options)}${lesenFeedback(question, answerPerson?.name || '')}</div>`;
+                return `<div id="lesen-q-${question.number}" class="${lesenQuestionClass(question)}"><b>${question.number}. ${lesenReviewQuestionText(question)}</b><br>${lesenSelect(question, options)}${lesenFeedback(question, answerPerson?.name || '')}</div>`;
             }).join('')}
         </section>
     </div>`;
@@ -5177,7 +5189,7 @@ function lesenRenderTeil2(task) {
     return `<section class="lesen-panel">
         <h3>Sätze a–h</h3>
         <div style="text-align:left;">
-            ${task.options.map(option => `<div style="margin:8px 0;"><span class="lesen-letter">${option.id}</span>${escapeVocabHtml(option.text)}</div>`).join('')}
+            ${task.options.map(option => `<div style="margin:8px 0;"><span class="lesen-letter">${option.id}</span>${lesenReviewPassage(option.text, `options.${option.id}`)}</div>`).join('')}
         </div>
     </section>
     <section class="lesen-panel lesen-readable-text">
@@ -5185,7 +5197,7 @@ function lesenRenderTeil2(task) {
         ${task.segments.map((segment, index) => {
             const question = task.questions[index];
             const gap = question ? `<span id="lesen-q-${question.number}" class="${lesenQuestionClass(question)}" style="display:inline-block;padding:4px 7px;margin:2px;">[${question.number}] ${lesenSelect(question, options, 'lesen-gap-select')}${lesenFeedback(question, optionText[question.answer])}</span>` : '';
-            return `<p>${escapeVocabHtml(segment)} ${gap}</p>`;
+            return `<p>${lesenReviewPassage(segment, `segments.${index}`)} ${gap}</p>`;
         }).join('')}
     </section>`;
 }
@@ -5193,14 +5205,14 @@ function lesenRenderTeil2(task) {
 function lesenRenderTeil3(task) {
     return `<section class="lesen-panel lesen-readable-text">
         <h3>Artikel</h3>
-        ${task.article.map(paragraph => `<p>${escapeVocabHtml(paragraph)}</p>`).join('')}
+        ${task.article.map((paragraph,index) => `<p>${lesenReviewPassage(paragraph, `article.${index}`)}</p>`).join('')}
     </section>
     <section class="lesen-panel">
         <h3>Aufgaben 16–21</h3>
         ${task.questions.map(question => `<div id="lesen-q-${question.number}" class="${lesenQuestionClass(question)}">
-            <b>${question.number}. ${escapeVocabHtml(question.text)}</b>
+            <b>${question.number}. ${lesenReviewQuestionText(question)}</b>
             <div class="lesen-radio-grid">
-                ${Object.entries(question.options).map(([id, text]) => `<label><input type="radio" name="lesen-${question.number}" value="${id}" ${lesenAnswerValue(question.number) === id ? 'checked' : ''} ${lesenCurrent.submitted ? 'disabled' : ''} onchange="lesenSaveAnswer(${question.number},this.value)"> <b>${id}</b> · ${escapeVocabHtml(text)}</label>`).join('')}
+                ${Object.entries(question.options).map(([id, text]) => `<label><input type="radio" name="lesen-${question.number}" value="${id}" ${lesenAnswerValue(question.number) === id ? 'checked' : ''} ${lesenCurrent.submitted ? 'disabled' : ''} onchange="lesenSaveAnswer(${question.number},this.value)"> <b>${id}</b> · ${lesenReviewOptionText(text,question,id)}</label>`).join('')}
             </div>
             ${lesenFeedback(question, question.options[question.answer])}
         </div>`).join('')}
@@ -5213,12 +5225,12 @@ function lesenRenderTeil4(task) {
     return `<div class="lesen-task-grid">
         <section class="lesen-panel lesen-readable-text">
             <h3>Meinungen a–h</h3>
-            ${task.opinions.map(opinion => `<article class="lesen-opinion"><span class="lesen-letter">${opinion.id}</span>${escapeVocabHtml(opinion.text)}</article>`).join('')}
+            ${task.opinions.map(opinion => `<article class="lesen-opinion"><span class="lesen-letter">${opinion.id}</span>${lesenReviewPassage(opinion.text, `opinions.${opinion.id}`)}</article>`).join('')}
         </section>
         <section class="lesen-panel">
             <h3>Überschriften 22–27</h3>
-            <div class="lesen-question" style="background:#eef3e9;"><b>Beispiel: ${escapeVocabHtml(task.example.text)}</b><br>→ ${task.example.answer}</div>
-            ${task.questions.map(question => `<div id="lesen-q-${question.number}" class="${lesenQuestionClass(question)}"><b>${question.number}. ${escapeVocabHtml(question.text)}</b><br>${lesenSelect(question, options)}${lesenFeedback(question, optionText[question.answer])}</div>`).join('')}
+            <div class="lesen-question" style="background:#eef3e9;"><b>Beispiel: ${lesenReviewPassage(task.example.text, 'example')}</b><br>→ ${task.example.answer}</div>
+            ${task.questions.map(question => `<div id="lesen-q-${question.number}" class="${lesenQuestionClass(question)}"><b>${question.number}. ${lesenReviewQuestionText(question)}</b><br>${lesenSelect(question, options)}${lesenFeedback(question, optionText[question.answer])}</div>`).join('')}
         </section>
     </div>`;
 }
@@ -5229,15 +5241,15 @@ function lesenRenderTeil5(task) {
     return `<section class="lesen-panel">
         <h3>Überschriften a–h</h3>
         <div style="text-align:left;columns:2;column-gap:24px;">
-            ${task.headings.map(heading => `<div style="break-inside:avoid;margin:7px 0;"><span class="lesen-letter">${heading.id}</span>${escapeVocabHtml(heading.text)}</div>`).join('')}
+            ${task.headings.map(heading => `<div style="break-inside:avoid;margin:7px 0;"><span class="lesen-letter">${heading.id}</span>${lesenReviewPassage(heading.text, `headings.${heading.id}`)}</div>`).join('')}
         </div>
     </section>
     <section class="lesen-panel lesen-readable-text">
         <h3>Regeln</h3>
-        <article class="lesen-rule" style="background:#eef3e9;"><b>Beispiel → ${task.example.answer}</b><p>${escapeVocabHtml(task.example.text)}</p></article>
+        <article class="lesen-rule" style="background:#eef3e9;"><b>Beispiel → ${task.example.answer}</b><p>${lesenReviewPassage(task.example.text, 'example')}</p></article>
         ${task.sections.map(section => {
             const question = task.questions.find(item => item.number === section.number);
-            return `<article id="lesen-q-${section.number}" class="lesen-rule ${lesenQuestionClass(question)}"><b>§ ${section.number}</b><p>${escapeVocabHtml(section.text)}</p>${lesenSelect(question, options)}${lesenFeedback(question, headingText[question.answer])}</article>`;
+            return `<article id="lesen-q-${section.number}" class="lesen-rule ${lesenQuestionClass(question)}"><b>§ ${section.number}</b><p>${lesenReviewPassage(section.text, `sections.${section.number}`)}</p>${lesenSelect(question, options)}${lesenFeedback(question, headingText[question.answer])}</article>`;
         }).join('')}
     </section>`;
 }
@@ -5261,7 +5273,7 @@ function renderLesenTask() {
     area.innerHTML = `<main class="lesen-shell" data-lesentask="${task.id}">
         <div class="lesen-toolbar">
             <span><b>Goethe B2 · Teil ${task.teil}</b></span>
-            <span>⏱️ Mốc gợi ý: ${task.suggestedMinutes} phút · đồng hồ không khóa bài</span>
+            <span>${lesenCurrent.submitted ? '✅ Đã nộp · đồng hồ đã dừng' : `⏱️ Mốc gợi ý: ${task.suggestedMinutes} phút · đồng hồ không khóa bài`}</span>
             <span>🖍️ Chọn chữ + bấm Highlight</span>
         </div>
         <section class="lesen-panel" style="text-align:left;background:#fff8e9;">
@@ -5269,8 +5281,9 @@ function renderLesenTask() {
         </section>
         ${result ? `<section class="lesen-panel" style="border-color:${result.score === result.total ? '#85b86c' : '#d4a8af'};text-align:left;">
             <h2 style="margin-top:0;">${result.score === result.total ? '🌿 Trọn điểm luôn' : '🐘 Phiếu đọc hiểu'}</h2>
-            <p><b>${result.score}/${result.total}</b> câu đúng. Các lời giải nằm ngay dưới từng câu.</p>
+            <p><b>${result.score}/${result.total}</b> câu đúng. Dịch tiếng Việt nằm dưới từng câu Đức; keyword được gạch chân và lời giải có dẫn chứng.</p>
             <p style="color:#7d6d65;">Từ bôi hồng giờ mới được lật nghĩa; từ chưa có có thể đưa vào khay chờ.</p>
+            ${lesenReviewWordSummary(result)}
         </section>` : ''}
         ${lesenTaskBody(task)}
         <div id="lesen-highlight-drawer"></div>
@@ -5325,6 +5338,7 @@ function submitLesenTask() {
     lesenWriteJson(LESEN_HISTORY_KEY, history.slice(0, 60));
     lesenCurrent.submitted = true;
     lesenCurrent.result = completion;
+    lesenStopClock();
     completeTodayStudyMission('lesen');
     renderLesenTask();
     window.scrollTo({ top:0, behavior:'smooth' });
@@ -5432,6 +5446,9 @@ function lesenCaptureHighlight(selection, range, selectedText) {
         alert('Bút hồng chỉ bắt một đoạn trong cùng ô đọc thôi nhé 🖍️');
         return true;
     }
+    if (startNode.closest?.('.lesen-vi-sentence,.lesen-proof') || endNode.closest?.('.lesen-vi-sentence,.lesen-proof')) return true;
+    const sentence = startNode.closest?.('.lesen-de-sentence');
+    if (sentence && !sentence.contains(endNode)) return true;
     if (startNode.closest?.('.lesen-user-highlight')) {
         selection.removeAllRanges();
         return true;
@@ -5447,7 +5464,8 @@ function lesenCaptureHighlight(selection, range, selectedText) {
         const span = document.createElement('span');
         span.className = 'lesen-user-highlight';
         span.dataset.lesenHighlightId = id;
-        range.surroundContents(span);
+        span.appendChild(range.extractContents());
+        range.insertNode(span);
         selection.removeAllRanges();
     } catch (_) {
         alert('Đoạn này vắt qua hai khối chữ nên bút bị kẹt. Bôi ngắn lại một chút nha 🖍️');
@@ -5523,19 +5541,26 @@ function lesenAddPending(highlightId) {
 
 function lesenWrapFirstText(root, text, id) {
     if (!root || !text) return false;
-    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
-    let node;
-    while ((node = walker.nextNode())) {
-        if (node.parentElement?.closest('.lesen-user-highlight,select,button')) continue;
-        const index = node.nodeValue.indexOf(text);
-        if (index < 0) continue;
+    const candidates = [...root.querySelectorAll('.lesen-de-sentence')];
+    if (!candidates.length) candidates.push(root);
+    for (const candidate of candidates) {
+        const walker = document.createTreeWalker(candidate, NodeFilter.SHOW_TEXT);
+        const nodes = []; let node, combined = '';
+        while ((node = walker.nextNode())) {
+            if (node.parentElement?.closest('.lesen-user-highlight,.lesen-vi-sentence,.lesen-proof,select,button')) continue;
+            nodes.push({node, start:combined.length}); combined += node.nodeValue;
+        }
+        const at = combined.indexOf(text);
+        if (at < 0) continue;
+        const first = nodes.find(item => item.start + item.node.nodeValue.length > at);
+        const last = nodes.find(item => item.start + item.node.nodeValue.length >= at + text.length);
+        if (!first || !last) continue;
         const range = document.createRange();
-        range.setStart(node, index);
-        range.setEnd(node, index + text.length);
+        range.setStart(first.node, at - first.start);
+        range.setEnd(last.node, at + text.length - last.start);
         const span = document.createElement('span');
-        span.className = 'lesen-user-highlight';
-        span.dataset.lesenHighlightId = id;
-        range.surroundContents(span);
+        span.className = 'lesen-user-highlight'; span.dataset.lesenHighlightId = id;
+        span.appendChild(range.extractContents()); range.insertNode(span);
         return true;
     }
     return false;
