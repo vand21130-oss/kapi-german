@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kapi - Deutsch B2</title>
+    <script>
+        // Reopening a page from the browser's back/forward cache must visit the gate too.
+        window.addEventListener('pageshow', event => {
+            if (event.persisted) window.location.reload();
+        });
+    </script>
     
     <!-- Gọi 3 "bộ não" của Kapi (thêm defer để tránh lỗi Timeout) -->
     <script src="vokabel-data.js" defer></script>
