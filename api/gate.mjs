@@ -1,18 +1,19 @@
 import {
   ATTEMPT_COOKIE,
   ATTEMPT_MAX_AGE_SECONDS,
+  ENTRY_COOKIE,
   SESSION_COOKIE,
-  SESSION_MAX_AGE_SECONDS,
   createAttemptToken,
+  createEntryToken,
   createSessionToken,
   nextAttemptState,
   parseCookies,
   passwordMatches,
   readAttemptState,
   remainingLockSeconds,
-  serializeCookie,
-  verifySessionToken
+  serializeCookie
 } from '../lib/gate-auth.mjs';
+import { ENTRY_MAX_AGE_SECONDS, normalizeEntryPath } from '../lib/gate-policy.mjs';
 
 function noStore(res) {
   res.setHeader('Cache-Control', 'no-store, max-age=0');
@@ -59,7 +60,9 @@ export default async function handler(req, res) {
   if (req.method === 'GET') {
     return json(res, 200, {
       ok: true,
-      authenticated: verifySessionToken(cookies[SESSION_COOKIE], gatePassword),
+      // Visiting the gate always requires the password again. A session from
+      // another tab must not silently open this one (including old gate.js).
+      authenticated: false,
       attempts: attemptState.count,
       lockedUntil: waitSeconds ? attemptState.lockedUntil : 0,
       waitSeconds
@@ -67,7 +70,9 @@ export default async function handler(req, res) {
   }
 
   if (req.method === 'DELETE') {
-    res.setHeader('Set-Cookie', [clearCookie(SESSION_COOKIE), clearCookie(ATTEMPT_COOKIE)]);
+    res.setHeader('Set-Cookie', [
+      clearCookie(SESSION_COOKIE), clearCookie(ENTRY_COOKIE), clearCookie(ATTEMPT_COOKIE)
+    ]);
     return json(res, 200, { ok: true, authenticated: false });
   }
 
@@ -86,19 +91,23 @@ export default async function handler(req, res) {
     });
   }
 
-  const { password } = readJsonBody(req);
+  const { password, returnTo } = readJsonBody(req);
   const candidate = typeof password === 'string' ? password.slice(0, 512) : '';
 
   if (passwordMatches(candidate, gatePassword)) {
+    const nextPath = normalizeEntryPath(returnTo);
     res.setHeader('Set-Cookie', [
-      serializeCookie(SESSION_COOKIE, createSessionToken(gatePassword), {
-        maxAge: SESSION_MAX_AGE_SECONDS
+      // No Max-Age/Expires: do not remember authentication for 30 days.
+      serializeCookie(SESSION_COOKIE, createSessionToken(gatePassword)),
+      serializeCookie(ENTRY_COOKIE, createEntryToken(gatePassword, nextPath), {
+        maxAge: ENTRY_MAX_AGE_SECONDS
       }),
       clearCookie(ATTEMPT_COOKIE)
     ]);
     return json(res, 200, {
       ok: true,
       authenticated: true,
+      next: nextPath,
       message: 'À, người nhà. Mời vào Nhà Kapi ♡'
     });
   }

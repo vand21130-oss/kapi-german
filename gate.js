@@ -150,13 +150,6 @@
       });
       const data = await response.json();
 
-      if (data.authenticated) {
-        setMood('open');
-        message.textContent = 'À, người nhà. Mời vào Nhà Kapi ♡';
-        window.setTimeout(() => window.location.replace(safeNextPath()), 500);
-        return;
-      }
-
       if (data.waitSeconds > 0 && data.lockedUntil) {
         beginCountdown(data.lockedUntil, data.attempts || 0);
       }
@@ -197,7 +190,7 @@
           Accept: 'application/json',
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ password })
+        body: JSON.stringify({ password, returnTo: safeNextPath() })
       });
       const data = await response.json();
 
@@ -209,7 +202,7 @@
         message.textContent = data.message || 'À, người nhà. Mời vào Nhà Kapi ♡';
         note.textContent = 'Cửa mở rồi. Gà xin phép nằm sang một bên.';
         passwordInput.value = '';
-        window.setTimeout(() => window.location.replace(safeNextPath()), 900);
+        window.setTimeout(() => window.location.replace(data.next || safeNextPath()), 900);
         return;
       }
 
