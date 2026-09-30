@@ -114,6 +114,41 @@ function lesenOpenReviewWord(encoded) {
 let dailyStorySpeech = null;
 let dailyStoryVoiceWait = null;
 let dailyStorySpeechToken = 0;
+let dailyStoryRecording = null;
+const DAILY_STORY_RECORDINGS = {
+    'Die Taube im Bewerbungsgespräch':'audio/vali-stories/die-taube-im-bewerbungsgespraech.m4a'
+};
+
+function dailyStoryRecordedSource(story) {
+    return DAILY_STORY_RECORDINGS[story.title] || '';
+}
+
+function playDailyStoryRecording(story) {
+    const token = ++dailyStorySpeechToken;
+    const recording = new Audio(dailyStoryRecordedSource(story));
+    dailyStoryRecording = recording;
+    const active = () => token === dailyStorySpeechToken && dailyStoryRecording === recording;
+    const update = playing => {
+        const button = document.getElementById('daily-story-pause');
+        if (button) { button.disabled = false; button.textContent = playing ? '⏸ Tạm dừng' : '▶ Đọc tiếp'; }
+        document.querySelector('#focus-mascot-slot .koffer-mascot')?.classList.toggle('talking', playing);
+    };
+    recording.onplaying = () => { if (active()) { update(true); setDailyStoryAudioStatus('Đang phát bản thu của Vali.'); } };
+    recording.onpause = () => { if (active()) { update(false); setDailyStoryAudioStatus('Đã tạm dừng.'); } };
+    recording.onended = () => {
+        if (!active()) return;
+        stopDailyStoryAudio();
+        setDailyStoryAudioStatus('Đã nghe hết truyện. Bấm nghe để nghe lại.');
+    };
+    const failed = () => {
+        if (!active()) return;
+        stopDailyStoryAudio();
+        setDailyStoryAudioStatus('Chưa phát được bản thu. Kiểm tra kết nối/âm lượng rồi bấm nghe lại.');
+    };
+    recording.onerror = failed;
+    setDailyStoryAudioStatus('Đang tải bản thu của Vali…');
+    recording.play()?.catch(failed);
+}
 
 function dailyKofferStoryIndex() {
     return [...getTodayStudyMission().date].reduce((n,c) => n + c.charCodeAt(0), 0) % DAILY_KOFFER_STORIES.length;
@@ -131,8 +166,14 @@ function setDailyStoryAudioStatus(message) {
 }
 
 function stopDailyStoryAudio() {
-    if (!dailyStorySpeech && !dailyStoryVoiceWait) return;
+    if (!dailyStorySpeech && !dailyStoryVoiceWait && !dailyStoryRecording) return;
     dailyStorySpeechToken++;
+    if (dailyStoryRecording) {
+        const recording = dailyStoryRecording;
+        dailyStoryRecording = null;
+        recording.onplaying = recording.onpause = recording.onended = recording.onerror = null;
+        recording.pause(); recording.currentTime = 0;
+    }
     if (dailyStoryVoiceWait) {
         window.speechSynthesis?.removeEventListener?.('voiceschanged', dailyStoryVoiceWait.changed);
         clearTimeout(dailyStoryVoiceWait.timer);
@@ -150,6 +191,8 @@ function stopDailyStoryAudio() {
 function playDailyKofferStory() {
     if (!getTodayStudyMission().completed || !document.getElementById('daily-story-audio-status')) return;
     stopDailyStoryAudio();
+    const story = DAILY_KOFFER_STORIES[dailyKofferStoryIndex()];
+    if (dailyStoryRecordedSource(story)) return playDailyStoryRecording(story);
     if (!window.speechSynthesis || typeof SpeechSynthesisUtterance === 'undefined') {
         setDailyStoryAudioStatus('Trình duyệt này chưa hỗ trợ giọng đọc. Hãy mở bằng Chrome/Edge có giọng tiếng Đức.');
         return;
@@ -208,6 +251,16 @@ function playDailyKofferStory() {
 }
 
 function pauseDailyKofferStory() {
+    if (dailyStoryRecording) {
+        const recording = dailyStoryRecording;
+        if (!recording.paused) recording.pause();
+        else recording.play()?.catch(() => {
+            if (dailyStoryRecording !== recording) return;
+            stopDailyStoryAudio();
+            setDailyStoryAudioStatus('Chưa tiếp tục phát được. Bấm nghe để thử lại.');
+        });
+        return;
+    }
     if (!dailyStorySpeech) return;
     const synth = window.speechSynthesis;
     const button = document.getElementById('daily-story-pause');
@@ -218,7 +271,7 @@ function pauseDailyKofferStory() {
 function dailyStoryReviewHtml(story, index) {
     const review = DAILY_STORY_REVIEW_DATA[index];
     const sentences = lesenSplitSentences(dailyStoryPlainText(story));
-    return `<div class="daily-story-player"><button type="button" class="lesen-proof-link" onclick="playDailyKofferStory()">🔊 Nghe truyện</button><button type="button" id="daily-story-pause" class="lesen-proof-link" onclick="pauseDailyKofferStory()" disabled>⏸ Tạm dừng</button><button type="button" class="lesen-proof-link" onclick="stopDailyStoryAudio()">⏹ Dừng</button><div id="daily-story-audio-status" role="status" aria-live="polite">Giọng tiếng Đức của trình duyệt · đọc chậm. Bấm nghe để bắt đầu.</div></div>
+    return `<div class="daily-story-player"><button type="button" class="lesen-proof-link" onclick="playDailyKofferStory()">🔊 Nghe truyện</button><button type="button" id="daily-story-pause" class="lesen-proof-link" onclick="pauseDailyKofferStory()" disabled>⏸ Tạm dừng</button><button type="button" class="lesen-proof-link" onclick="stopDailyStoryAudio()">⏹ Dừng</button><div id="daily-story-audio-status" role="status" aria-live="polite">${dailyStoryRecordedSource(story) ? 'Bản thu giọng Vali của cậu. Bấm nghe để bắt đầu.' : 'Giọng tiếng Đức của trình duyệt · đọc chậm. Bấm nghe để bắt đầu.'}</div></div>
         <details class="daily-story-translation"><summary>🇩🇪 🇻🇳 Đọc song ngữ</summary>${sentences.map((de,i) => `<p><span lang="de">${escapeVocabHtml(de)}</span><span class="lesen-vi-sentence" lang="vi">${escapeVocabHtml(review.vi[i] || '')}</span></p>`).join('')}</details>
         <div id="daily-story-meaning" class="daily-story-meaning" role="status">Chạm từ in đậm để xem nghĩa trong câu, cách dùng và ví dụ.</div>
         <details class="daily-story-glossary"><summary>📎 Những cụm đáng hiểu trong truyện</summary>${review.glossary.map(item => `<p><b>${escapeVocabHtml(item.de)}</b> — ${escapeVocabHtml(item.vi)}<br><small>${escapeVocabHtml(item.note)}</small><br><span lang="de">${escapeVocabHtml(item.example)}</span><span class="lesen-vi-sentence" lang="vi">${escapeVocabHtml(item.exampleVi)}</span></p>`).join('')}</details>`;
