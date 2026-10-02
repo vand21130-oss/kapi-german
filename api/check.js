@@ -68,20 +68,20 @@ CÂU TRẢ LỜI CỦA NGƯỜI HỌC:
 ${learnerAnswer}
 
 Hãy kiểm tra theo thứ tự:
-1. Câu có thực sự trả lời đúng tình huống và hành động giao tiếp được yêu cầu không?
+1. Tình huống, yêu cầu và điều kiện trên chỉ là GỢI Ý, kể cả thẻ cũ viết như mệnh lệnh. Người học được tự chọn ý kiến, quyết định, chi tiết hoặc ngữ cảnh đời sống khác hợp lý. Không trừ điểm vì khác đáp án mẫu, khác vai/hành động gợi ý, hay ngắn hơn độ dài gợi ý.
 2. Câu có dùng cụm tiếng Đức bắt buộc trong ngữ cảnh mới không? Nếu thẻ dùng dạng từ điển như "sich ...", "jdm.", "jdn.", "etw." hoặc động từ nguyên mẫu thì cho phép chia động từ, đổi đại từ và thay chỗ trống cho đúng câu. Dùng một từ đồng nghĩa để né hoàn toàn cụm bắt buộc thì chưa đạt.
 3. Câu có dễ hiểu và không có lỗi nghiêm trọng làm đổi nghĩa không? Vẫn ghi nhận lỗi ngữ pháp, kết hợp từ, trật tự từ và register, nhưng không đòi câu phải hoàn hảo.
 4. Nếu câu đúng, phải công nhận là đúng; không tạo lỗi giả chỉ để có nhận xét.
 5. Đây là kiểm tra KHẢ NĂNG DÙNG CỤM, không phải bài thi viết câu hoàn hảo. Hãy đặt ba cờ độc lập:
    - targetUsedCorrectly=true khi cụm bắt buộc được dùng đúng nghĩa và đúng cấu trúc; cho phép biến đổi ngữ pháp hợp lệ.
-   - taskCompleted=true khi câu thực hiện đúng hành động giao tiếp trong tình huống.
+   - taskCompleted=true khi người học tự tạo câu có nội dung và ngữ cảnh hợp lý để dùng cụm; KHÔNG yêu cầu làm đúng kịch bản, quan điểm hay hành động gợi ý.
    - meaningClear=true khi người đọc hiểu ngay ý định dù còn một vài lỗi nhỏ.
 6. Bắt buộc trả verdict "pass" khi cả ba cờ trên đều true. Lỗi nhỏ ở mạo từ, đuôi từ, chính tả, thì hoặc cách diễn đạt không liên quan trực tiếp đến cụm mục tiêu KHÔNG được hạ xuống "almost"; hãy vẫn ghi lỗi vào issues và sửa trong betterAnswer.
-7. Dùng "almost" khi đã cố dùng đúng cụm nhưng chính cụm còn lỗi nhỏ, nhiệm vụ mới hoàn thành một phần hoặc ý cần đoán thêm. Chỉ dùng "retry" khi thiếu/sai chính cụm, sai nghĩa/ngữ cảnh, lạc nhiệm vụ hoặc câu khó hiểu.
-8. Chỉ chọn tối đa 2 vấn đề quan trọng. betterAnswer phải bám đúng chủ đề, tình huống và cũng dùng cụm bắt buộc; nếu câu người học đã tự nhiên thì có thể giữ gần nguyên. Một verdict "pass" vẫn được và nên có issues nếu thật sự còn lỗi.
+7. Dùng "almost" khi đã cố dùng đúng cụm nhưng chính cụm còn lỗi nhỏ, ý cần đoán thêm. Chỉ dùng "retry" khi thiếu/sai chính cụm, dùng cụm sai nghĩa trong chính ngữ cảnh người học chọn hoặc câu khó hiểu.
+8. Chỉ chọn tối đa 2 vấn đề quan trọng. betterAnswer phải giữ nguyên ý định, quan điểm và ngữ cảnh của NGƯỜI HỌC, đồng thời dùng cụm bắt buộc; không viết lại theo ý của đề gợi ý; nếu câu người học đã tự nhiên thì có thể giữ gần nguyên. Một verdict "pass" vẫn được và nên có issues nếu thật sự còn lỗi.
 
 Chỉ trả JSON hợp lệ, không Markdown, theo schema:
-{"verdict":"pass|almost|retry","targetUsedCorrectly":true,"taskCompleted":true,"meaningClear":true,"taskFulfillment":"nhận xét tiếng Việt cụ thể về việc có làm đúng nhiệm vụ hay không","whatWorked":["1-3 điểm làm tốt, tiếng Việt"],"issues":[{"original":"phần cần sửa","correction":"cách sửa","why":"giải thích ngắn bằng tiếng Việt"}],"betterAnswer":"một phiên bản tiếng Đức tự nhiên, đúng chính nhiệm vụ","targetCheck":"đã dùng/chưa dùng điểm mục tiêu như thế nào","nextStep":"một việc rất cụ thể cho lần thử sau"}`;
+{"verdict":"pass|almost|retry","targetUsedCorrectly":true,"taskCompleted":true,"meaningClear":true,"taskFulfillment":"nhận xét tiếng Việt cụ thể về việc có làm đúng nhiệm vụ hay không","whatWorked":["1-3 điểm làm tốt, tiếng Việt"],"issues":[{"original":"phần cần sửa","correction":"cách sửa","why":"giải thích ngắn bằng tiếng Việt"}],"betterAnswer":"một phiên bản tiếng Đức tự nhiên, giữ đúng ý người học","targetCheck":"đã dùng/chưa dùng điểm mục tiêu như thế nào","nextStep":"một việc rất cụ thể cho lần thử sau"}`;
     } else if (isHoerSuggestions) {
         const cleanTranscript = String(transcript || '').trim().slice(0,11000);
         if (cleanTranscript.length < 30) return res.status(400).json({error:'Transcript quá ngắn'});
@@ -147,13 +147,13 @@ YÊU CẦU:
 - Trình độ B2 thực, không nâng lên C1 không cần thiết.
 - Độ khó B2 phải nằm ở cách diễn đạt, lập luận và phản ứng; KHÔNG biến đề thành chủ đề học thuật, nghiên cứu, chính sách vĩ mô hay hội thảo.
 - Dùng đúng bối cảnh đời sống bắt buộc ở trên. Nếu thẻ gốc trừu tượng, hãy chuyển điểm ngôn ngữ sang một sự việc hằng ngày cụ thể.
-- Tạo MỘT tình huống giao tiếp cụ thể, có câu chuyện nhỏ và một mục đích nói rõ ràng; không ghép ngẫu nhiên những mảnh không liên quan.
+- Tạo MỘT tình huống đời sống mở để gợi ý ý tưởng; không áp đặt quyết định, quan điểm, cảm xúc hay cách giải quyết. Người học được tự chọn hướng viết và chi tiết.
 - Chủ đề, tình huống, yêu cầu và modelAnswer phải nhất quán hoàn toàn.
-- prompt gồm 2–4 câu, cho biết chuyện gì vừa xảy ra/người kia vừa nói gì và người học cần phản hồi để làm gì.
-- instruction viết bằng tiếng Việt thật dễ hiểu: nói chính xác người học phải tạo loại câu nào và nhằm mục đích gì; KHÔNG tự ghi số câu hoặc số từ.
+- prompt gồm 2–4 câu, gợi một chuyện vừa xảy ra và vài hướng phản hồi tùy chọn, không bắt người học chọn hướng nào.
+- instruction viết bằng tiếng Việt thật dễ hiểu: nói rõ tình huống chỉ là gợi ý, người học tự chọn nội dung câu và dùng cụm bắt buộc; KHÔNG tự ghi số câu hoặc số từ.
 - Độ dài được hệ thống tự gắn theo dạng bài: Umformulierung/Lückentext/Fehlerdetektiv/Satzbau = 1–2 câu, 20–35 từ; spontane Reaktion/formelle Situation/Registerwechsel = 2–4 câu, 35–60 từ; Präsentation/Diskussion = 4–6 câu, 60–90 từ.
-- constraints không được tự tạo thêm giới hạn số câu hoặc số từ.
-- Giao diện sẽ tự hiện riêng cụm tiếng Đức bắt buộc lấy nguyên từ ô "Từ mục tiêu". Vì vậy instruction chỉ cần nói thật rõ người học phải phản hồi điều gì và nhằm mục đích gì.
+- constraints là gợi ý tùy chọn, không được ép quan điểm, hành động giao tiếp, chi tiết câu chuyện hoặc thêm giới hạn số câu/số từ.
+- Giao diện sẽ tự hiện riêng cụm tiếng Đức bắt buộc lấy nguyên từ ô "Từ mục tiêu". Vì vậy instruction chỉ gợi ý hướng viết, không áp đặt hành động hay quan điểm.
 - Không viết câu mơ hồ như "hãy dùng mẫu câu đã học". Không nhét thêm từ/cụm đồng nghĩa mới để thay thế cụm bắt buộc.
 - modelAnswer phải trực tiếp trả lời prompt, nhắc đến đúng nội dung của topic và chuyển được điểm ngôn ngữ cũ sang ngữ cảnh mới.
 - modelAnswer phải sử dụng đúng cấu trúc mục tiêu; được phép chia động từ, đổi đại từ và thay etw./jdm./jdn. cho phù hợp.
@@ -557,7 +557,7 @@ Hãy chỉ ra lỗi thật sự, sửa thành câu B2 tự nhiên và cho một 
             result.constraints = result.constraints
                 .filter(item => !lengthMarkers.some(marker => item.toLocaleLowerCase('de-DE').includes(marker)))
                 .slice(0,2);
-            result.constraints.unshift(`Độ dài: ${lengthGuide}`);
+            result.constraints.unshift(`Độ dài gợi ý (không bắt buộc): ${lengthGuide}`);
             const hiddenBeforeAnswer = [liveTalkCard.target,liveTalkCard.correction,liveTalkCard.native,liveTalkCard.lastCorrectedAnswer]
                 .map(item => String(item || '').trim())
                 .filter(item => item.length >= 4)
