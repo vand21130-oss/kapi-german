@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="de" class="kapi-booting">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -25,6 +25,7 @@
     <script src="kapi-logic.js" defer></script>
     
     <style>
+        .kapi-booting body { visibility: hidden; }
         /* TẠO LỚP NỀN CUTE */
         /* Ép nền và hòa tan bằng "lệnh bài" !important */
         body {
@@ -1330,8 +1331,12 @@
         setInterval(checkAndToggleWidgets, 200);
 
         document.addEventListener('DOMContentLoaded', () => {
-            initSystem();
-            checkAndToggleWidgets();
+            try {
+                initSystem();
+                checkAndToggleWidgets();
+            } finally {
+                document.documentElement.classList.remove('kapi-booting');
+            }
             // Nếu trang mở qua nửa đêm, ngày bị bỏ lỡ sẽ tự gạch mà không cần tải lại.
             setInterval(renderLeavesUI, 60000);
         });
