@@ -1,0 +1,76 @@
+.fish-panel {
+  max-width: 900px;
+  margin: 18px auto;
+  padding: 24px;
+  background: #fffdf7;
+  border: 2px solid #b9d5c2;
+  border-radius: 22px;
+  text-align: left;
+  font-size: 16px;
+  color: #3c5348;
+}
+.fish-panel .btn-kapi,
+.fish-card .btn-kapi,
+.fish-metadata .btn-kapi {
+  font-size: 16px;
+  padding: 10px 14px;
+  margin: 5px;
+  border-radius: 12px;
+}
+.fish-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.fish-add {
+  padding: 16px 0;
+}
+.fish-panel textarea,
+.fish-panel input,
+.fish-card select {
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  padding: 12px;
+  margin: 8px 0;
+  border: 1px solid #bad0bd;
+  border-radius: 10px;
+  font: inherit;
+}
+.fish-card {
+  max-width: 860px;
+  margin: 12px auto;
+  padding: 18px;
+  border: 1px solid #d9dfcb;
+  border-radius: 16px;
+  background: #fff;
+  text-align: left;
+  font-size: 16px;
+  color: #435343;
+}
+.fish-card small {
+  display: block;
+}
+.fish-card select {
+  width: auto;
+  max-width: 100%;
+}
+.fish-metadata {
+  margin: 16px auto;
+  padding: 12px;
+  background: #f3f8ef;
+  border-radius: 12px;
+  font-size: 15px;
+  max-width: 700px;
+}
+.fish-capture {
+  margin-top: 14px;
+}
+.fish-panel button:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.fish-card input[type="checkbox"] { display: inline-block; width: auto; margin: 0 8px 0 0; }
+.fish-card label { display: flex; align-items: center; font-weight: 700; }
+.fish-panel select { max-width: 100%; padding: 10px; border-radius: 10px; font: inherit; }
