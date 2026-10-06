@@ -5732,8 +5732,8 @@ async function loadHoerSuggestions() {
             button.textContent = words.some(w => hoerKey(w.de) === hoerKey(de)) ? '✓ Đã lưu' : '+ Lưu';
             button.disabled = button.textContent !== '+ Lưu';
             button.style.cssText = 'border:0;border-radius:10px;background:#dff0cb;padding:7px 12px;cursor:pointer';
-            button.onclick = () => {
-                if (hoerAddWord(de,vi)) { button.textContent = '✓ Đã lưu'; button.disabled = true; }
+            button.onclick = async () => {
+                if (await hoerAddWord(de,vi)) { button.textContent = '✓ Đã lưu'; button.disabled = true; }
             };
             row.append(label,button);
             box.append(row);
@@ -5783,7 +5783,7 @@ function showHoerWortschatz() {
     const words = hoerReadWords();
     const queue = hoerDailyQueue(words);
     const today = getLocalDateKey(new Date());
-    const due = queue.filter(key => words.some(w => hoerKey(w.de) === key && w.lastAttempt !== today));
+    const due = window.KapiFish ? window.KapiFish.db.queue('hoeren',8) : queue.filter(key => words.some(w => hoerKey(w.de) === key && w.lastAttempt !== today));
     const withContext = words.filter(w => w.context && w.context.audio && w.context.dialogue);
     document.getElementById('message').textContent = '👂 Hör-Wortschatz';
     document.getElementById('buttons').innerHTML = `
@@ -5793,7 +5793,7 @@ function showHoerWortschatz() {
                 <h3 style="margin:0;color:#264a65;">Hôm nay còn ${due.length} lượt</h3>
                 <p style="margin:0;color:#536678;">Nghe cụm · tự đoán · lật chữ và nghĩa</p>
                 <button class="btn-kapi" style="margin:8px 0 0;align-self:flex-start;background:#d6eaf7;" onclick="startHoerPractice()" ${due.length ? '' : 'disabled'}>${due.length ? '▶ Bắt đầu nghe' : '✓ Hôm nay đã xong'}</button>
-                <small style="color:#718394;">Tối đa 6 cụm/ngày · nghe ra 3 ngày khác nhau thì tốt nghiệp.</small>
+                <small style="color:#718394;">${window.KapiFish ? 'Tối đa 8 cá/ngày · lịch ôn riêng theo tiến bộ trong hồ Hören.' : 'Tối đa 6 cụm/ngày · nghe ra 3 ngày khác nhau thì tốt nghiệp.'}</small>
             </section>
             <section style="padding:24px;border:2px solid #b8d7a4;border-radius:22px;background:#f4faee;display:flex;flex-direction:column;gap:12px;">
                 <div style="font-size:13px;font-weight:800;color:#618047;letter-spacing:.04em;">🎧 NGHE TRONG NGỮ CẢNH</div>
@@ -5829,12 +5829,15 @@ function renderHoerInventory() {
         row.style.cssText = 'padding:10px;margin:6px 0;border-radius:10px;background:white;display:flex;gap:8px;align-items:center;flex-wrap:wrap';
         const label = document.createElement('span');
         label.style.flex = '1';
-        label.textContent = (word.status === 'graduated' ? '🎓' : word.status === 'listening' ? '👂' : '🆕') + ' ' + word.de + ' · ' + word.vi;
+        const fish = window.KapiFish?.db.byTerm(word.de,'hoeren')[0];
+        const fishStatus = fish?.progress.status;
+        label.textContent = (fishStatus ? (fishStatus === 'stable' ? '🎓' : fishStatus === 'new' ? '🆕' : '👂') : word.status === 'graduated' ? '🎓' : word.status === 'listening' ? '👂' : '🆕') + ' ' + word.de + ' · ' + word.vi;
         const star = document.createElement('button');
         star.type = 'button';
-        star.textContent = word.active ? '⭐ Đã thêm' : '☆ Auch aktiv lernen';
-        star.disabled = !!word.active;
-        star.onclick = () => { hoerPromote(word.de); renderHoerInventory(); };
+        const inSpeakingPool = window.KapiFish?.db.byTerm(word.de,'sprechen').length;
+        star.textContent = window.KapiFish ? (inSpeakingPool ? '🐟 Đã có ở Sprechen' : '🐟 Luyện dùng ở Sprechen') : word.active ? '⭐ Đã thêm' : '☆ Auch aktiv lernen';
+        star.disabled = window.KapiFish ? !!inSpeakingPool : !!word.active;
+        star.onclick = async () => { await hoerPromote(word.de); renderHoerInventory(); };
         const edit = document.createElement('button');
         edit.type = 'button';
         edit.textContent = word.context?.audio ? '🎬 Sửa hội thoại' : '🎬 Gắn hội thoại';
