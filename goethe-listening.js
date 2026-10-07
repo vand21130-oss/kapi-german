@@ -63,7 +63,7 @@
     if(!today){const p=document.createElement('p');p.textContent='Bốn ngăn đã sẵn sàng. Đang chờ gói audio, câu hỏi, transcript và đáp án đầu tiên.';box.append(p);}
     const grid=document.createElement('div');grid.className='gl-teile';box.append(grid);
     for(let teil=1;teil<=4;teil++)grid.append(button(`Teil ${teil} · ${lessons().filter(l=>l.teil===teil).length} bài`,()=>shelf(teil)));
-    if(!lessons().length && legacyMenu)box.append(button('Kho đề cũ · dùng trong lúc chờ bài mới',legacyMenu));
+    if(legacyMenu)box.append(button('Kho đề cũ',legacyMenu));
     box.append(button('⬅ Hörtraining',()=>showHoerenMenu()));
   }
   function shelf(teil) {

@@ -30,3 +30,36 @@ test('answers hidden until complete submission; replay only shows audio and bili
 test('daily random pick stays stable on repeated openings',()=>{
  const a=app([lesson('one',1),lesson('four',4)]);const id=a.s.KapiGoetheReplay.chooseToday().id;for(let i=0;i<20;i++)assert.equal(a.s.KapiGoetheReplay.chooseToday().id,id);
 });
+test('original Flexibles Ehrenamt package renders all ABC options, grades each answer, and unlocks the complete bilingual replay',()=>{
+ const context={window:{}};
+ vm.runInNewContext(readFileSync(new URL('../goethe-listening-data.js',import.meta.url),'utf8'),context);
+ const rows=context.window.KapiGoetheListeningLessons,l=rows.find(l=>l.id==='flexibles-ehrenamt-2026-10-07');
+ assert.equal(l.audio,'audio/flexibles-ehrenamt-2026-10-07.m4a');
+ assert.deepEqual(Array.from(l.questions,q=>q.answer),[0,0,1,2,0,1,0,2]);
+ assert.equal(l.transcript.length,10);
+ for(const wrong of [false,true]){
+  const a=app(rows);a.s.KapiGoetheReplay.start(l.id);
+  assert.equal(a.document.querySelectorAll('fieldset').length,8);
+  assert.equal(a.document.querySelectorAll('input').length,24);
+  assert.equal(a.document.querySelectorAll('.gl-transcript').length,0);
+  l.questions.forEach((q,i)=>{
+   const field=a.document.querySelectorAll('fieldset')[i];
+   assert.equal(field.querySelector('legend').textContent,q.prompt);
+   assert.deepEqual([...field.querySelectorAll('label')].map(x=>x.textContent),Array.from(q.options));
+   field.querySelectorAll('input')[wrong?(q.answer+1)%3:q.answer].onchange();
+  });
+  a.click('Chấm bài');
+  assert.equal(a.document.querySelectorAll(wrong?'.gl-wrong':'.gl-correct').length,8);
+  assert.match(a.document.toString(),wrong?/0\/8 câu đúng/:/8\/8 câu đúng/);
+  a.click('Nghe lại cùng');
+  assert.equal(a.document.querySelector('audio').src,l.audio);
+  const blocks=a.document.querySelectorAll('.gl-transcript');
+  assert.equal(blocks.length,10);
+  l.transcript.forEach((t,i)=>{
+   assert.equal(blocks[i].querySelector('[lang="de"]').textContent,t.de);
+   assert.equal(blocks[i].querySelector('[lang="vi"]').textContent,t.vi);
+  });
+  a.click('Kết quả');a.click('Bốn ngăn');
+  assert.ok([...a.document.querySelectorAll('button')].some(b=>b.textContent==='Kho đề cũ'));
+ }
+});
