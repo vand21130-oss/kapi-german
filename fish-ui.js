@@ -646,6 +646,33 @@
         }),
       ).catch(fail);
   }
+  function updateVocabularyHome() {
+    const hard = document.getElementById("vocab-review-hard"),
+      fish = document.getElementById("vocab-review-fish"),
+      ancientCard = document.getElementById("vocab-review-ancient");
+    if (!hard || !fish || !ancientCard) return;
+    const missed = getSavedMissed();
+    const hardDue = new Set(missed.filter(w => eligible(w, null, true)).map(w => C.canonical(term(w)))).size;
+    const fishDue = new Set(C.SKILLS.flatMap(skill => db.queue(skill)).map(id => db.read().fish[id].canonicalKey)).size;
+    const ancientDue = Math.min(db.ancientRemaining(), db.archive(3).length);
+    hard.querySelector("span").textContent = `${hardDue} đến hạn · ${missed.length} đã lưu`;
+    fish.querySelector("span").textContent = `${fishDue} đến hạn · ${Object.keys(db.read().fish).length} đã lưu`;
+    ancientCard.querySelector("span").textContent = `${ancientDue} hôm nay`;
+    const highest = Math.max(hardDue, fishDue);
+    // Only a subtle review cue; archive browsing is never presented as overdue work.
+    if (highest > 0) (fishDue > hardDue ? fish : hard).classList.add("is-due");
+    const mission = document.getElementById("vocab-mission-cta");
+    if (mission && !getAllUniqueVocabWords().some(w => eligible(w, null, true))) {
+      mission.classList.remove("is-primary");
+      mission.classList.add("is-light");
+      mission.innerHTML = '<strong>🌿 Hôm nay chỉ cần ôn nhẹ</strong><small>Chọn một mục Ôn nhanh bên dưới nếu cậu muốn.</small>';
+      mission.removeAttribute("onclick");
+      mission.onclick = () => {
+        document.getElementById("vocab-quick-review").scrollIntoView({ behavior: "smooth", block: "center" });
+        hard.focus();
+      };
+    }
+  }
   function install() {
     for (const name of [
       "showVokabelHauptmenu",
@@ -667,12 +694,7 @@
     lock(refreshLegacy).catch(fail);
     after("hoerWriteWords", () => lock(refreshLegacy).catch(fail));
     after("saveLiveTalkData", () => lock(refreshLegacy).catch(fail));
-    after("showVokabelHauptmenu", () =>
-      document.getElementById("buttons").prepend(
-        button("🐟 Cá Béo · Hören / Sprechen", () => open()),
-        button("🏺 Cá cổ đại · 3 con hôm nay", ancient),
-      ),
-    );
+    after("showVokabelHauptmenu", updateVocabularyHome);
     for (const [name, sk] of [
       ["showHoerenMenu", "hoeren"],
       ["showHoerWortschatz", "hoeren"],
