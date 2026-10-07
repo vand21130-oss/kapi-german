@@ -958,6 +958,7 @@
             if (!Array.isArray(sysData.completedStudyDates)) sysData.completedStudyDates = [];
             if (!Array.isArray(sysData.shopGiftMilestones)) sysData.shopGiftMilestones = [];
             
+            restoreKapiAnimatedOutfit();
             checkResetWeek();
             migrateWeeklyClaims();
             renderLeavesUI();
@@ -1082,21 +1083,43 @@
             return '';
         }
 
+        function hasKapiArtwork(item) {
+            return !!item && !item.look.includes(' ');
+        }
+
+        function restoreKapiAnimatedOutfit() {
+            // Preserve ownership; only replace unavailable colour overlays in equipped slots.
+            let changed = false;
+            for (const type of ['face', 'head', 'activity']) {
+                const selected = shopItems.find(item => item.id === sysData.equippedItems[type]);
+                if (selected && !hasKapiArtwork(selected)) {
+                    const fallback = type === 'face' && sysData.inventory.includes('item_glass') ? 'item_glass' : null;
+                    sysData.equippedItems[type] = fallback;
+                    if (sysData.activeDisplayItemId === selected.id) sysData.activeDisplayItemId = fallback;
+                    changed = true;
+                }
+            }
+            if (changed) saveData();
+        }
+
         function renderShopItem(item) {
             const isOwned = sysData.inventory.includes(item.id);
             const isEquipped = sysData.equippedItems[item.type] === item.id;
             const canAfford = sysData.totalLeaves >= item.price;
-            const requirement = isOwned ? '' : getItemRequirement(item);
+            const artworkMissing = !hasKapiArtwork(item);
+            const requirement = artworkMissing ? 'Chưa có hoạt cảnh · đồ đã mua vẫn giữ trong tủ' : isOwned ? '' : getItemRequirement(item);
             const wearWord = item.type === 'activity' ? 'Dùng' : 'Mặc';
             const wearingWord = item.type === 'activity' ? 'Đang dùng' : 'Đang mặc';
             let primaryButton = '';
-            if (isEquipped) primaryButton = `<button class="equipped" onclick="equipItem('${item.id}')">${wearingWord}</button>`;
+            if (artworkMissing) primaryButton = '<button disabled>Chờ hoạt cảnh</button>';
+            else if (isEquipped) primaryButton = `<button class="equipped" onclick="equipItem('${item.id}')">${wearingWord}</button>`;
             else if (isOwned) primaryButton = `<button onclick="equipItem('${item.id}')">${wearWord}</button>`;
             else if (requirement) primaryButton = '<button disabled>Chưa mở khóa</button>';
             else primaryButton = `<button ${!canAfford ? 'disabled' : ''} onclick="buyItem('${item.id}', ${item.price})">${canAfford ? 'Mua (' + item.price + ' 🍃)' : '🔒 ' + item.price + ' 🍃'}</button>`;
 
             let previewButton = '';
-            if (isOwned) previewButton = `<button class="replay-scene" title="Cho Kapi diễn lại" aria-label="Diễn lại" onclick="previewKapiItem('${item.id}', true)">▶ Diễn lại</button>`;
+            if (artworkMissing) previewButton = '';
+            else if (isOwned) previewButton = `<button class="replay-scene" title="Cho Kapi diễn lại" aria-label="Diễn lại" onclick="previewKapiItem('${item.id}', true)">▶ Diễn lại</button>`;
             else if (!hasPreviewedKapiActivity(item.id)) previewButton = `<button class="preview-scene" title="Xem thử một lần" onclick="previewKapiItem('${item.id}')">👀 Xem thử</button>`;
             else previewButton = '<span class="shop-preview-used">Đã xem thử</span>';
             const btnHTML = `<span class="shop-item-actions">${previewButton}${primaryButton}</span>`;
@@ -1107,7 +1130,7 @@
 
         function buyItem(id) {
             const item = shopItems.find(entry => entry.id === id);
-            if (item && !sysData.inventory.includes(id) && !getItemRequirement(item) && sysData.totalLeaves >= item.price) {
+            if (hasKapiArtwork(item) && !sysData.inventory.includes(id) && !getItemRequirement(item) && sysData.totalLeaves >= item.price) {
                 cancelKapiPreview();
                 sysData.totalLeaves -= item.price;
                 if (!sysData.inventory.includes(id)) sysData.inventory.push(id);
@@ -1145,7 +1168,7 @@
 
         function equipItem(id) {
             const item = shopItems.find(entry => entry.id === id);
-            if (!item || !sysData.inventory.includes(id)) return;
+            if (!hasKapiArtwork(item) || !sysData.inventory.includes(id)) return;
             cancelKapiPreview();
             const isRemoving = sysData.equippedItems[item.type] === id;
             sysData.equippedItems[item.type] = isRemoving ? null : id;
@@ -1263,7 +1286,7 @@
             const kapi = document.querySelector('.kapi-container');
             const layer = document.getElementById('kapi-activity');
             const isOwned = item && sysData.inventory.includes(id);
-            if (!item || !kapi || !layer || (!isOwned && hasPreviewedKapiActivity(id))) return;
+            if (!hasKapiArtwork(item) || !kapi || !layer || (!isOwned && hasPreviewedKapiActivity(id))) return;
             const bubble = kapi.querySelector('.kapi-bubble');
             const sleepImage = document.getElementById('kapi-sleep-image');
             if (item.type === 'activity' && item.look === 'sleep' && (!sleepImage || !sleepImage.complete || sleepImage.naturalWidth === 0)) {
