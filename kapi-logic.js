@@ -671,14 +671,20 @@ function showVokabelHauptmenu() {
     let missed = getSavedMissed();
     let weeklyJournal = loadVocabJournal().current;
     let dailyStatus = getDailyMissionStatus();
-    let warningHtml = missed.length > 0 ? `<button class="btn-grid btn-full" style="background:#ffb74d; color:white; justify-content:center; display:flex;" onclick="showLernenScreen('review')">⚠️ Sổ tay từ khó: Ôn ${missed.length} từ!</button>` : '';
-    
-    document.getElementById("message").innerText = "Was möchtest du im Alltag üben?";
+    const missionHtml = dailyStatus.completed
+        ? `<div class="vocab-mission is-complete"><strong>✅ Xong nhiệm vụ hôm nay</strong><p>Phần chính đã xong. Muốn thì ôn thêm một chút bên dưới nhé.</p><button class="vocab-text-link" onclick="startDailyVocabMission()">Ôn lại nhiệm vụ</button></div>`
+        : `<button id="vocab-mission-cta" class="vocab-mission is-primary" onclick="startDailyVocabMission()"><strong>🐦 Bắt đầu nhiệm vụ hôm nay · khoảng 7 phút</strong><small>5 từ mới + 3 từ cần ôn + 5 câu kiểm tra</small></button>`;
+    document.getElementById("message").innerText = "Hôm nay mình học gì?";
     document.getElementById("buttons").innerHTML = `
-        <div class="grid-container">
-            <button class="btn-grid btn-full" style="background:linear-gradient(135deg,#e8f5e9,#fff8e1);border:3px solid #8bc34a;text-align:center;color:#47733c;font-weight:800;padding:20px;box-shadow:0 7px 15px rgba(76,125,55,.15);" onclick="startDailyVocabMission()">${dailyStatus.completed ? '✅ Nhiệm vụ hôm nay đã xong · Ôn lại' : '🐦 Bắt đầu nhiệm vụ hôm nay · khoảng 7 phút'}<br><small style="font-weight:normal;color:#71856a;">5 từ mới + 3 từ cần ôn + 5 câu kiểm tra</small></button>
-            ${warningHtml}
-            <button class="btn-grid btn-full" style="background:linear-gradient(135deg,#fff8e1,#fce4ec);border:2px solid #ffcc80;text-align:center;color:#8d6e63;font-weight:bold;" onclick="showVocabWeeklyJournal()">📒 Nhật ký tuần này · ${weeklyJournal.learnedWords.length} từ · ${weeklyJournal.correctAnswers} đúng</button>
+        <div class="vocab-home">
+            <section id="vocab-today" aria-label="Nhiệm vụ hôm nay">${missionHtml}</section>
+            <section class="vocab-journal-strip" aria-label="Nhật ký tuần này"><div><strong>📒 Nhật ký tuần này</strong><p>${weeklyJournal.learnedWords.length} từ · ${weeklyJournal.correctAnswers} đúng</p></div><button class="vocab-text-link" onclick="showVocabWeeklyJournal()">Xem nhật ký</button></section>
+            <section id="vocab-quick-review" class="vocab-quick-review" aria-labelledby="vocab-review-heading"><h2 id="vocab-review-heading">🔁 Ôn nhanh hôm nay</h2><div class="vocab-review-grid">
+                <button id="vocab-review-hard" class="vocab-review-card" onclick="showLernenScreen('review')"><strong>📕 Từ khó</strong><span>${missed.length} đã lưu</span></button>
+                <button id="vocab-review-fish" class="vocab-review-card" onclick="window.KapiFish.open()"><strong>🐟 Cá Béo</strong><span>Hồ Hören / Sprechen</span></button>
+                <button id="vocab-review-ancient" class="vocab-review-card" onclick="window.KapiFish.ancient()"><strong>🏺 Cá cổ đại</strong><span>Vài từ cũ mỗi ngày</span></button>
+            </div></section>
+            <section class="vocab-archive" aria-labelledby="vocab-archive-heading"><h2 id="vocab-archive-heading">📚 Kho từ vựng</h2><p class="vocab-section-hint">Xem lại theo chủ đề</p><div class="grid-container">
             ${vokabelGruppen.hoerenAktiv.woerter.length ? `<button class="btn-grid btn-full" style="background:#e3f2fd;" onclick="showLernenScreen('hoerenAktiv')">⭐ Aus Hören · ${vokabelGruppen.hoerenAktiv.woerter.length} từ học chủ động</button>` : ''}
             <button class="btn-grid" onclick="showLernenScreen('arbeit')">💼 Arbeit</button>
             <button class="btn-grid" style="background:#e8f5e9;" onclick="showLernenScreen('umwelt')">🌍 Umwelt</button>
@@ -703,6 +709,7 @@ function showVokabelHauptmenu() {
             <button class="btn-grid btn-full" style="background:#dcedc8; text-align:center; color:#27ae60; font-weight:bold;" onclick="showMiniGameSetup('sentence')">✍️ Game: Đặt câu với từ ngẫu nhiên</button>
             <button class="btn-grid btn-full" style="background:#e8eaf6; text-align:center; color:#3f51b5; font-weight:bold;" onclick="showMiniGameSetup('tornado')">🌪️ Game: Lốc Xoáy Từ Vựng (Trộn Ngẫu Nhiên)</button>
             <button class="btn-grid btn-full" style="background:linear-gradient(135deg,#ffe0b2,#e3f2fd);border:2px solid #ffb74d;text-align:center;color:#795548;font-weight:800;" onclick="showKofferIntro()">🧳 Game: Koffer nach Deutschland</button>
+            </div></section>
         </div>
         <button class="btn-kapi btn-home" onclick="showLessons()">⬅️ Zurück</button>
     `;
