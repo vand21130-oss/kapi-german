@@ -112,7 +112,7 @@
         #shop-items-container::-webkit-scrollbar-thumb { background: #ffcc80; border-radius: 10px; }
 
         .shop-item {
-            display: flex; justify-content: space-between; align-items: center;
+            display: flex; flex-wrap: wrap; gap: 7px; justify-content: space-between; align-items: center;
             background: #fffaf0; padding: 6px 10px;
             border-radius: 10px; margin-bottom: 6px; font-size: 13px;
             font-weight: bold; color: #555;
@@ -124,7 +124,8 @@
         .shop-item button:disabled { background: #f5f5f5; color: #ccc; cursor: not-allowed; }
         .shop-item button.equipped { background: #4CAF50; color: white; }
         .shop-item button.preview-scene { background:#8d6e63; color:white; min-width:38px; }
-        .shop-item-actions { display:flex; align-items:center; gap:4px; flex-shrink:0; }
+        .shop-item-actions { display:flex; flex-wrap:wrap; align-items:center; justify-content:flex-end; gap:5px; width:100%; }
+        .shop-preview-used { color:#806c60; font-size:10px; margin-right:auto; }
         .shop-item button.replay-scene { background:#7e9b64; color:white; min-width:34px; }
 
         /* Phụ kiện Kapi */
@@ -134,7 +135,7 @@
         }
         .shop-item.locked-item { opacity: .72; }
         .shop-item-info { min-width: 0; padding-right: 6px; }
-        .shop-item-name { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .shop-item-name { display: block; white-space: normal; overflow-wrap: anywhere; }
         .shop-item-rule { display: block; margin-top: 2px; color: #9b7b6d; font-size: 9px; font-weight: 700; }
         .shop-week-title { margin: 2px 0 7px; color: #9b6b4b; font-size: 10px; font-weight: 900; text-align: center; letter-spacing: .4px; }
         .shop-owned-title { margin: 8px 0 5px; padding-top: 6px; border-top: 1px dashed #efc99d; color: #79905a; font-size: 10px; font-weight: 900; text-align: center; }
@@ -1091,23 +1092,24 @@
             let primaryButton = '';
             if (isEquipped) primaryButton = `<button class="equipped" onclick="equipItem('${item.id}')">${wearingWord}</button>`;
             else if (isOwned) primaryButton = `<button onclick="equipItem('${item.id}')">${wearWord}</button>`;
-            else if (requirement) primaryButton = '<button disabled>🔒</button>';
+            else if (requirement) primaryButton = '<button disabled>Chưa mở khóa</button>';
             else primaryButton = `<button ${!canAfford ? 'disabled' : ''} onclick="buyItem('${item.id}', ${item.price})">${canAfford ? 'Mua (' + item.price + ' 🍃)' : '🔒 ' + item.price + ' 🍃'}</button>`;
 
             let previewButton = '';
-            if (isOwned) previewButton = `<button class="replay-scene" title="Cho Kapi diễn lại" onclick="previewKapiItem('${item.id}', true)">▶</button>`;
-            else if (!hasPreviewedKapiActivity(item.id)) previewButton = `<button class="preview-scene" title="Xem thử một lần" onclick="previewKapiItem('${item.id}')">👀</button>`;
-            else previewButton = '<button disabled title="Đã dùng lượt xem thử">✓</button>';
+            if (isOwned) previewButton = `<button class="replay-scene" title="Cho Kapi diễn lại" aria-label="Diễn lại" onclick="previewKapiItem('${item.id}', true)">▶ Diễn lại</button>`;
+            else if (!hasPreviewedKapiActivity(item.id)) previewButton = `<button class="preview-scene" title="Xem thử một lần" onclick="previewKapiItem('${item.id}')">👀 Xem thử</button>`;
+            else previewButton = '<span class="shop-preview-used">Đã xem thử</span>';
             const btnHTML = `<span class="shop-item-actions">${previewButton}${primaryButton}</span>`;
             return `<div class="shop-item ${requirement ? 'locked-item' : ''}">
                 <span class="shop-item-info"><span class="shop-item-name">${item.icon} ${item.name}</span>${requirement ? `<small class="shop-item-rule">${requirement}</small>` : ''}</span>${btnHTML}
             </div>`;
         }
 
-        function buyItem(id, price) {
+        function buyItem(id) {
             const item = shopItems.find(entry => entry.id === id);
-            if (item && !getItemRequirement(item) && sysData.totalLeaves >= price) {
-                sysData.totalLeaves -= price;
+            if (item && !sysData.inventory.includes(id) && !getItemRequirement(item) && sysData.totalLeaves >= item.price) {
+                cancelKapiPreview();
+                sysData.totalLeaves -= item.price;
                 if (!sysData.inventory.includes(id)) sysData.inventory.push(id);
                 sysData.equippedItems[item.type] = id;
                 sysData.activeDisplayItemId = id;
@@ -1144,6 +1146,7 @@
         function equipItem(id) {
             const item = shopItems.find(entry => entry.id === id);
             if (!item || !sysData.inventory.includes(id)) return;
+            cancelKapiPreview();
             const isRemoving = sysData.equippedItems[item.type] === id;
             sysData.equippedItems[item.type] = isRemoving ? null : id;
             if (isRemoving && sysData.activeDisplayItemId === id) sysData.activeDisplayItemId = null;
@@ -1153,7 +1156,7 @@
             updateKapiAppearance();
         }
 
-        function updateKapiAppearance() {
+        function updateKapiAppearance(previewItem = null) {
             const headItem = document.getElementById('kapi-head-item');
             const accItem = document.getElementById('kapi-accessory');
             const isSunday = new Date().getDay() === 0;
@@ -1170,8 +1173,8 @@
                 headItem.style.animation = "none";
             }
 
-            const faceItem = shopItems.find(item => item.id === sysData.equippedItems.face);
-            const equippedHead = shopItems.find(item => item.id === sysData.equippedItems.head);
+            const faceItem = previewItem?.type === 'face' ? previewItem : shopItems.find(item => item.id === sysData.equippedItems.face);
+            const equippedHead = previewItem?.type === 'head' ? previewItem : shopItems.find(item => item.id === sysData.equippedItems.head);
             if (faceItem && accItem) {
                 accItem.className = 'kapi-accessory';
                 faceItem.look.split(' ').forEach(name => accItem.classList.add(name));
@@ -1190,22 +1193,23 @@
                 headItem.innerHTML = '';
                 headItem.style.display = 'block';
             }
-            updateKapiActivity();
+            updateKapiActivity(previewItem);
         }
 
-        function updateKapiActivity() {
+        function updateKapiActivity(previewItem = null) {
             const kapi = document.querySelector('.kapi-container');
             const layer = document.getElementById('kapi-activity');
             if (!kapi || !layer) return;
             ['radio','cocoa','sleep','mirror','star-nod','sunglasses','top-hat','headband','flower','beret'].forEach(scene => kapi.classList.remove(`kapi-scene-${scene}`));
             kapi.classList.remove('kapi-full-scene');
             layer.className = 'kapi-activity-layer';
-            let item = shopItems.find(entry => entry.id === sysData.activeDisplayItemId && sysData.equippedItems[entry.type] === entry.id);
+            let item = previewItem || shopItems.find(entry => entry.id === sysData.activeDisplayItemId && sysData.equippedItems[entry.type] === entry.id);
             if (!item) {
                 const fallbackId = sysData.equippedItems.activity || sysData.equippedItems.face || sysData.equippedItems.head;
                 item = shopItems.find(entry => entry.id === fallbackId);
             }
             if (item && item.type === 'activity') {
+                if (item.look === 'sleep' && !isKapiSceneImageReady('sleep')) return;
                 kapi.classList.add(`kapi-scene-${item.look}`);
                 layer.classList.add(`${item.look}-scene`);
                 if (item.look !== 'sleep' && isKapiSceneImageReady(item.look)) kapi.classList.add('kapi-full-scene');
@@ -1234,13 +1238,19 @@
 
         function getKapiFashionScene(item) {
             if (!item || item.type === 'activity') return '';
+            // Colour variants have no matching full-body artwork: retain their actual CSS accessory.
+            if (item.look.includes(' ')) return '';
             if (item.look.includes('star-glasses')) return 'star';
             return item.look.split(' ')[0];
         }
 
         let kapiPreviewTimer = null;
+        function cancelKapiPreview() {
+            if (kapiPreviewTimer !== null) window.clearTimeout(kapiPreviewTimer);
+            kapiPreviewTimer = null;
+        }
         function getKapiActivityPreviews() {
-            try { return JSON.parse(localStorage.getItem(KAPI_PREVIEW_KEY)) || []; }
+            try { const ids = JSON.parse(localStorage.getItem(KAPI_PREVIEW_KEY)); return Array.isArray(ids) ? ids : []; }
             catch (_) { return []; }
         }
 
@@ -1265,7 +1275,7 @@
                 return;
             }
             const fashionScene = getKapiFashionScene(item);
-            if (item.type !== 'activity' && !isKapiSceneImageReady(fashionScene)) {
+            if (fashionScene && !isKapiSceneImageReady(fashionScene)) {
                 if (bubble) bubble.textContent = 'Ảnh biểu diễn chưa tới nơi, vé xem thử vẫn còn nguyên nhé! 🫩';
                 return;
             }
@@ -1275,24 +1285,14 @@
                 localStorage.setItem(KAPI_PREVIEW_KEY, JSON.stringify(previews));
             }
             renderShopUI();
-            if (kapiPreviewTimer) {
-                window.clearTimeout(kapiPreviewTimer);
-                updateKapiAppearance();
-            }
-            const previousItem = sysData.equippedItems[item.type];
-            sysData.equippedItems[item.type] = item.id;
-            updateKapiAppearance();
-            sysData.equippedItems[item.type] = previousItem;
-            ['fashion','sunglasses','top-hat','beret','flower','headband'].forEach(name => kapi.classList.remove(`kapi-demo-${name}`));
-            if (item.type !== 'activity') {
-                ['star-nod','sunglasses','top-hat','headband','flower','beret'].forEach(scene => kapi.classList.remove(`kapi-scene-${scene}`));
-                kapi.classList.add('kapi-full-scene', `kapi-scene-${fashionScene === 'star' ? 'star-nod' : fashionScene}`);
-            }
+            cancelKapiPreview();
+            // Preview the requested scene without changing or saving the equipped slots.
+            updateKapiAppearance(item);
             if (bubble) bubble.textContent = isOwned ? 'Kapi diễn lại theo yêu cầu! 💗' : 'Bản dùng thử 5 giây thôi nhé! 👀';
             kapiPreviewTimer = window.setTimeout(() => {
-                ['fashion','sunglasses','top-hat','beret','flower','headband'].forEach(name => kapi.classList.remove(`kapi-demo-${name}`));
+                kapiPreviewTimer = null;
                 updateKapiAppearance();
-                if (bubble) bubble.textContent = 'Vali đã thu đạo cụ lại. 🫩';
+                if (bubble) bubble.textContent = isOwned ? 'Kapi đã diễn xong! 💗' : 'Hết lượt xem thử, Kapi mặc lại đồ cũ nhé!';
             }, 5000);
         }
 
@@ -1336,6 +1336,11 @@
         document.addEventListener('DOMContentLoaded', () => {
             try {
                 initSystem();
+                document.querySelectorAll('.kapi-scene-image, .kapi-sleep-image').forEach(image => {
+                    image.addEventListener('load', () => {
+                        if (kapiPreviewTimer === null) updateKapiAppearance();
+                    });
+                });
                 checkAndToggleWidgets();
             } finally {
                 document.documentElement.classList.remove('kapi-booting');
