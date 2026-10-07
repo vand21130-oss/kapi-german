@@ -23,10 +23,18 @@ test('activity preview overrides active fashion, restores outfit without changin
   [...s.timers.values()].forEach(fn=>fn());
   assert.ok(s.document.querySelector('.kapi-container').classList.contains('kapi-scene-sunglasses'));
 });
-test('colour variants retain own accessory instead of black full-body artwork',()=>{
-  const s=shop(); s.run('equipItem("item_glass_mint")');
-  assert.ok(s.document.getElementById('kapi-accessory').classList.contains('mint'));
-  assert.equal(s.document.querySelector('.kapi-container').classList.contains('kapi-full-scene'),false);
+test('unavailable colour variants preserve the owned animated black sunglasses',()=>{
+  const s=shop(); s.run('updateKapiAppearance();equipItem("item_glass_mint");previewKapiItem("item_glass_mint",true)');
+  assert.ok(s.document.querySelector('.kapi-container').classList.contains('kapi-scene-sunglasses'));
+  assert.equal(s.run('sysData.equippedItems.face'),'item_glass');
+  assert.equal(s.timers.size,0);
+});
+test('repair old colour-overlay selection without deleting owned items or spending leaves',()=>{
+ const s=shop();s.run('sysData.equippedItems.face="item_glass_mint";sysData.activeDisplayItemId="item_glass_mint";sysData.totalLeaves=17;restoreKapiAnimatedOutfit();updateKapiAppearance()');
+ assert.equal(s.run('sysData.equippedItems.face'),'item_glass');
+ assert.equal(s.run('sysData.totalLeaves'),17);
+ assert.equal(s.run('sysData.inventory.includes("item_glass_mint")'),true);
+ assert.ok(s.document.querySelector('.kapi-container').classList.contains('kapi-scene-sunglasses'));
 });
 test('purchase uses catalogue price, repeated purchase does not debit again',()=>{
   const s=shop();s.run('sysData.totalLeaves=50;sysData.studyCompletions=10;buyItem("item_hat",1);buyItem("item_hat",1)');
@@ -34,9 +42,9 @@ test('purchase uses catalogue price, repeated purchase does not debit again',()=
   assert.equal(s.run('sysData.inventory.filter(id=>id==="item_hat").length'),1);
 });
 test('equipping during demo cancels old timer and keeps newly selected outfit',()=>{
-  const s=shop();s.run('previewKapiItem("item_pillow",true);equipItem("item_glass_mint")');
+  const s=shop();s.run('previewKapiItem("item_pillow",true);sysData.inventory.push("item_hat");equipItem("item_hat")');
   assert.equal(s.timers.size,0);
-  assert.equal(s.run('sysData.activeDisplayItemId'),'item_glass_mint');
+  assert.equal(s.run('sysData.activeDisplayItemId'),'item_hat');
 });
 test('failed scene does not consume demo and unavailable sleep keeps Kapi visible',()=>{
   const s=shop();s.document.getElementById('kapi-sleep-image').naturalWidth=0;
