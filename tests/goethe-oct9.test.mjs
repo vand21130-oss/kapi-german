@@ -11,10 +11,10 @@ function app(){
  vm.createContext(s);vm.runInContext(read('goethe-listening-data.js'),s);vm.runInContext(read('goethe-listening.js'),s);
  const click=t=>[...document.querySelectorAll('button')].find(b=>b.textContent.includes(t)).onclick();return {s,document,data,click};
 }
-const keys={'buergerbuero-2026-10-09':[1,2],'rufbus-2026-10-09':[1,0,2,0,1,1]};
+const keys={'supermarkt-2026-10-09':[1,1],'buergerbuero-2026-10-09':[1,2],'rufbus-2026-10-09':[1,0,2,0,1,1]};
 for(const [id,key] of Object.entries(keys))test(id+' preserves key and grades both correct/incorrect answers, then replays full translation',()=>{
  const a=app(),l=a.s.KapiGoetheListeningLessons.find(l=>l.id===id);assert.deepEqual(Array.from(l.questions,q=>q.answer),key);
- assert.equal(l.audio,id.startsWith('buerger')?'audio/buergerbuero-oeffnungszeiten-2026-10-09.m4a':'audio/rufbus-2026-10-09.m4a');
+ assert.equal(l.audio,id.startsWith('supermarkt')?'audio/preisaenderungen-supermarkt-2026-10-09.m4a':id.startsWith('buerger')?'audio/buergerbuero-oeffnungszeiten-2026-10-09.m4a':'audio/rufbus-2026-10-09.m4a');
  for(const correct of [true,false]){
  a.s.KapiGoetheReplay.start(id);assert.equal(a.document.querySelector('audio').src,l.audio);
  assert.equal(a.document.querySelectorAll('.gl-transcript').length,0);
@@ -26,7 +26,7 @@ for(const [id,key] of Object.entries(keys))test(id+' preserves key and grades bo
  }
 });
 test('new entries eligible for random choice and shelves; original Teil 4 still grades',()=>{
- const a=app(),ls=a.s.KapiGoetheReplay.lessons();assert.equal(ls.filter(l=>l.teil===1).length,1);assert.equal(ls.filter(l=>l.teil===2).length,1);assert.equal(ls.filter(l=>l.teil===4).length,1);
+ const a=app(),ls=a.s.KapiGoetheReplay.lessons();assert.equal(ls.filter(l=>l.teil===1).length,2);assert.equal(ls.filter(l=>l.teil===2).length,1);assert.equal(ls.filter(l=>l.teil===4).length,1);
  for(let i=0;i<ls.length;i++){a.data.clear();a.s.Math.random=()=> (i+.1)/ls.length;assert.equal(a.s.KapiGoetheReplay.chooseToday().id,ls[i].id);}
  const l=ls.find(l=>l.teil===4);a.s.KapiGoetheReplay.start(l.id);
  [...a.document.querySelectorAll('fieldset')].forEach((f,i)=>f.querySelectorAll('input')[l.questions[i].answer].onchange());a.click('Chấm bài');assert.equal(a.document.querySelectorAll('.gl-correct').length,8);

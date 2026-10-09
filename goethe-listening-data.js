@@ -512,5 +512,52 @@ window.KapiGoetheListeningLessons = [
         "speaker": "Moderator"
       }
     ]
+  },
+  {
+    "id": "supermarkt-2026-10-09",
+    "teil": 1,
+    "title": "Preisänderungen im Supermarkt",
+    "audio": "audio/preisaenderungen-supermarkt-2026-10-09.m4a",
+    "questions": [
+      {
+        "prompt": "Der Sonderpreis für die Erdbeeren gilt nur heute bis Ladenschluss.",
+        "options": [
+          "Richtig",
+          "Falsch"
+        ],
+        "answer": 1
+      },
+      {
+        "prompt": "Wie viel kostet der Kaffee heute tatsächlich?",
+        "options": [
+          "A. 4,79 Euro",
+          "B. 5,29 Euro",
+          "C. 5,79 Euro"
+        ],
+        "answer": 1
+      }
+    ],
+    "transcript": [
+      {
+        "de": "Achtung, Achtung, liebe Kundinnen und Kunden.\nWir möchten Sie auf zwei aktuelle Preisänderungen aufmerksam machen.",
+        "vi": "Chúng tôi muốn thông báo cho quý khách về hai sự thay đổi giá gần đây."
+      },
+      {
+        "de": "Die 500-Gramm-Schale Erdbeeren kostet heute statt 3,49 Euro nur 2,79 Euro. Dieses Angebot gilt ausschließlich heute und nur solange der Vorrat reicht.",
+        "vi": "Hộp 500 gram dâu tây hôm nay chỉ có giá 2,79 Euro thay vì 3,49 Euro. Ưu đãi này chỉ áp dụng trong ngày hôm nay và chỉ khi còn hàng."
+      },
+      {
+        "de": "Außerdem möchten wir eine Angabe aus unserem Wochenprospekt korrigieren. Dort wurde der Preis für eine Packung Kaffee mit 5,79 Euro angegeben. Tatsächlich erhalten Sie die Packung heute für 5,29 Euro.",
+        "vi": "Ngoài ra, chúng tôi muốn đính chính một thông tin trong tờ quảng cáo tuần của mình. Trong đó, giá của một gói cà phê được ghi là 5,79 Euro. Thực tế, quý khách có thể mua gói cà phê này với giá 5,29 Euro trong hôm nay."
+      },
+      {
+        "de": "Bitte beachten Sie, dass der reduzierte Kaffeepreis nur bis 18 Uhr gilt. Danach kostet die Packung wieder 6,49 Euro.",
+        "vi": "Xin lưu ý rằng mức giá cà phê giảm này chỉ áp dụng đến 18 giờ. Sau thời điểm đó, gói cà phê sẽ có giá lại là 6,49 Euro."
+      },
+      {
+        "de": "Vielen Dank für Ihre Aufmerksamkeit und weiterhin einen angenehmen Einkauf.",
+        "vi": "Cảm ơn sự quan tâm của quý khách và chúc quý khách tiếp tục có một buổi mua sắm vui vẻ."
+      }
+    ]
   }
 ];
