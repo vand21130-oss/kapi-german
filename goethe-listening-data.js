@@ -559,5 +559,464 @@ window.KapiGoetheListeningLessons = [
         "vi": "Cảm ơn sự quan tâm của quý khách và chúc quý khách tiếp tục có một buổi mua sắm vui vẻ."
       }
     ]
+  },
+  {
+    "id": "teil1-verkehrsunfall-lokalradio-2026-10-10",
+    "teil": 1,
+    "title": "Kurznachricht im Lokalradio",
+    "audio": "audio/teil1-verkehrsunfall-lokalradio-2026-10-10.m4a",
+    "questions": [
+      {
+        "prompt": "Bei dem Unfall wurde die Straße bis zum Abend vollständig gesperrt.",
+        "options": [
+          "Richtig",
+          "Falsch"
+        ],
+        "answer": 1
+      },
+      {
+        "prompt": "Warum kam es nach dem Unfall zu besonders langen Wartezeiten?",
+        "options": [
+          "A. Weil zusätzlich eine andere Straße wegen Bauarbeiten gesperrt war.",
+          "B. Weil der Unfall während des morgendlichen Berufsverkehrs passierte.",
+          "C. Weil zunächst keine Busse durch die Innenstadt fahren durften."
+        ],
+        "answer": 0
+      }
+    ],
+    "transcript": [
+      {
+        "de": "Hier noch eine Meldung aus dem Stadtgebiet.",
+        "vi": "Sau đây là một bản tin khác từ khu vực thành phố."
+      },
+      {
+        "de": "Auf der Bundesstraße 27 hat es heute Morgen gegen 7.40 Uhr einen Verkehrsunfall gegeben.",
+        "vi": "Sáng nay, vào khoảng 7 giờ 40, đã xảy ra một vụ tai nạn giao thông trên quốc lộ 27."
+      },
+      {
+        "de": "Zwei Fahrzeuge waren beteiligt.",
+        "vi": "Có hai phương tiện liên quan đến vụ tai nạn."
+      },
+      {
+        "de": "Nach Angaben der Polizei wurde niemand schwer verletzt.",
+        "vi": "Theo thông tin từ cảnh sát, không có ai bị thương nặng."
+      },
+      {
+        "de": "Die Straße musste zunächst in beide Richtungen gesperrt werden.",
+        "vi": "Ban đầu, con đường buộc phải bị phong tỏa theo cả hai hướng."
+      },
+      {
+        "de": "Bereits gegen 8.25 Uhr konnte jedoch eine Fahrspur wieder freigegeben werden.",
+        "vi": "Tuy nhiên, ngay khoảng 8 giờ 25, một làn đường đã có thể được mở trở lại."
+      },
+      {
+        "de": "Die vollständige Sperrung dauerte also deutlich kürzer als zunächst erwartet.",
+        "vi": "Vì vậy, việc phong tỏa hoàn toàn kéo dài ngắn hơn đáng kể so với dự kiến ban đầu."
+      },
+      {
+        "de": "Trotzdem bildete sich ein langer Rückstau.",
+        "vi": "Dù vậy, vẫn hình thành một hàng xe ùn tắc dài."
+      },
+      {
+        "de": "Besonders ungünstig war, dass zur gleichen Zeit auf der parallel verlaufenden Hauptstraße wegen Bauarbeiten nur eine Spur zur Verfügung stand.",
+        "vi": "Điều đặc biệt bất lợi là cùng lúc đó, trên con đường chính chạy song song, do đang thi công nên chỉ có một làn đường có thể sử dụng được."
+      },
+      {
+        "de": "Die Polizei rechnet damit, dass sich die Verkehrslage gegen 10 Uhr wieder vollständig normalisiert.",
+        "vi": "Cảnh sát dự đoán rằng khoảng 10 giờ, tình hình giao thông sẽ hoàn toàn trở lại bình thường."
+      }
+    ]
+  },
+  {
+    "id": "teil1-durchsage-museum-2026-10-10",
+    "teil": 1,
+    "title": "Durchsage im Museum",
+    "audio": "audio/teil1-durchsage-museum-2026-10-10.m4a",
+    "questions": [
+      {
+        "prompt": "Die letzte Führung beginnt heute um 17.30 Uhr.",
+        "options": [
+          "Richtig",
+          "Falsch"
+        ],
+        "answer": 1
+      },
+      {
+        "prompt": "Wann dürfen Besucher heute zuletzt die Sonderausstellung betreten?",
+        "options": [
+          "A. Um 17.15 Uhr",
+          "B. Um 17.45 Uhr",
+          "C. Um 18.30 Uhr"
+        ],
+        "answer": 1
+      }
+    ],
+    "transcript": [
+      {
+        "de": "Liebe Besucherinnen und Besucher, bitte beachten Sie eine Änderung im heutigen Programm.",
+        "vi": "Kính thưa quý khách, xin lưu ý một thay đổi trong chương trình hôm nay."
+      },
+      {
+        "de": "Wegen einer technischen Überprüfung schließt unsere Sonderausstellung im zweiten Stock heute bereits um 18 Uhr und damit eine halbe Stunde früher als ursprünglich geplant.",
+        "vi": "Do có một đợt kiểm tra kỹ thuật, khu triển lãm đặc biệt ở tầng hai hôm nay sẽ đóng cửa từ 18:00, tức là sớm hơn kế hoạch ban đầu 30 phút."
+      },
+      {
+        "de": "Der letzte Einlass ist um 17.45 Uhr.",
+        "vi": "Lần cuối cùng khách được phép vào là 17:45."
+      },
+      {
+        "de": "Die Führung, die normalerweise um 17.30 Uhr beginnt, wurde heute auf 17.15 Uhr vorverlegt.",
+        "vi": "Chuyến tham quan có hướng dẫn, vốn bình thường bắt đầu lúc 17:30, hôm nay đã được dời sớm lên 17:15."
+      },
+      {
+        "de": "Sie dauert etwa 45 Minuten.",
+        "vi": "Chuyến tham quan kéo dài khoảng 45 phút."
+      },
+      {
+        "de": "Alle anderen Ausstellungsbereiche bleiben wie gewohnt bis 19 Uhr geöffnet.",
+        "vi": "Tất cả các khu triển lãm khác vẫn mở cửa như thường lệ đến 19:00."
+      },
+      {
+        "de": "Vielen Dank für Ihr Verständnis und noch einen angenehmen Aufenthalt in unserem Museum.",
+        "vi": "Cảm ơn quý khách đã thông cảm và chúc quý khách tiếp tục có một khoảng thời gian dễ chịu tại bảo tàng của chúng tôi."
+      }
+    ]
+  },
+  {
+    "id": "teil1-telefonansage-arztpraxis-2026-10-10",
+    "teil": 1,
+    "title": "Telefonansage in einer Arztpraxis",
+    "audio": "audio/teil1-telefonansage-arztpraxis-2026-10-10.m4a",
+    "questions": [
+      {
+        "prompt": "Patienten ohne Termin können morgen bereits ab 8 Uhr in die Praxis kommen.",
+        "options": [
+          "Richtig",
+          "Falsch"
+        ],
+        "answer": 1
+      },
+      {
+        "prompt": "Bis wann können Patienten morgen Blut abnehmen lassen?",
+        "options": [
+          "A. Bis 9.30 Uhr",
+          "B. Bis 10.00 Uhr",
+          "C. Bis 11.30 Uhr"
+        ],
+        "answer": 1
+      }
+    ],
+    "transcript": [
+      {
+        "de": "Guten Tag, Sie sind mit der Gemeinschaftspraxis Dr. Weber und Dr. Klein verbunden.",
+        "vi": "Xin chào, quý vị đang kết nối với phòng khám chung của bác sĩ Weber và bác sĩ Klein."
+      },
+      {
+        "de": "Wegen einer internen Fortbildung öffnet unsere Praxis morgen nicht wie üblich um 8 Uhr, sondern erst um 8.30 Uhr.",
+        "vi": "Do có một buổi đào tạo nội bộ, ngày mai phòng khám của chúng tôi sẽ không mở cửa lúc 8 giờ như thường lệ mà đến 8 giờ 30 mới mở."
+      },
+      {
+        "de": "Patienten mit einem bereits vereinbarten Termin zwischen 8 und 8.30 Uhr wurden telefonisch informiert und erhalten einen neuen Termin.",
+        "vi": "Những bệnh nhân đã có lịch hẹn từ trước trong khoảng 8:00 đến 8:30 đã được thông báo qua điện thoại và sẽ nhận một lịch hẹn mới."
+      },
+      {
+        "de": "Für akute Beschwerden können Sie morgen ohne Termin ab 9 Uhr vorbeikommen.",
+        "vi": "Nếu có các triệu chứng/vấn đề sức khỏe cấp tính, ngày mai quý vị có thể đến không cần lịch hẹn từ 9 giờ."
+      },
+      {
+        "de": "Bitte melden Sie sich dafür zunächst an der Rezeption.",
+        "vi": "Trong trường hợp đó, trước tiên xin hãy đăng ký/báo với quầy lễ tân."
+      },
+      {
+        "de": "Blutabnahmen sind normalerweise bis 11.30 Uhr möglich.",
+        "vi": "Thông thường, việc lấy máu xét nghiệm có thể được thực hiện đến 11 giờ 30."
+      },
+      {
+        "de": "Morgen endet die Blutabnahme jedoch bereits um 10 Uhr, da die Laborproben früher abgeholt werden.",
+        "vi": "Tuy nhiên, ngày mai việc lấy máu sẽ kết thúc từ 10 giờ, vì các mẫu xét nghiệm sẽ được thu/vận chuyển đi sớm hơn."
+      },
+      {
+        "de": "Ab dem folgenden Werktag gelten wieder unsere normalen Sprechzeiten.",
+        "vi": "Từ ngày làm việc tiếp theo, giờ khám thông thường của chúng tôi sẽ lại được áp dụng."
+      },
+      {
+        "de": "Vielen Dank für Ihr Verständnis.",
+        "vi": "Cảm ơn quý vị đã thông cảm."
+      }
+    ]
+  },
+  {
+    "id": "teil4-schloss-falkenried-2026-10-10",
+    "teil": 4,
+    "title": "Ein Schloss mit vielen Gesichtern",
+    "audio": "audio/teil4-schloss-falkenried-2026-10-10.m4a",
+    "questions": [
+      {
+        "prompt": "Worauf möchte die Sprecherin besonders aufmerksam machen?",
+        "options": [
+          "A. Darauf, wie sich das Schloss im Laufe der Jahrhunderte verändert hat.",
+          "B. Darauf, warum das Schloss heute hauptsächlich als Hotel genutzt wird.",
+          "C. Darauf, welche Herrscher dort besonders lange gelebt haben."
+        ],
+        "answer": 0
+      },
+      {
+        "prompt": "Was geschah nach dem Brand von 1847?",
+        "options": [
+          "A. Das Schloss wurde sofort vollständig wiederaufgebaut.",
+          "B. Ein Teil blieb zunächst weiterhin bewohnbar.",
+          "C. Die gesamte Anlage wurde für mehr als 30 Jahre geschlossen."
+        ],
+        "answer": 1
+      },
+      {
+        "prompt": "Warum wirken die Fenster an der Südfassade unregelmäßig angeordnet?",
+        "options": [
+          "A. Weil beim Bau mehrere Fehler gemacht wurden.",
+          "B. Weil die Räume im Laufe der Zeit anders genutzt wurden.",
+          "C. Weil ein Teil der Fassade im Zweiten Weltkrieg zerstört wurde."
+        ],
+        "answer": 1
+      },
+      {
+        "prompt": "Was überraschte die Archäologen bei den Untersuchungen besonders?",
+        "options": [
+          "A. Die ursprüngliche Küche befand sich an einer unerwarteten Stelle.",
+          "B. Unter dem Innenhof wurde ein vollständig erhaltener Brunnen gefunden.",
+          "C. Ein geheimer Gang führte direkt bis zur Stadtmauer."
+        ],
+        "answer": 0
+      },
+      {
+        "prompt": "Wie viele Besucher dürfen gleichzeitig auf den alten Turm?",
+        "options": [
+          "A. 12",
+          "B. 18",
+          "C. 25"
+        ],
+        "answer": 1
+      },
+      {
+        "prompt": "Was gilt für den Audioguide?",
+        "options": [
+          "A. Er ist in allen Sprachen gleich ausführlich.",
+          "B. Die Kinderversion ist nur in drei Sprachen verfügbar.",
+          "C. Für Erwachsene gibt es nur eine deutsche Version."
+        ],
+        "answer": 1
+      },
+      {
+        "prompt": "Warum dürfen Veranstaltungen im Innenhof abends nicht unbegrenzt dauern?",
+        "options": [
+          "A. Weil die Nachbarn sich regelmäßig über Lärm beschweren.",
+          "B. Weil bestimmte Tiere in der Umgebung geschützt werden sollen.",
+          "C. Weil nach 22 Uhr keine Besucher mehr im Schloss bleiben dürfen."
+        ],
+        "answer": 1
+      },
+      {
+        "prompt": "Was ist der Sprecherin bei der Restaurierung besonders wichtig?",
+        "options": [
+          "A. Alle Räume sollen möglichst modern wirken.",
+          "B. Das Schloss soll genau so aussehen wie im 18. Jahrhundert.",
+          "C. Unterschiedliche historische Spuren sollen sichtbar bleiben."
+        ],
+        "answer": 2
+      }
+    ],
+    "transcript": [
+      {
+        "de": "Guten Abend und herzlich willkommen zu unserem Vortrag über Schloss Falkenried.",
+        "vi": "Xin chào buổi tối và herzlich willkommen đến với buổi thuyết trình của chúng tôi về lâu đài Falkenried."
+      },
+      {
+        "de": "Viele Besucher kommen hierher und erwarten ein Gebäude, das seit Jahrhunderten fast unverändert aussieht.",
+        "vi": "Nhiều du khách đến đây và mong đợi được thấy một công trình gần như không thay đổi suốt nhiều thế kỷ."
+      },
+      {
+        "de": "Tatsächlich ist genau das Gegenteil der Fall.",
+        "vi": "Trên thực tế, điều hoàn toàn ngược lại mới đúng."
+      },
+      {
+        "de": "Das Schloss wurde immer wieder umgebaut, erweitert, beschädigt und an die Bedürfnisse seiner jeweiligen Bewohner angepasst.",
+        "vi": "Lâu đài đã nhiều lần được xây sửa lại, mở rộng, bị hư hại và được điều chỉnh để phù hợp với nhu cầu của những người sinh sống ở đó trong từng thời kỳ."
+      },
+      {
+        "de": "Gerade diese Veränderungen machen seine Geschichte so interessant.",
+        "vi": "Chính những thay đổi này làm cho lịch sử của lâu đài trở nên thú vị."
+      },
+      {
+        "de": "Der älteste Teil der Anlage stammt vermutlich aus dem späten 13. Jahrhundert.",
+        "vi": "Phần cổ nhất của khu công trình có lẽ có từ cuối thế kỷ 13."
+      },
+      {
+        "de": "Damals stand hier allerdings noch keine große Schlossanlage, sondern eher ein befestigter Wohnturm.",
+        "vi": "Tuy nhiên, vào thời điểm đó ở đây chưa có một khu lâu đài lớn, mà chủ yếu chỉ là một tháp ở được gia cố để phòng thủ."
+      },
+      {
+        "de": "Erst im 16. Jahrhundert kamen mehrere Wohngebäude hinzu.",
+        "vi": "Phải đến thế kỷ 16 mới có thêm nhiều tòa nhà dùng để ở."
+      },
+      {
+        "de": "Besonders folgenreich war ein Brand im Jahr 1847.",
+        "vi": "Một sự kiện đặc biệt gây hậu quả lớn là vụ cháy vào năm 1847."
+      },
+      {
+        "de": "Große Teile des westlichen Flügels wurden dabei zerstört.",
+        "vi": "Phần lớn cánh phía tây của lâu đài đã bị phá hủy trong vụ cháy."
+      },
+      {
+        "de": "Oft hört man, das gesamte Schloss sei danach unbewohnbar gewesen.",
+        "vi": "Người ta thường nghe nói rằng sau đó toàn bộ lâu đài đã không còn có thể ở được."
+      },
+      {
+        "de": "Das stimmt jedoch nicht ganz.",
+        "vi": "Tuy nhiên, điều đó không hoàn toàn đúng."
+      },
+      {
+        "de": "Der östliche Flügel blieb erhalten und wurde noch fast zwanzig Jahre lang genutzt.",
+        "vi": "Cánh phía đông vẫn được bảo tồn và còn tiếp tục được sử dụng trong gần 20 năm nữa."
+      },
+      {
+        "de": "Erst 1865 begann man mit umfangreicheren Wiederaufbauarbeiten.",
+        "vi": "Phải đến năm 1865 người ta mới bắt đầu những công việc tái xây dựng quy mô lớn hơn."
+      },
+      {
+        "de": "Wenn Sie morgen an einer Führung teilnehmen, achten Sie einmal auf die Südfassade.",
+        "vi": "Nếu ngày mai quý vị tham gia một chuyến tham quan có hướng dẫn, hãy thử chú ý đến mặt tiền phía nam."
+      },
+      {
+        "de": "Viele Besucher glauben zunächst, die Fenster seien bei einer späteren Renovierung falsch eingesetzt worden, weil sie nicht in einer geraden Linie liegen.",
+        "vi": "Ban đầu, nhiều du khách cho rằng các cửa sổ đã được lắp sai trong một lần cải tạo sau này, bởi chúng không nằm trên một đường thẳng."
+      },
+      {
+        "de": "Tatsächlich hängt ihre ungewöhnliche Anordnung mit der früheren Nutzung der Räume zusammen.",
+        "vi": "Trên thực tế, cách bố trí bất thường của chúng có liên quan đến việc các căn phòng từng được sử dụng như thế nào trước đây."
+      },
+      {
+        "de": "Einige große Säle wurden im 18. Jahrhundert in kleinere Zimmer aufgeteilt.",
+        "vi": "Một số đại sảnh lớn đã được chia thành những căn phòng nhỏ hơn vào thế kỷ 18."
+      },
+      {
+        "de": "Dafür brauchte man zusätzliche Fenster, während andere zugemauert wurden.",
+        "vi": "Vì vậy người ta cần thêm cửa sổ, trong khi một số cửa sổ khác lại bị xây bịt kín."
+      },
+      {
+        "de": "Bei archäologischen Untersuchungen vor einigen Jahren gab es ebenfalls eine Überraschung.",
+        "vi": "Trong các cuộc khảo sát khảo cổ vài năm trước cũng có một phát hiện gây bất ngờ."
+      },
+      {
+        "de": "Lange hatte man angenommen, die erste Schlossküche habe sich im Keller befunden.",
+        "vi": "Trong một thời gian dài, người ta cho rằng căn bếp đầu tiên của lâu đài nằm ở tầng hầm."
+      },
+      {
+        "de": "Das wäre für ein Gebäude dieser Zeit durchaus typisch gewesen.",
+        "vi": "Điều đó thực ra cũng khá điển hình đối với một công trình thuộc thời kỳ đó."
+      },
+      {
+        "de": "Unter einer später eingebauten Treppe fanden die Archäologen jedoch Spuren eines großen Herdes.",
+        "vi": "Tuy nhiên, dưới một cầu thang được xây thêm sau này, các nhà khảo cổ đã tìm thấy dấu vết của một bếp lò lớn."
+      },
+      {
+        "de": "Dadurch konnte man nachweisen, dass sich die ursprüngliche Küche tatsächlich im Erdgeschoss befand.",
+        "vi": "Nhờ đó người ta có thể chứng minh rằng căn bếp ban đầu thực ra nằm ở tầng trệt."
+      },
+      {
+        "de": "Für Besucher besonders beliebt ist heute der Nordturm.",
+        "vi": "Ngày nay, tháp phía bắc đặc biệt được du khách yêu thích."
+      },
+      {
+        "de": "Von dort hat man einen weiten Blick über das Tal.",
+        "vi": "Từ đó có thể nhìn bao quát khắp thung lũng."
+      },
+      {
+        "de": "Allerdings ist der Zugang eingeschränkt.",
+        "vi": "Tuy nhiên, việc tiếp cận tháp bị hạn chế."
+      },
+      {
+        "de": "Wegen der schmalen Treppe dürfen sich höchstens 18 Besucher gleichzeitig oben aufhalten.",
+        "vi": "Do cầu thang hẹp, tối đa chỉ có 18 du khách được phép ở trên tháp cùng một lúc."
+      },
+      {
+        "de": "Bei Führungen mit 25 Personen wird die Gruppe deshalb geteilt.",
+        "vi": "Vì vậy, đối với các đoàn tham quan có 25 người, cả đoàn sẽ được chia ra."
+      },
+      {
+        "de": "Eine Hälfte wartet zunächst im Innenhof, während die andere den Turm besichtigt.",
+        "vi": "Một nửa trước tiên chờ trong sân trong, trong khi nửa còn lại tham quan ngọn tháp."
+      },
+      {
+        "de": "Seit zwei Jahren gibt es außerdem einen neuen Audioguide.",
+        "vi": "Ngoài ra, từ hai năm nay lâu đài có một hệ thống hướng dẫn âm thanh mới."
+      },
+      {
+        "de": "Die normale Version wird in sechs Sprachen angeboten.",
+        "vi": "Phiên bản thông thường được cung cấp bằng sáu ngôn ngữ."
+      },
+      {
+        "de": "Für Kinder gibt es eine kürzere und stärker erzählte Variante.",
+        "vi": "Đối với trẻ em có một phiên bản ngắn hơn và mang tính kể chuyện nhiều hơn."
+      },
+      {
+        "de": "Diese steht allerdings bisher nur auf Deutsch, Englisch und Französisch zur Verfügung.",
+        "vi": "Tuy nhiên, cho đến nay phiên bản này chỉ có sẵn bằng tiếng Đức, tiếng Anh và tiếng Pháp."
+      },
+      {
+        "de": "Viele Familien wünschen sich weitere Sprachen, aber dafür müssten zunächst zusätzliche Sprecher gefunden und die Texte angepasst werden.",
+        "vi": "Nhiều gia đình mong muốn có thêm các ngôn ngữ khác, nhưng để làm được điều đó trước tiên cần tìm thêm người đọc và điều chỉnh các văn bản."
+      },
+      {
+        "de": "Der Innenhof wird im Sommer regelmäßig für Konzerte und Theateraufführungen genutzt.",
+        "vi": "Vào mùa hè, sân trong thường xuyên được sử dụng cho các buổi hòa nhạc và biểu diễn sân khấu."
+      },
+      {
+        "de": "Früher dauerten solche Veranstaltungen teilweise bis weit nach 23 Uhr.",
+        "vi": "Trước đây, những sự kiện như vậy đôi khi kéo dài đến tận sau 23 giờ."
+      },
+      {
+        "de": "Inzwischen endet verstärkte Musik spätestens um 21.30 Uhr.",
+        "vi": "Hiện nay, nhạc được khuếch đại âm thanh phải kết thúc muộn nhất vào 21 giờ 30."
+      },
+      {
+        "de": "Der Grund dafür sind allerdings nicht Beschwerden aus dem benachbarten Dorf.",
+        "vi": "Tuy nhiên, lý do cho điều đó không phải là những lời phàn nàn từ ngôi làng lân cận."
+      },
+      {
+        "de": "In den alten Dachbereichen leben mehrere Fledermausarten, die während bestimmter Monate besonders geschützt werden müssen.",
+        "vi": "Trong những khu vực mái cũ có nhiều loài dơi sinh sống, và trong một số tháng nhất định chúng cần được bảo vệ đặc biệt."
+      },
+      {
+        "de": "Vielleicht fragen Sie sich nun, ob man das Schloss nicht einfach vollständig restaurieren und in einen einheitlichen historischen Zustand zurückversetzen könnte.",
+        "vi": "Có lẽ lúc này quý vị đang tự hỏi tại sao người ta không đơn giản là trùng tu toàn bộ lâu đài và đưa nó trở lại một trạng thái lịch sử thống nhất."
+      },
+      {
+        "de": "Genau das wollen wir bewusst nicht.",
+        "vi": "Và chính điều đó là điều chúng tôi cố ý không muốn làm."
+      },
+      {
+        "de": "Ein Gebäude wie dieses erzählt seine Geschichte nicht nur durch seine ältesten Mauern.",
+        "vi": "Một công trình như thế này không chỉ kể câu chuyện của nó thông qua những bức tường cổ nhất."
+      },
+      {
+        "de": "Auch spätere Veränderungen gehören dazu.",
+        "vi": "Những thay đổi xảy ra về sau cũng là một phần của lịch sử đó."
+      },
+      {
+        "de": "Deshalb werden beispielsweise an einigen Stellen alte Farbschichten sichtbar gelassen, während in anderen Räumen Teile aus dem 19. Jahrhundert erhalten bleiben.",
+        "vi": "Vì vậy, chẳng hạn tại một số vị trí, những lớp màu/sơn cũ được cố ý để lộ ra, trong khi ở những căn phòng khác, các phần kiến trúc từ thế kỷ 19 vẫn được giữ lại."
+      },
+      {
+        "de": "Unser Ziel ist also nicht, den Besuchern ein scheinbar perfektes Schloss aus einem einzigen Jahrhundert zu zeigen.",
+        "vi": "Vì vậy, mục tiêu của chúng tôi không phải là cho du khách thấy một lâu đài có vẻ hoàn hảo thuộc duy nhất một thế kỷ."
+      },
+      {
+        "de": "Viel spannender ist es, sichtbar zu machen, wie viele Generationen das Gebäude verändert haben.",
+        "vi": "Điều thú vị hơn nhiều là làm cho người ta có thể nhìn thấy bao nhiêu thế hệ khác nhau đã góp phần thay đổi công trình này."
+      },
+      {
+        "de": "Vielen Dank für Ihre Aufmerksamkeit.",
+        "vi": "Xin cảm ơn quý vị đã chú ý lắng nghe."
+      }
+    ]
   }
 ];
