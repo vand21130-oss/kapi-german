@@ -11,24 +11,28 @@ function app(){
  vm.createContext(s);vm.runInContext(read('goethe-listening-data.js'),s);vm.runInContext(read('goethe-listening.js'),s);
  const click=t=>[...document.querySelectorAll('button')].find(b=>b.textContent.includes(t)).onclick();return {s,document,data,click};
 }
-const keys={'supermarkt-2026-10-09':[1,1],'buergerbuero-2026-10-09':[1,2],'rufbus-2026-10-09':[1,0,2,0,1,1]};
-for(const [id,key] of Object.entries(keys))test(id+' preserves key and grades both correct/incorrect answers, then replays full translation',()=>{
- const a=app(),l=a.s.KapiGoetheListeningLessons.find(l=>l.id===id);assert.deepEqual(Array.from(l.questions,q=>q.answer),key);
- assert.equal(l.audio,id.startsWith('supermarkt')?'audio/preisaenderungen-supermarkt-2026-10-09.m4a':id.startsWith('buerger')?'audio/buergerbuero-oeffnungszeiten-2026-10-09.m4a':'audio/rufbus-2026-10-09.m4a');
+const keys={
+ 'teil1-verkehrsunfall-lokalradio-2026-10-10':[1,0],
+ 'teil1-durchsage-museum-2026-10-10':[1,1],
+ 'teil1-telefonansage-arztpraxis-2026-10-10':[1,1],
+ 'teil4-schloss-falkenried-2026-10-10':[0,1,1,0,1,1,1,2]
+};
+for(const [id,key] of Object.entries(keys))test(id+' exact path, answer key, grading and bilingual replay',()=>{
+ const a=app(),l=a.s.KapiGoetheListeningLessons.find(l=>l.id===id);
+ assert.deepEqual(Array.from(l.questions,q=>q.answer),key);assert.equal(l.audio,'audio/'+id+'.m4a');
  for(const correct of [true,false]){
  a.s.KapiGoetheReplay.start(id);assert.equal(a.document.querySelector('audio').src,l.audio);
  assert.equal(a.document.querySelectorAll('.gl-transcript').length,0);
  [...a.document.querySelectorAll('fieldset')].forEach((f,i)=>f.querySelectorAll('input')[correct?key[i]:(key[i]+1)%l.questions[i].options.length].onchange());
  a.click('Chấm bài');assert.equal(a.document.querySelectorAll(correct?'.gl-correct':'.gl-wrong').length,key.length);
  a.click('Nghe lại cùng');assert.equal(a.document.querySelectorAll('fieldset').length,0);
+ assert.equal(a.document.querySelector('audio').src,l.audio);
  assert.deepEqual([...a.document.querySelectorAll('[lang=de]')].map(p=>p.textContent),Array.from(l.transcript,t=>t.de));
  assert.deepEqual([...a.document.querySelectorAll('[lang=vi]')].map(p=>p.textContent),Array.from(l.transcript,t=>t.vi));
  }
 });
-test('new entries eligible for random choice and shelves; original Teil 4 still grades',()=>{
- const a=app(),ls=a.s.KapiGoetheReplay.lessons();assert.equal(ls.filter(l=>l.teil===1).length,5);assert.equal(ls.filter(l=>l.teil===2).length,1);assert.equal(ls.filter(l=>l.teil===4).length,2);
- for(let i=0;i<ls.length;i++){a.data.clear();a.s.Math.random=()=> (i+.1)/ls.length;assert.equal(a.s.KapiGoetheReplay.chooseToday().id,ls[i].id);}
- const l=ls.find(l=>l.teil===4);a.s.KapiGoetheReplay.start(l.id);
- [...a.document.querySelectorAll('fieldset')].forEach((f,i)=>f.querySelectorAll('input')[l.questions[i].answer].onchange());a.click('Chấm bài');assert.equal(a.document.querySelectorAll('.gl-correct').length,8);
+test('only corrected Laborproben sentence is used',()=>{
+ const a=app(),l=a.s.KapiGoetheListeningLessons.find(l=>l.id.includes('arztpraxis'));
+ assert.ok(l.transcript.some(t=>t.de==='Morgen endet die Blutabnahme jedoch bereits um 10 Uhr, da die Laborproben früher abgeholt werden.'));
+ assert.ok(!JSON.stringify(l).includes('da das Labor früher abgeholt wird'));
 });
-
