@@ -1018,5 +1018,564 @@ window.KapiGoetheListeningLessons = [
         "vi": "Xin cảm ơn quý vị đã chú ý lắng nghe."
       }
     ]
-  }
+  },
+{
+  "id": "teil1-stadtbibliothek-autorenlesung-2026-10-11",
+  "teil": 1,
+  "title": "Durchsage in einer Stadtbibliothek",
+  "audio": "audio/teil1-stadtbibliothek-autorenlesung-2026-10-11.m4a",
+  "instructions": "Nghe 1 lần · 1 Richtig/Falsch + 1 ABC",
+  "questions": [
+    {
+      "prompt": "Die Lesung am Samstag beginnt weiterhin um 18 Uhr.",
+      "options": [
+        "Richtig",
+        "Falsch"
+      ],
+      "answer": 0
+    },
+    {
+      "prompt": "Wie viel kostet die Teilnahme an der Lesung für Personen ohne Bibliotheksausweis?",
+      "options": [
+        "A. 3 Euro",
+        "B. 5 Euro",
+        "C. 8 Euro"
+      ],
+      "answer": 1
+    }
+  ],
+  "transcript": [
+    {
+      "de": "Liebe Besucherinnen und Besucher, wir möchten Sie kurz über eine Änderung bei unserer Autorenlesung am kommenden Samstag informieren.",
+      "vi": "Kính thưa quý khách, chúng tôi muốn thông báo ngắn gọn cho quý vị về một thay đổi liên quan đến buổi giao lưu/đọc sách của tác giả vào thứ Bảy tới."
+    },
+    {
+      "de": "Wegen der großen Nachfrage findet die Veranstaltung nicht wie ursprünglich geplant im kleinen Lesesaal im ersten Stock statt, sondern im Veranstaltungssaal im Erdgeschoss.",
+      "vi": "Do nhu cầu lớn, sự kiện sẽ không diễn ra ở phòng đọc nhỏ trên tầng một như dự kiến ban đầu, mà sẽ được tổ chức tại hội trường sự kiện ở tầng trệt."
+    },
+    {
+      "de": "Die Uhrzeit bleibt jedoch unverändert.",
+      "vi": "Tuy nhiên, giờ tổ chức vẫn không thay đổi."
+    },
+    {
+      "de": "Beginn ist weiterhin um 18 Uhr, Einlass ab 17.30 Uhr.",
+      "vi": "Thời gian bắt đầu vẫn là 18 giờ, và bắt đầu cho khách vào từ 17 giờ 30."
+    },
+    {
+      "de": "Für Besucherinnen und Besucher mit einem gültigen Bibliotheksausweis ist der Eintritt kostenlos.",
+      "vi": "Đối với khách có thẻ thư viện còn hiệu lực, vé vào cửa là miễn phí."
+    },
+    {
+      "de": "Alle anderen zahlen 5 Euro.",
+      "vi": "Tất cả những người còn lại phải trả 5 euro."
+    },
+    {
+      "de": "Bitte beachten Sie außerdem, dass an der Abendkasse nur Barzahlung möglich ist.",
+      "vi": "Ngoài ra, xin lưu ý rằng tại quầy vé buổi tối chỉ có thể thanh toán bằng tiền mặt."
+    },
+    {
+      "de": "Reservierte Plätze müssen spätestens 15 Minuten vor Beginn eingenommen werden.",
+      "vi": "Những chỗ ngồi đã được đặt trước phải được nhận/ngồi vào muộn nhất 15 phút trước khi chương trình bắt đầu."
+    },
+    {
+      "de": "Danach werden sie wieder freigegeben.",
+      "vi": "Sau thời điểm đó, các chỗ này sẽ được nhả ra để người khác sử dụng."
+    }
+  ]
+},
+{
+  "id": "teil1-durchsage-bahnhof-koeln-2026-10-11",
+  "teil": 1,
+  "title": "Durchsage am Bahnhof",
+  "audio": "audio/teil1-durchsage-bahnhof-koeln-2026-10-11.m4a",
+  "instructions": "Nghe 1 lần · 1 Richtig/Falsch + 1 ABC",
+  "questions": [
+    {
+      "prompt": "Der Regionalexpress nach Köln fährt heute zehn Minuten später ab.",
+      "options": [
+        "Richtig",
+        "Falsch"
+      ],
+      "answer": 1
+    },
+    {
+      "prompt": "Wo sollen Fahrgäste nach Köln einsteigen?",
+      "options": [
+        "A. Auf Gleis 4, im vorderen Zugteil.",
+        "B. Auf Gleis 6, im hinteren Zugteil.",
+        "C. Auf Gleis 6, im vorderen Zugteil."
+      ],
+      "answer": 2
+    }
+  ],
+  "transcript": [
+    {
+      "de": "Achtung auf Gleis 4 und Gleis 6.",
+      "vi": "Xin chú ý tại sân ga/đường ray số 4 và số 6."
+    },
+    {
+      "de": "Der Regionalexpress 2857 nach Köln, planmäßige Abfahrt 14.42 Uhr, fährt heute abweichend von Gleis 6.",
+      "vi": "Tàu Regionalexpress số 2857 đi Köln, theo lịch khởi hành lúc 14 giờ 42, hôm nay sẽ khởi hành khác với kế hoạch, từ Gleis 6."
+    },
+    {
+      "de": "Wegen einer technischen Störung am ursprünglich vorgesehenen Zug wird ein Ersatzzug eingesetzt.",
+      "vi": "Do có một sự cố kỹ thuật ở đoàn tàu vốn được dự kiến sử dụng ban đầu, một tàu thay thế sẽ được đưa vào hoạt động."
+    },
+    {
+      "de": "Die Abfahrt verzögert sich dadurch voraussichtlich um fünf Minuten.",
+      "vi": "Vì vậy, giờ khởi hành dự kiến sẽ bị chậm khoảng 5 phút."
+    },
+    {
+      "de": "Bitte beachten Sie außerdem, dass der Zug heute nur aus vier Wagen besteht.",
+      "vi": "Ngoài ra, xin lưu ý rằng hôm nay đoàn tàu chỉ gồm 4 toa."
+    },
+    {
+      "de": "Fahrgäste nach Köln steigen bitte in den vorderen Zugteil ein.",
+      "vi": "Hành khách đi Köln vui lòng lên phần đầu của đoàn tàu."
+    },
+    {
+      "de": "Reisende nach Bonn nutzen dagegen den hinteren Zugteil, da dieser dort zuerst am Bahnsteig hält.",
+      "vi": "Ngược lại, hành khách đi Bonn sử dụng phần sau của đoàn tàu, vì phần này sẽ dừng trước tại sân ga ở đó."
+    },
+    {
+      "de": "Wir bitten die kurzfristige Änderung zu entschuldigen.",
+      "vi": "Chúng tôi xin quý khách thông cảm cho sự thay đổi đột xuất này."
+    }
+  ]
+},
+{
+  "id": "teil1-durchsage-hallenbad-2026-10-11",
+  "teil": 1,
+  "title": "Durchsage im Hallenbad",
+  "audio": "audio/teil1-durchsage-hallenbad-2026-10-11.m4a",
+  "instructions": "Nghe 1 lần · 1 Richtig/Falsch + 1 ABC",
+  "questions": [
+    {
+      "prompt": "Das große Schwimmerbecken steht am Samstag ab 14 Uhr wieder allen Besuchern zur Verfügung.",
+      "options": [
+        "Richtig",
+        "Falsch"
+      ],
+      "answer": 0
+    },
+    {
+      "prompt": "Wann beginnt am Samstag der günstigere Abendtarif?",
+      "options": [
+        "A. Um 17.30 Uhr",
+        "B. Um 18.00 Uhr",
+        "C. Um 18.30 Uhr"
+      ],
+      "answer": 1
+    }
+  ],
+  "transcript": [
+    {
+      "de": "Liebe Badegäste, bitte beachten Sie einige Änderungen für kommenden Samstag.",
+      "vi": "Kính thưa quý khách, xin vui lòng lưu ý một số thay đổi cho thứ Bảy tới."
+    },
+    {
+      "de": "Wegen eines regionalen Schwimmwettkampfs ist das große Schwimmerbecken von 9 Uhr bis 13.30 Uhr ausschließlich für die Teilnehmer reserviert.",
+      "vi": "Do có một cuộc thi bơi cấp khu vực, bể bơi lớn từ 9:00 đến 13:30 chỉ dành riêng cho những người tham gia thi đấu."
+    },
+    {
+      "de": "Anschließend wird das Becken gereinigt.",
+      "vi": "Sau đó, bể bơi sẽ được vệ sinh."
+    },
+    {
+      "de": "Für den normalen Badebetrieb steht es deshalb erst ab 14 Uhr wieder zur Verfügung.",
+      "vi": "Vì vậy, đối với hoạt động bơi bình thường, bể chỉ mở trở lại từ 14 giờ."
+    },
+    {
+      "de": "Das Nichtschwimmerbecken und der Kinderbereich können dagegen den ganzen Tag wie gewohnt genutzt werden.",
+      "vi": "Ngược lại, bể dành cho người không biết bơi và khu trẻ em vẫn có thể được sử dụng cả ngày như thường lệ."
+    },
+    {
+      "de": "Außerdem beginnt unser vergünstigter Abendtarif am Samstag ausnahmsweise bereits um 18 Uhr statt wie üblich um 18.30 Uhr.",
+      "vi": "Ngoài ra, vào thứ Bảy, mức giá buổi tối ưu đãi của chúng tôi ngoại lệ sẽ bắt đầu từ 18:00, thay vì 18:30 như thường lệ."
+    },
+    {
+      "de": "Eine Erwachsenenkarte kostet dann 4,50 Euro statt 7 Euro.",
+      "vi": "Khi đó, vé người lớn có giá 4,50 euro thay vì 7 euro."
+    },
+    {
+      "de": "Die Sauna schließt unverändert um 21 Uhr.",
+      "vi": "Khu sauna vẫn đóng cửa lúc 21 giờ, không thay đổi."
+    },
+    {
+      "de": "Vielen Dank für Ihr Verständnis.",
+      "vi": "Cảm ơn quý khách đã thông cảm."
+    }
+  ]
+},
+{
+  "id": "teil1-stadtwerke-wasserversorgung-2026-10-11",
+  "teil": 1,
+  "title": "Mitteilung der Stadtwerke",
+  "audio": "audio/teil1-stadtwerke-wasserversorgung-2026-10-11.m4a",
+  "instructions": "Nghe 1 lần · 1 Richtig/Falsch + 1 ABC",
+  "questions": [
+    {
+      "prompt": "Die Wasserversorgung wird am Dienstag bereits um 8 Uhr vollständig unterbrochen.",
+      "options": [
+        "Richtig",
+        "Falsch"
+      ],
+      "answer": 1
+    },
+    {
+      "prompt": "Bis wann sollen die Arbeiten voraussichtlich abgeschlossen sein?",
+      "options": [
+        "A. Bis 11.30 Uhr",
+        "B. Bis 13.00 Uhr",
+        "C. Bis 15.30 Uhr"
+      ],
+      "answer": 1
+    }
+  ],
+  "transcript": [
+    {
+      "de": "Achtung, hier eine Mitteilung der Stadtwerke für die Bewohnerinnen und Bewohner der Lindenstraße und der Gartenstraße.",
+      "vi": "Chú ý, sau đây là một thông báo của công ty dịch vụ đô thị dành cho cư dân ở phố Lindenstraße và Gartenstraße."
+    },
+    {
+      "de": "Wegen dringender Reparaturarbeiten an einer Hauptwasserleitung kann es am kommenden Dienstag zwischen 8 Uhr und 13 Uhr zu Einschränkungen bei der Wasserversorgung kommen.",
+      "vi": "Do có công việc sửa chữa khẩn cấp tại một đường ống nước chính, vào thứ Ba tới trong khoảng từ 8 giờ đến 13 giờ có thể xảy ra tình trạng hạn chế cấp nước."
+    },
+    {
+      "de": "Eine vollständige Unterbrechung ist allerdings erst ab 9.30 Uhr vorgesehen und soll voraussichtlich etwa zwei Stunden dauern.",
+      "vi": "Tuy nhiên, việc ngắt nước hoàn toàn chỉ được dự kiến bắt đầu từ 9 giờ 30 và dự kiến kéo dài khoảng 2 tiếng."
+    },
+    {
+      "de": "Die Arbeiten selbst sollen bis spätestens 13 Uhr abgeschlossen sein.",
+      "vi": "Bản thân công việc sửa chữa dự kiến sẽ hoàn tất muộn nhất vào 13 giờ."
+    },
+    {
+      "de": "Danach kann es noch kurze Zeit dauern, bis in allen Haushalten wieder der normale Wasserdruck erreicht ist.",
+      "vi": "Sau đó có thể vẫn mất thêm một khoảng thời gian ngắn cho đến khi áp lực nước bình thường được khôi phục tại tất cả các hộ gia đình."
+    },
+    {
+      "de": "Wir empfehlen deshalb, sich bereits am Morgen einen kleinen Wasservorrat bereitzustellen.",
+      "vi": "Vì vậy, chúng tôi khuyến nghị người dân nên chuẩn bị sẵn một lượng nước dự trữ nhỏ ngay từ buổi sáng."
+    },
+    {
+      "de": "Vielen Dank für Ihr Verständnis.",
+      "vi": "Cảm ơn quý vị đã thông cảm."
+    }
+  ]
+},
+{
+  "id": "teil3-wochenende-berghuette-2026-10-11",
+  "teil": 3,
+  "title": "Drei Freunde sprechen über ein Wochenende in einer Berghütte",
+  "audio": "audio/teil3-wochenende-berghuette-2026-10-11.m4a",
+  "instructions": "Nghe 1 lần · Wer sagt was? · A. Mara · B. Jonas · C. Leila",
+  "questions": [
+    {
+      "prompt": "Wer sagt, dass ein vermeintlicher Nachteil am Ende kaum gestört hat?",
+      "options": [
+        "A. Mara",
+        "B. Jonas",
+        "C. Leila"
+      ],
+      "answer": 0
+    },
+    {
+      "prompt": "Wer fand eine kurzfristige Planänderung im Nachhinein sogar sinnvoll?",
+      "options": [
+        "A. Mara",
+        "B. Jonas",
+        "C. Leila"
+      ],
+      "answer": 1
+    },
+    {
+      "prompt": "Wer würde beim nächsten Mal bewusst mehr Geld für eine andere Unterkunft ausgeben?",
+      "options": [
+        "A. Mara",
+        "B. Jonas",
+        "C. Leila"
+      ],
+      "answer": 2
+    },
+    {
+      "prompt": "Wer hatte mit einer bestimmten sozialen Situation gerechnet, erlebte sie aber anders als erwartet?",
+      "options": [
+        "A. Mara",
+        "B. Jonas",
+        "C. Leila"
+      ],
+      "answer": 0
+    },
+    {
+      "prompt": "Wer meint, dass Bewertungen im Internet einen falschen Eindruck vermittelt haben?",
+      "options": [
+        "A. Mara",
+        "B. Jonas",
+        "C. Leila"
+      ],
+      "answer": 1
+    },
+    {
+      "prompt": "Wer hat seine Meinung über eine organisierte Aktivität während der Reise geändert?",
+      "options": [
+        "A. Mara",
+        "B. Jonas",
+        "C. Leila"
+      ],
+      "answer": 2
+    }
+  ],
+  "transcript": [
+    {
+      "de": "Also, ich muss sagen, ich hatte vor dem Wochenende wirklich Zweifel.",
+      "vi": "Tớ phải nói là trước cuối tuần đó, tớ thực sự có khá nhiều nghi ngờ.",
+      "speaker": "Mara"
+    },
+    {
+      "de": "Nicht wegen der Wanderung selbst, sondern wegen der Hütte.",
+      "vi": "Không phải vì bản thân chuyến đi bộ đường dài, mà vì căn nhà nghỉ trên núi.",
+      "speaker": "Mara"
+    },
+    {
+      "de": "In den Bewertungen stand ständig, die Zimmer seien sehr einfach, die Duschen nur zu bestimmten Zeiten warm und nachts könne es ziemlich laut werden.",
+      "vi": "Trong các đánh giá người ta liên tục nói rằng phòng rất đơn giản, vòi sen chỉ có nước nóng vào những giờ nhất định và ban đêm có thể khá ồn.",
+      "speaker": "Mara"
+    },
+    {
+      "de": "Ich dachte ehrlich gesagt, genau das würde mir den Aufenthalt verderben.",
+      "vi": "Thành thật mà nói, tớ đã nghĩ chính những điều đó sẽ làm hỏng kỳ nghỉ của mình.",
+      "speaker": "Mara"
+    },
+    {
+      "de": "Aber am Ende war es erstaunlich unwichtig.",
+      "vi": "Nhưng cuối cùng những chuyện đó lại không quan trọng một cách đáng ngạc nhiên.",
+      "speaker": "Mara"
+    },
+    {
+      "de": "Klar, das Zimmer war klein und morgens gab es tatsächlich nur kurz warmes Wasser.",
+      "vi": "Đúng là phòng nhỏ và buổi sáng thực sự chỉ có nước nóng trong một khoảng thời gian ngắn.",
+      "speaker": "Mara"
+    },
+    {
+      "de": "Trotzdem war ich abends so müde, dass ich einfach geschlafen habe.",
+      "vi": "Tuy vậy, buổi tối tớ mệt đến mức cứ thế ngủ luôn.",
+      "speaker": "Mara"
+    },
+    {
+      "de": "Ich hatte mir das viel schlimmer vorgestellt.",
+      "vi": "Tớ đã tưởng tượng nó tệ hơn nhiều.",
+      "speaker": "Mara"
+    },
+    {
+      "de": "Bei mir war es eher das Wetter, das mich beschäftigt hat.",
+      "vi": "Với tớ thì thứ làm tớ bận tâm hơn là thời tiết.",
+      "speaker": "Jonas"
+    },
+    {
+      "de": "Am Samstag wollten wir ja ursprünglich bis zum Aussichtspunkt am Hochgrat gehen.",
+      "vi": "Thứ Bảy ban đầu bọn tớ định đi đến điểm ngắm cảnh ở Hochgrat.",
+      "speaker": "Jonas"
+    },
+    {
+      "de": "Als der Hüttenwirt morgens meinte, oberhalb von 1.700 Metern werde es ab Mittag gewittern, war ich zuerst ziemlich enttäuscht.",
+      "vi": "Khi chủ nhà nghỉ nói vào buổi sáng rằng từ trưa trở đi, ở độ cao trên 1.700 mét sẽ có giông, ban đầu tớ khá thất vọng.",
+      "speaker": "Jonas"
+    },
+    {
+      "de": "Ich hatte mich gerade auf diesen Abschnitt besonders gefreut.",
+      "vi": "Tớ đặc biệt mong chờ chính đoạn đường đó.",
+      "speaker": "Jonas"
+    },
+    {
+      "de": "Wir sind dann stattdessen die kürzere Route durchs Tal gegangen.",
+      "vi": "Sau đó bọn tớ đi tuyến đường ngắn hơn qua thung lũng để thay thế.",
+      "speaker": "Jonas"
+    },
+    {
+      "de": "Später, als wir gesehen haben, wie schnell die Wolken kamen, dachte ich: Gut, dass wir umgeplant haben.",
+      "vi": "Sau đó, khi thấy mây kéo đến nhanh thế nào, tớ đã nghĩ: May mà bọn mình đổi kế hoạch.",
+      "speaker": "Jonas"
+    },
+    {
+      "de": "Im Nachhinein war die Entscheidung wahrscheinlich sogar besser als unser ursprünglicher Plan.",
+      "vi": "Nhìn lại thì quyết định đó có lẽ còn tốt hơn cả kế hoạch ban đầu.",
+      "speaker": "Jonas"
+    },
+    {
+      "de": "Ich fand die Hütte eigentlich ganz nett, aber beim Schlafen bin ich weniger entspannt als ihr.",
+      "vi": "Tớ thấy căn nhà nghỉ thực ra khá ổn, nhưng chuyện ngủ thì tớ không thoải mái được như hai người.",
+      "speaker": "Leila"
+    },
+    {
+      "de": "Im Schlafsaal waren zwölf Leute, und sobald eine Person aufstand, waren gefühlt alle anderen auch wach.",
+      "vi": "Trong phòng ngủ tập thể có 12 người, và cứ một người đứng dậy là cảm giác như tất cả những người khác cũng tỉnh theo.",
+      "speaker": "Leila"
+    },
+    {
+      "de": "Ich hatte vorher gesagt, für zwei Nächte reicht mir das völlig.",
+      "vi": "Trước đó tớ đã nói rằng ở hai đêm như vậy là hoàn toàn ổn với tớ.",
+      "speaker": "Leila"
+    },
+    {
+      "de": "Jetzt würde ich sagen: Beim nächsten Mal zahle ich lieber zwanzig oder dreißig Euro mehr und nehme ein kleines Doppelzimmer.",
+      "vi": "Nhưng giờ tớ sẽ nói rằng lần sau tớ thà trả thêm 20 hoặc 30 euro và lấy một phòng đôi nhỏ còn hơn.",
+      "speaker": "Leila"
+    },
+    {
+      "de": "Nicht weil die Hütte schlecht war, sondern weil ich gemerkt habe, dass mir ruhiger Schlaf wichtiger ist, als ich dachte.",
+      "vi": "Không phải vì căn nhà nghỉ tệ, mà vì tớ nhận ra rằng một giấc ngủ yên tĩnh quan trọng với tớ hơn tớ từng nghĩ.",
+      "speaker": "Leila"
+    },
+    {
+      "de": "Was mich dagegen überrascht hat, war das gemeinsame Abendessen.",
+      "vi": "Điều ngược lại khiến tớ bất ngờ là bữa tối chung.",
+      "speaker": "Mara"
+    },
+    {
+      "de": "Ich hatte erwartet, dass man da ziemlich gezwungen zusammensitzt und diese typischen Gespräche führt, bei denen niemand so richtig weiß, was er sagen soll.",
+      "vi": "Tớ đã nghĩ rằng mọi người sẽ ngồi cùng nhau khá gượng gạo và có những cuộc nói chuyện kiểu ai cũng chẳng biết phải nói gì.",
+      "speaker": "Mara"
+    },
+    {
+      "de": "Genau deshalb wollte ich eigentlich möglichst schnell essen und danach rausgehen.",
+      "vi": "Chính vì thế ban đầu tớ chỉ muốn ăn càng nhanh càng tốt rồi ra ngoài.",
+      "speaker": "Mara"
+    },
+    {
+      "de": "Aber dann saßen wir mit diesem älteren Paar aus Augsburg und den zwei Studenten aus Bremen am Tisch, und plötzlich waren zwei Stunden vorbei.",
+      "vi": "Nhưng rồi bọn tớ ngồi cùng một cặp đôi lớn tuổi từ Augsburg và hai sinh viên từ Bremen, rồi đột nhiên hai tiếng đã trôi qua lúc nào không biết.",
+      "speaker": "Mara"
+    },
+    {
+      "de": "Es war überhaupt nicht unangenehm.",
+      "vi": "Nó hoàn toàn không khó chịu chút nào.",
+      "speaker": "Mara"
+    },
+    {
+      "de": "Eigentlich war das sogar einer der schönsten Teile des Wochenendes.",
+      "vi": "Thực ra đó thậm chí còn là một trong những phần tuyệt nhất của cuối tuần.",
+      "speaker": "Mara"
+    },
+    {
+      "de": "Ich fand die Leute auch nett.",
+      "vi": "Tớ cũng thấy mọi người khá dễ mến.",
+      "speaker": "Jonas"
+    },
+    {
+      "de": "Nur bei den Online-Bewertungen zur Hütte bin ich inzwischen vorsichtiger.",
+      "vi": "Chỉ là giờ tớ thận trọng hơn với những đánh giá online về căn nhà nghỉ.",
+      "speaker": "Jonas"
+    },
+    {
+      "de": "Da wurde zum Beispiel mehrfach behauptet, nachts sei es wegen der dünnen Wände kaum möglich zu schlafen.",
+      "vi": "Chẳng hạn, người ta nhiều lần khẳng định rằng ban đêm vì tường mỏng nên gần như không thể ngủ được.",
+      "speaker": "Jonas"
+    },
+    {
+      "de": "Ich hatte deshalb extra Ohrstöpsel eingepackt.",
+      "vi": "Vì thế tớ còn cố tình mang theo nút bịt tai.",
+      "speaker": "Jonas"
+    },
+    {
+      "de": "Benutzt habe ich sie kein einziges Mal.",
+      "vi": "Nhưng tớ không dùng chúng lấy một lần.",
+      "speaker": "Jonas"
+    },
+    {
+      "de": "Natürlich hört man mal eine Tür oder jemanden auf dem Flur, aber „kaum schlafen können“ fand ich völlig übertrieben.",
+      "vi": "Tất nhiên thỉnh thoảng vẫn nghe thấy tiếng cửa hoặc ai đó ngoài hành lang, nhưng tớ thấy câu “gần như không ngủ nổi” là phóng đại hoàn toàn.",
+      "speaker": "Jonas"
+    },
+    {
+      "de": "Andererseits stimmt schon, dass man dort keine absolute Ruhe erwarten darf.",
+      "vi": "Mặt khác, đúng là ở đó không thể mong đợi sự yên tĩnh tuyệt đối.",
+      "speaker": "Jonas"
+    },
+    {
+      "de": "Bei mir waren die Bewertungen eher hilfreich.",
+      "vi": "Với tớ thì các đánh giá lại khá hữu ích.",
+      "speaker": "Leila"
+    },
+    {
+      "de": "Ich wusste dadurch wenigstens, dass ich kein Hotelzimmer erwarten darf.",
+      "vi": "Nhờ vậy ít nhất tớ biết rằng mình không nên mong đợi một phòng khách sạn đúng nghĩa.",
+      "speaker": "Leila"
+    },
+    {
+      "de": "Was ich dagegen falsch eingeschätzt hatte, war diese geführte Morgenwanderung am Sonntag.",
+      "vi": "Nhưng điều tớ đã đánh giá sai lại là chuyến đi bộ buổi sáng có hướng dẫn vào Chủ nhật.",
+      "speaker": "Leila"
+    },
+    {
+      "de": "Ich dachte zuerst: Wozu brauchen wir einen Guide?",
+      "vi": "Ban đầu tớ nghĩ: Bọn mình cần hướng dẫn viên để làm gì?",
+      "speaker": "Leila"
+    },
+    {
+      "de": "Der Weg ist markiert, wir haben eine Karte und außerdem eine App.",
+      "vi": "Đường đã có đánh dấu, bọn mình có bản đồ và còn có cả ứng dụng.",
+      "speaker": "Leila"
+    },
+    {
+      "de": "Ich wollte eigentlich gar nicht mit.",
+      "vi": "Ban đầu tớ thực sự chẳng muốn tham gia.",
+      "speaker": "Leila"
+    },
+    {
+      "de": "Dann hat der Guide aber unterwegs erklärt, warum bestimmte Wege wegen der Bodenfeuchtigkeit gesperrt waren und weshalb man an einer Stelle trotz Markierung nicht weitergehen sollte.",
+      "vi": "Nhưng trên đường, hướng dẫn viên đã giải thích tại sao một số lối đi bị đóng do độ ẩm của đất và vì sao ở một đoạn nhất định, dù có đánh dấu, người ta vẫn không nên tiếp tục đi.",
+      "speaker": "Leila"
+    },
+    {
+      "de": "Ohne ihn hätten wir wahrscheinlich genau die falsche Abzweigung genommen.",
+      "vi": "Nếu không có anh ấy, có lẽ bọn tớ đã rẽ đúng vào nhánh đường sai.",
+      "speaker": "Leila"
+    },
+    {
+      "de": "Danach fand ich die Führung plötzlich ziemlich sinnvoll.",
+      "vi": "Sau đó tớ bỗng thấy chuyến đi có hướng dẫn này khá hợp lý.",
+      "speaker": "Leila"
+    },
+    {
+      "de": "Stimmt, die Führung war besser als erwartet.",
+      "vi": "Đúng, chuyến đi có hướng dẫn tốt hơn mong đợi.",
+      "speaker": "Mara"
+    },
+    {
+      "de": "Aber ich würde trotzdem nicht jede Wanderung mit Guide machen.",
+      "vi": "Nhưng dù vậy tớ vẫn sẽ không đi mọi chuyến đi bộ với hướng dẫn viên.",
+      "speaker": "Mara"
+    },
+    {
+      "de": "Für mich war das eher wegen der speziellen Strecke interessant.",
+      "vi": "Với tớ, nó chủ yếu thú vị vì tuyến đường đặc biệt này thôi.",
+      "speaker": "Mara"
+    },
+    {
+      "de": "Ja, und ich fand gut, dass er uns nicht die ganze Zeit mit Informationen zugeschüttet hat.",
+      "vi": "Ừ, và tớ thích việc anh ấy không nhồi nhét thông tin cho bọn mình suốt cả buổi.",
+      "speaker": "Jonas"
+    },
+    {
+      "de": "Ich hatte ein bisschen Angst, dass es eher wie eine Schulstunde wird.",
+      "vi": "Tớ hơi lo rằng nó sẽ giống một tiết học ở trường hơn.",
+      "speaker": "Jonas"
+    },
+    {
+      "de": "Aber das war zum Glück nicht so.",
+      "vi": "Nhưng may là không phải vậy.",
+      "speaker": "Jonas"
+    },
+    {
+      "de": "Ich glaube, insgesamt war das Wochenende gerade deshalb gut, weil einiges anders lief als geplant.",
+      "vi": "Tớ nghĩ nhìn chung cuối tuần này hay chính vì có khá nhiều thứ diễn ra khác với kế hoạch.",
+      "speaker": "Leila"
+    },
+    {
+      "de": "Früher hätte mich so etwas viel mehr gestresst.",
+      "vi": "Trước đây những chuyện như vậy chắc đã khiến tớ stress hơn rất nhiều.",
+      "speaker": "Leila"
+    }
+  ]
+}
 ];

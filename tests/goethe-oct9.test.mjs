@@ -26,9 +26,10 @@ for(const [id,key] of Object.entries(keys))test(id+' preserves key and grades bo
  }
 });
 test('new entries eligible for random choice and shelves; original Teil 4 still grades',()=>{
- const a=app(),ls=a.s.KapiGoetheReplay.lessons();assert.equal(ls.filter(l=>l.teil===1).length,5);assert.equal(ls.filter(l=>l.teil===2).length,1);assert.equal(ls.filter(l=>l.teil===4).length,2);
+ const a=app(),ls=a.s.KapiGoetheReplay.lessons();assert.equal(ls.filter(l=>l.teil===1).length,9);assert.equal(ls.filter(l=>l.teil===2).length,1);assert.equal(ls.filter(l=>l.teil===3).length,1);assert.equal(ls.filter(l=>l.teil===4).length,2);
  for(let i=0;i<ls.length;i++){a.data.clear();a.s.Math.random=()=> (i+.1)/ls.length;assert.equal(a.s.KapiGoetheReplay.chooseToday().id,ls[i].id);}
  const l=ls.find(l=>l.teil===4);a.s.KapiGoetheReplay.start(l.id);
  [...a.document.querySelectorAll('fieldset')].forEach((f,i)=>f.querySelectorAll('input')[l.questions[i].answer].onchange());a.click('Chấm bài');assert.equal(a.document.querySelectorAll('.gl-correct').length,8);
 });
+
 
