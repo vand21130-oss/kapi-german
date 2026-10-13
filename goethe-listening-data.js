@@ -1969,5 +1969,372 @@ window.KapiGoetheListeningLessons = [
       "vi": "Nếu chúng ta tính đến những khác biệt này, các xung đột về tiếng ồn thường có thể được giải quyết khách quan hơn, và đôi khi thậm chí có thể tránh hoàn toàn."
     }
   ]
+},
+{
+  "id": "teil1-lokalradio-verlorene-tasche-2026-10-12",
+  "teil": 1,
+  "title": "Kurznachricht im Lokalradio · Eine verlorene Tasche",
+  "audio": "audio/teil1-lokalradio-verlorene-tasche-2026-10-12.m4a",
+  "instructions": "Nghe 1 lần · 1 Richtig/Falsch + 1 ABC",
+  "questions": [
+    {
+      "prompt": "Die Besitzerin bekam ihre Tasche noch am selben Tag zurück.",
+      "options": [
+        "Richtig",
+        "Falsch"
+      ],
+      "answer": 0
+    },
+    {
+      "prompt": "Warum konnte die Polizei die Besitzerin so schnell finden?",
+      "options": [
+        "A. In der Tasche lag ein Dokument mit ihrer Adresse.",
+        "B. Eine Mitarbeiterin des Cafés kannte die Frau persönlich.",
+        "C. Die Besitzerin hatte ihren Verlust bereits bei der Polizei gemeldet."
+      ],
+      "answer": 0
+    }
+  ],
+  "transcript": [
+    {
+      "de": "Und noch eine kleine Geschichte aus der Innenstadt:",
+      "vi": "Và sau đây là một câu chuyện nhỏ khác từ khu vực trung tâm thành phố."
+    },
+    {
+      "de": "Eine 27-jährige Frau hat gestern Vormittag ihre Handtasche in einem Café am Marktplatz liegen lassen.",
+      "vi": "Sáng hôm qua, một phụ nữ 27 tuổi đã để quên túi xách tay của mình trong một quán cà phê ở quảng trường chợ."
+    },
+    {
+      "de": "Erst etwa eine Stunde später bemerkte sie den Verlust.",
+      "vi": "Mãi khoảng một tiếng sau, cô ấy mới nhận ra mình đã mất túi."
+    },
+    {
+      "de": "Zu diesem Zeitpunkt hatte eine Mitarbeiterin des Cafés die Tasche bereits gefunden und zur nahe gelegenen Polizeiwache gebracht.",
+      "vi": "Vào thời điểm đó, một nhân viên của quán cà phê đã tìm thấy chiếc túi và mang nó đến đồn cảnh sát gần đó."
+    },
+    {
+      "de": "Bargeld befand sich keines darin, dafür aber ein Ausweis, mehrere Bankkarten und ein Schlüsselbund.",
+      "vi": "Trong túi không có tiền mặt, nhưng lại có một giấy tờ tùy thân, vài thẻ ngân hàng và một chùm chìa khóa."
+    },
+    {
+      "de": "Über die Adresse auf dem Ausweis konnte die Polizei die Besitzerin schnell erreichen.",
+      "vi": "Nhờ địa chỉ trên giấy tờ tùy thân, cảnh sát có thể nhanh chóng liên hệ được với chủ chiếc túi."
+    },
+    {
+      "de": "Als die Frau gegen 14 Uhr zur Polizeiwache kam, war sie vor allem erleichtert, weil sich in der Tasche auch ein Schlüssel zu ihrer neuen Wohnung befand.",
+      "vi": "Khi người phụ nữ đến đồn cảnh sát vào khoảng 14 giờ, điều khiến cô ấy nhẹ nhõm nhất là trong túi còn có cả chìa khóa của căn hộ mới của mình."
+    },
+    {
+      "de": "Nach Angaben der Polizei fehlte nichts.",
+      "vi": "Theo thông tin từ cảnh sát, không thiếu bất cứ thứ gì."
+    },
+    {
+      "de": "Die Frau bedankte sich anschließend persönlich bei der Cafémitarbeiterin.",
+      "vi": "Sau đó, người phụ nữ đã đích thân cảm ơn nhân viên quán cà phê."
+    }
+  ]
+},
+{
+  "id": "teil1-kino-nordlicht-saalwechsel-2026-10-12",
+  "teil": 1,
+  "title": "Durchsage in einem Kino",
+  "audio": "audio/teil1-kino-nordlicht-saalwechsel-2026-10-12.m4a",
+  "instructions": "Nghe 1 lần · 1 Richtig/Falsch + 1 ABC",
+  "questions": [
+    {
+      "prompt": "Die Vorstellung beginnt heute später als ursprünglich angekündigt.",
+      "options": [
+        "Richtig",
+        "Falsch"
+      ],
+      "answer": 1
+    },
+    {
+      "prompt": "Warum findet der Film in einem anderen Saal statt?",
+      "options": [
+        "A. Weil im ursprünglich vorgesehenen Saal ein technisches Problem aufgetreten ist.",
+        "B. Weil deutlich mehr Karten verkauft wurden als erwartet.",
+        "C. Weil dort bessere Plätze für Besucher mit Kindern vorhanden sind."
+      ],
+      "answer": 1
+    }
+  ],
+  "transcript": [
+    {
+      "de": "Liebe Kinogäste, eine kurze Information zur heutigen Vorstellung von „Nordlicht“.",
+      "vi": "Kính thưa quý khách, sau đây là một thông tin ngắn về suất chiếu phim “Nordlicht” hôm nay."
+    },
+    {
+      "de": "Aufgrund der hohen Nachfrage wird der Film heute nicht wie ursprünglich vorgesehen in Saal 3, sondern im größeren Saal 1 gezeigt.",
+      "vi": "Do nhu cầu cao, hôm nay bộ phim sẽ không được chiếu ở phòng số 3 như dự kiến ban đầu, mà ở phòng số 1 lớn hơn."
+    },
+    {
+      "de": "An der Anfangszeit ändert sich nichts.",
+      "vi": "Thời gian bắt đầu không có gì thay đổi."
+    },
+    {
+      "de": "Die Vorstellung beginnt weiterhin um 19.45 Uhr.",
+      "vi": "Suất chiếu vẫn bắt đầu lúc 19 giờ 45."
+    },
+    {
+      "de": "Bereits gekaufte Eintrittskarten behalten ihre Gültigkeit.",
+      "vi": "Những vé đã mua vẫn giữ nguyên hiệu lực."
+    },
+    {
+      "de": "Allerdings können sich durch den Saalwechsel die Sitzplatznummern ändern.",
+      "vi": "Tuy nhiên, do đổi phòng chiếu, số ghế có thể thay đổi."
+    },
+    {
+      "de": "Bitte überprüfen Sie deshalb vor dem Einlass die Anzeige auf Ihrem Ticket in der Kino-App.",
+      "vi": "Vì vậy, trước khi vào rạp, vui lòng kiểm tra thông tin hiển thị trên vé trong ứng dụng của rạp."
+    },
+    {
+      "de": "Besucherinnen und Besucher, die ihre Karte an der Abendkasse gekauft haben, erhalten die neue Sitzplatznummer direkt dort.",
+      "vi": "Những khách đã mua vé tại quầy vé buổi tối sẽ nhận số ghế mới trực tiếp tại đó."
+    },
+    {
+      "de": "Der Film wird heute in der Originalfassung mit deutschen Untertiteln gezeigt.",
+      "vi": "Hôm nay bộ phim được chiếu ở phiên bản nguyên gốc, kèm phụ đề tiếng Đức."
+    },
+    {
+      "de": "Vielen Dank und viel Vergnügen.",
+      "vi": "Xin cảm ơn và chúc quý khách xem phim vui vẻ."
+    }
+  ]
+},
+{
+  "id": "teil1-wohnhaus-aufzug-reparatur-2026-10-12",
+  "teil": 1,
+  "title": "Mitteilung für Bewohner · Aufzug in Haus B",
+  "audio": "audio/teil1-wohnhaus-aufzug-reparatur-2026-10-12.m4a",
+  "instructions": "Nghe 1 lần · 1 Richtig/Falsch + 1 ABC",
+  "questions": [
+    {
+      "prompt": "Bewohner können den Hausmeister um Hilfe bitten, wenn sie schwere Einkäufe nach oben tragen müssen.",
+      "options": [
+        "Richtig",
+        "Falsch"
+      ],
+      "answer": 0
+    },
+    {
+      "prompt": "Warum bleibt der Aufzug nach der Reparatur zunächst noch außer Betrieb?",
+      "options": [
+        "A. Weil ein Ersatzteil erst am Freitag geliefert wird.",
+        "B. Weil vor der erneuten Nutzung noch eine Sicherheitsprüfung nötig ist.",
+        "C. Weil während der Arbeiten auch die Stromversorgung überprüft werden muss."
+      ],
+      "answer": 1
+    }
+  ],
+  "transcript": [
+    {
+      "de": "Liebe Bewohnerinnen und Bewohner,",
+      "vi": "Kính gửi quý cư dân,"
+    },
+    {
+      "de": "wegen eines Defekts bleibt der Aufzug in Haus B voraussichtlich bis Freitagvormittag außer Betrieb.",
+      "vi": "Do một sự cố, thang máy ở tòa B dự kiến sẽ ngừng hoạt động cho đến sáng thứ Sáu."
+    },
+    {
+      "de": "Die eigentliche Reparatur soll bereits am Donnerstagnachmittag abgeschlossen sein.",
+      "vi": "Việc sửa chữa chính dự kiến sẽ hoàn tất ngay từ chiều thứ Năm."
+    },
+    {
+      "de": "Bevor der Aufzug wieder benutzt werden darf, muss jedoch am Freitagmorgen noch eine vorgeschriebene Sicherheitsprüfung durchgeführt werden.",
+      "vi": "Tuy nhiên, trước khi thang máy được phép sử dụng trở lại, vào sáng thứ Sáu vẫn phải tiến hành một cuộc kiểm tra an toàn bắt buộc."
+    },
+    {
+      "de": "Bewohnerinnen und Bewohner, die in dieser Zeit Hilfe beim Tragen schwerer Einkäufe benötigen, können sich zwischen 16 und 19 Uhr beim Hausmeister melden.",
+      "vi": "Những cư dân cần hỗ trợ mang đồ mua sắm nặng trong thời gian này có thể liên hệ với người quản lý tòa nhà từ 16 giờ đến 19 giờ."
+    },
+    {
+      "de": "Bitte beachten Sie außerdem, dass der Keller über das Treppenhaus weiterhin erreichbar ist.",
+      "vi": "Ngoài ra, xin lưu ý rằng tầng hầm vẫn có thể đi tới thông qua cầu thang bộ."
+    },
+    {
+      "de": "Fahrräder dürfen während der Reparatur allerdings nicht im Treppenhaus abgestellt werden.",
+      "vi": "Tuy nhiên, trong thời gian sửa chữa, không được để xe đạp ở khu vực cầu thang."
+    },
+    {
+      "de": "Sobald der Aufzug wieder freigegeben ist, informieren wir Sie über einen Aushang im Eingangsbereich.",
+      "vi": "Ngay khi thang máy được phép hoạt động trở lại, chúng tôi sẽ thông báo cho quý vị qua một tờ thông báo ở khu vực lối vào."
+    },
+    {
+      "de": "Vielen Dank für Ihr Verständnis.",
+      "vi": "Xin cảm ơn sự thông cảm của quý vị."
+    }
+  ]
+},
+{
+  "id": "teil2-abos-apps-streamingdienste-2026-10-12",
+  "teil": 2,
+  "title": "Interview im Radio: Abos bei Apps und Streamingdiensten",
+  "audio": "audio/teil2-abos-apps-streamingdienste-2026-10-12.m4a",
+  "instructions": "Nghe 2 lần · 6 câu ABC · Moderator / Frau Berger",
+  "questions": [
+    {
+      "prompt": "Warum zahlen manche Nutzer weiter, obwohl sie eine App längst gelöscht haben?",
+      "options": [
+        "A. Weil die App nach einiger Zeit automatisch neu installiert wird.",
+        "B. Weil das Löschen der App den abgeschlossenen Vertrag nicht beendet.",
+        "C. Weil bereits bezahlte Abos grundsätzlich nicht gekündigt werden können."
+      ],
+      "answer": 1
+    },
+    {
+      "prompt": "Worauf sollte man bei einer kostenlosen Probezeit besonders achten?",
+      "options": [
+        "A. Ob während der Probezeit alle Funktionen verfügbar sind.",
+        "B. Ob für die Anmeldung bereits eine Gebühr verlangt wird.",
+        "C. Wann die Probezeit endet und ab welchem Zeitpunkt Kosten entstehen."
+      ],
+      "answer": 2
+    },
+    {
+      "prompt": "Was empfiehlt Frau Berger unmittelbar nach einer Kündigung?",
+      "options": [
+        "A. Einen Nachweis über die Kündigung aufzubewahren.",
+        "B. Die Zahlungsmethode sofort aus dem Kundenkonto zu entfernen.",
+        "C. Den Anbieter zusätzlich telefonisch über die Kündigung zu informieren."
+      ],
+      "answer": 0
+    },
+    {
+      "prompt": "Warum können Jahresabos problematisch sein, obwohl sie oft günstiger sind?",
+      "options": [
+        "A. Weil die Preise während des Jahres häufiger geändert werden.",
+        "B. Weil Nutzer leichter vergessen können, wann sich das Abo verlängert.",
+        "C. Weil man bei Jahresabos meist keine Rechnung erhält."
+      ],
+      "answer": 1
+    },
+    {
+      "prompt": "Was sagt Frau Berger über besonders günstige Angebote?",
+      "options": [
+        "A. Ein niedriger Preis bedeutet häufig, dass wichtige Funktionen fehlen.",
+        "B. Günstige Angebote dürfen nur für kurze Zeit genutzt werden.",
+        "C. Man sollte prüfen, ob nach der ersten günstigen Phase ein höherer Preis gilt."
+      ],
+      "answer": 2
+    },
+    {
+      "prompt": "Welche Gewohnheit hält Frau Berger insgesamt für besonders sinnvoll?",
+      "options": [
+        "A. Nur Dienste zu verwenden, die keine Bankdaten verlangen.",
+        "B. Regelmäßig zu kontrollieren, wofür tatsächlich Geld abgebucht wird.",
+        "C. Für jedes Online-Abo ein eigenes Bankkonto zu benutzen."
+      ],
+      "answer": 1
+    }
+  ],
+  "transcript": [
+    {
+      "speaker": "Moderator",
+      "de": "Viele von uns haben inzwischen mehrere digitale Abonnements: Musik, Filme, Cloud-Speicher, Fitness-Apps oder Programme für die Arbeit. Häufig kosten sie einzeln nur wenige Euro im Monat. Trotzdem stellen manche Menschen irgendwann fest, dass insgesamt erstaunlich viel Geld von ihrem Konto abgeht. Darüber sprechen wir heute mit Clara Berger von einer Verbraucherberatungsstelle. Frau Berger, warum verlieren so viele Menschen bei ihren Abos den Überblick?",
+      "vi": "Nhiều người trong chúng ta hiện nay sở hữu nhiều gói đăng ký dịch vụ kỹ thuật số: nhạc, phim, lưu trữ đám mây, ứng dụng tập thể dục hay các phần mềm phục vụ công việc. Hầu hết mỗi dịch vụ riêng lẻ chỉ tốn vài euro một tháng. Tuy nhiên, đến một lúc nào đó, một số người mới nhận ra rằng tổng số tiền bị trừ khỏi tài khoản của họ nhiều đến mức kinh ngạc. Hôm nay chúng ta sẽ trao đổi về chủ đề này với bà Clara Berger đến từ trung tâm tư vấn người tiêu dùng. Thưa bà Berger, tại sao lại có nhiều người mất kiểm soát đối với các khoản đăng ký dịch vụ của mình đến vậy?"
+    },
+    {
+      "speaker": "Frau Berger",
+      "de": "Ein Grund ist, dass viele dieser Verträge sehr schnell abgeschlossen werden. Man lädt eine App herunter, klickt auf ein Angebot und denkt zunächst gar nicht daran, dass daraus ein länger laufender Vertrag entstehen kann. Besonders häufig passiert das bei kostenlosen Probezeiträumen. Man möchte eine Anwendung eigentlich nur ein paar Tage ausprobieren und vergisst dann, rechtzeitig zu kündigen.",
+      "vi": "Một lý do là vì nhiều hợp đồng loại này được đăng ký rất nhanh chóng. Người ta tải một ứng dụng về, nhấp vào một ưu đãi và ban đầu hoàn toàn không nghĩ rằng hành động đó có thể dẫn đến một hợp đồng dài hạn. Điều này đặc biệt thường xuyên xảy ra với các thời gian dùng thử miễn phí. Thực ra người ta chỉ muốn thử dùng ứng dụng vài ngày rồi sau đó quên mất việc hủy đăng ký đúng hạn."
+    },
+    {
+      "speaker": "Moderator",
+      "de": "Viele Menschen würden wahrscheinlich sagen: Wenn ich die App nicht mehr brauche, lösche ich sie einfach.",
+      "vi": "Chắc hẳn nhiều người sẽ nói: Nếu tôi không cần ứng dụng nữa thì chỉ cần xóa nó đi là xong."
+    },
+    {
+      "speaker": "Frau Berger",
+      "de": "Genau das ist ein typisches Missverständnis. Wenn Sie eine App vom Smartphone löschen, bedeutet das normalerweise nicht, dass Sie damit auch das Abo beendet haben. Der Vertrag kann weiterlaufen und der Anbieter kann weiterhin Geld abbuchen. Man muss also immer nachsehen, wo und wie das Abo abgeschlossen wurde. Manchmal lässt es sich direkt in den Einstellungen des Smartphones verwalten, manchmal muss man sich auf der Internetseite des Anbieters anmelden.",
+      "vi": "Chính xác, đó là một hiểu lầm rất điển hình. Khi bạn xóa một ứng dụng khỏi điện thoại thông minh, điều đó thường không có nghĩa là bạn đã hủy gói dịch vụ. Hợp đồng vẫn có thể tiếp tục duy trì và nhà cung cấp vẫn có thể tiếp tục trừ tiền. Do đó, bạn luôn phải kiểm tra xem gói dịch vụ đã được đăng ký ở đâu và bằng hình thức nào. Đôi khi có thể quản lý trực tiếp trong phần cài đặt của điện thoại, nhưng đôi khi bạn phải đăng nhập vào trang web của nhà cung cấp."
+    },
+    {
+      "speaker": "Moderator",
+      "de": "Dann sind kostenlose Probeangebote also eher gefährlich?",
+      "vi": "Vậy các ưu đãi dùng thử miễn phí có phải là khá nguy hiểm không?"
+    },
+    {
+      "speaker": "Frau Berger",
+      "de": "Nicht unbedingt. Sie können durchaus sinnvoll sein, wenn man einen Dienst wirklich testen möchte. Problematisch wird es nur, wenn nicht klar ist, wann die kostenlose Phase endet. Bei manchen Angeboten wird direkt am nächsten Tag nach dem Probezeitraum der erste Monats- oder sogar Jahresbetrag abgebucht. Deshalb sollte man schon bei der Anmeldung nachsehen: Wie lange läuft die Probezeit? Wann muss ich spätestens kündigen? Und was kostet das Angebot danach?",
+      "vi": "Không hẳn như vậy. Chúng hoàn toàn có ích nếu bạn thực sự muốn trải nghiệm thử một dịch vụ. Điều đáng bận tâm chỉ xuất hiện khi thời điểm kết thúc giai đoạn miễn phí không rõ ràng. Ở một số dịch vụ, ngay ngày hôm sau khi hết hạn dùng thử, số tiền của tháng đầu tiên hoặc thậm chí cả năm sẽ bị trừ ngay lập tức. Vì vậy, ngay từ khi đăng ký bạn nên kiểm tra: Thời gian dùng thử kéo dài bao lâu? Hạn cuối cùng tôi phải hủy là khi nào? Và sau đó dịch vụ này có giá bao nhiêu?"
+    },
+    {
+      "speaker": "Moderator",
+      "de": "Man könnte sich den Termin doch einfach merken.",
+      "vi": "Người ta hoàn toàn có thể tự ghi nhớ mốc thời gian đó mà."
+    },
+    {
+      "speaker": "Frau Berger",
+      "de": "Natürlich, aber darauf würde ich mich nicht verlassen. Vierzehn Tage oder ein Monat wirken zunächst überschaubar. Im Alltag denkt man dann an ganz andere Dinge. Deshalb empfehle ich, sofort einen Termin im Kalender einzutragen, am besten ein paar Tage vor Ablauf der Frist. Dann kann man in Ruhe entscheiden, ob man den Dienst weiter nutzen möchte.",
+      "vi": "Dĩ nhiên rồi, nhưng tôi sẽ không trông chờ vào điều đó. Mười bốn ngày hoặc một tháng ban đầu có vẻ vẫn dễ kiểm soát. Thế nhưng trong cuộc sống hàng ngày, người ta lại bận tâm đến những việc hoàn toàn khác. Do đó, tôi khuyên bạn nên ghi ngay một lịch nhắc vào điện thoại, tốt nhất là vài ngày trước khi hết hạn. Khi đó, bạn có thể thong thả quyết định xem mình có muốn tiếp tục sử dụng dịch vụ hay không."
+    },
+    {
+      "speaker": "Moderator",
+      "de": "Und wenn man kündigt, ist die Sache damit erledigt?",
+      "vi": "Và khi đã hủy đăng ký rồi thì mọi chuyện xem như xong đúng không?"
+    },
+    {
+      "speaker": "Frau Berger",
+      "de": "Meistens ja, aber ich würde trotzdem immer einen Nachweis aufbewahren. Wenn Sie eine Bestätigung per E-Mail bekommen, löschen Sie sie nicht sofort. Bei einer Kündigung über ein Online-Formular kann auch ein Screenshot hilfreich sein. Falls später trotzdem noch Geld abgebucht wird, können Sie leichter zeigen, wann Sie gekündigt haben. Ein zusätzlicher Anruf ist dagegen normalerweise nicht nötig, wenn die Kündigung korrekt bestätigt wurde.",
+      "vi": "Hầu hết là vậy, nhưng tôi vẫn luôn khuyên nên giữ lại bằng chứng. Khi bạn nhận được email xác nhận, đừng xóa nó ngay. Nếu hủy qua biểu mẫu trực tuyến, việc chụp lại màn hình cũng rất hữu ích. Trong trường hợp sau đó vẫn bị trừ tiền, bạn sẽ dễ dàng chứng minh được thời điểm mình đã hủy. Ngược lại, một cuộc gọi bổ sung thường là không cần thiết nếu việc hủy đã được xác nhận chính xác."
+    },
+    {
+      "speaker": "Moderator",
+      "de": "Es gibt ja auch oft die Wahl zwischen einem Monatsabo und einem Jahresabo. Jahresabos sind häufig deutlich günstiger.",
+      "vi": "Người ta cũng thường có sự lựa chọn giữa gói theo tháng và gói theo năm. Gói theo năm thường rẻ hơn đáng kể."
+    },
+    {
+      "speaker": "Frau Berger",
+      "de": "Das stimmt. Wer einen Dienst wirklich regelmäßig nutzt, kann damit durchaus Geld sparen. Aber gerade bei einem Jahresabo vergeht viel Zeit zwischen Vertragsabschluss und Verlängerung. Nach elf oder zwölf Monaten erinnern sich manche Nutzer kaum noch daran, wann sie den Vertrag abgeschlossen haben. Und dann wird plötzlich wieder ein Betrag für ein ganzes Jahr abgebucht. Deshalb sollte man auch solche Verlängerungstermine im Kalender festhalten.",
+      "vi": "Đúng vậy. Những ai thực sự sử dụng dịch vụ thường xuyên thì hoàn toàn có thể tiết kiệm tiền bằng cách này. Tuy nhiên, chính ở các gói đăng ký theo năm, khoảng thời gian từ lúc ký hợp đồng đến lúc gia hạn là rất dài. Sau 11 hay 12 tháng, một số người dùng hầu như không còn nhớ mình đã đăng ký hợp đồng từ khi nào. Và rồi đột nhiên một khoản tiền cho cả năm tiếp theo lại bị trừ. Do đó, người ta cũng nên ghi lại các thời điểm gia hạn như vậy vào lịch."
+    },
+    {
+      "speaker": "Moderator",
+      "de": "Im Internet sieht man außerdem häufig Angebote wie „nur 99 Cent im ersten Monat“. Sind solche Preise grundsätzlich verdächtig?",
+      "vi": "Ngoài ra trên mạng ta cũng hay gặp các ưu đãi kiểu như \"chỉ 99 cent cho tháng đầu tiên\". Liệu những mức giá như vậy về bản chất có đáng nghi ngờ không?"
+    },
+    {
+      "speaker": "Frau Berger",
+      "de": "Nein, keineswegs. Ein günstiger Einführungspreis kann völlig seriös sein. Entscheidend ist, was danach passiert. Vielleicht kostet der erste Monat nur 99 Cent, ab dem zweiten Monat aber beispielsweise 12,99 Euro. Oder der günstige Preis gilt für drei Monate und danach beginnt automatisch ein Jahresvertrag. Das sollte man vor dem Abschluss prüfen. Nicht der niedrige Preis selbst ist das Problem, sondern wenn man nur auf diesen ersten Preis schaut und die späteren Bedingungen übersieht.",
+      "vi": "Không, hoàn toàn không. Một mức giá chào hàng rẻ có thể hoàn toàn đáng tin cậy. Điều quyết định là những gì xảy ra sau đó. Có thể tháng đầu tiên chỉ tốn 99 cent, nhưng từ tháng thứ hai trở đi lại là 12,99 euro chẳng hạn. Hoặc mức giá ưu đãi áp dụng trong 3 tháng và sau đó tự động chuyển thành hợp đồng theo năm. Bạn nên kiểm tra điều này trước khi đăng ký. Bản thân mức giá thấp không phải là vấn đề, mà vấn đề là khi người ta chỉ nhìn vào mức giá đầu tiên đó mà bỏ qua các điều khoản về sau."
+    },
+    {
+      "speaker": "Moderator",
+      "de": "Manche Anbieter informieren ihre Kunden vor einer Verlängerung per E-Mail. Reicht das nicht?",
+      "vi": "Một số nhà cung cấp có gửi email thông báo cho khách hàng trước khi gia hạn. Như vậy không đủ sao?"
+    },
+    {
+      "speaker": "Frau Berger",
+      "de": "Das hilft natürlich. Aber viele Menschen bekommen täglich sehr viele E-Mails. Solche Nachrichten landen schnell zwischen Werbung, Bestellbestätigungen und Newslettern. Einige lesen sie erst Wochen später. Deshalb würde ich mich nicht ausschließlich darauf verlassen, dass der Anbieter mich rechtzeitig erinnert.",
+      "vi": "Điều đó tất nhiên là có giúp ích. Nhưng nhiều người nhận được rất nhiều email mỗi ngày. Những tin nhắn như vậy rất dễ bị trôi giữa đống quảng cáo, xác nhận đơn hàng và bản tin. Một số người phải vài tuần sau mới đọc đến. Vì vậy, tôi sẽ không chỉ trông chờ hoàn toàn vào việc nhà cung cấp sẽ nhắc nhở mình đúng hạn."
+    },
+    {
+      "speaker": "Moderator",
+      "de": "Gibt es noch einen einfachen Trick, mit dem man seine Abos besser im Blick behalten kann?",
+      "vi": "Còn mẹo đơn giản nào khác giúp mọi người theo dõi các gói dịch vụ tốt hơn không?"
+    },
+    {
+      "speaker": "Frau Berger",
+      "de": "Ja. Ich empfehle, regelmäßig die Konto- oder Kreditkartenumsätze durchzugehen. Nicht unbedingt jeden Tag, aber vielleicht einmal im Monat. Dabei entdeckt man häufig kleine regelmäßige Abbuchungen, die man sonst gar nicht mehr wahrnimmt. Manchmal stellt man dann fest: Diesen Dienst habe ich seit Monaten nicht benutzt. Dann kann man überlegen, ob man ihn wirklich noch braucht.",
+      "vi": "Có chứ. Tôi khuyên bạn nên thường xuyên kiểm tra sao kê tài khoản ngân hàng hoặc thẻ tín dụng. Không nhất thiết phải mỗi ngày, mà có thể là mỗi tháng một lần. Khi đó, bạn sẽ thường phát hiện ra các khoản trừ tiền định kỳ nhỏ lẻ mà bình thường mình không hề chú ý tới. Đôi khi bạn sẽ nhận ra: Dịch vụ này mình đã không dùng cả tháng nay rồi. Khi đó bạn có thể cân nhắc xem liệu mình có thực sự còn cần nó nữa hay không."
+    },
+    {
+      "speaker": "Moderator",
+      "de": "Also nicht grundsätzlich weniger digitale Dienste nutzen, sondern bewusster?",
+      "vi": "Nghĩa là không phải cắt giảm hoàn toàn các dịch vụ kỹ thuật số, mà là sử dụng chúng một cách có ý thức hơn?"
+    },
+    {
+      "speaker": "Frau Berger",
+      "de": "Genau. Ein Abo ist ja nicht automatisch etwas Schlechtes. Viele Dienste sind praktisch und ihren Preis durchaus wert. Wichtig ist nur, dass man weiß, welche Verträge laufen, wie viel sie kosten und wann sie sich verlängern. Sonst verschwinden jeden Monat kleine Beträge vom Konto, und erst am Jahresende merkt man, dass daraus eine ziemlich große Summe geworden ist.",
+      "vi": "Chính xác. Một gói đăng ký không phải tự nhiên là một điều xấu. Nhiều dịch vụ rất tiện lợi và hoàn toàn xứng đáng với giá tiền. Điều quan trọng duy nhất là bạn phải biết mình đang có những hợp đồng nào đang chạy, chúng tốn bao nhiêu tiền và khi nào sẽ gia hạn. Nếu không, mỗi tháng những khoản tiền nhỏ cứ lặng lẽ biến mất khỏi tài khoản, và phải đến cuối năm bạn mới nhận ra chúng đã tích tụ thành một con số khá lớn."
+    },
+    {
+      "speaker": "Moderator",
+      "de": "Clara Berger von der Verbraucherberatung, vielen Dank für das Gespräch.",
+      "vi": "Cảm ơn bà Clara Berger đến từ trung tâm tư vấn người tiêu dùng rất nhiều vì cuộc trò chuyện này."
+    }
+  ],
+  "showSpeakers": true
 }
 ];
