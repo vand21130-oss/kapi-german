@@ -111,10 +111,11 @@
   function transcript() {
     if(!session?.submitted)return;
     const l=session.lesson,box=mount(`🎧 Nghe lại · ${l.title}`);audio(box,l);
-    l.transcript.forEach(t=>{const block=document.createElement('div');block.className='gl-transcript';block.innerHTML=`${l.teil===3 && t.speaker ? `<strong class="gl-speaker">${esc(t.speaker)}</strong>` : ''}<p lang="de">${esc(t.de)}</p><p lang="vi">${esc(t.vi)}</p>`;box.append(block);});
+    l.transcript.forEach(t=>{const block=document.createElement('div');block.className='gl-transcript';block.innerHTML=`${(l.teil===3 || l.showSpeakers===true) && t.speaker ? `<strong class="gl-speaker">${esc(t.speaker)}</strong>` : ''}<p lang="de">${esc(t.de)}</p><p lang="vi">${esc(t.vi)}</p>`;box.append(block);});
     box.append(button('⬅ Kết quả',exercise));
   }
   window.KapiGoetheReplay={menu,start,chooseToday,valid,lessons};
   document.addEventListener('DOMContentLoaded',()=>{legacyMenu=window.showGoetheHoerenMenu;window.showGoetheHoerenMenu=menu;},{once:true});
 })();
+
 
