@@ -1577,5 +1577,397 @@ window.KapiGoetheListeningLessons = [
       "speaker": "Leila"
     }
   ]
+},
+{
+  "id": "teil1-paketdienst-paketzustellung-2026-10-13",
+  "teil": 1,
+  "title": "Mitteilung eines Paketdienstes",
+  "audio": "audio/teil1-paketdienst-paketzustellung-2026-10-13.m4a",
+  "questions": [
+    {
+      "prompt": "Kunden können ihr Paket heute weiterhin in der Filiale abholen.",
+      "options": [
+        "Richtig",
+        "Falsch"
+      ],
+      "answer": 1
+    },
+    {
+      "prompt": "Was sollen Kunden tun, wenn sie ihr Paket heute noch bekommen möchten?",
+      "options": [
+        "A. Einen neuen Zustelltermin über die App auswählen.",
+        "B. Das Paket an eine andere Abholstation umleiten.",
+        "C. Beim Kundenservice anrufen und eine Sonderzustellung beantragen."
+      ],
+      "answer": 1
+    }
+  ],
+  "transcript": [
+    {
+      "de": "Guten Tag, hier eine aktuelle Information zu Ihrer Paketzustellung.",
+      "vi": "Xin chào, sau đây là một thông tin cập nhật về việc giao gói hàng của quý khách."
+    },
+    {
+      "de": "Aufgrund eines technischen Problems kann unsere Filiale in der Bahnhofstraße heute keine Pakete ausgeben.",
+      "vi": "Do một sự cố kỹ thuật, chi nhánh của chúng tôi ở phố Bahnhofstraße hôm nay không thể phát/trả bất kỳ gói hàng nào."
+    },
+    {
+      "de": "Bereits eingelagerte Sendungen bleiben dort sicher aufbewahrt und können voraussichtlich ab morgen wieder abgeholt werden.",
+      "vi": "Những kiện hàng đã được lưu tại đó vẫn được bảo quản an toàn và dự kiến có thể được nhận lại từ ngày mai."
+    },
+    {
+      "de": "Wenn Sie Ihr Paket noch heute benötigen, können Sie es über unsere App kostenlos an eine Abholstation in der Nähe umleiten.",
+      "vi": "Nếu quý khách vẫn cần gói hàng ngay trong hôm nay, quý khách có thể dùng ứng dụng của chúng tôi để chuyển hướng miễn phí gói hàng tới một điểm nhận hàng ở gần."
+    },
+    {
+      "de": "Bitte beachten Sie, dass eine Zustellung an die Wohnadresse für heute nicht mehr möglich ist.",
+      "vi": "Xin lưu ý rằng việc giao đến địa chỉ nhà trong hôm nay không còn khả thi nữa."
+    },
+    {
+      "de": "Kunden, die keine App verwenden, können die Umleitung auch auf unserer Internetseite vornehmen.",
+      "vi": "Những khách hàng không sử dụng ứng dụng cũng có thể thực hiện việc chuyển hướng trên trang web của chúng tôi."
+    },
+    {
+      "de": "Sobald die Filiale wieder geöffnet ist, erhalten betroffene Kunden automatisch eine Nachricht.",
+      "vi": "Ngay khi chi nhánh mở cửa trở lại, những khách hàng bị ảnh hưởng sẽ tự động nhận được một thông báo."
+    },
+    {
+      "de": "Vielen Dank für Ihr Verständnis.",
+      "vi": "Xin cảm ơn sự thông cảm của quý khách."
+    }
+  ]
+},
+{
+  "id": "teil1-supermarkt-produktrueckruf-2026-10-13",
+  "teil": 1,
+  "title": "Mitteilung in einem Supermarkt",
+  "audio": "audio/teil1-supermarkt-produktrueckruf-2026-10-13.m4a",
+  "questions": [
+    {
+      "prompt": "Kunden müssen den Kassenbon mitbringen, wenn sie das Produkt zurückgeben möchten.",
+      "options": [
+        "Richtig",
+        "Falsch"
+      ],
+      "answer": 1
+    },
+    {
+      "prompt": "Warum wird das Produkt zurückgerufen?",
+      "options": [
+        "A. Weil bei einigen Packungen das Mindesthaltbarkeitsdatum falsch gedruckt wurde.",
+        "B. Weil auf der Verpackung ein möglicher Inhaltsstoff nicht korrekt angegeben ist.",
+        "C. Weil bei einer Kontrolle Fremdkörper im Produkt gefunden wurden."
+      ],
+      "answer": 1
+    }
+  ],
+  "transcript": [
+    {
+      "de": "Liebe Kundinnen und Kunden, wir möchten Sie über einen aktuellen Produktrückruf informieren.",
+      "vi": "Kính thưa quý khách, chúng tôi muốn thông báo cho quý vị về một đợt thu hồi sản phẩm hiện tại."
+    },
+    {
+      "de": "Betroffen ist eine bestimmte Charge unseres Nussmüslis der Marke „MorgenFit“ in der 500-Gramm-Packung.",
+      "vi": "Sản phẩm bị ảnh hưởng là một lô cụ thể của loại ngũ cốc hạt hiệu “MorgenFit”, gói 500 gram."
+    },
+    {
+      "de": "Bei diesem Produkt wurde festgestellt, dass auf einigen Verpackungen der Hinweis auf mögliche Spuren von Erdnüssen fehlt.",
+      "vi": "Với sản phẩm này, người ta phát hiện rằng trên một số bao bì thiếu cảnh báo về khả năng có dấu vết của đậu phộng."
+    },
+    {
+      "de": "Für Personen mit einer Erdnussallergie kann der Verzehr daher ein gesundheitliches Risiko darstellen.",
+      "vi": "Vì vậy, đối với những người bị dị ứng đậu phộng, việc ăn sản phẩm này có thể gây ra một nguy cơ đối với sức khỏe."
+    },
+    {
+      "de": "Kundinnen und Kunden, die das Produkt gekauft haben, werden gebeten, es nicht zu verzehren und in eine unserer Filialen zurückzubringen.",
+      "vi": "Những khách hàng đã mua sản phẩm được yêu cầu không ăn sản phẩm đó và mang trả lại tại một trong các chi nhánh của chúng tôi."
+    },
+    {
+      "de": "Der Kaufpreis wird vollständig erstattet.",
+      "vi": "Giá mua sẽ được hoàn lại đầy đủ."
+    },
+    {
+      "de": "Ein Kassenbon ist dafür nicht erforderlich.",
+      "vi": "Không cần hóa đơn cho việc này."
+    },
+    {
+      "de": "Andere Produkte der Marke sind von dem Rückruf nicht betroffen.",
+      "vi": "Các sản phẩm khác của thương hiệu này không bị ảnh hưởng bởi đợt thu hồi."
+    },
+    {
+      "de": "Weitere Informationen finden Sie auf unserer Internetseite oder erhalten Sie an der Information im Markt.",
+      "vi": "Quý khách có thể tìm thêm thông tin trên trang web của chúng tôi hoặc nhận thông tin tại quầy thông tin trong siêu thị."
+    },
+    {
+      "de": "Vielen Dank für Ihr Verständnis.",
+      "vi": "Xin cảm ơn sự thông cảm của quý khách"
+    }
+  ]
+},
+{
+  "id": "teil4-laerm-geraeuschwahrnehmung-2026-10-13",
+  "teil": 4,
+  "title": "Warum uns manche Geräusche stärker stören als andere",
+  "audio": "audio/teil4-laerm-geraeuschwahrnehmung-2026-10-13.m4a",
+  "questions": [
+    {
+      "prompt": "Was erklärt die Referentin zu Beginn über Lärm?",
+      "options": [
+        "A. Lärm lässt sich allein anhand der Lautstärke eindeutig bestimmen.",
+        "B. Ob ein Geräusch als störend empfunden wird, hängt nicht nur von seiner Lautstärke ab.",
+        "C. Menschen gewöhnen sich grundsätzlich schnell an gleichbleibende Geräusche."
+      ],
+      "answer": 1
+    },
+    {
+      "prompt": "Warum kann ein relativ leises Geräusch besonders störend wirken?",
+      "options": [
+        "A. Weil unerwartete Geräusche unsere Aufmerksamkeit stärker auf sich ziehen können.",
+        "B. Weil leise Geräusche normalerweise länger dauern als laute.",
+        "C. Weil das menschliche Ohr leise Töne nachts schlechter verarbeitet."
+      ],
+      "answer": 0
+    },
+    {
+      "prompt": "Welche Rolle spielt laut Vortrag die Kontrolle über eine Geräuschquelle?",
+      "options": [
+        "A. Geräusche werden oft besser akzeptiert, wenn man selbst Einfluss darauf hat.",
+        "B. Geräusche wirken stärker, sobald man weiß, woher sie kommen.",
+        "C. Geräusche stören nur dann, wenn man die Ursache nicht erkennen kann."
+      ],
+      "answer": 0
+    },
+    {
+      "prompt": "Was zeigt das Beispiel mit den Nachbarn?",
+      "options": [
+        "A. Menschen reagieren besonders empfindlich auf Geräusche, die sie für vermeidbar halten.",
+        "B. Geräusche aus Nachbarwohnungen werden objektiv meist lauter gemessen als Straßenlärm.",
+        "C. Menschen beschweren sich vor allem dann, wenn Geräusche nachts auftreten."
+      ],
+      "answer": 0
+    },
+    {
+      "prompt": "Warum ist dauerhafter Verkehrslärm problematisch?",
+      "options": [
+        "A. Weil der Körper auch dann reagieren kann, wenn man subjektiv meint, sich daran gewöhnt zu haben.",
+        "B. Weil Verkehrslärm hauptsächlich die Konzentration am Arbeitsplatz beeinflusst.",
+        "C. Weil Menschen nach einiger Zeit einzelne Fahrzeuge nicht mehr unterscheiden können."
+      ],
+      "answer": 0
+    },
+    {
+      "prompt": "Was empfiehlt die Referentin bei störenden Geräuschen in der Wohnung?",
+      "options": [
+        "A. Zuerst zu prüfen, welche konkrete Ursache tatsächlich beeinflussbar ist.",
+        "B. Möglichst alle Geräusche vollständig auszublenden.",
+        "C. Bereits bei kurzen Störungen sofort eine offizielle Beschwerde einzureichen."
+      ],
+      "answer": 0
+    },
+    {
+      "prompt": "Was sagt die Referentin über Geräusche in ruhiger Umgebung?",
+      "options": [
+        "A. In ruhiger Umgebung werden einzelne Geräusche oft deutlicher wahrgenommen.",
+        "B. In ruhiger Umgebung sinkt die Empfindlichkeit gegenüber hohen Tönen.",
+        "C. In ruhiger Umgebung können Menschen Geräusche schlechter lokalisieren."
+      ],
+      "answer": 0
+    },
+    {
+      "prompt": "Welche Schlussfolgerung zieht die Referentin am Ende?",
+      "options": [
+        "A. Vor allem technische Lösungen sind notwendig, um Lärmprobleme zu vermeiden.",
+        "B. Die Wirkung von Geräuschen entsteht aus mehreren Faktoren und ist nicht rein objektiv.",
+        "C. Menschen sollten versuchen, sich möglichst vollständig an störende Geräusche zu gewöhnen."
+      ],
+      "answer": 1
+    }
+  ],
+  "transcript": [
+    {
+      "de": "Wenn wir über Lärm sprechen, denken viele zunächst an Dezibelwerte.",
+      "vi": "Khi nói về tiếng ồn, nhiều người trước tiên nghĩ đến các mức decibel."
+    },
+    {
+      "de": "Je lauter ein Geräusch, desto störender müsste es also sein.",
+      "vi": "Theo logic đó, âm thanh càng lớn thì càng phải gây khó chịu."
+    },
+    {
+      "de": "Ganz so einfach ist es jedoch nicht.",
+      "vi": "Tuy nhiên, mọi chuyện không đơn giản như vậy."
+    },
+    {
+      "de": "Natürlich spielt die Lautstärke eine wichtige Rolle.",
+      "vi": "Tất nhiên, độ lớn âm thanh đóng một vai trò quan trọng."
+    },
+    {
+      "de": "Ein Presslufthammer direkt vor dem Fenster wird kaum jemand angenehm finden.",
+      "vi": "Chắc chẳng mấy ai thấy dễ chịu khi có một chiếc máy khoan khí nén ngay trước cửa sổ."
+    },
+    {
+      "de": "Trotzdem zeigen Untersuchungen immer wieder, dass zwei Geräusche mit ähnlicher Lautstärke völlig unterschiedlich bewertet werden können.",
+      "vi": "Tuy vậy, các nghiên cứu liên tục cho thấy rằng hai âm thanh có độ lớn tương tự nhau vẫn có thể được đánh giá hoàn toàn khác nhau."
+    },
+    {
+      "de": "Entscheidend ist nämlich nicht nur, wie laut etwas ist, sondern auch, wann es auftritt, wie lange es dauert, ob wir damit rechnen und ob wir Einfluss darauf haben.",
+      "vi": "Điều quyết định không chỉ là một âm thanh lớn đến mức nào, mà còn là nó xuất hiện lúc nào, kéo dài bao lâu, chúng ta có dự đoán trước được hay không và chúng ta có thể tác động đến nó hay không."
+    },
+    {
+      "de": "Ein Beispiel: Das gleichmäßige Brummen eines Kühlschranks ist objektiv vielleicht gar nicht besonders leise.",
+      "vi": "Ví dụ, tiếng ù đều đều của tủ lạnh xét về mặt khách quan có thể thậm chí không hề nhỏ."
+    },
+    {
+      "de": "Viele Menschen nehmen es nach kurzer Zeit kaum noch bewusst wahr.",
+      "vi": "Sau một thời gian ngắn, nhiều người gần như không còn chủ động nhận ra nó nữa."
+    },
+    {
+      "de": "Ein einzelnes Klopfen an der Wand kann dagegen deutlich leiser sein und trotzdem sofort die Aufmerksamkeit auf sich ziehen.",
+      "vi": "Ngược lại, một tiếng gõ đơn lẻ vào tường có thể nhỏ hơn nhiều nhưng vẫn lập tức thu hút sự chú ý."
+    },
+    {
+      "de": "Der Grund liegt unter anderem darin, dass unerwartete Veränderungen für unser Gehirn interessanter sind als gleichbleibende Hintergrundgeräusche.",
+      "vi": "Một trong những lý do là những thay đổi bất ngờ thu hút bộ não của chúng ta hơn những tiếng nền đều đều."
+    },
+    {
+      "de": "Das bedeutet allerdings nicht, dass wir uns an jedes dauerhafte Geräusch problemlos gewöhnen.",
+      "vi": "Tuy nhiên, điều đó không có nghĩa là chúng ta có thể dễ dàng làm quen với mọi âm thanh kéo dài."
+    },
+    {
+      "de": "Gerade bei Verkehrslärm ist die Situation komplizierter.",
+      "vi": "Đặc biệt với tiếng ồn giao thông, tình hình phức tạp hơn."
+    },
+    {
+      "de": "Manche Menschen sagen nach einigen Jahren: „Ich höre die Straße gar nicht mehr.“",
+      "vi": "Sau vài năm, một số người nói: “Tôi chẳng còn nghe thấy tiếng đường phố nữa.”"
+    },
+    {
+      "de": "Subjektiv stimmt das möglicherweise sogar.",
+      "vi": "Xét theo cảm nhận chủ quan, điều đó thậm chí có thể đúng."
+    },
+    {
+      "de": "Der Körper kann aber trotzdem auf den Lärm reagieren.",
+      "vi": "Nhưng cơ thể vẫn có thể phản ứng với tiếng ồn."
+    },
+    {
+      "de": "Besonders während des Schlafs können Geräusche zu kurzen körperlichen Stressreaktionen führen, ohne dass die betreffende Person vollständig aufwacht.",
+      "vi": "Đặc biệt trong lúc ngủ, âm thanh có thể gây ra những phản ứng căng thẳng ngắn của cơ thể mà người đó không hoàn toàn tỉnh giấc."
+    },
+    {
+      "de": "Ein weiterer Faktor ist das Gefühl von Kontrolle.",
+      "vi": "Một yếu tố khác là cảm giác mình có khả năng kiểm soát."
+    },
+    {
+      "de": "Nehmen wir an, jemand hört Musik bei relativ hoher Lautstärke.",
+      "vi": "Giả sử có người nghe nhạc với âm lượng tương đối lớn."
+    },
+    {
+      "de": "Wenn diese Person die Musik selbst eingeschaltet hat, wird sie sie wahrscheinlich kaum als störend empfinden.",
+      "vi": "Nếu chính người đó bật nhạc lên, họ có lẽ hầu như không cảm thấy nó gây khó chịu."
+    },
+    {
+      "de": "Kommt dieselbe Musik dagegen durch die Wand aus der Nachbarwohnung, kann die Reaktion völlig anders ausfallen.",
+      "vi": "Nhưng nếu cũng bản nhạc ấy vọng qua tường từ căn hộ hàng xóm, phản ứng có thể hoàn toàn khác."
+    },
+    {
+      "de": "Das Geräusch ist vielleicht ähnlich laut, aber man kann es nicht selbst ausschalten.",
+      "vi": "Âm thanh có thể lớn tương tự, nhưng mình không thể tự tắt nó."
+    },
+    {
+      "de": "Hinzu kommt die Frage, wie wir die Ursache bewerten.",
+      "vi": "Ngoài ra còn có vấn đề chúng ta đánh giá nguyên nhân của tiếng động như thế nào."
+    },
+    {
+      "de": "Viele Menschen reagieren besonders empfindlich auf Geräusche, die sie für vermeidbar halten.",
+      "vi": "Nhiều người phản ứng đặc biệt nhạy cảm với những tiếng động mà họ cho rằng có thể tránh được."
+    },
+    {
+      "de": "Wenn beispielsweise ein Nachbar spät am Abend Möbel verschiebt, denken manche sofort: „Das müsste doch jetzt wirklich nicht sein.“",
+      "vi": "Ví dụ, nếu một người hàng xóm di chuyển đồ đạc vào tối muộn, một số người sẽ lập tức nghĩ: “Giờ này thật sự đâu cần phải làm vậy.”"
+    },
+    {
+      "de": "Ein Krankenwagen auf der Straße kann ähnlich laut oder sogar lauter sein.",
+      "vi": "Một chiếc xe cứu thương trên đường có thể ồn tương đương hoặc thậm chí ồn hơn."
+    },
+    {
+      "de": "Trotzdem wird er oft eher akzeptiert, weil klar ist, dass das Geräusch einen notwendigen Grund hat.",
+      "vi": "Tuy nhiên, nó thường dễ được chấp nhận hơn vì người ta hiểu rằng âm thanh ấy xuất phát từ một lý do cần thiết."
+    },
+    {
+      "de": "Interessant ist außerdem, dass die Umgebung selbst unsere Wahrnehmung verändert.",
+      "vi": "Một điều thú vị nữa là chính môi trường xung quanh cũng làm thay đổi cách chúng ta cảm nhận âm thanh."
+    },
+    {
+      "de": "In einer ohnehin lauten Straße fällt ein einzelnes Gespräch auf dem Gehweg vielleicht kaum auf.",
+      "vi": "Trên một con đường vốn đã ồn ào, một cuộc trò chuyện riêng lẻ trên vỉa hè có thể gần như chẳng gây chú ý."
+    },
+    {
+      "de": "In einer sehr ruhigen Wohnung dagegen kann schon ein leises Ticken oder Summen plötzlich sehr deutlich wirken.",
+      "vi": "Ngược lại, trong một căn hộ rất yên tĩnh, chỉ một tiếng tích tắc hoặc tiếng ù nhẹ cũng có thể đột nhiên trở nên rất rõ."
+    },
+    {
+      "de": "Das Geräusch ist nicht stärker geworden. Es hebt sich lediglich stärker vom Hintergrund ab.",
+      "vi": "Âm thanh không hề trở nên lớn hơn. Nó chỉ nổi bật hơn so với âm thanh nền mà thôi."
+    },
+    {
+      "de": "Was kann man also tun, wenn man sich zu Hause regelmäßig durch Geräusche gestört fühlt?",
+      "vi": "Vậy có thể làm gì nếu thường xuyên cảm thấy bị tiếng động làm phiền ở nhà?"
+    },
+    {
+      "de": "Zunächst sollte man möglichst genau herausfinden, was eigentlich stört.",
+      "vi": "Trước tiên nên xác định càng chính xác càng tốt xem điều gì thực sự gây khó chịu."
+    },
+    {
+      "de": "Ist es ein dauerhaftes Brummen? Ein bestimmtes Gerät? Trittschall? Musik? Verkehr?",
+      "vi": "Đó là tiếng ù kéo dài? Một thiết bị cụ thể? Tiếng bước chân truyền qua sàn? Âm nhạc? Hay giao thông?"
+    },
+    {
+      "de": "Erst dann kann man überlegen, welche Ursache tatsächlich beeinflussbar ist.",
+      "vi": "Chỉ sau đó mới có thể xem xét nguyên nhân nào thực sự có thể tác động và thay đổi được."
+    },
+    {
+      "de": "Bei einem technischen Gerät kann manchmal eine kleine Veränderung helfen, etwa ein anderer Standort oder eine Unterlage, die Vibrationen reduziert.",
+      "vi": "Với một thiết bị kỹ thuật, đôi khi chỉ một thay đổi nhỏ cũng có thể giúp ích, chẳng hạn đổi vị trí đặt hoặc dùng một tấm lót giúp giảm rung."
+    },
+    {
+      "de": "Bei Problemen mit Nachbarn ist dagegen häufig ein Gespräch sinnvoller als sofort eine formelle Beschwerde.",
+      "vi": "Ngược lại, khi có vấn đề với hàng xóm, một cuộc nói chuyện thường hợp lý hơn việc lập tức gửi khiếu nại chính thức."
+    },
+    {
+      "de": "Dabei hilft es, möglichst konkret zu bleiben.",
+      "vi": "Khi đó, việc trình bày càng cụ thể càng tốt sẽ hữu ích hơn."
+    },
+    {
+      "de": "Statt zu sagen „Sie sind ständig viel zu laut“, kann man zum Beispiel erklären: „Zwischen elf und zwölf höre ich regelmäßig das Verschieben von Möbeln.“",
+      "vi": "Thay vì nói “Anh/chị lúc nào cũng quá ồn”, có thể giải thích cụ thể hơn, chẳng hạn: “Từ 11 đến 12 giờ tôi thường xuyên nghe tiếng di chuyển đồ đạc.”"
+    },
+    {
+      "de": "Natürlich lässt sich nicht jedes Geräusch vermeiden.",
+      "vi": "Tất nhiên, không thể tránh được mọi âm thanh."
+    },
+    {
+      "de": "In Städten gehören Verkehr, Lieferfahrzeuge, Baustellen oder Menschen auf der Straße bis zu einem gewissen Grad zum Alltag.",
+      "vi": "Ở thành phố, giao thông, xe giao hàng, công trường hay người đi lại trên phố ở một mức độ nhất định đều là một phần của cuộc sống thường ngày."
+    },
+    {
+      "de": "Ziel kann deshalb nicht völlige Stille sein.",
+      "vi": "Vì vậy, mục tiêu không thể là sự im lặng hoàn toàn."
+    },
+    {
+      "de": "Wichtig ist vielmehr zu verstehen, dass Lärmwirkung aus mehreren Faktoren entsteht.",
+      "vi": "Điều quan trọng hơn là hiểu rằng tác động của tiếng ồn được hình thành từ nhiều yếu tố."
+    },
+    {
+      "de": "Lautstärke spielt eine Rolle, aber ebenso Erwartung, Kontrolle, Dauer, Zeitpunkt, Bedeutung und persönliche Situation.",
+      "vi": "Độ lớn âm thanh đóng vai trò quan trọng, nhưng kỳ vọng, khả năng kiểm soát, thời lượng, thời điểm, ý nghĩa và hoàn cảnh cá nhân cũng vậy."
+    },
+    {
+      "de": "Deshalb können zwei Menschen auf dasselbe Geräusch sehr unterschiedlich reagieren, ohne dass einer von beiden „recht“ oder „unrecht“ haben muss.",
+      "vi": "Vì vậy, hai người có thể phản ứng rất khác nhau với cùng một âm thanh mà không nhất thiết phải có một người “đúng” và người kia “sai”."
+    },
+    {
+      "de": "Wenn wir diese Unterschiede berücksichtigen, lassen sich Konflikte über Lärm oft sachlicher lösen und manchmal sogar ganz vermeiden.",
+      "vi": "Nếu chúng ta tính đến những khác biệt này, các xung đột về tiếng ồn thường có thể được giải quyết khách quan hơn, và đôi khi thậm chí có thể tránh hoàn toàn."
+    }
+  ]
 }
 ];
