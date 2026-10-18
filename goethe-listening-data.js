@@ -2336,5 +2336,234 @@ window.KapiGoetheListeningLessons = [
     }
   ],
   "showSpeakers": true
+},
+{
+  "id": "teil1-lokalradio-wochenmarkt-2026-10-17",
+  "teil": 1,
+  "title": "Lokale Radiomeldung · Wochenmarkt",
+  "audio": "audio/teil1-lokalradio-wochenmarkt-2026-10-17.m4a",
+  "questions": [
+    {
+      "prompt": "Der Wochenmarkt beginnt am Samstag früher als gewöhnlich.",
+      "options": [
+        "Richtig",
+        "Falsch"
+      ],
+      "answer": 0
+    },
+    {
+      "prompt": "Was müssen Besucherinnen und Besucher mit dem Auto beachten?",
+      "options": [
+        "A. Sie dürfen ab 10 Uhr wieder direkt am Rathausplatz parken.",
+        "B. Sie können kostenlos auf dem Parkplatz am Kulturzentrum parken.",
+        "C. Sie müssen wegen einer Straßensperrung über die Gartenstraße fahren."
+      ],
+      "answer": 2
+    }
+  ],
+  "transcript": [
+    {
+      "de": "Guten Morgen, hier eine kurze Information zum Wochenmarkt am kommenden Samstag.",
+      "vi": "Chào buổi sáng, sau đây là một thông tin ngắn về chợ phiên vào thứ Bảy tới."
+    },
+    {
+      "de": "Wegen einer größeren Radsportveranstaltung kann der Markt diesmal nicht wie gewohnt auf dem Rathausplatz stattfinden.",
+      "vi": "Do có một sự kiện đua xe đạp quy mô lớn, lần này chợ không thể diễn ra như thường lệ tại quảng trường tòa thị chính."
+    },
+    {
+      "de": "Die Stände werden stattdessen auf dem Parkplatz hinter der Stadthalle aufgebaut.",
+      "vi": "Thay vào đó, các quầy hàng sẽ được dựng tại bãi đỗ xe phía sau hội trường thành phố."
+    },
+    {
+      "de": "Außerdem beginnt der Verkauf bereits um 7 Uhr, also eine Stunde früher als sonst.",
+      "vi": "Ngoài ra, việc bán hàng bắt đầu từ 7 giờ, tức là sớm hơn bình thường một tiếng."
+    },
+    {
+      "de": "Dafür endet der Markt diesmal schon um 12.30 Uhr.",
+      "vi": "Đổi lại, lần này chợ sẽ kết thúc sớm, vào lúc 12 giờ 30."
+    },
+    {
+      "de": "Wer mit dem Auto kommt, sollte beachten, dass die Lindenstraße zwischen 6 und 14 Uhr vollständig gesperrt ist.",
+      "vi": "Những ai đến bằng ô tô cần lưu ý rằng đường Lindenstraße bị phong tỏa hoàn toàn trong khoảng từ 6 giờ đến 14 giờ."
+    },
+    {
+      "de": "Die Zufahrt zum Markt ist in dieser Zeit nur über die Gartenstraße möglich.",
+      "vi": "Trong khoảng thời gian này, chỉ có thể đi vào khu chợ qua Gartenstraße."
+    },
+    {
+      "de": "Direkt an der Stadthalle stehen nur wenige Parkplätze zur Verfügung.",
+      "vi": "Ngay tại hội trường thành phố chỉ có một số ít chỗ đỗ xe."
+    },
+    {
+      "de": "Zusätzliche Parkmöglichkeiten gibt es an der Grundschule, etwa fünf Gehminuten entfernt.",
+      "vi": "Có thêm chỗ đỗ xe tại trường tiểu học, cách đó khoảng năm phút đi bộ."
+    },
+    {
+      "de": "Dort gelten die üblichen Parkgebühren.",
+      "vi": "Ở đó vẫn áp dụng mức phí đỗ xe thông thường."
+    },
+    {
+      "de": "Die Bushaltestelle „Rathaus“ wird bis 9 Uhr regulär angefahren.",
+      "vi": "Trạm xe buýt “Rathaus” vẫn được phục vụ bình thường cho đến 9 giờ."
+    },
+    {
+      "de": "Danach halten die Busse ersatzweise an der Haltestelle „Poststraße“.",
+      "vi": "Sau đó, các xe buýt sẽ tạm thời dừng thay thế tại trạm “Poststraße”."
+    },
+    {
+      "de": "Ab Sonntag findet der Wochenmarkt wieder wie gewohnt auf dem Rathausplatz statt.",
+      "vi": "Từ Chủ nhật trở đi, chợ phiên lại diễn ra như thường lệ tại quảng trường tòa thị chính."
+    }
+  ]
+},
+{
+  "id": "teil1-flughafen-gate-aenderung-2026-10-17",
+  "teil": 1,
+  "title": "Durchsage am Flughafen · Gate-Änderung",
+  "audio": "audio/teil1-flughafen-gate-aenderung-2026-10-17.m4a",
+  "questions": [
+    {
+      "prompt": "Wegen des Gate-Wechsels beginnt das Boarding später als ursprünglich geplant.",
+      "options": [
+        "Richtig",
+        "Falsch"
+      ],
+      "answer": 1
+    },
+    {
+      "prompt": "Was gilt für Reisende, die beim Einsteigen Unterstützung benötigen?",
+      "options": [
+        "A. Sie sollen sich spätestens um 17.50 Uhr am Servicepunkt neben Gate B10 melden.",
+        "B. Sie müssen bereits um 17.50 Uhr direkt am neuen Gate C6 sein.",
+        "C. Sie sollen erst um 18.10 Uhr zum Servicepunkt im Terminal C kommen."
+      ],
+      "answer": 0
+    }
+  ],
+  "transcript": [
+    {
+      "de": "Achtung, eine Information für die Passagiere des Fluges LH 1846 nach Wien.",
+      "vi": "Chú ý, sau đây là thông tin dành cho hành khách của chuyến bay LH 1846 đi Vienna."
+    },
+    {
+      "de": "Der Flug wird heute nicht wie ursprünglich vorgesehen von Gate B14, sondern von Gate C6 abgefertigt.",
+      "vi": "Hôm nay chuyến bay sẽ không được làm thủ tục/xử lý tại Gate B14 như dự kiến ban đầu, mà tại Gate C6."
+    },
+    {
+      "de": "Grund dafür ist eine technische Überprüfung im Bereich des ursprünglich geplanten Gates.",
+      "vi": "Lý do là có một đợt kiểm tra kỹ thuật tại khu vực của cửa ra máy bay ban đầu."
+    },
+    {
+      "de": "Der Flug selbst ist davon nicht betroffen.",
+      "vi": "Bản thân chuyến bay không bị ảnh hưởng bởi việc đó."
+    },
+    {
+      "de": "Das Boarding beginnt daher wie vorgesehen um 18.10 Uhr.",
+      "vi": "Vì vậy, việc lên máy bay vẫn bắt đầu đúng như dự kiến vào lúc 18:10."
+    },
+    {
+      "de": "Der geplante Abflug bleibt bei 18.45 Uhr.",
+      "vi": "Giờ khởi hành dự kiến vẫn giữ nguyên là 18:45."
+    },
+    {
+      "de": "Passagiere, die bereits Gepäck aufgegeben haben, müssen nichts weiter unternehmen.",
+      "vi": "Những hành khách đã ký gửi hành lý rồi không cần làm thêm gì nữa."
+    },
+    {
+      "de": "Das Gepäck wird automatisch dem neuen Abflugbereich zugeordnet.",
+      "vi": "Hành lý sẽ tự động được chuyển/được phân vào khu vực khởi hành mới."
+    },
+    {
+      "de": "Wer beim Einsteigen Unterstützung benötigt, zum Beispiel wegen eingeschränkter Mobilität, wird gebeten, sich spätestens um 17.50 Uhr am Servicepunkt neben Gate B10 zu melden.",
+      "vi": "Ai cần hỗ trợ khi lên máy bay, ví dụ do khả năng vận động bị hạn chế, được yêu cầu đến điểm dịch vụ cạnh Gate B10 để báo muộn nhất lúc 17:50."
+    },
+    {
+      "de": "Von dort werden die betreffenden Reisenden zum neuen Gate begleitet.",
+      "vi": "Từ đó, những hành khách liên quan sẽ được nhân viên đưa/đi cùng đến cửa ra máy bay mới."
+    },
+    {
+      "de": "Ein Shuttlebus zwischen den Bereichen B und C ist nicht erforderlich.",
+      "vi": "Không cần xe shuttle giữa khu B và khu C."
+    },
+    {
+      "de": "Beide Bereiche sind nach der Sicherheitskontrolle zu Fuß miteinander verbunden.",
+      "vi": "Hai khu vực này được nối với nhau bằng lối đi bộ sau khu kiểm tra an ninh."
+    },
+    {
+      "de": "Bitte beachten Sie außerdem, dass die Anzeige an einigen Monitoren möglicherweise noch für kurze Zeit Gate B14 zeigt.",
+      "vi": "Ngoài ra, xin lưu ý rằng bảng hiển thị trên một số màn hình có thể trong một thời gian ngắn vẫn còn hiện Gate B14."
+    },
+    {
+      "de": "Maßgeblich ist jedoch Gate C6.",
+      "vi": "Tuy nhiên, Gate C6 mới là thông tin có giá trị quyết định / thông tin chính thức cần tuân theo."
+    },
+    {
+      "de": "Wir wünschen Ihnen einen angenehmen Flug.",
+      "vi": "Chúng tôi chúc quý khách có một chuyến bay dễ chịu."
+    }
+  ]
+},
+{
+  "id": "teil1-stadtbibliothek-rueckgabeautomat-2026-10-17",
+  "teil": 1,
+  "title": "Durchsage in der Stadtbibliothek · Rückgabeautomat",
+  "audio": "audio/teil1-stadtbibliothek-rueckgabeautomat-2026-10-17.m4a",
+  "questions": [
+    {
+      "prompt": "Am Samstag können ausgeliehene Medien auch nach der Schließung der Bibliothek zurückgegeben werden.",
+      "options": [
+        "Richtig",
+        "Falsch"
+      ],
+      "answer": 0
+    },
+    {
+      "prompt": "Was ändert sich am Samstag für Besucherinnen und Besucher?",
+      "options": [
+        "A. Der Haupteingang bleibt wegen Bauarbeiten den ganzen Tag geschlossen.",
+        "B. Die persönliche Beratung endet früher als normalerweise.",
+        "C. Der Rückgabeautomat kann erst ab 16 Uhr benutzt werden."
+      ],
+      "answer": 1
+    }
+  ],
+  "transcript": [
+    {
+      "de": "Liebe Besucherinnen und Besucher,",
+      "vi": "Kính gửi quý khách đến thư viện,"
+    },
+    {
+      "de": "wegen kurzfristiger Wartungsarbeiten an unserer Computeranlage schließt die Stadtbibliothek am kommenden Samstag bereits um 16 Uhr statt wie üblich um 18 Uhr.",
+      "vi": "Do có công việc bảo trì đột xuất đối với hệ thống máy tính, thư viện thành phố vào thứ Bảy tới sẽ đóng cửa từ 16 giờ thay vì 18 giờ như thường lệ."
+    },
+    {
+      "de": "Die Ausleihe und die persönliche Beratung sind an diesem Tag deshalb nur bis 16 Uhr möglich.",
+      "vi": "Vì vậy, vào ngày hôm đó, việc mượn tài liệu và tư vấn trực tiếp chỉ có thể thực hiện đến 16 giờ."
+    },
+    {
+      "de": "Wer ausgeliehene Bücher, Zeitschriften oder andere Medien zurückgeben möchte, kann dafür jedoch auch nach der Schließung weiterhin den Rückgabeautomaten neben dem Haupteingang benutzen.",
+      "vi": "Tuy nhiên, ai muốn trả lại sách, tạp chí hoặc các tài liệu khác đã mượn thì vẫn có thể tiếp tục sử dụng máy trả tài liệu cạnh lối vào chính ngay cả sau khi thư viện đóng cửa."
+    },
+    {
+      "de": "Dieser steht wie gewohnt bis 22 Uhr zur Verfügung.",
+      "vi": "Máy này vẫn hoạt động như thường lệ đến 22 giờ."
+    },
+    {
+      "de": "Bitte beachten Sie, dass am Automaten zwar Rückgaben möglich sind, Verlängerungen von Leihfristen dort jedoch nicht vorgenommen werden können.",
+      "vi": "Xin lưu ý rằng tại máy này tuy có thể trả tài liệu, nhưng không thể thực hiện việc gia hạn thời hạn mượn."
+    },
+    {
+      "de": "Der Haupteingang selbst bleibt während der regulären Öffnungszeit zugänglich.",
+      "vi": "Bản thân lối vào chính vẫn có thể sử dụng trong thời gian mở cửa bình thường."
+    },
+    {
+      "de": "Lediglich der Seiteneingang an der Parkstraße ist wegen Reparaturarbeiten bereits seit Donnerstag gesperrt.",
+      "vi": "Chỉ có lối vào bên hông tại đường Parkstraße là đã bị đóng từ thứ Năm do công việc sửa chữa."
+    },
+    {
+      "de": "Ab Montag gelten wieder die üblichen Öffnungszeiten.",
+      "vi": "Từ thứ Hai trở đi, giờ mở cửa thông thường sẽ lại được áp dụng."
+    }
+  ]
 }
 ];

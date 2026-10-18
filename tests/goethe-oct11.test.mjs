@@ -31,7 +31,7 @@ for(const [id,key] of Object.entries(keys))test(id+' preserves key and grades bo
 test('Oct 11 has exactly five entries, one Stadtbibliothek, and preserves speaker turns',()=>{
  const {s}=app(),ls=s.KapiGoetheReplay.lessons(),fresh=ls.filter(l=>l.id.endsWith('2026-10-11'));
  assert.equal(fresh.length,5);assert.equal(new Set(ls.map(l=>l.id)).size,ls.length);
- assert.equal(ls.filter(l=>l.title.includes('Stadtbibliothek')).length,1);
+ assert.equal(fresh.filter(l=>l.title.includes('Stadtbibliothek')).length,1);
  const l=fresh.find(l=>l.teil===3);
  l.questions.forEach(q=>assert.deepEqual(Array.from(q.options),['A. Mara','B. Jonas','C. Leila']));
  const turns=l.transcript.filter((t,i)=>!i||t.speaker!==l.transcript[i-1].speaker).map(t=>t.speaker);
