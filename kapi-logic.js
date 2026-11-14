@@ -515,9 +515,14 @@ function recordLearnedWord(word) {
 
 function recordVocabAnswer(word, isCorrect) {
     if (!word || !word.de) return;
-    recordLearnedWord(word);
+    // Update learned words and answer statistics in a single journal transaction.
     const journal = loadVocabJournal();
     const week = journal.current;
+    if (!week.learnedWords.some(item => item.de === word.de)) {
+        const group = findWordGroup(word);
+        week.learnedWords.push({ de: word.de, vi: word.vi || '', group });
+        week.groups[group] = (week.groups[group] || 0) + 1;
+    }
     const key = word.de.toLocaleLowerCase('de-DE');
 
     if (!week.wordStats[key]) {
