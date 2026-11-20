@@ -1047,11 +1047,58 @@ function showQuizQuestion() {
     setTimeout(() => document.getElementById("vokabelInput").focus(), 100);
 }
 
+// Recall grading: alternatives are valid; spelling feedback never hides the standard form.
+function vocabRecallKey(value) {
+    return String(value || '').normalize('NFC').toLocaleLowerCase('de-DE').trim().replace(/\s+/g, ' ').replace(/[.!?;,]+$/, '').trim();
+}
+function vocabRecallOptions(value) {
+    return String(value || '').split(/\s*\/\s*|\s*;\s*/).map(x => x.trim()).filter(Boolean);
+}
+function gradeVocabRecall(input, expected) {
+    const raw = String(input || '').normalize('NFC').trim();
+    const key = vocabRecallKey(raw);
+    const options = vocabRecallOptions(expected);
+    const result = (ok, option = '') => ({ok, option, minor:ok && raw !== option,
+        alternatives:options.filter(x => x !== option)});
+    if (!key) return result(false);
+    for (const option of options) if (key === vocabRecallKey(option)) return result(true, option);
+    const bare = value => vocabRecallKey(value).replace(/^(der|die|das)\s+/, '');
+    // A supplied wrong article is not the same as an omitted article.
+    const hasArticle = /^(der|die|das)\s+/.test(key);
+    for (const option of options) if (!hasArticle && key === bare(option)) return result(true, option);
+    const fold = value => value.replace(/[äöü]/g, c => ({ä:'a',ö:'o',ü:'u'}[c]));
+    const blocked = new Set(['schon','schön','wurde','würde','konnte','könnte','musste','müsste','hatte','hätte','waren','wären','fordern','fördern']);
+    const known = new Set();
+    if (typeof vokabelGruppen !== 'undefined') for (const group of Object.values(vokabelGruppen)) {
+        for (const word of group.woerter || []) for (const option of vocabRecallOptions(word.de)) known.add(bare(option));
+    }
+    for (const option of options) {
+        const target = vocabRecallKey(option);
+        const comparison = hasArticle ? target : bare(option);
+        if (blocked.has(bare(key)) || known.has(bare(key))) continue;
+        if (fold(key) === fold(comparison)) return result(true, option);
+        // One adjacent transposition in a longer word is a clear typing slip.
+        // No fuzzy deletion of prepositions, reflexives or whole phrase components.
+        if (key.length === comparison.length && key.length >= 6) {
+            const diff = [...key].map((c,i) => c !== comparison[i] ? i : -1).filter(i => i >= 0);
+            if (diff.length === 2 && diff[1] === diff[0] + 1 &&
+                key[diff[0]] === comparison[diff[1]] && key[diff[1]] === comparison[diff[0]] &&
+                !/\s/.test(key.slice(diff[0], diff[1]+1))) return result(true, option);
+        }
+    }
+    return result(false);
+}
+function vocabRecallFeedback(grade, input) {
+    const safe = escapeSprechenHtml;
+    return `${grade.minor ? `<p>✏️ Cậu gõ: ${safe(input)}<br>Dạng chuẩn: <b>${safe(grade.option)}</b> — nhớ mạo từ, viết hoa và dấu Umlaut nhé.</p>` : ''}
+        ${grade.alternatives.length ? `<p>📌 Đáp án khác trong mục này: <b>${grade.alternatives.map(safe).join(' / ')}</b>. Đối chiếu nghĩa để dùng đúng ngữ cảnh.</p>` : ''}`;
+}
+
 function checkVokabelAnswer() {
-    let input = document.getElementById("vokabelInput").value.trim().toLowerCase();
+    let input = document.getElementById("vokabelInput").value.trim();
     let w = quizWords[currentQuizIndex];
-    let correctAns = w.de.toLowerCase();
-    let isCorrect = (input === correctAns);
+    const grade = gradeVocabRecall(input, w.de);
+    let isCorrect = grade.ok;
     let savedMissed = getSavedMissed();
     let resultHtml = "";
     recordVocabAnswer(w, isCorrect);
@@ -1060,15 +1107,16 @@ function checkVokabelAnswer() {
         quizScore++;
         // KHÔNG XÓA GHIM TỰ ĐỘNG - ĐỂ QUAY LỐC XOÁY!
         resultHtml = `
-            <h3 style="color:#27ae60; margin:0;">✅ Chính xác!</h3>
+            <h3 style="color:#27ae60; margin:0;">${grade.minor ? "✅ Đã nhớ từ · sửa nhẹ cách viết" : "✅ Chính xác!"}</h3>
             <p style="font-size:18px;"><b>${w.de}</b> = ${w.vi}</p>
+            ${vocabRecallFeedback(grade, input)}
             <p style="font-size:14px; color:#7f8c8d;"><i>(Từ này vẫn nằm trong Sổ tay để Kapi "quay lốc xoáy" hỏi lại vào hôm khác nhé! 🌪️)</i></p>
         `;
     } else {
         currentMissedWords.push(w);
         // Tự động ghim vào sổ tay nếu gõ sai (và nếu chưa có)
         if (!savedMissed.find(item => item.de === w.de)) savedMissed.push(w);
-        resultHtml = `<h3 style="color:#c0392b; margin:0;">❌ Sai rồi Vịt ơi!</h3><p style="font-size:16px;">Cậu gõ: <s>${input || "(trống)"}</s></p><p style="font-size:20px; color:#27ae60;">Phải là: <b>${w.de}</b></p>`;
+        resultHtml = `<h3 style="color:#c0392b; margin:0;">❌ Sai rồi Vịt ơi!</h3><p style="font-size:16px;">Cậu gõ: <s>${escapeSprechenHtml(input || "(trống)")}</s></p><p style="font-size:20px; color:#27ae60;">Phải là: <b>${w.de}</b></p>`;
     }
     saveMissed(savedMissed);
     
@@ -1797,7 +1845,8 @@ function checkKofferTypingAnswer() {
     }
 
     kofferGame.answered = true;
-    const correct = userAnswer === correctAnswer;
+    const grade = gradeVocabRecall(input ? input.value : "", word.de);
+    const correct = grade.ok;
     recordVocabAnswer(word, correct);
     document.getElementById('buttons').style.display = 'none';
     document.getElementById('feedback-area').style.display = 'block';
@@ -1806,7 +1855,7 @@ function checkKofferTypingAnswer() {
         kofferGame.streak++;
         kofferGame.bestStreak = Math.max(kofferGame.bestStreak, kofferGame.streak);
         document.getElementById('feedback-area').innerHTML = `
-            <div style="padding:14px;border-radius:14px;background:#e8f5e9;color:#2e7d32;font-weight:bold;">✅ Hải quan đóng dấu: <b>${word.de}</b><br><small>${kofferGame.typedIndex + 1}/8 từ đã được nhớ lại bằng tay.</small></div>
+            <div style="padding:14px;border-radius:14px;background:#e8f5e9;color:#2e7d32;font-weight:bold;">✅ Hải quan đóng dấu: <b>${word.de}</b>${vocabRecallFeedback(grade, input.value)}<br><small>${kofferGame.typedIndex + 1}/8 từ đã được nhớ lại bằng tay.</small></div>
             <button class="btn-kapi btn-green" style="width:100%;margin:12px 0 0;" onclick="nextKofferTypingWord()">➡️ Từ tiếp theo</button>`;
         return;
     }
@@ -2351,24 +2400,38 @@ function getLiveTalkGateWeight(row) {
 
 function chooseLiveTalkGateRow() {
     const pool = liveTalkGate?.pool || [];
-    if (!pool.length) return null;
-    const cleared = new Set(liveTalkGate?.clearedCardIds || []);
-    const available = pool.filter(row => !cleared.has(row.id));
-    if (!available.length) return null;
     const stored = readLiveTalkGateStorage();
-    const recent = [...(stored.recentCardIds || []), ...(liveTalkGate.recentCardIds || [])].slice(-6);
-    let candidates = available.filter(row => !recent.slice(-2).includes(row.id));
-    if (!candidates.length) candidates = available;
-    const weighted = candidates.map(row => ({row, weight:getLiveTalkGateWeight(row)}));
-    const total = weighted.reduce((sum,item) => sum + item.weight, 0);
-    let ticket = Math.random() * total;
-    let chosen = weighted[weighted.length - 1].row;
-    for (const item of weighted) {
-        ticket -= item.weight;
-        if (ticket <= 0) { chosen = item.row; break; }
+    const today = todayDateKey();
+    const asked = new Set(stored.askedDate === today ? stored.askedTerms || [] : []);
+    const cleared = new Set(liveTalkGate?.clearedCardIds || []);
+    const unique = new Map();
+    for (const row of pool) {
+        const key = vocabRecallKey(getLiveTalkGateTargetPhrase(row));
+        if (!key || asked.has(key) || cleared.has(row.id)) continue;
+        const previous = unique.get(key);
+        if (!previous || Number(row.wrong || 0) > Number(previous.wrong || 0)) unique.set(key, row);
     }
+    const available = [...unique.values()];
+    if (!available.length) return null;
+    // Rotate weak, old and explicitly important cards so weak cards cannot monopolize a gate.
+    const lane = Number(stored.selectionCount || 0) % 3;
+    let candidates = lane === 0 ? available.filter(row => Number(row.wrong || 0) > 0)
+        : lane === 2 ? available.filter(row => /⭐|😸|important|quan trọng/i.test(String(row.tags || '')))
+        : [];
+    if (!candidates.length) candidates = available;
+    let chosen;
+    if (lane === 1) {
+        chosen = [...candidates].sort((a,b) => String(a.lastReviewedAt || a.sessionDate || '').localeCompare(String(b.lastReviewedAt || b.sessionDate || '')))[0];
+    } else {
+        const weighted = candidates.map(row => ({row, weight:getLiveTalkGateWeight(row)}));
+        let ticket = Math.random() * weighted.reduce((sum,item) => sum + item.weight, 0);
+        chosen = weighted[weighted.length - 1].row;
+        for (const item of weighted) { ticket -= item.weight; if (ticket <= 0) { chosen = item.row; break; } }
+    }
+    asked.add(vocabRecallKey(getLiveTalkGateTargetPhrase(chosen)));
     liveTalkGate.recentCardIds.push(chosen.id);
-    writeLiveTalkGateStorage({recentCardIds:[...(stored.recentCardIds || []), chosen.id].slice(-24)});
+    writeLiveTalkGateStorage({askedDate:today, askedTerms:[...asked], selectionCount:Number(stored.selectionCount || 0)+1,
+        recentCardIds:[...(stored.recentCardIds || []), chosen.id].slice(-24)});
     return chosen;
 }
 
@@ -6092,3 +6155,4 @@ window.saveTranscriptNote = function() {
         localStorage.setItem(noteKey, currentNote);
     }
 };
+
