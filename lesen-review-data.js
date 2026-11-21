@@ -264,3 +264,993 @@ Object.assign(LESEN_REVIEW_DATA, {
         }
     }
 });
+
+
+// Sentence translations and exact evidence for the 2026-11-21 pack.
+Object.assign(LESEN_REVIEW_DATA, {
+    "lesen_t1_nachbarschaft_20261121": {
+        "passages": {
+            "people.a": [
+                "Khi chuyển đến đây hai năm trước, cuối cùng tôi cũng muốn sống trong một ngôi nhà mà mọi người quen biết nhau.",
+                "Vì vậy, chính tôi đã đề xuất buổi nấu ăn hằng tháng và lúc đầu lần nào cũng cho mọi người dùng bếp của mình.",
+                "Nhưng dần dần điều đó trở thành một kỳ vọng cố định: khi từ chối, tôi gần như phải giải trình.",
+                "Một số người dường như đã nhầm sự hào hứng của tôi với lời cam kết lâu dài.",
+                "Giờ chúng tôi luân phiên làm chủ nhà và không ai phải giải thích vì sao mình vắng một lần.",
+                "Những buổi tối ấy vẫn quan trọng với tôi; chỉ là tôi không muốn cảm thấy bị buộc phải giao lưu.",
+                "Suy cho cùng, thoải mái sống trong cùng một nhà không có nghĩa là phải dành toàn bộ thời gian rảnh cho nhau."
+            ],
+            "people.b": [
+                "Nhóm trò chuyện của tòa nhà chúng tôi có tiếng xấu vì đôi khi mọi người cãi nhau về xe đạp đỗ chắn chỗ.",
+                "Dù vậy, tôi không muốn bỏ nhóm, vì nó rất tiện khi cửa chính bị hỏng hoặc thất lạc kiện hàng.",
+                "Điều làm tôi khó chịu là suy nghĩ rằng tin nhắn nào cũng phải được trả lời ngay.",
+                "Vì thế tôi chỉ đọc bài đăng buổi tối và đã tắt thông báo.",
+                "Một người hàng xóm còn phụ trách dán thông báo quan trọng ở lối vào để người không dùng điện thoại thông minh vẫn được cập nhật.",
+                "Ngược lại, khi có lời trách móc cá nhân, thêm một bình luận trong nhóm chẳng giúp gì: những người liên quan nên nói chuyện trực tiếp.",
+                "Công cụ số có thể giúp thống nhất công việc dễ hơn, nhưng không thể thay chúng ta thực hiện cuộc trò chuyện khó xử."
+            ],
+            "people.c": [
+                "Trước đây tôi luôn nghĩ hàng xóm tốt phải có thể thỏa thuận với nhau mà không cần danh sách hay quy định.",
+                "Vì thế, khi cùng mua một chiếc xe đạp chở hàng, ban đầu ai cần chỉ phải nhắn một tin ngắn.",
+                "Nhưng đúng vào những cuối tuần nhiều người muốn đi mua sắm, nhiều người đồng thời cho rằng mình có quyền sử dụng.",
+                "Từ khi chúng tôi đặt khung giờ bắt buộc và thông báo nếu trễ, chuyện bực bội đã giảm đáng kể.",
+                "Nỗi lo trước kia của tôi rằng điều đó sẽ khiến quan hệ xa cách hơn đã không trở thành sự thật.",
+                "Trái lại: vì không ai còn phải tranh cãi về sự thiên vị mà mình tưởng có, lúc trả xe vẫn có thời gian trò chuyện vui vẻ.",
+                "Giờ đây, với tôi, lòng tin không hình thành nhờ để mọi việc tùy ý mà nhờ ai cũng có thể tin vào những thỏa thuận chung."
+            ],
+            "people.d": [
+                "Từ khi bố tôi đi lại khó khăn hơn, tôi đặc biệt trân trọng những lời tự nguyện giúp đỡ trong tòa nhà.",
+                "Một người hàng xóm thỉnh thoảng mua đồ hộ, một người khác mang các kiện hàng nặng lên tầng.",
+                "Điều đó giúp cuộc sống hằng ngày nhẹ nhàng hơn, nhưng không thể đưa vào kế hoạch cố định mỗi tuần.",
+                "Vì vậy chúng tôi vẫn dùng dịch vụ giao hàng có trả phí, dù có người cho rằng giờ có thể bỏ khoản chi này.",
+                "Sự hỗ trợ lẫn nhau nên bổ sung cho những việc cần được tổ chức đáng tin cậy, chứ không âm thầm thay thế chúng.",
+                "Ngay cả lời cảm ơn cũng không được mang nghĩa rằng lần sau đương nhiên lại mong nhận được giúp đỡ.",
+                "Bố tôi cũng muốn đóng góp theo khả năng và tưới cây cho những người khác khi họ đi nghỉ.",
+                "Nhờ vậy, ông vẫn là một người hàng xóm có năng lực riêng, chứ không chỉ được nhìn nhận như người cần được chăm sóc."
+            ]
+        },
+        "questions": {
+            "1": {
+                "vi": "Ai đã thay đổi thái độ đối với các thỏa thuận chính thức?",
+                "evidence": [
+                    [
+                        "people.c",
+                        0,
+                        [
+                            "ohne Listen und Vorschriften"
+                        ]
+                    ],
+                    [
+                        "people.c",
+                        6,
+                        [
+                            "inzwischen",
+                            "dieselben Vereinbarungen"
+                        ]
+                    ]
+                ],
+                "link": "Eva trước đây phản đối quy định, sau trải nghiệm lại coi thỏa thuận rõ ràng là nền tảng tin cậy. Không nhầm với Lena: cô điều chỉnh việc tiếp khách, không thay đổi quan điểm về quy tắc nói chung."
+            },
+            "2": {
+                "vi": "Ai cho rằng vẫn nên giữ một kênh liên lạc mặc dù nó có nhược điểm?",
+                "evidence": [
+                    [
+                        "people.b",
+                        1,
+                        [
+                            "Trotzdem",
+                            "nicht abschaffen",
+                            "praktisch"
+                        ]
+                    ]
+                ],
+                "link": "Tarek thừa nhận nhóm có tranh cãi nhưng không muốn bỏ vì tiện cho thông tin thực tế. trotzdem báo hiệu sự nhượng bộ."
+            },
+            "3": {
+                "vi": "Ai muốn tránh việc sự giúp đỡ trở thành nền tảng duy nhất của việc chăm lo?",
+                "evidence": [
+                    [
+                        "people.d",
+                        3,
+                        [
+                            "bleibt der bezahlte Lieferdienst bestehen"
+                        ]
+                    ],
+                    [
+                        "people.d",
+                        4,
+                        [
+                            "ergänzen",
+                            "nicht stillschweigend an dessen Stelle"
+                        ]
+                    ]
+                ],
+                "link": "Martin giữ dịch vụ trả phí: giúp đỡ tự nguyện chỉ bổ sung, không thay cách tổ chức ổn định. Câu không hỏi ai phản đối việc giúp hàng xóm."
+            },
+            "4": {
+                "vi": "Ai từng thấy sáng kiến của mình bị hiểu thành nghĩa vụ?",
+                "evidence": [
+                    [
+                        "people.a",
+                        1,
+                        [
+                            "selbst",
+                            "vorgeschlagen"
+                        ]
+                    ],
+                    [
+                        "people.a",
+                        3,
+                        [
+                            "dauerhaften Zusage"
+                        ]
+                    ]
+                ],
+                "link": "Lena tự đề xuất buổi nấu ăn nhưng sau đó bị mặc định luôn làm chủ nhà. eigene Initiative ↔ selbst vorgeschlagen; Verpflichtung ↔ dauerhafte Zusage."
+            },
+            "5": {
+                "vi": "Ai phân biệt thông báo sự việc với việc giải quyết xung đột cá nhân?",
+                "evidence": [
+                    [
+                        "people.b",
+                        1,
+                        [
+                            "defekte Haustür",
+                            "verlorenes Paket"
+                        ]
+                    ],
+                    [
+                        "people.b",
+                        5,
+                        [
+                            "persönlichen Vorwürfen",
+                            "direkt miteinander sprechen"
+                        ]
+                    ]
+                ],
+                "link": "Tarek dùng nhóm cho cửa hỏng và kiện hàng, nhưng yêu cầu nói trực tiếp khi có trách móc. Không phải từ bỏ hoàn toàn công cụ số."
+            },
+            "6": {
+                "vi": "Ai kể rằng quy tắc rõ ràng thậm chí còn cải thiện quan hệ cá nhân?",
+                "evidence": [
+                    [
+                        "people.c",
+                        4,
+                        [
+                            "nicht bestätigt"
+                        ]
+                    ],
+                    [
+                        "people.c",
+                        5,
+                        [
+                            "freundliches Gespräch"
+                        ]
+                    ]
+                ],
+                "link": "Eva nói ít cãi nhau hơn nên còn thời gian trò chuyện. Bẫy là đoán quy tắc sẽ làm quan hệ xa cách: đó chỉ là nỗi lo cũ đã bị bác bỏ."
+            },
+            "7": {
+                "vi": "Ai coi trọng việc một người vẫn đóng góp dù bản thân cần được hỗ trợ?",
+                "evidence": [
+                    [
+                        "people.d",
+                        6,
+                        [
+                            "beteiligen",
+                            "gießt"
+                        ]
+                    ],
+                    [
+                        "people.d",
+                        7,
+                        [
+                            "eigenen Fähigkeiten"
+                        ]
+                    ]
+                ],
+                "link": "Bố Martin cần giúp đỡ nhưng vẫn tưới cây cho hàng xóm. Người nhận hỗ trợ cũng có năng lực đóng góp, không chỉ là người được chăm lo."
+            },
+            "8": {
+                "vi": "Ai muốn tiếp tục một hoạt động chung mà không phải lần nào cũng tham gia?",
+                "evidence": [
+                    [
+                        "people.a",
+                        4,
+                        [
+                            "niemand muss begründen"
+                        ]
+                    ],
+                    [
+                        "people.a",
+                        5,
+                        [
+                            "nach wie vor wichtig",
+                            "nicht zur Geselligkeit verpflichtet"
+                        ]
+                    ]
+                ],
+                "link": "Lena vẫn coi trọng buổi nấu ăn nhưng muốn được vắng mặt mà không giải thích. Không phải cô muốn chấm dứt hoạt động."
+            },
+            "9": {
+                "vi": "Ai chủ động giới hạn thời gian tiếp nhận tin nhắn?",
+                "evidence": [
+                    [
+                        "people.b",
+                        3,
+                        [
+                            "nur abends",
+                            "Benachrichtigungen ausgeschaltet"
+                        ]
+                    ]
+                ],
+                "link": "Tarek chỉ đọc buổi tối và tắt thông báo; đây là giới hạn tiếp nhận, không phải hạn chế quyền đăng tin của người khác."
+            }
+        }
+    },
+    "lesen_t2_leihladen_20261121": {
+        "passages": {
+            "segments.0": [
+                "Máy khoan hữu ích, nhưng trong nhiều căn hộ phần lớn thời gian nó nằm không trong tủ.",
+                "Máy làm bánh quế hay vali lớn cũng vậy: mua chỉ để dùng vài lần thì khó đáng tiền.",
+                "Vì thế một sáng kiến khu phố đã mở cửa hàng cho mượn những đồ vật như vậy với một khoản phí hằng năm nhỏ.",
+                "Ý tưởng được ủng hộ ngay và trước khi khai trương đã có nhiều thiết bị cũ được quyên góp.",
+                "Tuy nhiên, lần kiểm kê đầu tiên cho thấy khoảng cách đáng ngạc nhiên giữa nguồn cung và nhu cầu thực tế."
+            ],
+            "segments.1": [
+                "Chính những chiếc vali này lại thiếu vào kỳ nghỉ học, lúc rất nhiều gia đình cùng muốn đi du lịch.",
+                "Vì thế nhóm quyết định từ nay không nhận mọi món đồ quyên góp nữa, mà tìm có mục tiêu những thứ thường được hỏi mượn.",
+                "Hiện nay một danh mục trực tuyến cho biết có những đồ vật nào và khi nào có thể mượn.",
+                "Tuy nhiên, đặt trước trong danh mục chưa có nghĩa là món đồ chắc chắn được xác nhận cho thời điểm mong muốn."
+            ],
+            "segments.2": [
+                "Chỉ xác nhận này mới có hiệu lực ràng buộc; thông báo tự động đã nhận yêu cầu là chưa đủ.",
+                "Nhờ vậy có thể tránh việc ai đó đến cửa hàng vô ích vì thiết bị vẫn đang được kiểm tra hoặc bị trả muộn.",
+                "Sau những tháng đầu, các tình nguyện viên còn nhận thấy hướng dẫn chi tiết không phải lúc nào cũng đủ.",
+                "Một số người quan tâm đã bỏ ý định mượn vì sợ thao tác sai với một thiết bị lạ."
+            ],
+            "segments.3": [
+                "Ở đó họ có thể thử cách vận hành thiết bị dưới sự hướng dẫn, mà chưa cần mang nó về nhà ngay.",
+                "Dịch vụ này được đón nhận nhưng chiếm nhân lực, khiến những người đó không thể xử lý trả đồ cùng lúc.",
+                "Việc kiểm tra, vệ sinh và sửa chữa thiết bị cũng tốn công hơn dự đoán ban đầu.",
+                "Phí hằng năm tuy đủ trả linh kiện hao mòn nhưng không đủ cho chi phí mặt bằng thường xuyên."
+            ],
+            "segments.4": [
+                "Nếu không có hỗ trợ này, phí sẽ phải tăng đáng kể, có thể khiến chính các hộ ít tiền không tham gia được.",
+                "Đổi lại thành phố yêu cầu báo cáo sử dụng hằng năm, nhưng không đặt số lượt mượn tối thiểu.",
+                "Dù sao với nhóm, điều quan trọng không chỉ là tần suất đồ vật được trao qua quầy.",
+                "Nhóm còn muốn biết nhờ dịch vụ này các thành viên có thực sự bỏ việc tự mua đồ hay không."
+            ],
+            "segments.5": [
+                "Trong khảo sát đó, các thành viên cho biết nếu không mượn thì họ sẽ mua, thuê nơi khác hay hoàn toàn không dùng món đồ.",
+                "Các câu trả lời đầu tiên cho thấy rõ vì sao nhiều lượt mượn không tự động đồng nghĩa với mức giảm tiêu dùng lớn tương ứng.",
+                "Một số thành viên chỉ dùng đồ mượn để thử sở thích mới mà trước đó họ vốn không định mua gì.",
+                "Tuy nhiên, sáng kiến không vì thế kết luận rằng những lượt mượn ấy là không được mong muốn."
+            ],
+            "segments.6": [
+                "Điều quyết định đối với sáng kiến là không nhầm lẫn các tác động khác nhau.",
+                "Sử dụng chung có thể mở ra khả năng mới đồng thời thay thế việc mua sắm, nhưng không thể chứng minh cả hai bằng cùng một con số.",
+                "Vì thế về lâu dài, cửa hàng không nhằm tích trữ thật nhiều thiết bị hay ghi nhận thật nhiều giao dịch.",
+                "Nó phải cung cấp một cách đáng tin cậy những gì khu phố cần."
+            ],
+            "options.a": [
+                "Vì vậy thành phố tạm thời trả tiền thuê, còn hội tổ chức vận hành."
+            ],
+            "options.b": [
+                "Suy cho cùng, chính việc khám phá một hoạt động cũng có thể mang giá trị."
+            ],
+            "options.c": [
+                "Để tìm hiểu điều đó, gần đây nhóm tiến hành một khảo sát ngắn sau khi trả đồ."
+            ],
+            "options.d": [
+                "Hiện nay nhóm này có thêm một hình thức đặt trước qua điện thoại."
+            ],
+            "options.e": [
+                "Hiện nay nhóm người này được mời tham gia các buổi hướng dẫn mở thường xuyên."
+            ],
+            "options.f": [
+                "Có nhiều máy làm bánh quế, nhưng hầu như không có vali phù hợp."
+            ],
+            "options.g": [
+                "Chỉ khi một nhân viên kiểm tra khả năng cung cấp, thành viên mới nhận được xác nhận riêng."
+            ],
+            "options.h": [
+                "Từ đó, mọi thiết bị có thể được nhận ngay mà không cần phản hồi thêm."
+            ]
+        },
+        "questions": {
+            "10": {
+                "vi": "Chỗ trống 10",
+                "evidence": [
+                    [
+                        "segments.0",
+                        4,
+                        [
+                            "Lücke zwischen Angebot und tatsächlichem Bedarf"
+                        ]
+                    ],
+                    [
+                        "options.f",
+                        0,
+                        [
+                            "Reisekoffer"
+                        ]
+                    ],
+                    [
+                        "segments.1",
+                        0,
+                        [
+                            "Diese",
+                            "verreisen"
+                        ]
+                    ]
+                ],
+                "link": "f cụ thể hóa khoảng cách cung–cầu: nhiều máy bánh, ít vali. Diese ở câu tiếp theo chỉ Reisekoffer; không thể nối với một lựa chọn chỉ nói chung về thiết bị."
+            },
+            "11": {
+                "vi": "Chỗ trống 11",
+                "evidence": [
+                    [
+                        "segments.1",
+                        3,
+                        [
+                            "noch nicht",
+                            "sicher zugesagt"
+                        ]
+                    ],
+                    [
+                        "options.g",
+                        0,
+                        [
+                            "persönliche Zusage"
+                        ]
+                    ],
+                    [
+                        "segments.2",
+                        0,
+                        [
+                            "Erst diese Bestätigung"
+                        ]
+                    ]
+                ],
+                "link": "g bổ sung bước kiểm tra và xác nhận riêng. Erst diese Bestätigung ở sau nối chính xác với persönliche Zusage; h nói được nhận ngay, trái điều kiện chưa chắc chắn ở trước."
+            },
+            "12": {
+                "vi": "Chỗ trống 12",
+                "evidence": [
+                    [
+                        "segments.2",
+                        3,
+                        [
+                            "befürchteten"
+                        ]
+                    ],
+                    [
+                        "options.e",
+                        0,
+                        [
+                            "Einführungstermine"
+                        ]
+                    ],
+                    [
+                        "segments.3",
+                        0,
+                        [
+                            "Dort",
+                            "unter Anleitung"
+                        ]
+                    ]
+                ],
+                "link": "e đưa ra các buổi hướng dẫn cho nhóm sợ dùng sai. Dort ở sau trỏ về Einführungstermine, rồi giải thích họ được thử có hướng dẫn. Không phải thay hướng dẫn giấy bằng bán đồ."
+            },
+            "13": {
+                "vi": "Chỗ trống 13",
+                "evidence": [
+                    [
+                        "segments.3",
+                        3,
+                        [
+                            "nicht jedoch",
+                            "Räume"
+                        ]
+                    ],
+                    [
+                        "options.a",
+                        0,
+                        [
+                            "die Miete"
+                        ]
+                    ],
+                    [
+                        "segments.4",
+                        0,
+                        [
+                            "Ohne diese Unterstützung"
+                        ]
+                    ]
+                ],
+                "link": "a giải quyết khoản mặt bằng chưa được phí bao phủ. diese Unterstützung ở sau là thành phố trả tiền thuê; không phải tăng phí ngay hoặc thành phố vận hành cửa hàng."
+            },
+            "14": {
+                "vi": "Chỗ trống 14",
+                "evidence": [
+                    [
+                        "segments.4",
+                        3,
+                        [
+                            "auf einen eigenen Kauf verzichten"
+                        ]
+                    ],
+                    [
+                        "options.c",
+                        0,
+                        [
+                            "Befragung"
+                        ]
+                    ],
+                    [
+                        "segments.5",
+                        0,
+                        [
+                            "In dieser"
+                        ]
+                    ]
+                ],
+                "link": "c đưa vào khảo sát để đo việc bỏ mua mới. In dieser ở sau là Befragung giống cái; nội dung khảo sát trả lời trực tiếp câu hỏi ở trước."
+            },
+            "15": {
+                "vi": "Chỗ trống 15",
+                "evidence": [
+                    [
+                        "segments.5",
+                        2,
+                        [
+                            "neue Hobbys"
+                        ]
+                    ],
+                    [
+                        "segments.5",
+                        3,
+                        [
+                            "nicht",
+                            "unerwünscht"
+                        ]
+                    ],
+                    [
+                        "options.b",
+                        0,
+                        [
+                            "ebenfalls einen Wert"
+                        ]
+                    ],
+                    [
+                        "segments.6",
+                        0,
+                        [
+                            "unterschiedliche Wirkungen"
+                        ]
+                    ]
+                ],
+                "link": "b giải thích tại sao thử sở thích mới vẫn có giá trị dù không làm giảm mua sắm. Đoạn kết phân biệt hai lợi ích; d nói về đặt trước qua điện thoại, không nối với lập luận về giá trị của việc khám phá sở thích mới."
+            }
+        }
+    },
+    "lesen_t3_termine_20261121": {
+        "passages": {
+            "article.0": [
+                "Một ghế trống ở tiệm tóc, một lịch tư vấn không được sử dụng, một bàn ăn bỏ trống: người không đến mà không báo hủy để lại nhiều hơn một khoảng trống trong lịch.",
+                "Thời gian đã được giữ thường không còn dành được cho người khác, dù họ rất muốn đến.",
+                "Khi ấy người ta nhanh chóng kết luận rằng khách hàng đã trở nên kém đáng tin hơn.",
+                "Tuy nhiên, nhân viên một trung tâm tư vấn thành phố không muốn dừng ở lời giải thích đó và đã hỏi lý do các buổi hẹn không diễn ra."
+            ],
+            "article.1": [
+                "Các câu trả lời khác nhau: có người nhầm giờ, có người đột xuất phải chăm con bị ốm.",
+                "Nhóm thứ ba thực sự đã thử hủy nhưng không liên lạc được qua điện thoại.",
+                "Đặc biệt với lịch hẹn đặt trước nhiều tuần, hoàn cảnh cá nhân cũng đã thay đổi.",
+                "Như vậy không phải ghế trống nào cũng xuất phát từ cùng một thái độ, nên một biện pháp duy nhất cho mọi trường hợp cũng khó hứa hẹn hiệu quả.",
+                "Điều đó không miễn trách nhiệm cho ai, nhưng chuyển sự chú ý sang các điều kiện cho phép báo hủy."
+            ],
+            "article.2": [
+                "Trước tiên trung tâm gửi nhắc hẹn vào tối hôm trước.",
+                "Nhờ vậy thực sự có ít cuộc hẹn bị quên hơn; tuy nhiên số chỗ được trả lại kịp thời hầu như không tăng.",
+                "Ai đã biết mình không đến được vẫn phải gọi trong giờ tiếp nhận.",
+                "Chỉ khi có thêm một đường dẫn cho phép hủy trong vài bước thì số lượt báo hủy mới tăng.",
+                "Sự gia tăng này không phải dấu hiệu giảm quan tâm: giờ đây các chỗ trống có thể được mời cho người khác sớm hơn."
+            ],
+            "article.3": [
+                "Trong cuộc tranh luận, phí phạt bỏ hẹn là biện pháp được nhắc tới nhiều.",
+                "Đối với cơ sở nhỏ, một lượt khách không đến có thể gây thiệt hại kinh tế đáng kể, nên việc dùng động lực tài chính để khuyến khích báo hủy sớm là dễ hiểu.",
+                "Nhưng ở trung tâm tư vấn xã hội, khả năng phải trả phí cũng có thể làm những người vốn khó kiểm soát hoàn cảnh của mình e ngại.",
+                "Khi ấy họ có thể không đặt hẹn nữa, dù cần hỗ trợ.",
+                "Vì thế không thể đánh giá tính hợp lý của phí mà tách khỏi mục đích dịch vụ và nhóm người dịch vụ muốn tiếp cận."
+            ],
+            "article.4": [
+                "Danh sách chờ điện tử cũng không tự mình giải quyết được vấn đề.",
+                "Khi phải phản hồi ngay để nhận chỗ vừa trống, người được phép dùng điện thoại ban ngày có lợi thế.",
+                "Người làm ở quầy thu ngân hoặc xưởng có thể chỉ thấy chính tin nhắn ấy lúc nghỉ.",
+                "Vì vậy trung tâm giữ một phần giờ vừa trống để liên hệ lại qua điện thoại, thay vì phân hết theo nguyên tắc ai trả lời nhanh nhất.",
+                "Cách này tốn công hơn, nhưng tránh nhầm khả năng liên lạc kỹ thuật với nhu cầu thực tế."
+            ],
+            "article.5": [
+                "Cuối cùng, với nhóm, điều quan trọng không phải số lời nhắc đã gửi hay việc lấp kín tối đa từng khung giờ.",
+                "Nhóm kiểm tra xem người tìm tư vấn có nhận hỗ trợ phù hợp nhanh hơn không, và công việc hành chính tăng thêm có tương xứng không.",
+                "Quy trình lấp hết khoảng trống nhưng lại chiếm mất thời gian tư vấn trực tiếp thì không phải tiến bộ.",
+                "Tính cam kết vẫn quan trọng, nhưng sẽ dễ kỳ vọng hơn khi việc đặt, đổi và hủy lịch thực sự hoạt động trong cuộc sống hằng ngày."
+            ]
+        },
+        "questions": {
+            "16": {
+                "vi": "Trung tâm rút ra điều gì từ các phản hồi?",
+                "evidence": [
+                    [
+                        "article.1",
+                        3,
+                        [
+                            "Nicht",
+                            "dieselbe Haltung",
+                            "eine einzige Maßnahme"
+                        ]
+                    ],
+                    [
+                        "article.1",
+                        4,
+                        [
+                            "entbindet niemanden"
+                        ]
+                    ]
+                ],
+                "link": "b tổng hợp các nguyên nhân khác nhau nên cần cách xử lý khác nhau. a biến một nguyên nhân thành nguyên nhân chính; c trái câu vẫn giữ trách nhiệm của người đặt hẹn.",
+                "options": {
+                    "a": "Phần lớn lượt bỏ hẹn do đặt lịch quá sớm.",
+                    "b": "Nguyên nhân khác nhau đòi hỏi nhiều hơn một cách phản ứng thống nhất.",
+                    "c": "Khi có trở ngại tổ chức, trách nhiệm của khách hàng không còn."
+                }
+            },
+            "17": {
+                "vi": "Tại sao nhóm đánh giá tích cực số lần báo hủy tăng?",
+                "evidence": [
+                    [
+                        "article.2",
+                        3,
+                        [
+                            "zusätzlicher Link",
+                            "mehr Absagen"
+                        ]
+                    ],
+                    [
+                        "article.2",
+                        4,
+                        [
+                            "kein Zeichen schwindenden Interesses",
+                            "früher anderen angeboten"
+                        ]
+                    ]
+                ],
+                "link": "a diễn đạt lại việc chỗ trống được trả sớm cho người khác. b nhầm báo hủy với nhu cầu giảm, đã bị bài bác bỏ; c nhầm tác dụng của link hủy với tác dụng nhắc nhớ.",
+                "options": {
+                    "a": "Thời gian không được sử dụng có thể được phân lại kịp thời.",
+                    "b": "Nhờ đó nhu cầu tư vấn nói chung đã giảm.",
+                    "c": "Từ đó khách hàng nhớ giờ hẹn chính xác hơn."
+                }
+            },
+            "18": {
+                "vi": "Theo bài, việc áp dụng phí bỏ hẹn nên phụ thuộc điều gì?",
+                "evidence": [
+                    [
+                        "article.3",
+                        4,
+                        [
+                            "welchen Zweck",
+                            "wen es erreichen soll"
+                        ]
+                    ]
+                ],
+                "link": "c nêu tiêu chí tác giả kết luận: mục đích và nhóm đối tượng. Thiệt hại kinh tế ở a được thừa nhận nhưng không phải tiêu chí duy nhất. b nhắc sự thuận tiện đặt hẹn, không phải căn cứ đánh giá phí trong đoạn.",
+                "options": {
+                    "a": "Chỉ từ mức doanh thu bị mất.",
+                    "b": "Từ việc mọi lịch hẹn có thể đặt trực tuyến hay không.",
+                    "c": "Từ chức năng của dịch vụ và hoàn cảnh nhóm đối tượng."
+                }
+            },
+            "19": {
+                "vi": "Bài nhìn thấy rủi ro gì khi phân ngay lịch trống?",
+                "evidence": [
+                    [
+                        "article.4",
+                        1,
+                        [
+                            "im Vorteil",
+                            "Telefon benutzen darf"
+                        ]
+                    ],
+                    [
+                        "article.4",
+                        2,
+                        [
+                            "erst in der Pause"
+                        ]
+                    ]
+                ],
+                "link": "b là chênh lệch cơ hội do không được dùng điện thoại trong giờ làm. a đảo ngược quan hệ tốc độ–nhu cầu; c là suy luận không có trong bài, vì không nói thời gian tư vấn bị rút ngắn.",
+                "options": {
+                    "a": "Người cần gấp nhất thường trả lời quá nhanh.",
+                    "b": "Khả năng liên lạc do điều kiện công việc ảnh hưởng cơ hội nhận chỗ.",
+                    "c": "Người được báo gấp nhận được buổi tư vấn ngắn hơn."
+                }
+            },
+            "20": {
+                "vi": "Trung tâm muốn đạt điều gì qua các cuộc liên hệ lại bằng điện thoại?",
+                "evidence": [
+                    [
+                        "article.4",
+                        3,
+                        [
+                            "einen Teil",
+                            "nicht alles",
+                            "schnellsten Antwort"
+                        ]
+                    ],
+                    [
+                        "article.4",
+                        4,
+                        [
+                            "aufwendiger",
+                            "tatsächlichem Bedarf"
+                        ]
+                    ]
+                ],
+                "link": "c diễn đạt mục đích không dành hết lịch cho người phản hồi nhanh. a sai vì vẫn giữ kênh điện tử; b đảo nghĩa vì cách này tốn công hơn, không giảm hành chính.",
+                "options": {
+                    "a": "Họ muốn dần thay thế hoàn toàn danh sách chờ điện tử.",
+                    "b": "Họ muốn xử lý lịch trống với ít nhân lực hơn.",
+                    "c": "Họ muốn việc tiếp cận bớt phụ thuộc vào phản hồi trực tuyến nhanh."
+                }
+            },
+            "21": {
+                "vi": "Cuối cùng nhóm đo thành công của các biện pháp bằng điều gì?",
+                "evidence": [
+                    [
+                        "article.5",
+                        1,
+                        [
+                            "schneller passende Unterstützung",
+                            "Verwaltungsaufwand",
+                            "vernünftigen Verhältnis"
+                        ]
+                    ],
+                    [
+                        "article.5",
+                        2,
+                        [
+                            "kein Fortschritt"
+                        ]
+                    ]
+                ],
+                "link": "a giữ cả hai tiêu chí: hỗ trợ phù hợp nhanh hơn và chi phí tổ chức tương xứng. b là mục tiêu lấp kín lịch mà đoạn cuối bác bỏ; c đánh giá theo công cụ chứ không theo ích lợi thực tế.",
+                "options": {
+                    "a": "Bằng khả năng tiếp cận hỗ trợ phù hợp tốt hơn với công sức hợp lý.",
+                    "b": "Bằng việc không lịch nào còn trống bất kể công sức.",
+                    "c": "Bằng tỷ lệ lịch hẹn được đặt không cần liên hệ trực tiếp."
+                }
+            }
+        }
+    },
+    "lesen_t4_sonntag_20261121": {
+        "passages": {
+            "opinions.a": [
+                "Khi tôi tan làm trong tuần thì thư viện vừa đóng cửa.",
+                "Thứ Bảy tôi mua sắm cho bố mẹ nên ngày này cũng hiếm khi phù hợp.",
+                "Mở vài giờ Chủ nhật sẽ cho tôi cơ hội thong thả xem các kệ sách, thay vì lúc nào cũng chỉ vội nhận sách đã đặt.",
+                "Tôi không cần chương trình sự kiện lớn cho việc đó, mà đơn giản là một cánh cửa mở."
+            ],
+            "opinions.b": [
+                "Ở chỗ tôi đã có mở cửa Chủ nhật, nhưng không có nhân viên chuyên môn.",
+                "Ai biết mình tìm gì thì xoay xở được; nhưng với việc tra cứu phức tạp, máy tự động không đủ.",
+                "Điều làm tôi khó chịu không hẳn là dịch vụ hạn chế, mà là quảng cáo hứa một ngày thư viện hoàn toàn bình thường.",
+                "Cần nói rõ có thể làm gì và việc gì vẫn phải đến vào ngày làm việc."
+            ],
+            "opinions.c": [
+                "Nhân viên của chúng tôi về cơ bản ủng hộ giờ mở cửa dài hơn.",
+                "Nhưng nếu vẫn những người ấy phải đến thêm Chủ nhật mà không được giảm tải ở nơi khác thì cách tính đó không ổn.",
+                "Tình nguyện viên có thể hỗ trợ sự kiện, nhưng điều đó không có nghĩa là họ đảm nhận trách nhiệm chuyên môn.",
+                "Trước khi mở rộng, phải bảo đảm có thêm vị trí nhân sự và bù đắp đáng tin cậy cho các ca cuối tuần."
+            ],
+            "opinions.d": [
+                "Cuộc thảo luận cứ xoay quanh số lượt mượn.",
+                "Nhưng tôi thường đến thư viện mà không mang gì về, vì có thể đọc báo và gặp người khác ở đó.",
+                "Khác với quán cà phê, tôi không phải gọi món; khác ở nhà, tôi không cô đơn.",
+                "Chính vào Chủ nhật, nhiều người thiếu một nơi như thế, mà ích lợi không thể đọc ra từ số sách đã mượn."
+            ],
+            "opinions.e": [
+                "Tôi sẽ thử việc mở Chủ nhật trước ở một cơ sở duy nhất.",
+                "Sau vài tháng có thể so sánh việc sử dụng, chi phí và phản hồi của nhân viên trước khi triển khai ở nơi khác.",
+                "Một Chủ nhật đầu tiên đông kín chưa chứng minh rằng sự quan tâm sẽ duy trì lâu dài.",
+                "Tương tự, một ngày ít khách cũng chưa nên có nghĩa là phải chấm dứt."
+            ],
+            "opinions.f": [
+                "Vào cửa bằng thẻ thành viên nghe đơn giản, nhưng đòi hỏi người dùng hiểu quy định và công nghệ.",
+                "Nếu không, người chưa có thẻ hoặc không tự tin dùng máy sẽ bị đứng ngoài.",
+                "Vì vậy, trước khi mở Chủ nhật không có nhân viên, thư viện nên tổ chức hướng dẫn và giải thích cách liên hệ hỗ trợ trong tình huống khẩn cấp.",
+                "Chỉ kéo dài thời gian chưa tạo ra quyền tiếp cận cho tất cả mọi người."
+            ],
+            "opinions.g": [
+                "Thư viện định tổ chức đọc sách vào Chủ nhật ở sân trong, ngay dưới cửa sổ phòng ngủ của chúng tôi.",
+                "Tôi không muốn cấm ai đọc sách hay gặp gỡ, nhưng chúng tôi cũng cần một ngày yên tĩnh.",
+                "Vì vậy cần có giờ cố định cho sự kiện ngoài trời và loa phải đặt trong nhà.",
+                "Với những thỏa thuận ấy, tôi có thể ủng hộ việc mở cửa mà không phải từ bỏ mọi sự quan tâm tới cư dân."
+            ],
+            "opinions.h": [
+                "Tôi thấy điểm nghẽn lớn nhất ở ngân sách tài liệu, chứ không phải giờ mở cửa.",
+                "Với tiểu thuyết được ưa chuộng, người ta chờ hàng tháng, còn sách chuyên môn mới thường thiếu hẳn.",
+                "Nếu có thêm tiền, tôi muốn dùng để mở rộng kho sách hơn là tài trợ thêm một ngày mở cửa.",
+                "Kệ sách có thể tiếp cận lâu hơn cũng ít hữu ích nếu không có cuốn sách cần tìm."
+            ],
+            "example": [
+                "Giờ mở cửa phù hợp với cuộc sống hằng ngày của mình"
+            ]
+        },
+        "questions": {
+            "22": {
+                "vi": "Không chỉ là chỗ mượn sách: một nơi không buộc phải tiêu tiền",
+                "evidence": [
+                    [
+                        "opinions.d",
+                        1,
+                        [
+                            "anderen Menschen begegnen"
+                        ]
+                    ],
+                    [
+                        "opinions.d",
+                        2,
+                        [
+                            "nichts bestellen"
+                        ]
+                    ]
+                ],
+                "link": "d nói đến đọc báo, gặp người và không cần gọi món. f cũng nói về tiếp cận, nhưng trọng tâm là rào cản thẻ và công nghệ, không phải không gian giao tiếp miễn phí."
+            },
+            "23": {
+                "vi": "Hoạt động mở rộng cần điều kiện lao động được bảo đảm",
+                "evidence": [
+                    [
+                        "opinions.c",
+                        3,
+                        [
+                            "zusätzliche Stellen",
+                            "Ausgleich für Wochenenddienste"
+                        ]
+                    ]
+                ],
+                "link": "c ủng hộ có điều kiện: thêm người và bù đắp ca cuối tuần. Không nhầm h: h muốn ưu tiên tiền cho sách, không đưa điều kiện nhân sự cho việc mở rộng."
+            },
+            "24": {
+                "vi": "Tự phục vụ bằng công nghệ không được loại trừ ai",
+                "evidence": [
+                    [
+                        "opinions.f",
+                        1,
+                        [
+                            "keinen Ausweis",
+                            "Terminal unsicher"
+                        ]
+                    ],
+                    [
+                        "opinions.f",
+                        3,
+                        [
+                            "noch keinen Zugang für alle"
+                        ]
+                    ]
+                ],
+                "link": "f tập trung vào người không thẻ hoặc không hiểu máy, rồi yêu cầu hướng dẫn. b cũng nhắc máy nhưng yêu cầu quảng cáo trung thực về giới hạn dịch vụ."
+            },
+            "25": {
+                "vi": "Thông báo trung thực về giới hạn dịch vụ",
+                "evidence": [
+                    [
+                        "opinions.b",
+                        2,
+                        [
+                            "weniger",
+                            "Werbung"
+                        ]
+                    ],
+                    [
+                        "opinions.b",
+                        3,
+                        [
+                            "deutlich sagen",
+                            "weiterhin werktags"
+                        ]
+                    ]
+                ],
+                "link": "b không chủ yếu yêu cầu tăng dịch vụ mà yêu cầu nói rõ những việc chưa làm được Chủ nhật. Cụm weniger ... als nhấn mạnh sự chênh lệch giữa quảng cáo và thực tế."
+            },
+            "26": {
+                "vi": "Tìm giải pháp khả thi có xét đến cư dân xung quanh",
+                "evidence": [
+                    [
+                        "opinions.g",
+                        2,
+                        [
+                            "feste Zeiten",
+                            "Lautsprecher"
+                        ]
+                    ],
+                    [
+                        "opinions.g",
+                        3,
+                        [
+                            "unterstützen",
+                            "Rücksichtnahme"
+                        ]
+                    ]
+                ],
+                "link": "g sẵn sàng ủng hộ nếu có giờ sự kiện và giới hạn loa. Không phải phản đối toàn bộ việc mở cửa hoặc chỉ nói giờ phù hợp với khách đọc."
+            },
+            "27": {
+                "vi": "Thu thập kinh nghiệm trước rồi quyết định mở rộng",
+                "evidence": [
+                    [
+                        "opinions.e",
+                        0,
+                        [
+                            "zunächst",
+                            "erproben"
+                        ]
+                    ],
+                    [
+                        "opinions.e",
+                        1,
+                        [
+                            "Nach einigen Monaten",
+                            "bevor weitere Standorte"
+                        ]
+                    ]
+                ],
+                "link": "e đề nghị thử ở một nơi nhiều tháng và đánh giá nhiều yếu tố. Số đông ở ngày đầu không đủ kết luận; h không đề nghị thử mà muốn dùng tiền cho kho sách."
+            }
+        }
+    },
+    "lesen_t5_gemeinschaftsraum_20261121": {
+        "passages": {
+            "headings.a": [
+                "Nhóm người được phép dùng và mục đích sự kiện"
+            ],
+            "headings.b": [
+                "Thủ tục đặt chỗ và hiệu lực ràng buộc"
+            ],
+            "headings.c": [
+                "Thay đổi và hủy lịch đã đặt"
+            ],
+            "headings.d": [
+                "Lưu giữ đồ dùng cá nhân"
+            ],
+            "headings.e": [
+                "Vệ sinh và bàn giao sau khi dùng"
+            ],
+            "headings.f": [
+                "Giờ ra vào và lưu ý khi hoạt động"
+            ],
+            "headings.g": [
+                "Thanh toán chi phí khi gây thiệt hại"
+            ],
+            "headings.h": [
+                "Giao và bảo quản chìa khóa"
+            ],
+            "example": [
+                "Phòng sinh hoạt chung dành cho cư dân thành niên của khu nhà tổ chức sự kiện cá nhân, phi thương mại.",
+                "Được mời khách bên ngoài nếu một người có quyền sử dụng chịu trách nhiệm cho sự kiện.",
+                "Không được giao lại cho bên thứ ba tự sử dụng."
+            ],
+            "sections.28": [
+                "Yêu cầu sử dụng phải nộp qua cổng quản lý chậm nhất bảy ngày lịch trước ngày dự kiến.",
+                "Tin nhắn tự động xác nhận đã nhận đơn chưa phải là chấp thuận.",
+                "Việc đặt chỗ chỉ có hiệu lực khi có xác nhận bằng văn bản của ban quản lý.",
+                "Nếu có nhiều đơn cho cùng khoảng thời gian, thời điểm nộp đơn đầy đủ là yếu tố quyết định.",
+                "Các cuộc họp cư dân định kỳ được miễn quy tắc này và được ưu tiên.",
+                "Việc từng được sử dụng không tạo ra quyền đòi các lịch tiếp theo."
+            ],
+            "sections.29": [
+                "Chậm nhất khi hết thời gian được xác nhận, phòng phải được dọn trống và quét sạch để bàn giao.",
+                "Bát đĩa đã dùng phải rửa và trả về chỗ quy định; rác phải bỏ vào thùng dành riêng bên ngoài tòa nhà.",
+                "Thời gian thực hiện các việc này phải được tính trong thời gian đã đặt.",
+                "Một giờ trống ngay sau đó trong lịch không cho phép bàn giao muộn hơn.",
+                "Các thiếu sót phát hiện khi bàn giao phải được ghi vào biên bản; yêu cầu thanh toán nếu có sẽ được quyết định riêng."
+            ],
+            "sections.30": [
+                "Lịch sử dụng đã xác nhận có thể được hủy miễn phí đến 48 giờ trước khi bắt đầu.",
+                "Thời điểm quyết định là khi ban quản lý nhận thông báo, không phải lúc gửi.",
+                "Nếu rút sau đó vẫn phải trả khoản phí cố định đã thỏa thuận, trừ khi phòng được giao cho người khác trong cùng khung giờ.",
+                "Yêu cầu đổi ngày được coi là hủy lịch cũ và cần một đơn mới.",
+                "Không được tự đổi lịch với người sử dụng khác, dù hai bên cùng đồng ý."
+            ]
+        },
+        "questions": {
+            "28": {
+                "vi": "Điều 28",
+                "evidence": [
+                    [
+                        "sections.28",
+                        0,
+                        [
+                            "einzureichen"
+                        ]
+                    ],
+                    [
+                        "sections.28",
+                        2,
+                        [
+                            "erst",
+                            "schriftlichen Bestätigung"
+                        ]
+                    ],
+                    [
+                        "sections.28",
+                        3,
+                        [
+                            "vollständigen Antrags"
+                        ]
+                    ]
+                ],
+                "link": "Toàn đoạn quy định nộp đơn, xác nhận và thứ tự ưu tiên, nên chọn b. Nhắc Hausversammlungen không biến nó thành quy định nhóm người ở a; chưa bàn đổi hay hủy nên không chọn c."
+            },
+            "29": {
+                "vi": "Điều 29",
+                "evidence": [
+                    [
+                        "sections.29",
+                        0,
+                        [
+                            "geräumt und besenrein",
+                            "übergeben"
+                        ]
+                    ],
+                    [
+                        "sections.29",
+                        2,
+                        [
+                            "gebuchte Zeit"
+                        ]
+                    ],
+                    [
+                        "sections.29",
+                        4,
+                        [
+                            "gesondert entschieden"
+                        ]
+                    ]
+                ],
+                "link": "Trọng tâm là tình trạng phòng và thời hạn bàn giao sau khi dùng. Chi phí chỉ là chi tiết phụ và được quyết định riêng, nên g không bao quát đoạn. f nói giờ ra vào hoạt động, không phải trách nhiệm dọn trả phòng."
+            },
+            "30": {
+                "vi": "Điều 30",
+                "evidence": [
+                    [
+                        "sections.30",
+                        0,
+                        [
+                            "storniert"
+                        ]
+                    ],
+                    [
+                        "sections.30",
+                        2,
+                        [
+                            "es sei denn"
+                        ]
+                    ],
+                    [
+                        "sections.30",
+                        3,
+                        [
+                            "anderen Termin",
+                            "Absage"
+                        ]
+                    ]
+                ],
+                "link": "Đoạn nói hủy và đổi lịch đã xác nhận, khác b là đăng ký ban đầu. Có khoản phí nhưng không phải bồi thường thiệt hại tài sản của g. Chú ý ngoại lệ es sei denn: được miễn nếu phòng được giao lại đúng khung giờ."
+            }
+        }
+    }
+});

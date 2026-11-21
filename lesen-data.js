@@ -304,3 +304,471 @@ const LESEN_B2_TASKS = [
         ]
     }
 ];
+
+
+// Original Kapi practice pack · 2026-11-21 · one task per Teil.
+LESEN_B2_TASKS.push(...[
+    {
+        "id": "lesen_t1_nachbarschaft_20261121",
+        "teil": 1,
+        "title": "Wie viel Nähe tut der Nachbarschaft gut?",
+        "topic": "Wohnen & Nachbarschaft",
+        "suggestedMinutes": 18,
+        "targetWords": [
+            "Rücksicht nehmen",
+            "sich absprechen",
+            "die Privatsphäre",
+            "sich verpflichtet fühlen",
+            "der Zusammenhalt",
+            "verbindlich"
+        ],
+        "instruction": "Sie lesen in einem Forum Beiträge über das Zusammenleben im Wohnhaus. Auf welche der vier Personen treffen die Aussagen 1 bis 9 zu? Die Personen können mehrmals gewählt werden. Kapi-Übung nach Goethe-Format; kein offizieller Prüfungssatz.",
+        "questions": [
+            {
+                "number": 1,
+                "text": "Wer hat seine Einstellung zu formellen Absprachen geändert?",
+                "answer": "c",
+                "why": "Eva trước đây phản đối quy định, sau trải nghiệm lại coi thỏa thuận rõ ràng là nền tảng tin cậy. Không nhầm với Lena: cô điều chỉnh việc tiếp khách, không thay đổi quan điểm về quy tắc nói chung."
+            },
+            {
+                "number": 2,
+                "text": "Wer hält einen Kommunikationsweg trotz seiner Nachteile für erhaltenswert?",
+                "answer": "b",
+                "why": "Tarek thừa nhận nhóm có tranh cãi nhưng không muốn bỏ vì tiện cho thông tin thực tế. trotzdem báo hiệu sự nhượng bộ."
+            },
+            {
+                "number": 3,
+                "text": "Wer möchte vermeiden, dass Hilfe zur einzigen Grundlage der Versorgung wird?",
+                "answer": "d",
+                "why": "Martin giữ dịch vụ trả phí: giúp đỡ tự nguyện chỉ bổ sung, không thay cách tổ chức ổn định. Câu không hỏi ai phản đối việc giúp hàng xóm."
+            },
+            {
+                "number": 4,
+                "text": "Wer erlebte, dass eine eigene Initiative als Verpflichtung verstanden wurde?",
+                "answer": "a",
+                "why": "Lena tự đề xuất buổi nấu ăn nhưng sau đó bị mặc định luôn làm chủ nhà. eigene Initiative ↔ selbst vorgeschlagen; Verpflichtung ↔ dauerhafte Zusage."
+            },
+            {
+                "number": 5,
+                "text": "Wer unterscheidet zwischen sachlichen Mitteilungen und der Klärung persönlicher Konflikte?",
+                "answer": "b",
+                "why": "Tarek dùng nhóm cho cửa hỏng và kiện hàng, nhưng yêu cầu nói trực tiếp khi có trách móc. Không phải từ bỏ hoàn toàn công cụ số."
+            },
+            {
+                "number": 6,
+                "text": "Wer berichtet, dass eindeutige Regeln den persönlichen Kontakt sogar verbessert haben?",
+                "answer": "c",
+                "why": "Eva nói ít cãi nhau hơn nên còn thời gian trò chuyện. Bẫy là đoán quy tắc sẽ làm quan hệ xa cách: đó chỉ là nỗi lo cũ đã bị bác bỏ."
+            },
+            {
+                "number": 7,
+                "text": "Wer legt Wert darauf, dass jemand trotz Unterstützungsbedarf selbst etwas beiträgt?",
+                "answer": "d",
+                "why": "Bố Martin cần giúp đỡ nhưng vẫn tưới cây cho hàng xóm. Người nhận hỗ trợ cũng có năng lực đóng góp, không chỉ là người được chăm lo."
+            },
+            {
+                "number": 8,
+                "text": "Wer will eine gemeinsame Aktivität fortsetzen, ohne regelmäßig teilnehmen zu müssen?",
+                "answer": "a",
+                "why": "Lena vẫn coi trọng buổi nấu ăn nhưng muốn được vắng mặt mà không giải thích. Không phải cô muốn chấm dứt hoạt động."
+            },
+            {
+                "number": 9,
+                "text": "Wer begrenzt bewusst die Zeiten, in denen er Nachrichten wahrnimmt?",
+                "answer": "b",
+                "why": "Tarek chỉ đọc buổi tối và tắt thông báo; đây là giới hạn tiếp nhận, không phải hạn chế quyền đăng tin của người khác."
+            }
+        ],
+        "people": [
+            {
+                "id": "a",
+                "text": "Als ich vor zwei Jahren hier einzog, wollte ich endlich in einem Haus wohnen, in dem man einander kennt. Deshalb habe ich selbst einen monatlichen Kochabend vorgeschlagen und anfangs jedes Mal meine Küche zur Verfügung gestellt. Mit der Zeit wurde daraus jedoch eine feste Erwartung: Wenn ich absagte, musste ich mich beinahe rechtfertigen. Einige verwechselten meine Begeisterung offenbar mit einer dauerhaften Zusage. Inzwischen wechseln wir uns als Gastgeber ab, und niemand muss begründen, warum er einmal fehlt. Die Abende sind mir nach wie vor wichtig; nur möchte ich mich nicht zur Geselligkeit verpflichtet fühlen. Dass man sich im selben Haus wohlfühlt, heißt schließlich nicht, dass man seine gesamte Freizeit miteinander verbringen muss.",
+                "name": "Lena, Bremen"
+            },
+            {
+                "id": "b",
+                "text": "Unsere Hausgruppe auf dem Handy hat einen schlechten Ruf, weil dort manchmal über abgestellte Fahrräder gestritten wird. Trotzdem möchte ich sie nicht abschaffen, denn für eine defekte Haustür oder ein verlorenes Paket ist sie ausgesprochen praktisch. Was mich stört, ist die Annahme, dass jede Nachricht sofort beantwortet werden müsse. Ich lese die Beiträge deshalb nur abends und habe die Benachrichtigungen ausgeschaltet. Eine Nachbarin kümmert sich außerdem darum, wichtige Hinweise im Eingangsbereich auszuhängen, damit auch Menschen ohne Smartphone informiert bleiben. Bei persönlichen Vorwürfen hilft dagegen kein weiterer Kommentar in der Gruppe: Darüber sollten die Beteiligten direkt miteinander sprechen. Ein digitales Werkzeug kann Absprachen erleichtern, aber ein schwieriges Gespräch nimmt es uns nicht ab.",
+                "name": "Tarek, Köln"
+            },
+            {
+                "id": "c",
+                "text": "Ich fand lange, gute Nachbarn müssten sich auch ohne Listen und Vorschriften verständigen können. Als wir gemeinsam ein Lastenrad anschafften, genügte deshalb zunächst eine kurze Nachricht, wenn jemand es brauchte. Doch ausgerechnet an den Wochenenden, an denen viele einkaufen wollten, fühlten sich mehrere Personen gleichzeitig im Recht. Seit wir verbindliche Zeitfenster buchen und Verspätungen melden, gibt es erheblich weniger Ärger. Meine frühere Sorge, dadurch würde der Umgang unpersönlicher, hat sich nicht bestätigt. Im Gegenteil: Weil niemand mehr über eine vermeintliche Bevorzugung diskutieren muss, bleibt beim Zurückbringen Zeit für ein freundliches Gespräch. Vertrauen entsteht für mich inzwischen nicht dadurch, dass alles offenbleibt, sondern dadurch, dass sich alle auf dieselben Vereinbarungen verlassen können.",
+                "name": "Eva, Dresden"
+            },
+            {
+                "id": "d",
+                "text": "Seit mein Vater schlechter gehen kann, weiß ich spontane Hilfsangebote in unserem Haus besonders zu schätzen. Eine Nachbarin bringt gelegentlich Einkäufe mit, ein anderer Bewohner trägt schwere Pakete nach oben. Das erleichtert unseren Alltag, lässt sich aber nicht für jede Woche fest einplanen. Deshalb bleibt der bezahlte Lieferdienst bestehen, obwohl manche meinen, auf diese Ausgabe könnten wir nun verzichten. Gegenseitige Unterstützung soll ergänzen, was zuverlässig organisiert werden muss, und nicht stillschweigend an dessen Stelle treten. Auch ein Dankeschön darf nicht bedeuten, dass beim nächsten Mal automatisch wieder Hilfe erwartet wird. Mein Vater möchte sich außerdem nach seinen Möglichkeiten beteiligen und gießt im Urlaub die Pflanzen der anderen. So bleibt er ein Nachbar mit eigenen Fähigkeiten und wird nicht nur als jemand wahrgenommen, um den man sich kümmern muss.",
+                "name": "Martin, Bonn"
+            }
+        ]
+    },
+    {
+        "id": "lesen_t2_leihladen_20261121",
+        "teil": 2,
+        "title": "Leihen braucht mehr als ein Regal",
+        "topic": "Alltag & gemeinschaftlicher Konsum",
+        "suggestedMinutes": 12,
+        "targetWords": [
+            "zur Verfügung stehen",
+            "die Anschaffung",
+            "der Aufwand",
+            "in Anspruch nehmen",
+            "auf Dauer",
+            "sich lohnen"
+        ],
+        "instruction": "Sie lesen einen Zeitschriftenartikel über einen Leihladen. Welche Sätze a bis h passen in die Lücken 10 bis 15? Zwei Sätze passen nicht. Kapi-Übung nach Goethe-Format; kein offizieller Prüfungssatz.",
+        "questions": [
+            {
+                "number": 10,
+                "text": "Lücke 10",
+                "answer": "f",
+                "why": "f cụ thể hóa khoảng cách cung–cầu: nhiều máy bánh, ít vali. Diese ở câu tiếp theo chỉ Reisekoffer; không thể nối với một lựa chọn chỉ nói chung về thiết bị."
+            },
+            {
+                "number": 11,
+                "text": "Lücke 11",
+                "answer": "g",
+                "why": "g bổ sung bước kiểm tra và xác nhận riêng. Erst diese Bestätigung ở sau nối chính xác với persönliche Zusage; h nói được nhận ngay, trái điều kiện chưa chắc chắn ở trước."
+            },
+            {
+                "number": 12,
+                "text": "Lücke 12",
+                "answer": "e",
+                "why": "e đưa ra các buổi hướng dẫn cho nhóm sợ dùng sai. Dort ở sau trỏ về Einführungstermine, rồi giải thích họ được thử có hướng dẫn. Không phải thay hướng dẫn giấy bằng bán đồ."
+            },
+            {
+                "number": 13,
+                "text": "Lücke 13",
+                "answer": "a",
+                "why": "a giải quyết khoản mặt bằng chưa được phí bao phủ. diese Unterstützung ở sau là thành phố trả tiền thuê; không phải tăng phí ngay hoặc thành phố vận hành cửa hàng."
+            },
+            {
+                "number": 14,
+                "text": "Lücke 14",
+                "answer": "c",
+                "why": "c đưa vào khảo sát để đo việc bỏ mua mới. In dieser ở sau là Befragung giống cái; nội dung khảo sát trả lời trực tiếp câu hỏi ở trước."
+            },
+            {
+                "number": 15,
+                "text": "Lücke 15",
+                "answer": "b",
+                "why": "b giải thích tại sao thử sở thích mới vẫn có giá trị dù không làm giảm mua sắm. Đoạn kết phân biệt hai lợi ích; d nói về đặt trước qua điện thoại, không nối với lập luận về giá trị của việc khám phá sở thích mới."
+            }
+        ],
+        "segments": [
+            "Eine Bohrmaschine ist nützlich, steht in vielen Wohnungen aber die meiste Zeit unbenutzt im Schrank. Ähnlich sieht es mit Waffeleisen oder großen Reisekoffern aus, deren Anschaffung sich für wenige Einsätze kaum lohnt. Eine Stadtteilinitiative eröffnete deshalb einen Laden, in dem solche Gegenstände gegen einen kleinen Jahresbeitrag ausgeliehen werden können. Die Idee fand sofort Zustimmung, und schon vor der Eröffnung wurden zahlreiche gebrauchte Geräte gespendet. Bei der ersten Bestandsaufnahme zeigte sich allerdings eine überraschende Lücke zwischen Angebot und tatsächlichem Bedarf.",
+            "Diese fehlten ausgerechnet in den Schulferien, als besonders viele Familien gleichzeitig verreisen wollten. Das Team entschied daher, künftig nicht mehr jede Spende anzunehmen, sondern gezielt nach häufig nachgefragten Dingen zu suchen. Inzwischen zeigt ein Onlinekatalog, welche Gegenstände vorhanden sind und wann sie zur Verfügung stehen. Eine Reservierung darin bedeutet jedoch noch nicht, dass der Gegenstand für den gewünschten Termin sicher zugesagt ist.",
+            "Erst diese Bestätigung ist verbindlich; eine automatisch versandte Eingangsbestätigung reicht dafür nicht aus. So lässt sich vermeiden, dass jemand umsonst zum Laden kommt, weil ein Gerät noch geprüft oder verspätet zurückgegeben wird. Nach den ersten Monaten bemerkten die Freiwilligen außerdem, dass eine ausführliche Anleitung nicht in jedem Fall genügt. Manche Interessierte verzichteten auf eine Ausleihe, weil sie befürchteten, bei einem unbekannten Gerät etwas falsch zu machen.",
+            "Dort können sie unter Anleitung ausprobieren, wie sich das Gerät bedienen lässt, ohne es gleich mit nach Hause nehmen zu müssen. Dieses Angebot wird gut angenommen, bindet aber Personal, das währenddessen keine Rückgaben bearbeiten kann. Auch die Kontrolle, Reinigung und Reparatur der Geräte erweist sich als aufwendiger, als zunächst vermutet wurde. Der Jahresbeitrag deckt zwar Verschleißteile ab, nicht jedoch die laufenden Ausgaben für die Räume.",
+            "Ohne diese Unterstützung müsste der Beitrag deutlich steigen, was gerade Haushalte mit wenig Geld ausschließen könnte. Die Stadt verlangt dafür einen jährlichen Bericht über die Nutzung, schreibt aber keine Mindestzahl an Ausleihen vor. Für das Team zählt ohnehin nicht allein, wie oft etwas über den Tresen geht. Es möchte auch wissen, ob die Mitglieder dank des Angebots tatsächlich auf einen eigenen Kauf verzichten.",
+            "In dieser geben die Mitglieder an, ob sie den geliehenen Gegenstand sonst gekauft, anderswo gemietet oder gar nicht benutzt hätten. Die ersten Antworten machen deutlich, warum eine hohe Zahl von Ausleihen nicht automatisch für einen ebenso großen Rückgang des Konsums steht. Einige Mitglieder probieren mit geliehenen Geräten lediglich neue Hobbys aus, für die sie vorher nichts angeschafft hätten. Daraus folgt für die Initiative allerdings nicht, dass solche Ausleihen unerwünscht wären.",
+            "Entscheidend ist für sie vielmehr, unterschiedliche Wirkungen nicht miteinander zu verwechseln. Gemeinsame Nutzung kann neue Möglichkeiten eröffnen und zugleich Anschaffungen ersetzen, aber beides lässt sich nicht mit derselben Zahl belegen. Auf Dauer soll der Laden deshalb weder möglichst viele Geräte sammeln noch möglichst viele Vorgänge verbuchen. Er soll verlässlich das bereitstellen, was im Viertel gebraucht wird."
+        ],
+        "options": [
+            {
+                "id": "a",
+                "text": "Die Stadt übernimmt deshalb vorerst die Miete, während der Verein den Betrieb organisiert."
+            },
+            {
+                "id": "b",
+                "text": "Gerade das Entdecken einer Tätigkeit kann schließlich ebenfalls einen Wert haben."
+            },
+            {
+                "id": "c",
+                "text": "Um das herauszufinden, führt es seit Kurzem eine kurze Befragung nach der Rückgabe durch."
+            },
+            {
+                "id": "d",
+                "text": "Für diese Gruppe wird nun eine zusätzliche telefonische Reservierung eingerichtet."
+            },
+            {
+                "id": "e",
+                "text": "Für diese Gruppe werden nun regelmäßig offene Einführungstermine angeboten."
+            },
+            {
+                "id": "f",
+                "text": "Mehrere Waffeleisen waren vorhanden, geeignete Reisekoffer dagegen kaum."
+            },
+            {
+                "id": "g",
+                "text": "Erst wenn eine Mitarbeiterin die Verfügbarkeit geprüft hat, erhalten die Mitglieder eine persönliche Zusage."
+            },
+            {
+                "id": "h",
+                "text": "Seitdem lässt sich jedes Gerät ohne weitere Rückmeldung sofort abholen."
+            }
+        ]
+    },
+    {
+        "id": "lesen_t3_termine_20261121",
+        "teil": 3,
+        "title": "Warum wir vereinbarte Termine verpassen",
+        "topic": "Alltag & Organisation",
+        "suggestedMinutes": 12,
+        "targetWords": [
+            "einen Termin vereinbaren",
+            "kurzfristig absagen",
+            "in Anspruch nehmen",
+            "verbindlich",
+            "der Aufwand",
+            "zur Verfügung stehen"
+        ],
+        "instruction": "Sie lesen einen Zeitungsartikel über nicht wahrgenommene Termine. Wählen Sie bei den Aufgaben 16 bis 21 jeweils die richtige Lösung a, b oder c. Kapi-Übung nach Goethe-Format; kein offizieller Prüfungssatz.",
+        "questions": [
+            {
+                "number": 16,
+                "text": "Was folgert die Beratungsstelle aus den Rückmeldungen?",
+                "answer": "b",
+                "why": "b tổng hợp các nguyên nhân khác nhau nên cần cách xử lý khác nhau. a biến một nguyên nhân thành nguyên nhân chính; c trái câu vẫn giữ trách nhiệm của người đặt hẹn.",
+                "options": {
+                    "a": "Die meisten Ausfälle beruhen auf zu früh vereinbarten Terminen.",
+                    "b": "Unterschiedliche Ursachen erfordern mehr als eine einheitliche Reaktion.",
+                    "c": "Bei organisatorischen Hindernissen entfällt die Verantwortung der Kundschaft."
+                }
+            },
+            {
+                "number": 17,
+                "text": "Warum bewertet das Team die gestiegene Zahl der Absagen positiv?",
+                "answer": "a",
+                "why": "a diễn đạt lại việc chỗ trống được trả sớm cho người khác. b nhầm báo hủy với nhu cầu giảm, đã bị bài bác bỏ; c nhầm tác dụng của link hủy với tác dụng nhắc nhớ.",
+                "options": {
+                    "a": "Nicht benötigte Zeiten lassen sich rechtzeitig neu vergeben.",
+                    "b": "Der Bedarf an Beratung ist dadurch insgesamt zurückgegangen.",
+                    "c": "Die Kundschaft erinnert sich seitdem zuverlässiger an die Uhrzeit."
+                }
+            },
+            {
+                "number": 18,
+                "text": "Wovon sollte der Einsatz einer Ausfallgebühr laut Artikel abhängen?",
+                "answer": "c",
+                "why": "c nêu tiêu chí tác giả kết luận: mục đích và nhóm đối tượng. Thiệt hại kinh tế ở a được thừa nhận nhưng không phải tiêu chí duy nhất. b nhắc sự thuận tiện đặt hẹn, không phải căn cứ đánh giá phí trong đoạn.",
+                "options": {
+                    "a": "Ausschließlich von der Höhe des entgangenen Umsatzes.",
+                    "b": "Davon, ob sämtliche Termine online gebucht werden können.",
+                    "c": "Von der Aufgabe des Angebots und der Situation seiner Zielgruppe."
+                }
+            },
+            {
+                "number": 19,
+                "text": "Welches Risiko sieht der Artikel bei der sofortigen Vergabe freier Termine?",
+                "answer": "b",
+                "why": "b là chênh lệch cơ hội do không được dùng điện thoại trong giờ làm. a đảo ngược quan hệ tốc độ–nhu cầu; c là suy luận không có trong bài, vì không nói thời gian tư vấn bị rút ngắn.",
+                "options": {
+                    "a": "Menschen mit dem dringendsten Bedarf antworten häufig zu schnell.",
+                    "b": "Beruflich bedingte Erreichbarkeit beeinflusst die Chance auf einen Platz.",
+                    "c": "Kurzfristig benachrichtigte Personen erhalten eine kürzere Beratung."
+                }
+            },
+            {
+                "number": 20,
+                "text": "Was bezweckt die Beratungsstelle mit den telefonischen Rückfragen?",
+                "answer": "c",
+                "why": "c diễn đạt mục đích không dành hết lịch cho người phản hồi nhanh. a sai vì vẫn giữ kênh điện tử; b đảo nghĩa vì cách này tốn công hơn, không giảm hành chính.",
+                "options": {
+                    "a": "Sie will die digitale Warteliste schrittweise vollständig ersetzen.",
+                    "b": "Sie will die Bearbeitung freier Termine mit weniger Personal erledigen.",
+                    "c": "Sie will den Zugang weniger stark von einer schnellen Online-Reaktion abhängig machen."
+                }
+            },
+            {
+                "number": 21,
+                "text": "Woran misst das Team letztlich den Erfolg seiner Maßnahmen?",
+                "answer": "a",
+                "why": "a giữ cả hai tiêu chí: hỗ trợ phù hợp nhanh hơn và chi phí tổ chức tương xứng. b là mục tiêu lấp kín lịch mà đoạn cuối bác bỏ; c đánh giá theo công cụ chứ không theo ích lợi thực tế.",
+                "options": {
+                    "a": "An besserem Zugang zu geeigneter Hilfe bei vertretbarem Aufwand.",
+                    "b": "Daran, dass unabhängig vom Aufwand kein Termin mehr frei bleibt.",
+                    "c": "Am Anteil der Buchungen, die ohne persönlichen Kontakt erfolgen."
+                }
+            }
+        ],
+        "article": [
+            "Ein freier Stuhl im Friseursalon, ein ungenutzter Beratungstermin, ein Tisch, der im Restaurant leer bleibt: Wer ohne Absage nicht erscheint, hinterlässt mehr als eine Lücke im Kalender. Die reservierte Zeit steht anderen häufig nicht mehr zur Verfügung, obwohl diese gern gekommen wären. Schnell fällt dann das Urteil, die Kundschaft sei unzuverlässiger geworden. Mitarbeitende einer kommunalen Beratungsstelle wollten sich mit dieser Erklärung jedoch nicht zufriedengeben und fragten nach, warum vereinbarte Gespräche ausgefallen waren.",
+            "Die Antworten waren unterschiedlich: Manche hatten die Uhrzeit verwechselt, andere mussten kurzfristig ein krankes Kind betreuen. Eine dritte Gruppe hatte durchaus versucht abzusagen, war am Telefon aber nicht durchgekommen. Gerade bei Terminen, die mehrere Wochen im Voraus vereinbart worden waren, hatte sich zudem die persönliche Situation verändert. Nicht hinter jedem leeren Stuhl stand also dieselbe Haltung, und entsprechend wenig versprach eine einzige Maßnahme für alle Fälle. Das entbindet niemanden von seiner Verantwortung, verschiebt aber den Blick auf die Bedingungen, unter denen eine Absage möglich ist.",
+            "Die Beratungsstelle versandte zunächst Erinnerungen am Vorabend. Dadurch wurden tatsächlich weniger Termine vergessen; die Zahl der rechtzeitig freigegebenen Plätze stieg jedoch kaum. Wer schon wusste, dass er nicht kommen konnte, musste weiterhin während der Sprechzeiten anrufen. Erst ein zusätzlicher Link, über den sich ein Termin mit wenigen Schritten stornieren ließ, führte zu mehr Absagen. Diese Zunahme war kein Zeichen schwindenden Interesses: Die Plätze konnten nun früher anderen angeboten werden.",
+            "Besonders gefragt sind in der Debatte Gebühren für versäumte Termine. Für einen kleinen Betrieb kann ein Ausfall wirtschaftlich schwer wiegen, weshalb ein finanzieller Anreiz zur rechtzeitigen Absage nachvollziehbar ist. Bei einer sozialen Beratungsstelle kann die Aussicht auf eine Gebühr jedoch auch Menschen abschrecken, die ihre Lage ohnehin kaum überblicken. Sie buchen dann womöglich gar keinen Termin mehr, obwohl sie Unterstützung benötigen. Ob eine Gebühr sinnvoll ist, lässt sich daher nicht unabhängig davon beurteilen, welchen Zweck ein Angebot erfüllt und wen es erreichen soll.",
+            "Auch digitale Wartelisten lösen das Problem nicht von allein. Wer auf einen frei gewordenen Platz sofort reagieren muss, ist im Vorteil, wenn er tagsüber sein Telefon benutzen darf. Eine Person an der Kasse oder in einer Werkhalle bemerkt dieselbe Nachricht möglicherweise erst in der Pause. Die Beratungsstelle reserviert deshalb einen Teil der frei gewordenen Zeiten für telefonische Rückfragen und verteilt nicht alles nach dem Prinzip der schnellsten Antwort. Das ist aufwendiger, verhindert aber, dass technische Erreichbarkeit mit tatsächlichem Bedarf verwechselt wird.",
+            "Am Ende zählt für das Team weder die Zahl verschickter Erinnerungen noch die möglichst vollständige Besetzung jedes einzelnen Zeitfensters. Es prüft, ob Ratsuchende schneller passende Unterstützung erhalten und ob der zusätzliche Verwaltungsaufwand in einem vernünftigen Verhältnis dazu steht. Ein Verfahren, das jede Lücke schließt, dafür aber persönliche Beratung verdrängt, wäre kein Fortschritt. Verbindlichkeit bleibt wichtig, doch sie lässt sich leichter erwarten, wenn Buchung, Änderung und Absage im Alltag tatsächlich funktionieren."
+        ]
+    },
+    {
+        "id": "lesen_t4_sonntag_20261121",
+        "teil": 4,
+        "title": "Soll die Bibliothek sonntags öffnen?",
+        "topic": "Freizeit & öffentlicher Raum",
+        "suggestedMinutes": 12,
+        "targetWords": [
+            "zur Verfügung stehen",
+            "der Zugang",
+            "auf etwas verzichten",
+            "die Beratung",
+            "die Verantwortung",
+            "Rücksicht nehmen"
+        ],
+        "instruction": "Sie lesen Meinungsäußerungen zur Sonntagsöffnung einer Bibliothek. Welche Äußerung a bis h passt zu welcher Überschrift 22 bis 27? Eine Äußerung passt nicht. Äußerung a ist das Beispiel und kann nicht noch einmal verwendet werden. Kapi-Übung nach Goethe-Format; kein offizieller Prüfungssatz.",
+        "questions": [
+            {
+                "number": 22,
+                "text": "Mehr als eine Ausleihstelle: ein Ort ohne Konsumzwang",
+                "answer": "d",
+                "why": "d nói đến đọc báo, gặp người và không cần gọi món. f cũng nói về tiếp cận, nhưng trọng tâm là rào cản thẻ và công nghệ, không phải không gian giao tiếp miễn phí."
+            },
+            {
+                "number": 23,
+                "text": "Erweiterter Betrieb braucht abgesicherte Arbeitsbedingungen",
+                "answer": "c",
+                "why": "c ủng hộ có điều kiện: thêm người và bù đắp ca cuối tuần. Không nhầm h: h muốn ưu tiên tiền cho sách, không đưa điều kiện nhân sự cho việc mở rộng."
+            },
+            {
+                "number": 24,
+                "text": "Technische Selbstbedienung darf niemanden ausschließen",
+                "answer": "f",
+                "why": "f tập trung vào người không thẻ hoặc không hiểu máy, rồi yêu cầu hướng dẫn. b cũng nhắc máy nhưng yêu cầu quảng cáo trung thực về giới hạn dịch vụ."
+            },
+            {
+                "number": 25,
+                "text": "Über die Grenzen des Angebots ehrlich informieren",
+                "answer": "b",
+                "why": "b không chủ yếu yêu cầu tăng dịch vụ mà yêu cầu nói rõ những việc chưa làm được Chủ nhật. Cụm weniger ... als nhấn mạnh sự chênh lệch giữa quảng cáo và thực tế."
+            },
+            {
+                "number": 26,
+                "text": "Mit Rücksicht auf Anwohnende zu einer tragfähigen Lösung",
+                "answer": "g",
+                "why": "g sẵn sàng ủng hộ nếu có giờ sự kiện và giới hạn loa. Không phải phản đối toàn bộ việc mở cửa hoặc chỉ nói giờ phù hợp với khách đọc."
+            },
+            {
+                "number": 27,
+                "text": "Erst Erfahrungen sammeln, dann über eine Ausweitung entscheiden",
+                "answer": "e",
+                "why": "e đề nghị thử ở một nơi nhiều tháng và đánh giá nhiều yếu tố. Số đông ở ngày đầu không đủ kết luận; h không đề nghị thử mà muốn dùng tiền cho kho sách."
+            }
+        ],
+        "opinions": [
+            {
+                "id": "a",
+                "text": "Wenn ich unter der Woche Feierabend habe, schließt unsere Bibliothek gerade. Am Samstag erledige ich die Einkäufe für meine Eltern, sodass auch dieser Tag selten infrage kommt. Ein paar Stunden am Sonntag würden mir ermöglichen, endlich in Ruhe durch die Regale zu gehen, statt immer nur schnell bestellte Bücher abzuholen. Dafür brauche ich kein großes Veranstaltungsprogramm, sondern schlicht eine offene Tür."
+            },
+            {
+                "id": "b",
+                "text": "Bei uns gibt es bereits Sonntagsöffnungen, allerdings ohne Fachpersonal. Wer weiß, was er sucht, kommt damit zurecht; für eine komplizierte Recherche reicht ein Automat dagegen nicht. Mich stört weniger die eingeschränkte Leistung als die Werbung, die einen ganz normalen Bibliothekstag verspricht. Man sollte deutlich sagen, was möglich ist und wofür man weiterhin werktags kommen muss."
+            },
+            {
+                "id": "c",
+                "text": "Unsere Beschäftigten unterstützen längere Öffnungszeiten grundsätzlich. Wenn dafür aber dieselben Menschen zusätzlich sonntags erscheinen sollen, ohne an anderer Stelle entlastet zu werden, geht die Rechnung nicht auf. Freiwillige können bei Veranstaltungen helfen, die fachliche Verantwortung übernehmen sie damit nicht. Vor einer Ausweitung müssen zusätzliche Stellen und ein verlässlicher Ausgleich für Wochenenddienste gesichert sein."
+            },
+            {
+                "id": "d",
+                "text": "In der Diskussion geht es ständig um Ausleihzahlen. Ich gehe jedoch oft in die Bibliothek, ohne etwas mitzunehmen, weil ich dort Zeitung lesen und anderen Menschen begegnen kann. Anders als im Café muss ich dafür nichts bestellen, und anders als zu Hause bin ich nicht allein. Gerade am Sonntag fehlt vielen ein solcher Ort, dessen Nutzen sich nicht an der Zahl ausgeliehener Bücher ablesen lässt."
+            },
+            {
+                "id": "e",
+                "text": "Ich würde eine Sonntagsöffnung zunächst in einem einzigen Haus erproben. Nach einigen Monaten könnte man die Nutzung, die Kosten und die Rückmeldungen der Beschäftigten vergleichen, bevor weitere Standorte folgen. Ein voll besetzter erster Sonntag beweist noch nicht, dass das Interesse dauerhaft anhält. Ebenso wenig sollte ein einzelner schwacher Tag schon das Ende bedeuten."
+            },
+            {
+                "id": "f",
+                "text": "Ein Zugang per Mitgliedskarte klingt unkompliziert, setzt aber voraus, dass man die Regeln und die Technik versteht. Wer noch keinen Ausweis hat oder sich am Terminal unsicher fühlt, bleibt sonst vor der Tür. Bevor die Bibliothek sonntags ohne Personal öffnet, sollte sie daher Einführungen anbieten und erklären, wie im Notfall Hilfe erreichbar ist. Längere Zeiten allein schaffen noch keinen Zugang für alle."
+            },
+            {
+                "id": "g",
+                "text": "Die Bibliothek plant am Sonntag Lesungen im Innenhof, direkt unter unseren Schlafzimmerfenstern. Ich möchte niemandem Bücher oder Begegnungen verbieten, aber auch wir brauchen einen ruhigen Tag. Für Veranstaltungen im Freien sollten deshalb feste Zeiten gelten, und Lautsprecher gehören nach drinnen. Mit solchen Absprachen könnte ich die Öffnung unterstützen, ohne auf jede Rücksichtnahme verzichten zu müssen."
+            },
+            {
+                "id": "h",
+                "text": "Ich sehe den größten Engpass im Medienetat, nicht bei den Öffnungszeiten. Auf gefragte Romane wartet man monatelang, und aktuelle Fachbücher fehlen oft ganz. Wenn zusätzliche Mittel vorhanden sind, würde ich damit lieber den Bestand erweitern, statt einen weiteren Öffnungstag zu finanzieren. Ein länger zugängliches Regal hilft wenig, wenn das benötigte Buch nicht darin steht."
+            }
+        ],
+        "example": {
+            "text": "Öffnungszeiten mit dem eigenen Alltag vereinbaren",
+            "answer": "a"
+        }
+    },
+    {
+        "id": "lesen_t5_gemeinschaftsraum_20261121",
+        "teil": 5,
+        "title": "Nutzungsordnung für den Gemeinschaftsraum",
+        "topic": "Wohnen & Regeln",
+        "suggestedMinutes": 6,
+        "targetWords": [
+            "die Nutzung",
+            "verbindlich",
+            "schriftlich",
+            "die Haftung",
+            "die Aufbewahrung",
+            "rechtzeitig"
+        ],
+        "instruction": "Sie möchten den Gemeinschaftsraum Ihrer Wohnanlage nutzen und lesen die Nutzungsordnung. Welche Überschriften a bis h passen zu den Paragraphen 28 bis 30? Vier Überschriften werden nicht gebraucht. Kapi-Übung nach Goethe-Format; kein offizieller Prüfungssatz.",
+        "questions": [
+            {
+                "number": 28,
+                "text": "§ 28",
+                "answer": "b",
+                "why": "Toàn đoạn quy định nộp đơn, xác nhận và thứ tự ưu tiên, nên chọn b. Nhắc Hausversammlungen không biến nó thành quy định nhóm người ở a; chưa bàn đổi hay hủy nên không chọn c."
+            },
+            {
+                "number": 29,
+                "text": "§ 29",
+                "answer": "e",
+                "why": "Trọng tâm là tình trạng phòng và thời hạn bàn giao sau khi dùng. Chi phí chỉ là chi tiết phụ và được quyết định riêng, nên g không bao quát đoạn. f nói giờ ra vào hoạt động, không phải trách nhiệm dọn trả phòng."
+            },
+            {
+                "number": 30,
+                "text": "§ 30",
+                "answer": "c",
+                "why": "Đoạn nói hủy và đổi lịch đã xác nhận, khác b là đăng ký ban đầu. Có khoản phí nhưng không phải bồi thường thiệt hại tài sản của g. Chú ý ngoại lệ es sei denn: được miễn nếu phòng được giao lại đúng khung giờ."
+            }
+        ],
+        "headings": [
+            {
+                "id": "a",
+                "text": "Zulässiger Personenkreis und Veranstaltungszweck"
+            },
+            {
+                "id": "b",
+                "text": "Reservierungsverfahren und Verbindlichkeit"
+            },
+            {
+                "id": "c",
+                "text": "Nachträgliche Änderung und Absage einer Buchung"
+            },
+            {
+                "id": "d",
+                "text": "Lagerung privater Gegenstände"
+            },
+            {
+                "id": "e",
+                "text": "Reinigung und Rückgabe nach der Nutzung"
+            },
+            {
+                "id": "f",
+                "text": "Zutrittszeiten und Rücksichtnahme im Betrieb"
+            },
+            {
+                "id": "g",
+                "text": "Kostenübernahme bei verursachten Schäden"
+            },
+            {
+                "id": "h",
+                "text": "Ausgabe und Aufbewahrung der Schlüssel"
+            }
+        ],
+        "example": {
+            "answer": "a",
+            "text": "Der Gemeinschaftsraum steht volljährigen Bewohnerinnen und Bewohnern der Wohnanlage für private, nicht gewerbliche Veranstaltungen zur Verfügung. Externe Gäste dürfen eingeladen werden, sofern eine berechtigte Person die Verantwortung für die Veranstaltung übernimmt. Eine Überlassung an Dritte zur eigenständigen Nutzung ist ausgeschlossen."
+        },
+        "sections": [
+            {
+                "number": 28,
+                "text": "Nutzungswünsche sind spätestens sieben Kalendertage vor dem vorgesehenen Termin über das Verwaltungsportal einzureichen. Die automatische Nachricht über den Eingang des Antrags stellt noch keine Zusage dar. Eine Buchung kommt erst mit der schriftlichen Bestätigung durch die Verwaltung zustande. Gehen mehrere Anträge für denselben Zeitraum ein, ist der Zeitpunkt des vollständigen Antrags maßgeblich. Regelmäßig stattfindende Hausversammlungen sind hiervon ausgenommen und werden vorrangig berücksichtigt. Aus einer früheren Überlassung entsteht kein Anspruch auf weitere Termine."
+            },
+            {
+                "number": 29,
+                "text": "Der Raum ist spätestens zum Ende des bestätigten Zeitraums geräumt und besenrein zu übergeben. Benutztes Geschirr ist zu spülen und an den vorgesehenen Platz zurückzustellen; Abfälle sind in den dafür bestimmten Behältern außerhalb des Gebäudes zu entsorgen. Die Durchführung dieser Arbeiten ist in die gebuchte Zeit einzurechnen. Eine anschließende freie Stunde im Belegungsplan berechtigt nicht zu einer späteren Übergabe. Festgestellte Mängel sind bei der Übergabe im Protokoll festzuhalten; über eine etwaige Kostenforderung wird gesondert entschieden."
+            },
+            {
+                "number": 30,
+                "text": "Eine bestätigte Nutzung kann bis 48 Stunden vor Beginn kostenfrei storniert werden. Maßgeblich ist der Eingang der Mitteilung bei der Verwaltung, nicht der Zeitpunkt ihrer Absendung. Bei späterem Rücktritt bleibt die vereinbarte Pauschale fällig, es sei denn, der Raum wird für denselben Zeitraum anderweitig vergeben. Der Wunsch nach einem anderen Termin gilt als Absage der bisherigen Buchung und erfordert einen neuen Antrag. Ein eigenständiger Tausch mit anderen Nutzenden ist nicht zulässig, auch wenn beide Seiten damit einverstanden sind."
+            }
+        ]
+    }
+]);
