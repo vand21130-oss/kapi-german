@@ -5,8 +5,8 @@ import vm from 'node:vm';
 const ctx=vm.createContext({});
 for(const file of ['lesen-data.js','lesen-review-data.js','daily-story-review-data.js','lesen-review.js']) vm.runInContext(fs.readFileSync(file,'utf8'),ctx);
 const {tasks,meta,notes}=vm.runInContext('({tasks:LESEN_B2_TASKS,meta:LESEN_REVIEW_DATA,notes:DAILY_STORY_REVIEW_DATA})',ctx);
-test('all fifteen reading tasks have sentence translations and exact evidence',()=>{
- assert.equal(tasks.length,15);
+test('all twenty reading tasks have sentence translations and exact evidence',()=>{
+ assert.equal(tasks.length,20);
  for(const task of tasks){
   const data=meta[task.id]; assert.ok(data,task.id);
   for(const [key,translations] of Object.entries(data.passages)){

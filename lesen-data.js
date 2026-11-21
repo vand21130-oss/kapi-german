@@ -772,3 +772,470 @@ LESEN_B2_TASKS.push(...[
         ]
     }
 ]);
+
+// Original Kapi practice pack 2 · 2026-11-21.
+LESEN_B2_TASKS.push(...[
+    {
+        "id": "lesen_t1_kochen_20261121b",
+        "teil": 1,
+        "title": "Was kommt abends auf den Tisch?",
+        "topic": "Ernährung & Alltag",
+        "suggestedMinutes": 18,
+        "targetWords": [
+            "der Aufwand",
+            "auf etwas verzichten",
+            "sich etwas vornehmen",
+            "die Gewohnheit",
+            "übrig bleiben",
+            "Rücksicht nehmen"
+        ],
+        "instruction": "Sie lesen in einem Forum, wie vier Personen ihren Kochalltag organisieren. Auf welche Person treffen die Aussagen 1 bis 9 zu? Die Personen können mehrmals gewählt werden. Kapi-Übung nach Goethe-Format; kein offizieller Prüfungssatz.",
+        "questions": [
+            {
+                "number": 1,
+                "text": "Wer kann inzwischen von Vorgaben abweichen, weil er sich fachlich sicherer fühlt?",
+                "answer": "d",
+                "why": "David chuyển từ bám công thức sang tự điều chỉnh nhờ nắm kỹ thuật. Không nhầm với Nora: kế hoạch linh hoạt của cô liên quan lịch ăn, không phải kỹ năng nấu."
+            },
+            {
+                "number": 2,
+                "text": "Wer findet, dass weniger gemeinsame Mahlzeiten das Zusammenleben verbessert haben?",
+                "answer": "c",
+                "why": "Mila đối chiếu yêu cầu ăn chung mỗi ngày với một buổi cố định; seltener lại dẫn tới entspannter, không phải quan hệ kém đi."
+            },
+            {
+                "number": 3,
+                "text": "Wer plant auch deshalb, damit bereits gekaufte Lebensmittel vollständig verwendet werden?",
+                "answer": "a",
+                "why": "Nora nhận ra đồ đã mở bị hỏng và dùng nguyên liệu trong nhiều món. Ben dự trữ đồ đông lạnh để tiết kiệm thời gian, không nêu mục tiêu xử lý nguyên liệu thừa."
+            },
+            {
+                "number": 4,
+                "text": "Wer lehnt es ab, die Qualität einer Mahlzeit am Aufwand zu messen?",
+                "answer": "b",
+                "why": "Ben phản đối quan niệm món tử tế phải cầu kỳ. Anh vẫn có thể nấu nhiều món khi rảnh nên không phải luôn ghét nấu phức tạp."
+            },
+            {
+                "number": 5,
+                "text": "Wer wurde durch gesundheitliche Umstände zum Kochen gebracht?",
+                "answer": "d",
+                "why": "Nguyên nhân David bắt đầu là Unverträglichkeit. Chú ý erst ... als chỉ thời điểm và động lực ban đầu, khác việc lựa chọn khẩu vị sau này."
+            },
+            {
+                "number": 6,
+                "text": "Wer hält sich trotz Vorbereitung bewusst Möglichkeiten für spontane Entscheidungen offen?",
+                "answer": "a",
+                "why": "Nora chỉ lên lịch ba tối, không cả tuần, để vẫn đi ăn với bạn. Đây là giới hạn của kế hoạch chứ không từ bỏ việc chuẩn bị."
+            },
+            {
+                "number": 7,
+                "text": "Für wen steht beim Kochen mit anderen der persönliche Austausch im Vordergrund?",
+                "answer": "c",
+                "why": "Mila nhấn mạnh weniger ... als: trò chuyện quan trọng hơn món mới. David cũng thích trao đổi nhưng nói về mời khách, không về cùng nấu ăn."
+            },
+            {
+                "number": 8,
+                "text": "Wer kocht je nach verfügbarer Freizeit bewusst unterschiedlich aufwendig?",
+                "answer": "b",
+                "why": "Ben chọn món nhanh trong tuần nhưng có thể làm nhiều món vào ngày nghỉ. Không suy ra anh không bao giờ dành nhiều công cho bữa ăn."
+            },
+            {
+                "number": 9,
+                "text": "Wer überprüft bei Einladungen ausdrücklich, ob die eigenen Vorlieben geteilt werden?",
+                "answer": "d",
+                "why": "David không mặc định khẩu vị mình là của khách nên hỏi trước. Hỏi về món thích không đồng nghĩa chỉ hỏi về bệnh không dung nạp."
+            }
+        ],
+        "people": [
+            {
+                "id": "a",
+                "text": "Sonntags schreibe ich inzwischen auf, was ich an den nächsten drei Abenden kochen möchte, und kaufe entsprechend ein. Früher hielt ich solche Pläne für unnötig, bis ich bemerkte, wie oft angebrochene Packungen bei mir verdarben. Seitdem verwende ich dieselben Zutaten bewusst in verschiedenen Gerichten, etwa Spinat zunächst in einer Suppe und später in einer Füllung. Eine ganze Woche möchte ich trotzdem nicht festlegen, weil ich gelegentlich spontan mit Freunden essen gehe. Was ich spare, ist vor allem die tägliche Entscheidung vor dem Supermarktregal; schneller koche ich deshalb nicht unbedingt. Neue Rezepte probiere ich weiterhin aus, allerdings erst, wenn ich weiß, wofür ich die übrigen Zutaten nutzen kann. Mein Plan soll mir Freiraum verschaffen und nicht zu einer weiteren Pflicht werden, die ich jeden Abend erfüllen muss.",
+                "name": "Nora, Münster"
+            },
+            {
+                "id": "b",
+                "text": "Nach einem langen Arbeitstag habe ich durchaus Hunger auf etwas Warmes, aber selten Lust, erst eine Stunde in der Küche zu stehen. Deshalb enthält mein Gefrierfach immer Gemüse und selbst gekochte Soßen, aus denen schnell etwas entsteht. Früher fand ich das gegenüber frischen Zutaten zweitklassig, heute stört mich eher die Vorstellung, ein ordentliches Essen müsse unbedingt aufwendig sein. Wenn Gäste kommen, bereite ich manchmal trotzdem mehrere Gänge zu, weil mir das an freien Tagen Freude macht. Unter der Woche messe ich meine Kochkünste jedoch nicht daran, wie lange ich beschäftigt bin. Auch eine fertige Suppe darf es sein, solange sie mir schmeckt; ich möchte mein Abendessen nicht vor anderen rechtfertigen müssen. Die eingesparte Zeit verbringe ich lieber draußen als mit dem Fotografieren besonders schöner Teller.",
+                "name": "Ben, Hannover"
+            },
+            {
+                "id": "c",
+                "text": "In unserer Wohngemeinschaft haben wir lange versucht, an jedem Abend gemeinsam zu essen. Das klang verbindend, führte aber dazu, dass jemand hungrig wartete oder kurz vor dem Essen noch eine Absage kam. Jetzt verabreden wir uns nur noch für den Mittwoch, und wer teilnehmen möchte, meldet sich bis zum Vorabend. An den übrigen Tagen sorgt jeder für sich, ohne dass dies als mangelndes Interesse an den anderen verstanden wird. Beim gemeinsamen Kochen geht es mir weniger um neue Gerichte als darum, endlich einmal ohne Eile miteinander zu reden. Seit wir seltener zusammen essen, sind unsere Abende tatsächlich entspannter geworden. Ein festes Treffen, auf das man sich freuen kann, ist mir lieber als ein täglicher Anspruch, der bei niemandem richtig in den Kalender passt.",
+                "name": "Mila, Leipzig"
+            },
+            {
+                "id": "d",
+                "text": "Ich habe das Kochen erst entdeckt, als ich wegen einer Unverträglichkeit genauer auf mein Essen achten musste. Anfangs hielt ich mich streng an Rezepte, weil ich fürchtete, beim Austauschen einzelner Zutaten würde nichts mehr gelingen. Inzwischen beherrsche ich einige Grundtechniken und ändere Gerichte danach ab, was ich vertrage und was gerade vorhanden ist. Das macht mich unabhängiger von speziellen Produkten, die oft teuer oder schwer zu bekommen sind. Für andere zu kochen, finde ich trotzdem anspruchsvoller, denn mein persönlicher Geschmack ist nicht automatisch ihrer. Deshalb frage ich vor einer Einladung nach, statt stillschweigend anzunehmen, alle würden dieselben Zutaten mögen. Auf den Austausch über das Essen freue ich mich dann besonders, auch wenn jemand eine andere Würzung bevorzugt.",
+                "name": "David, Augsburg"
+            }
+        ]
+    },
+    {
+        "id": "lesen_t2_paketraum_20261121b",
+        "teil": 2,
+        "title": "Ein Raum für Pakete – und viele offene Fragen",
+        "topic": "Wohnen & Zustellung",
+        "suggestedMinutes": 12,
+        "targetWords": [
+            "die Zustellung",
+            "der Zugang",
+            "die Benachrichtigung",
+            "entgegennehmen",
+            "der Aufwand",
+            "die Aufbewahrung"
+        ],
+        "instruction": "Sie lesen einen Zeitschriftenartikel über einen Paketraum in einem Wohnhaus. Welche Sätze a bis h passen in die Lücken 10 bis 15? Zwei Sätze passen nicht. Kapi-Übung nach Goethe-Format; kein offizieller Prüfungssatz.",
+        "questions": [
+            {
+                "number": 10,
+                "text": "Lücke 10",
+                "answer": "e",
+                "why": "e đưa vào các doanh nghiệp chưa có quy trình, là đối tượng của Mit diesen ở sau. Hệ thống ra vào khác nhau khiến phải thỏa thuận riêng, không thể chỉ treo biển."
+            },
+            {
+                "number": 11,
+                "text": "Lücke 11",
+                "answer": "b",
+                "why": "b nói về người không đăng ký; Für sie ở sau giải thích họ vẫn dùng cách nhận cũ. Đây là lựa chọn cá nhân, không phải cấm họ nhận hàng."
+            },
+            {
+                "number": 12,
+                "text": "Lücke 12",
+                "answer": "f",
+                "why": "f cung cấp số khu kệ để giải quyết việc tìm thùng giống nhau. Diese Angabe ở sau là số này. Câu tiếp theo phân biệt đánh số khu với làm ngăn riêng từng hộ."
+            },
+            {
+                "number": 13,
+                "text": "Lücke 13",
+                "answer": "a",
+                "why": "a đặt thời hạn năm ngày để giải quyết phòng quá đầy. dieser Frist ở sau cần mốc thời gian cụ thể này; h dành phòng cho người vắng không giải quyết hàng tồn và không đưa thời hạn rõ."
+            },
+            {
+                "number": 14,
+                "text": "Lücke 14",
+                "answer": "d",
+                "why": "d đưa ra biên bản ghi theo dõi; Darin ở sau trỏ vào biên bản rồi liệt kê dữ liệu. Đây là đánh giá công việc phát sinh, không phải cho rằng ít đường đi thì chắc chắn ít việc."
+            },
+            {
+                "number": 15,
+                "text": "Lücke 15",
+                "answer": "c",
+                "why": "c nhấn mạnh cần làm rõ trách nhiệm dù đa số ủng hộ. Vì thế đoạn sau chỉ gia hạn có thời hạn và chỉ định người phụ trách. g trái cả điều kiện sofern ở trước lẫn quyết định chỉ thử tiếp ở sau."
+            }
+        ],
+        "segments": [
+            "Wer tagsüber nicht zu Hause ist, kennt die Zettel im Briefkasten: Ein Paket liegt bei einem Nachbarn, ein anderes in einer Filiale am Stadtrand. In einem großen Wohnhaus schlug der Hausbeirat deshalb vor, einen ungenutzten Raum im Erdgeschoss für Lieferungen einzurichten. Das klang zunächst nach einer einfachen Lösung, denn die Fläche war vorhanden und musste kaum umgebaut werden. Noch vor der Eröffnung stellte sich jedoch heraus, dass nicht alle Zustelldienste mit demselben Zugangssystem arbeiteten.",
+            "Mit diesen musste die Verwaltung zunächst einzeln klären, ob und unter welchen Bedingungen eine Ablage im Raum überhaupt möglich war. Ein Schild an der Haustür genügte dafür nicht, auch wenn manche Bewohner genau das erwartet hatten. Nach mehreren Absprachen begann ein dreimonatiger Versuch mit den beteiligten Unternehmen. Dabei erhielten die Zustellenden einen zeitlich begrenzten Code, während die Bewohner ihren normalen Hausschlüssel benutzten. Wer die neue Möglichkeit nutzen wollte, musste sich ausdrücklich dafür anmelden; eine Pflicht zur Teilnahme gab es nicht.",
+            "Für sie blieb die bisherige Zustellung an die Wohnungstür beziehungsweise an eine vereinbarte Abholstelle bestehen. So konnten auch Personen, die zunächst skeptisch waren, die Erfahrungen im Haus beobachten, ohne ihr eigenes Verfahren sofort umzustellen. Schon bald zeigte sich allerdings, dass die bloße Nachricht über eine Lieferung nicht ausreichte. In Stoßzeiten standen viele ähnlich aussehende Kartons dicht nebeneinander, und das Suchen dauerte länger als erwartet.",
+            "Diese Angabe wurde fortan auch in die Benachrichtigung aufgenommen, sodass sich die Suche auf einen kleinen Bereich beschränkte. Ein eigenes Fach für jede Wohnung ließ sich dagegen nicht verwirklichen, weil dafür der Platz fehlte. Außerdem blieb die Frage offen, wie lange Sendungen dort stehen dürfen. Einige Bewohner waren auf Reisen, andere verschoben das Abholen, gerade weil der Weg nun so bequem war. Nach wenigen Wochen war der Raum deshalb so voll, dass neue Pakete kaum noch unterzubringen waren.",
+            "Nach Ablauf dieser Frist erhielten die Empfänger eine Erinnerung und mussten mit der Verwaltung eine Lösung vereinbaren. Wer länger abwesend war, konnte beispielsweise eine vertraute Person mit der Abholung beauftragen. Eine automatische Rücksendung war nicht vorgesehen, denn darüber sollte nicht ohne Rücksprache entschieden werden. Für die Verwaltung entstand dadurch zusätzliche Arbeit, die bei der ursprünglichen Planung unterschätzt worden war.",
+            "Darin wurden nicht nur die Zahl der Sendungen, sondern auch Suchzeiten, Rückfragen und Beschwerden festgehalten. Die Auswertung zeigte am Ende, dass weniger Nachbarn Lieferungen entgegennehmen mussten, die Verwaltung jedoch häufiger vermitteln musste. Der Aufwand war also nicht einfach verschwunden, sondern hatte sich teilweise verlagert. Trotzdem sprach sich eine Mehrheit dafür aus, den Raum weiter zu nutzen, sofern die zusätzliche Betreuung verlässlich organisiert würde.",
+            "Deshalb beschloss die Hausgemeinschaft zunächst nur eine Verlängerung um sechs Monate und legte fest, wer für Rückfragen zuständig ist. Ob sich die Lösung auf Dauer bewährt, soll danach erneut gemeinsam beurteilt werden. Ein Paketraum spart Wege, funktioniert aber nicht ohne Regeln und Menschen, die sich um die Ausnahmen kümmern."
+        ],
+        "options": [
+            {
+                "id": "a",
+                "text": "Für jede Sendung wurde deshalb eine Höchstdauer von fünf Tagen festgelegt."
+            },
+            {
+                "id": "b",
+                "text": "Andere wiederum entschieden sich bewusst gegen eine Anmeldung."
+            },
+            {
+                "id": "c",
+                "text": "Eine hohe Zustimmung allein beantwortete jedoch noch nicht die Frage nach der Zuständigkeit."
+            },
+            {
+                "id": "d",
+                "text": "Um solche Folgen beurteilen zu können, führte das Team während der Testphase ein einfaches Protokoll."
+            },
+            {
+                "id": "e",
+                "text": "Einige Unternehmen sahen dieses Verfahren bislang gar nicht vor."
+            },
+            {
+                "id": "f",
+                "text": "Deshalb wurde jeder Regalabschnitt mit einer gut sichtbaren Nummer versehen."
+            },
+            {
+                "id": "g",
+                "text": "Nach dieser Zustimmung war die dauerhafte Öffnung bereits ohne weitere Bedingungen beschlossen."
+            },
+            {
+                "id": "h",
+                "text": "Für diese Zeit sollte der Raum ausschließlich den abwesenden Bewohnern vorbehalten bleiben."
+            }
+        ]
+    },
+    {
+        "id": "lesen_t3_bewertungen_20261121b",
+        "teil": 3,
+        "title": "Fünf Sterne – aber für wen?",
+        "topic": "Onlinekauf & Verbraucheralltag",
+        "suggestedMinutes": 12,
+        "targetWords": [
+            "die Bewertung",
+            "aussagekräftig",
+            "die Rückmeldung",
+            "in Betracht ziehen",
+            "die Voraussetzung",
+            "enttäuscht sein"
+        ],
+        "instruction": "Sie lesen einen Artikel über Kundenbewertungen im Internet. Wählen Sie bei den Aufgaben 16 bis 21 jeweils die richtige Lösung a, b oder c. Kapi-Übung nach Goethe-Format; kein offizieller Prüfungssatz.",
+        "questions": [
+            {
+                "number": 16,
+                "text": "Was verdeutlicht das Beispiel der Kaffeemaschine?",
+                "answer": "c",
+                "why": "c là luận điểm các kỳ vọng sử dụng khác nhau. a suy diễn nhận xét bị bịa, điều bài phủ nhận là không nhất thiết; b thu hẹp mọi người mua vào tiếng ồn.",
+                "options": {
+                    "a": "Gute Bewertungen entstehen häufig ohne wirkliche Produkterfahrung.",
+                    "b": "Bei Haushaltsgeräten ist die Lautstärke das wichtigste Kaufkriterium.",
+                    "c": "Ein positiv bewertetes Gerät kann für andere Bedürfnisse ungeeignet sein."
+                }
+            },
+            {
+                "number": 17,
+                "text": "Welche Grenze des Sterndurchschnitts wird beschrieben?",
+                "answer": "a",
+                "why": "a tổng hợp việc giao hàng, thao tác và chất lượng được gộp cùng con số. b nhầm lời khuyên không quá chú ý số lẻ với lỗi tính; c thêm kết luận về số người mà bài không nêu.",
+                "options": {
+                    "a": "Die Zahl lässt die unterschiedlichen Grundlagen der Urteile nicht erkennen.",
+                    "b": "Die Plattformen berechnen kleine Unterschiede meist ungenau.",
+                    "c": "Die Zahl sinkt automatisch, sobald mehr Personen ein Produkt bewerten."
+                }
+            },
+            {
+                "number": 18,
+                "text": "Was besagt ein bestätigter Kauf laut Text?",
+                "answer": "b",
+                "why": "b chỉ giữ phạm vi xác nhận giao dịch qua tài khoản. Nó không bảo đảm tự do khỏi lợi ích như c hoặc thử đủ lâu như a.",
+                "options": {
+                    "a": "Die bewertende Person hat den Artikel ausreichend lange getestet.",
+                    "b": "Für das betreffende Konto ist eine Bestellung über die Plattform nachgewiesen.",
+                    "c": "Die Bewertung wurde ohne finanzielle oder andere Anreize abgegeben."
+                }
+            },
+            {
+                "number": 19,
+                "text": "Wann ist ein negativer Kommentar besonders aufschlussreich?",
+                "answer": "a",
+                "why": "a diễn đạt điều kiện cụ thể giúp liên hệ với việc dùng của mình. b nhầm tính gay gắt với chất lượng; c thêm tiêu chuẩn tương đồng toàn bộ sở thích, bài chỉ cần điều kiện liên quan.",
+                "options": {
+                    "a": "Wenn der beschriebene Nachteil auf die eigene Verwendung bezogen werden kann.",
+                    "b": "Wenn er deutlich entschiedener formuliert ist als die positiven Urteile.",
+                    "c": "Wenn die schreibende Person in allen Bereichen denselben Geschmack hat."
+                }
+            },
+            {
+                "number": 20,
+                "text": "Welchen Zweck hat die vorab erstellte Liste?",
+                "answer": "c",
+                "why": "c hướng sự đánh giá vào nhu cầu riêng thay vì chỉ tìm xác nhận lựa chọn có sẵn. a sai vì danh sách vẫn cần chỉnh khi thấy yếu tố mới; b bài không đề nghị bỏ qua phản đối.",
+                "options": {
+                    "a": "Sie legt die Kaufentscheidung schon vor dem Lesen endgültig fest.",
+                    "b": "Sie macht es überflüssig, widersprechende Bewertungen zu berücksichtigen.",
+                    "c": "Sie hilft, Einwände anhand eigener Prioritäten abzuwägen."
+                }
+            },
+            {
+                "number": 21,
+                "text": "Welche Schlussfolgerung zieht der Artikel?",
+                "answer": "b",
+                "why": "b là kết luận đánh giá cung cấp căn cứ phải đối chiếu nhu cầu. a biến đánh giá thành quyết định thay người mua; c loại bỏ dữ liệu hữu ích, trái weder nutzlos.",
+                "options": {
+                    "a": "Bei genügend Bewertungen kann die persönliche Prüfung entfallen.",
+                    "b": "Der Nutzen von Bewertungen hängt davon ab, wie man sie auf die eigene Situation bezieht.",
+                    "c": "Eigene Anforderungen lassen sich am besten ohne Kundenurteile bestimmen."
+                }
+            }
+        ],
+        "article": [
+            "Eine Kaffeemaschine erhält begeisterte Bewertungen, doch nach dem Kauf ist die neue Besitzerin enttäuscht: Für ihre kleine Küche ist das Gerät viel zu laut. Das bedeutet nicht zwangsläufig, dass die positiven Urteile erfunden waren. Wer vor allem große Mengen Kaffee zubereitet, setzt möglicherweise andere Schwerpunkte als jemand, der frühmorgens niemanden wecken möchte. Bewertungen beschreiben daher nicht nur ein Produkt, sondern auch Erwartungen, die häufig unausgesprochen bleiben.",
+            "Beim Vergleich mehrerer Angebote fällt der Blick dennoch meist zuerst auf den Durchschnitt der vergebenen Sterne. Diese Zahl ist übersichtlich, fasst aber sehr unterschiedliche Erfahrungen zusammen. Ein Kunde bewertet den schnellen Versand, eine andere Person die Bedienung, ein dritter schreibt nach einem einzigen Einsatz über die Qualität. Ein hoher Durchschnitt kann deshalb eine erste Orientierung bieten, ersetzt aber nicht die Frage, worauf die Urteile jeweils beruhen. Gerade wenn zwei Produkte ähnlich abschneiden, lohnt sich der Blick in die einzelnen Texte mehr als der Vergleich der zweiten Nachkommastelle.",
+            "Auch der Hinweis auf einen bestätigten Kauf wird leicht überschätzt. Er kann zeigen, dass ein Kundenkonto den Artikel tatsächlich über die Plattform bestellt hat. Ob die Person sorgfältig getestet hat, ausreichend Erfahrung besitzt oder für ihre Bewertung einen Vorteil erhalten hat, geht daraus nicht hervor. Der Hinweis ist somit eine zusätzliche Information, aber kein Gütesiegel für die Begründung des Urteils.",
+            "Besonders nützlich können kritische Kommentare sein, wenn sie konkrete Bedingungen nennen. Die Aussage, ein Kopfhörer drücke nach zwei Stunden unter einer Brille, hilft eher weiter als das pauschale Urteil, er sei schlecht. Für jemanden ohne Brille kann dieser Nachteil weniger wichtig sein; für eine Brillenträgerin ist er womöglich entscheidend. Hilfreich ist außerdem, wenn mehrere voneinander unabhängige Rückmeldungen dasselbe Problem unter ähnlichen Bedingungen beschreiben. Nicht die Schärfe der Kritik macht sie wertvoll, sondern ihre Nachvollziehbarkeit für die eigene Nutzung.",
+            "Manche Käufer lesen schließlich so lange weiter, bis sie eine Bewertung finden, die ihre ursprüngliche Entscheidung bestätigt. Die Suche wirkt dann gründlich, führt aber kaum zu einer offeneren Abwägung. Ein Verbraucherberater empfiehlt in einem Workshop deshalb, vor dem Lesen drei unverzichtbare Eigenschaften aufzuschreiben und ein Kriterium festzulegen, bei dem man zu einem Kompromiss bereit wäre. So lässt sich gezielter prüfen, ob ein Einwand wirklich gegen den Kauf spricht oder lediglich eine andere Vorliebe widerspiegelt. Die Liste verhindert allerdings nicht jede Fehlentscheidung und sollte geändert werden, wenn beim Lesen ein bislang übersehener wichtiger Aspekt auftaucht.",
+            "Kundenurteile sind damit weder nutzlos noch eine fertige Kaufentscheidung. Sie liefern Anhaltspunkte, deren Bedeutung erst im Verhältnis zu den eigenen Anforderungen deutlich wird. Wer nach dem Lesen besser erklären kann, warum ein Produkt zu seinem Alltag passt, hat mehr gewonnen als jemand, der nur eine möglichst hohe Sternezahl gefunden hat."
+        ]
+    },
+    {
+        "id": "lesen_t4_nebensaison_20261121b",
+        "teil": 4,
+        "title": "Urlaub außerhalb der Hauptsaison",
+        "topic": "Reisen & Alltag",
+        "suggestedMinutes": 12,
+        "targetWords": [
+            "in Kauf nehmen",
+            "Rücksicht nehmen",
+            "zur Verfügung stehen",
+            "die Voraussetzung",
+            "sich lohnen",
+            "auf etwas verzichten"
+        ],
+        "instruction": "Sie lesen Meinungsäußerungen zu Reisen außerhalb der Hauptsaison. Welche Äußerung a bis h passt zu welcher Überschrift 22 bis 27? Eine Äußerung passt nicht. Äußerung a ist das Beispiel und kann nicht noch einmal verwendet werden. Kapi-Übung nach Goethe-Format; kein offizieller Prüfungssatz.",
+        "questions": [
+            {
+                "number": 22,
+                "text": "Ein günstiges Angebot kann am Ende teuer werden",
+                "answer": "d",
+                "why": "d đối chiếu giá phòng thấp với chi phí taxi khiến hết tiền tiết kiệm. h có nhắc tìm khách sạn nhưng trọng tâm là linh hoạt đặt sát ngày, không phải tổng chi phí."
+            },
+            {
+                "number": 23,
+                "text": "Weniger Spitzen ermöglichen verlässlichere Beschäftigung",
+                "answer": "c",
+                "why": "c muốn phân bố khách đều để ký hợp đồng dài, không nhất thiết tăng tổng khách. b cũng nhắc công ty nhưng nói về giới hạn lịch của người đi du lịch."
+            },
+            {
+                "number": 24,
+                "text": "Die Wahl der Reisezeit ist nicht für alle frei",
+                "answer": "b",
+                "why": "b bác lời trách gia đình đi cùng mùa vì lịch học và công ty hạn chế lựa chọn. Không nhầm h: người đó tự chọn giữ sự linh hoạt, không bị ràng buộc như b."
+            },
+            {
+                "number": 25,
+                "text": "Entzerrung allein garantiert noch keinen ökologischen Vorteil",
+                "answer": "g",
+                "why": "g phân biệt bớt đông với bền vững: cần xét đi thêm chuyến và phương tiện. e lo mất thời gian nghỉ của địa phương, không phân tích tác động cách di chuyển."
+            },
+            {
+                "number": 26,
+                "text": "Das Urlaubsprogramm an veränderte Bedingungen anpassen",
+                "answer": "f",
+                "why": "f thay đổi kỳ vọng và chuẩn bị hoạt động thay thế theo mùa, không hứa thời tiết tốt. h nói về thời điểm đặt chứ không về chương trình phù hợp mùa."
+            },
+            {
+                "number": 27,
+                "text": "Auch der Urlaubsort braucht Zeiten zum Durchatmen",
+                "answer": "e",
+                "why": "e đòi giữ khoảng nghỉ để sửa chữa và hồi phục. a muốn yên cho kỳ nghỉ cá nhân; e bảo vệ nhịp sống của người địa phương."
+            }
+        ],
+        "opinions": [
+            {
+                "id": "a",
+                "text": "Ich fahre gern im November ans Meer, weil ich dann am Strand lange unterwegs sein kann, ohne ständig Gruppen ausweichen zu müssen. Dass es früher dunkel wird und manches Café geschlossen ist, nehme ich dafür in Kauf. Für mich besteht Erholung nicht darin, möglichst viele Angebote zu nutzen, sondern endlich weniger Reize um mich zu haben."
+            },
+            {
+                "id": "b",
+                "text": "Immer heißt es, man müsse seine Reise nur ein wenig verschieben, dann werde alles günstiger und ruhiger. Mit schulpflichtigen Kindern und einem Betrieb, der den Urlaub weit im Voraus festlegt, ist das aber keine frei verfügbare Möglichkeit. Mich ärgert deshalb der Vorwurf, Familien würden aus Bequemlichkeit alle zur selben Zeit verreisen. Bevor man ihnen bessere Planung empfiehlt, sollte man sich die Grenzen ihres Kalenders ansehen."
+            },
+            {
+                "id": "c",
+                "text": "Ich betreibe ein kleines Hotel und würde gern auch im Winter mehr Gäste aufnehmen. Dann könnte ich Beschäftigten längere Verträge anbieten, statt jedes Frühjahr ein neues Team einarbeiten zu müssen. Ein voller Sommer allein reicht für solche Zusagen nicht aus, solange im übrigen Jahr kaum etwas gebucht wird. Für mich geht es deshalb weniger um noch mehr Besucher insgesamt als um eine gleichmäßigere Verteilung."
+            },
+            {
+                "id": "d",
+                "text": "Das günstige Hotel im Herbst sah im Angebot hervorragend aus, nur fuhr der Bus vom Bahnhof dann bloß zweimal täglich. Ohne Auto mussten wir für mehrere Ausflüge ein Taxi nehmen, sodass die Ersparnis rasch aufgebraucht war. Heute prüfe ich vor der Buchung zuerst, was sich am Zielort tatsächlich erreichen lässt. Ein niedriger Zimmerpreis sagt eben wenig darüber aus, was der gesamte Aufenthalt kostet."
+            },
+            {
+                "id": "e",
+                "text": "Als Bewohnerin eines Küstenortes wünsche ich mir im Winter nicht einfach dieselben Menschenmengen wie im August. Die ruhigeren Monate geben uns Zeit, Wege instand zu setzen und uns vom Sommerbetrieb zu erholen. Wenn nun jede Woche ein neues Großereignis Besucher anlocken soll, geht genau diese Pause verloren. Gäste sind willkommen, aber eine Verlängerung der Saison braucht Grenzen, die auch für die Menschen vor Ort passen."
+            },
+            {
+                "id": "f",
+                "text": "Ich plane inzwischen lieber eine Wanderreise im Frühjahr als einen Badeurlaub, bei dem ich jeden Tag auf Sonne hoffe. Das Wetter lässt sich nicht buchen, doch die Erwartungen lassen sich an die Jahreszeit anpassen. Ein verregneter Vormittag ist für mich kein verlorener Urlaubstag, wenn ich von Anfang an auch Museen oder einen Lesetag vorgesehen habe. Entscheidend ist, dass ich nicht im April dasselbe Programm voraussetze wie im Hochsommer."
+            },
+            {
+                "id": "g",
+                "text": "Werbung für Reisen im Frühling betont gern, dass weniger Gedränge automatisch auch weniger Belastung für die Umwelt bedeute. Wenn dadurch jedoch zusätzlich gereist wird oder für ein fernes Ziel das Flugzeug gewählt wird, ist dieser Vorteil keineswegs sicher. Ich würde daher die Anreise und die Zahl meiner Reisen betrachten, bevor ich allein den Monat als Beleg für Nachhaltigkeit anführe. Ein leererer Strand kann angenehm sein, ersetzt aber keine solche Abwägung."
+            },
+            {
+                "id": "h",
+                "text": "Seit ich allein verreise, buche ich am liebsten kurzfristig. Wenn sich ein günstiges Zeitfenster ergibt, möchte ich nicht schon durch lange vorher getroffene Entscheidungen gebunden sein. Manchmal finde ich dann nicht mehr mein Wunschhotel, dafür kann ich auf eine unerwartete freie Woche reagieren. Diese Beweglichkeit ist mir wichtiger als die Gewissheit, Monate vorher jedes Detail zu kennen."
+            }
+        ],
+        "example": {
+            "text": "Weniger Trubel als persönlicher Erholungsgewinn",
+            "answer": "a"
+        }
+    },
+    {
+        "id": "lesen_t5_abendkurs_20261121b",
+        "teil": 5,
+        "title": "Teilnahmebedingungen für Abendkurse",
+        "topic": "Weiterbildung & Regeln",
+        "suggestedMinutes": 6,
+        "targetWords": [
+            "die Anmeldung",
+            "die Bescheinigung",
+            "die Voraussetzung",
+            "nachweisen",
+            "schriftlich",
+            "die Teilnahme"
+        ],
+        "instruction": "Sie möchten an einem Abendkurs teilnehmen und lesen die Teilnahmebedingungen des Bildungszentrums. Welche Überschriften a bis h passen zu den Paragraphen 28 bis 30? Vier Überschriften werden nicht gebraucht. Kapi-Übung nach Goethe-Format; kein offizieller Prüfungssatz.",
+        "questions": [
+            {
+                "number": 28,
+                "text": "§ 28",
+                "answer": "b",
+                "why": "b bao quát xếp trình độ và điều kiện chuyển nhóm. Đoạn không nói cấp giấy tham gia ở e: Einstufungstest không phải Abschlussprüfung. Không tự có quyền đòi lớp mới khi hết chỗ."
+            },
+            {
+                "number": 29,
+                "text": "§ 29",
+                "answer": "d",
+                "why": "d bao quát bỏ lỡ buổi và ngoại lệ học bù. Có nhắc không hoàn tiền nhưng không phải rút cả khóa ở c; câu cuối loại buổi do giáo viên hủy khỏi quy định, nên không chọn g."
+            },
+            {
+                "number": 30,
+                "text": "§ 30",
+                "answer": "e",
+                "why": "e là chủ đề bao trùm: điều kiện và ý nghĩa giấy xác nhận. Trả đủ phí chỉ là một điều kiện phụ, không biến đoạn thành cách và hạn thanh toán ở h. Giấy không chứng nhận trình độ."
+            }
+        ],
+        "headings": [
+            {
+                "id": "a",
+                "text": "Anmeldung und Zustandekommen des Vertrags"
+            },
+            {
+                "id": "b",
+                "text": "Einstufung und Wechsel des Kursniveaus"
+            },
+            {
+                "id": "c",
+                "text": "Rücktritt und Erstattung der Kursgebühr"
+            },
+            {
+                "id": "d",
+                "text": "Versäumte Unterrichtsstunden und Ersatzangebote"
+            },
+            {
+                "id": "e",
+                "text": "Voraussetzungen für die Teilnahmebescheinigung"
+            },
+            {
+                "id": "f",
+                "text": "Umgang mit Unterrichtsmaterialien"
+            },
+            {
+                "id": "g",
+                "text": "Absage eines Kurses durch das Bildungszentrum"
+            },
+            {
+                "id": "h",
+                "text": "Zahlungsweise und Fälligkeit"
+            }
+        ],
+        "example": {
+            "answer": "a",
+            "text": "Die Anmeldung erfolgt über das Onlineformular oder persönlich im Sekretariat. Sie wird erst verbindlich, sobald das Bildungszentrum eine schriftliche Bestätigung versandt hat. Eine bloße Teilnahme an der ersten Unterrichtsstunde ersetzt die Anmeldung nicht."
+        },
+        "sections": [
+            {
+                "number": 28,
+                "text": "Vor Beginn eines aufbauenden Sprachkurses ist ein Einstufungstest abzulegen, sofern kein anerkannter Nachweis über die erforderlichen Vorkenntnisse vorliegt. Das Ergebnis dient der Zuordnung zu einer geeigneten Lerngruppe und ist keine Abschlussprüfung. Erweist sich die Zuordnung während der ersten beiden Unterrichtswochen als unpassend, kann im Einvernehmen mit der Kursleitung ein Wechsel beantragt werden. Die Umsetzung setzt einen freien Platz in der gewünschten Gruppe voraus. Ein Anspruch auf einen zusätzlichen Kurs entsteht daraus nicht."
+            },
+            {
+                "number": 29,
+                "text": "Nicht wahrgenommene Unterrichtsstunden werden grundsätzlich weder erstattet noch auf andere Personen übertragen. Bei nachgewiesener längerer Erkrankung kann die Verwaltung im Rahmen verfügbarer Plätze die Teilnahme an einer entsprechenden Einheit in einem Parallelkurs gestatten. Hierauf besteht kein Anspruch; eine vorherige schriftliche Zustimmung ist erforderlich. Die selbstständige Bearbeitung bereitgestellter Aufgaben ist unabhängig davon möglich, gilt jedoch nicht als nachgeholte Anwesenheit. Von der Kursleitung abgesagte Stunden sind von diesen Regelungen nicht betroffen und werden gesondert neu angesetzt."
+            },
+            {
+                "number": 30,
+                "text": "Eine Bescheinigung wird auf Antrag ausgestellt, wenn mindestens vier Fünftel der vorgesehenen Unterrichtsstunden besucht wurden. Maßgeblich sind die von der Kursleitung geführten Anwesenheitslisten einschließlich genehmigter Ersatztermine. Der Nachweis bestätigt ausschließlich die Teilnahme und enthält keine Aussage über ein erreichtes Sprachniveau. Ein gesondertes Prüfungszertifikat wird dadurch nicht ersetzt. Die Ausstellung setzt außerdem voraus, dass die Kursgebühr vollständig entrichtet wurde; eine Ratenzahlungsvereinbarung allein genügt hierfür nicht."
+            }
+        ]
+    }
+]);

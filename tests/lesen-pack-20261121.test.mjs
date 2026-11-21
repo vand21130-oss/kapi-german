@@ -27,17 +27,17 @@ test('the ten original tasks and their review metadata remain unchanged',()=>{
  assert.equal(hash(f.run('LESEN_B2_TASKS.slice(0,10)')),'bba61d71151bc98ef77f20e118722953c31abe2d336f1858939136b236f7a49f');
  assert.equal(hash(f.run('Object.fromEntries(Object.entries(LESEN_REVIEW_DATA).filter(([id])=>LESEN_B2_TASKS.slice(0,10).some(t=>t.id===id)))')),'157bb4d317089ed59fadbc4c0c0783766cd1e520f13f984b1c725d27418019cc');
 });
-test('new pack has all five formats, 30 questions, unique IDs and complete review coverage',()=>{
+test('both new packs have all five formats, 60 questions, unique IDs and complete review coverage',()=>{
  const f=fixture(),tasks=f.run('LESEN_B2_TASKS');
- assert.equal(new Set(tasks.map(t=>t.id)).size,15);
- const keys=['cbdabcdab','fgeacb','bacbca','dcfbge','bec'];
+ assert.equal(new Set(tasks.map(t=>t.id)).size,20);
+ const keys=['cbdabcdab','fgeacb','bacbca','dcfbge','bec','dcabdacbd','ebfadc','cabacb','dcbgfe','bde'];
  for(const [i,t] of tasks.slice(10).entries()){
-  assert.equal(t.teil,i+1);
-  assert.equal(tasks.filter(x=>x.teil===t.teil).length,3);
+  assert.equal(t.teil,i%5+1);
+  assert.equal(tasks.filter(x=>x.teil===t.teil).length,4);
   assert.equal(t.questions.map(q=>q.answer).join(''),keys[i]);
   assert.match(t.instruction,/kein offizieller Prüfungssatz/);
   const starts=[1,10,16,22,28];
-  t.questions.forEach((q,index)=>assert.equal(q.number,starts[i]+index));
+  t.questions.forEach((q,index)=>assert.equal(q.number,starts[i%5]+index));
   const meta=f.run(`LESEN_REVIEW_DATA['${t.id}']`);
   const passages=t.people?.map(x=>'people.'+x.id) || t.segments?.map((_,i)=>'segments.'+i) || t.article?.map((_,i)=>'article.'+i) || t.opinions?.map(x=>'opinions.'+x.id) || t.sections.map(x=>'sections.'+x.number);
   for(const field of ['options','headings'])for(const item of t[field]||[])passages.push(field+'.'+item.id);
@@ -50,21 +50,29 @@ test('new pack has all five formats, 30 questions, unique IDs and complete revie
   }
  }
 });
+test('pack two preserves all fifteen previously published tasks and explanations',()=>{
+ const f=fixture();
+ assert.equal(hash(f.run('LESEN_B2_TASKS.slice(0,15)')),'305c7f7b1dd7566feaff9b0600ef2da13db8d7f0d144a6b0a27ecec7c389e63a');
+ assert.equal(hash(f.run('Object.fromEntries(Object.entries(LESEN_REVIEW_DATA).filter(([id])=>LESEN_B2_TASKS.slice(0,15).some(t=>t.id===id)))')),'07fd0594ac2fa5af3d09353335e3d5f53814866196156c6ffa8dd1f6c2f7171e');
+});
 test('each new task is selectable, while a saved daily plan is preserved',()=>{
  const f=fixture();
- for(let teil=1;teil<=5;teil++)assert.ok(f.run(`lesenPickTaskForTeil(${teil}).id.endsWith('_20261121')`));
+ for(const task of f.run('LESEN_B2_TASKS.slice(10)')){
+  const chosen=f.run(`lesenPickTaskForTeil(${task.teil}, LESEN_B2_TASKS.filter(t=>t.id!==${JSON.stringify(task.id)}).map(t=>t.id))`);
+  assert.equal(chosen.id,task.id);
+ }
  const saved={date:'2026-11-21',required:'lesen_t1_hybridarbeit',bonus:'lesen_t2_stadtverkehr'};
  f.storage.set('kapi_lesen_daily_plan_v1',JSON.stringify(saved));
  assert.equal(JSON.stringify(f.run('lesenGetDailyPlan()')),JSON.stringify(saved));
  f.storage.delete('kapi_lesen_daily_plan_v1');
  const plan=f.run('lesenGetDailyPlan()');
- assert.ok(plan.required.endsWith('_20261121'));
- assert.ok(plan.bonus.endsWith('_20261121'));
+ assert.ok(plan.required.endsWith('_20261121b'));
+ assert.ok(plan.bonus.endsWith('_20261121b'));
  assert.notEqual(plan.required,plan.bonus);
 });
 test('real renderers hide solutions until submission; real grading accepts keys and rejects wrong choices',()=>{
  const f=fixture();
- for(let i=10;i<15;i++){
+ for(let i=10;i<20;i++){
   f.run(`lesenCurrent={task:LESEN_B2_TASKS[${i}],answers:{},submitted:false};`);
   let html=f.run('lesenTaskBody(lesenCurrent.task)');
   assert.doesNotMatch(html,/lesen-vi-sentence|data-lesen-proof/);
