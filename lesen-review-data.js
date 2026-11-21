@@ -1254,3 +1254,980 @@ Object.assign(LESEN_REVIEW_DATA, {
         }
     }
 });
+
+// Bilingual review and evidence for pack 2.
+Object.assign(LESEN_REVIEW_DATA, {
+    "lesen_t1_kochen_20261121b": {
+        "passages": {
+            "people.a": [
+                "Giờ đây vào Chủ nhật tôi ghi lại món định nấu trong ba buổi tối tiếp theo và mua thực phẩm tương ứng.",
+                "Trước đây tôi thấy kế hoạch như vậy không cần thiết, cho tới khi nhận ra đồ trong bao đã mở của mình thường hỏng đến thế nào.",
+                "Từ đó tôi chủ động dùng cùng nguyên liệu trong nhiều món, chẳng hạn rau chân vịt trước trong súp rồi sau làm nhân.",
+                "Dù vậy tôi không muốn lên lịch cả tuần vì thỉnh thoảng tôi ngẫu hứng đi ăn với bạn.",
+                "Điều tôi tiết kiệm chủ yếu là công sức quyết định mỗi ngày trước kệ siêu thị; không nhất thiết nhờ đó mà nấu nhanh hơn.",
+                "Tôi vẫn thử công thức mới, nhưng chỉ khi đã biết sẽ dùng nguyên liệu còn dư vào việc gì.",
+                "Kế hoạch phải tạo khoảng tự do cho tôi, chứ không thành nghĩa vụ mới phải hoàn thành mỗi tối."
+            ],
+            "people.b": [
+                "Sau một ngày làm việc dài tôi rất muốn ăn món nóng, nhưng hiếm khi có hứng đứng bếp thêm một tiếng.",
+                "Vì vậy ngăn đông của tôi luôn có rau và sốt tự nấu để nhanh chóng làm được món gì đó.",
+                "Trước đây tôi coi đó là kém hơn nguyên liệu tươi; giờ tôi lại khó chịu hơn với quan niệm rằng bữa ăn tử tế nhất thiết phải cầu kỳ.",
+                "Dù vậy khi có khách, đôi lúc tôi vẫn chuẩn bị nhiều món theo lượt, vì ngày nghỉ làm vậy khiến tôi vui.",
+                "Nhưng trong tuần tôi không đo tài nấu ăn bằng thời gian mình bận rộn.",
+                "Một món súp làm sẵn cũng được, miễn là tôi thấy ngon; tôi không muốn phải biện minh bữa tối của mình với người khác.",
+                "Tôi thích dùng thời gian tiết kiệm được ra ngoài hơn là chụp ảnh những đĩa thức ăn thật đẹp."
+            ],
+            "people.c": [
+                "Ở căn hộ chung, chúng tôi từng cố gắng tối nào cũng ăn cùng nhau trong thời gian dài.",
+                "Điều đó nghe có vẻ gắn kết, nhưng lại khiến có người phải chờ trong đói bụng hoặc sát giờ ăn mới nhận được báo vắng.",
+                "Giờ chúng tôi chỉ hẹn vào thứ Tư, ai muốn tham gia thì báo trước tối hôm trước.",
+                "Những ngày còn lại mỗi người tự lo, mà không bị hiểu là thiếu quan tâm tới nhau.",
+                "Khi nấu chung, tôi ít quan tâm món mới hơn là cuối cùng cũng có thời gian trò chuyện với nhau không vội vã.",
+                "Từ khi ít ăn cùng nhau hơn, những buổi tối của chúng tôi thực sự thoải mái hơn.",
+                "Tôi thích một buổi gặp cố định để mong đợi hơn là yêu cầu hằng ngày không thực sự hợp lịch của ai."
+            ],
+            "people.d": [
+                "Tôi chỉ khám phá việc nấu ăn khi phải chú ý kỹ hơn đến thức ăn vì tình trạng không dung nạp.",
+                "Ban đầu tôi làm đúng công thức vì sợ đổi một nguyên liệu thì món ăn sẽ hỏng.",
+                "Giờ tôi nắm được một số kỹ thuật nền tảng và điều chỉnh món theo thứ mình ăn được và nguyên liệu đang có.",
+                "Điều đó giúp tôi bớt phụ thuộc vào sản phẩm đặc biệt thường đắt hoặc khó mua.",
+                "Dù vậy tôi thấy nấu cho người khác khó hơn, vì khẩu vị của tôi không tự động là khẩu vị của họ.",
+                "Vì thế trước khi mời tôi hỏi trước, thay vì ngầm cho rằng ai cũng thích cùng những nguyên liệu.",
+                "Khi ấy tôi đặc biệt mong được trao đổi về món ăn, kể cả khi có người thích nêm khác."
+            ]
+        },
+        "questions": {
+            "1": {
+                "vi": "Ai giờ có thể làm khác hướng dẫn nhờ vững kỹ năng hơn?",
+                "evidence": [
+                    [
+                        "people.d",
+                        1,
+                        [
+                            "streng an Rezepte"
+                        ]
+                    ],
+                    [
+                        "people.d",
+                        2,
+                        [
+                            "Grundtechniken",
+                            "ändere Gerichte"
+                        ]
+                    ]
+                ],
+                "link": "David chuyển từ bám công thức sang tự điều chỉnh nhờ nắm kỹ thuật. Không nhầm với Nora: kế hoạch linh hoạt của cô liên quan lịch ăn, không phải kỹ năng nấu."
+            },
+            "2": {
+                "vi": "Ai thấy ăn chung ít hơn đã cải thiện đời sống chung?",
+                "evidence": [
+                    [
+                        "people.c",
+                        5,
+                        [
+                            "seltener",
+                            "entspannter"
+                        ]
+                    ]
+                ],
+                "link": "Mila đối chiếu yêu cầu ăn chung mỗi ngày với một buổi cố định; seltener lại dẫn tới entspannter, không phải quan hệ kém đi."
+            },
+            "3": {
+                "vi": "Ai lên kế hoạch còn nhằm sử dụng hết thực phẩm đã mua?",
+                "evidence": [
+                    [
+                        "people.a",
+                        1,
+                        [
+                            "angebrochene Packungen",
+                            "verdarben"
+                        ]
+                    ],
+                    [
+                        "people.a",
+                        2,
+                        [
+                            "dieselben Zutaten",
+                            "verschiedenen Gerichten"
+                        ]
+                    ]
+                ],
+                "link": "Nora nhận ra đồ đã mở bị hỏng và dùng nguyên liệu trong nhiều món. Ben dự trữ đồ đông lạnh để tiết kiệm thời gian, không nêu mục tiêu xử lý nguyên liệu thừa."
+            },
+            "4": {
+                "vi": "Ai phản đối đánh giá chất lượng bữa ăn qua công sức bỏ ra?",
+                "evidence": [
+                    [
+                        "people.b",
+                        2,
+                        [
+                            "ordentliches Essen",
+                            "aufwendig"
+                        ]
+                    ],
+                    [
+                        "people.b",
+                        4,
+                        [
+                            "nicht daran",
+                            "wie lange"
+                        ]
+                    ]
+                ],
+                "link": "Ben phản đối quan niệm món tử tế phải cầu kỳ. Anh vẫn có thể nấu nhiều món khi rảnh nên không phải luôn ghét nấu phức tạp."
+            },
+            "5": {
+                "vi": "Ai bắt đầu nấu ăn do hoàn cảnh sức khỏe?",
+                "evidence": [
+                    [
+                        "people.d",
+                        0,
+                        [
+                            "erst entdeckt",
+                            "Unverträglichkeit"
+                        ]
+                    ]
+                ],
+                "link": "Nguyên nhân David bắt đầu là Unverträglichkeit. Chú ý erst ... als chỉ thời điểm và động lực ban đầu, khác việc lựa chọn khẩu vị sau này."
+            },
+            "6": {
+                "vi": "Ai dù chuẩn bị vẫn chủ động chừa chỗ cho quyết định ngẫu hứng?",
+                "evidence": [
+                    [
+                        "people.a",
+                        0,
+                        [
+                            "nächsten drei Abenden"
+                        ]
+                    ],
+                    [
+                        "people.a",
+                        3,
+                        [
+                            "nicht festlegen",
+                            "spontan"
+                        ]
+                    ]
+                ],
+                "link": "Nora chỉ lên lịch ba tối, không cả tuần, để vẫn đi ăn với bạn. Đây là giới hạn của kế hoạch chứ không từ bỏ việc chuẩn bị."
+            },
+            "7": {
+                "vi": "Với ai, giao tiếp cá nhân là điều quan trọng nhất khi nấu chung?",
+                "evidence": [
+                    [
+                        "people.c",
+                        4,
+                        [
+                            "weniger um neue Gerichte",
+                            "miteinander zu reden"
+                        ]
+                    ]
+                ],
+                "link": "Mila nhấn mạnh weniger ... als: trò chuyện quan trọng hơn món mới. David cũng thích trao đổi nhưng nói về mời khách, không về cùng nấu ăn."
+            },
+            "8": {
+                "vi": "Ai chủ động nấu cầu kỳ ở mức khác nhau tùy thời gian rảnh?",
+                "evidence": [
+                    [
+                        "people.b",
+                        0,
+                        [
+                            "selten Lust"
+                        ]
+                    ],
+                    [
+                        "people.b",
+                        3,
+                        [
+                            "mehrere Gänge",
+                            "an freien Tagen"
+                        ]
+                    ]
+                ],
+                "link": "Ben chọn món nhanh trong tuần nhưng có thể làm nhiều món vào ngày nghỉ. Không suy ra anh không bao giờ dành nhiều công cho bữa ăn."
+            },
+            "9": {
+                "vi": "Ai khi mời khách sẽ chủ động kiểm tra xem họ có cùng sở thích ăn uống không?",
+                "evidence": [
+                    [
+                        "people.d",
+                        4,
+                        [
+                            "nicht automatisch ihrer"
+                        ]
+                    ],
+                    [
+                        "people.d",
+                        5,
+                        [
+                            "frage ich",
+                            "alle würden dieselben Zutaten mögen"
+                        ]
+                    ]
+                ],
+                "link": "David không mặc định khẩu vị mình là của khách nên hỏi trước. Hỏi về món thích không đồng nghĩa chỉ hỏi về bệnh không dung nạp."
+            }
+        }
+    },
+    "lesen_t2_paketraum_20261121b": {
+        "passages": {
+            "segments.0": [
+                "Ai không ở nhà ban ngày đều biết những mẩu giấy trong hòm thư: một kiện hàng ở chỗ hàng xóm, kiện khác tại chi nhánh ngoại ô.",
+                "Vì vậy ở một tòa nhà lớn, ban đại diện đề xuất dành phòng trống tầng trệt để nhận hàng.",
+                "Thoạt nghe đó là giải pháp đơn giản, vì đã có diện tích và gần như không cần sửa chữa.",
+                "Nhưng trước khi mở đã phát hiện không phải mọi đơn vị giao hàng đều dùng cùng một hệ thống ra vào."
+            ],
+            "segments.1": [
+                "Với những đơn vị ấy, ban quản lý phải làm rõ riêng xem có thể để hàng trong phòng không và theo điều kiện nào.",
+                "Một biển ở cửa chính không đủ, dù một số cư dân đã kỳ vọng như vậy.",
+                "Sau nhiều thỏa thuận, đợt thử ba tháng bắt đầu với các doanh nghiệp tham gia.",
+                "Nhân viên giao hàng nhận mã có thời hạn, còn cư dân dùng chìa khóa tòa nhà thông thường.",
+                "Ai muốn dùng lựa chọn mới phải đăng ký rõ ràng; không bắt buộc tham gia."
+            ],
+            "segments.2": [
+                "Với những người đó, cách giao cũ tới cửa căn hộ hoặc điểm nhận đã thỏa thuận vẫn được giữ.",
+                "Nhờ vậy, người ban đầu hoài nghi cũng có thể quan sát trải nghiệm trong tòa nhà mà chưa phải đổi ngay cách nhận của mình.",
+                "Tuy nhiên, không lâu sau đã thấy chỉ thông báo có hàng được giao là chưa đủ.",
+                "Lúc cao điểm, nhiều thùng trông giống nhau đặt sát nhau khiến việc tìm lâu hơn dự kiến."
+            ],
+            "segments.3": [
+                "Từ đó thông tin này cũng được đưa vào thông báo, nên chỉ phải tìm trong một khu vực nhỏ.",
+                "Ngược lại, không thể làm ngăn riêng cho mỗi căn hộ vì thiếu chỗ.",
+                "Ngoài ra vẫn còn câu hỏi được để kiện hàng ở đó bao lâu.",
+                "Một số cư dân đi xa, người khác hoãn lấy chính vì đường đi giờ quá tiện.",
+                "Vì thế sau vài tuần phòng đầy đến mức gần như không thể xếp thêm kiện mới."
+            ],
+            "segments.4": [
+                "Sau thời hạn này, người nhận được nhắc và phải thống nhất giải pháp với ban quản lý.",
+                "Chẳng hạn ai vắng lâu có thể nhờ người tin cậy nhận hộ.",
+                "Không có kế hoạch tự động gửi trả, vì không nên quyết định việc đó mà không trao đổi.",
+                "Điều đó tạo thêm việc cho ban quản lý, vốn đã bị đánh giá thấp trong kế hoạch ban đầu."
+            ],
+            "segments.5": [
+                "Trong đó không chỉ ghi số kiện mà cả thời gian tìm, các câu hỏi và khiếu nại.",
+                "Đánh giá cuối kỳ cho thấy ít hàng xóm phải nhận hộ hơn, nhưng ban quản lý lại phải đứng ra giải quyết thường xuyên hơn.",
+                "Như vậy công sức không đơn giản biến mất, mà một phần chuyển sang nơi khác.",
+                "Dù vậy đa số ủng hộ tiếp tục sử dụng phòng, miễn là khâu phụ trách bổ sung được tổ chức đáng tin cậy."
+            ],
+            "segments.6": [
+                "Vì thế trước mắt cộng đồng cư dân chỉ quyết định gia hạn sáu tháng và xác định ai phụ trách giải đáp.",
+                "Sau đó sẽ cùng đánh giá lại giải pháp có hiệu quả lâu dài hay không.",
+                "Phòng nhận hàng tiết kiệm đường đi, nhưng không vận hành được nếu thiếu quy tắc và người xử lý ngoại lệ."
+            ],
+            "options.a": [
+                "Vì vậy mỗi kiện hàng được quy định thời gian lưu tối đa năm ngày."
+            ],
+            "options.b": [
+                "Những người khác lại chủ động không đăng ký."
+            ],
+            "options.c": [
+                "Tuy nhiên, mức ủng hộ cao chưa tự nó trả lời câu hỏi về người chịu trách nhiệm."
+            ],
+            "options.d": [
+                "Để đánh giá tác động như vậy, nhóm lập biên bản đơn giản trong giai đoạn thử."
+            ],
+            "options.e": [
+                "Một số doanh nghiệp cho tới lúc đó hoàn toàn chưa có quy trình này."
+            ],
+            "options.f": [
+                "Vì thế mỗi khu kệ được gắn số dễ nhìn."
+            ],
+            "options.g": [
+                "Sau sự đồng ý này, việc mở lâu dài đã được quyết định mà không còn điều kiện nào."
+            ],
+            "options.h": [
+                "Trong khoảng thời gian đó phòng sẽ chỉ dành riêng cho những cư dân đang vắng mặt."
+            ]
+        },
+        "questions": {
+            "10": {
+                "vi": "Chỗ trống 10",
+                "evidence": [
+                    [
+                        "segments.0",
+                        3,
+                        [
+                            "nicht alle Zustelldienste"
+                        ]
+                    ],
+                    [
+                        "options.e",
+                        0,
+                        [
+                            "Einige Unternehmen"
+                        ]
+                    ],
+                    [
+                        "segments.1",
+                        0,
+                        [
+                            "Mit diesen",
+                            "einzeln klären"
+                        ]
+                    ]
+                ],
+                "link": "e đưa vào các doanh nghiệp chưa có quy trình, là đối tượng của Mit diesen ở sau. Hệ thống ra vào khác nhau khiến phải thỏa thuận riêng, không thể chỉ treo biển."
+            },
+            "11": {
+                "vi": "Chỗ trống 11",
+                "evidence": [
+                    [
+                        "segments.1",
+                        4,
+                        [
+                            "eine Pflicht zur Teilnahme gab es nicht"
+                        ]
+                    ],
+                    [
+                        "options.b",
+                        0,
+                        [
+                            "gegen eine Anmeldung"
+                        ]
+                    ],
+                    [
+                        "segments.2",
+                        0,
+                        [
+                            "Für sie",
+                            "bisherige Zustellung"
+                        ]
+                    ]
+                ],
+                "link": "b nói về người không đăng ký; Für sie ở sau giải thích họ vẫn dùng cách nhận cũ. Đây là lựa chọn cá nhân, không phải cấm họ nhận hàng."
+            },
+            "12": {
+                "vi": "Chỗ trống 12",
+                "evidence": [
+                    [
+                        "segments.2",
+                        3,
+                        [
+                            "ähnlich aussehende Kartons",
+                            "Suchen"
+                        ]
+                    ],
+                    [
+                        "options.f",
+                        0,
+                        [
+                            "Nummer"
+                        ]
+                    ],
+                    [
+                        "segments.3",
+                        0,
+                        [
+                            "Diese Angabe"
+                        ]
+                    ]
+                ],
+                "link": "f cung cấp số khu kệ để giải quyết việc tìm thùng giống nhau. Diese Angabe ở sau là số này. Câu tiếp theo phân biệt đánh số khu với làm ngăn riêng từng hộ."
+            },
+            "13": {
+                "vi": "Chỗ trống 13",
+                "evidence": [
+                    [
+                        "segments.3",
+                        4,
+                        [
+                            "so voll"
+                        ]
+                    ],
+                    [
+                        "options.a",
+                        0,
+                        [
+                            "fünf Tagen"
+                        ]
+                    ],
+                    [
+                        "segments.4",
+                        0,
+                        [
+                            "dieser Frist"
+                        ]
+                    ]
+                ],
+                "link": "a đặt thời hạn năm ngày để giải quyết phòng quá đầy. dieser Frist ở sau cần mốc thời gian cụ thể này; h dành phòng cho người vắng không giải quyết hàng tồn và không đưa thời hạn rõ."
+            },
+            "14": {
+                "vi": "Chỗ trống 14",
+                "evidence": [
+                    [
+                        "segments.4",
+                        3,
+                        [
+                            "zusätzliche Arbeit"
+                        ]
+                    ],
+                    [
+                        "options.d",
+                        0,
+                        [
+                            "Protokoll"
+                        ]
+                    ],
+                    [
+                        "segments.5",
+                        0,
+                        [
+                            "Darin"
+                        ]
+                    ]
+                ],
+                "link": "d đưa ra biên bản ghi theo dõi; Darin ở sau trỏ vào biên bản rồi liệt kê dữ liệu. Đây là đánh giá công việc phát sinh, không phải cho rằng ít đường đi thì chắc chắn ít việc."
+            },
+            "15": {
+                "vi": "Chỗ trống 15",
+                "evidence": [
+                    [
+                        "segments.5",
+                        3,
+                        [
+                            "sofern"
+                        ]
+                    ],
+                    [
+                        "options.c",
+                        0,
+                        [
+                            "Zuständigkeit"
+                        ]
+                    ],
+                    [
+                        "segments.6",
+                        0,
+                        [
+                            "nur eine Verlängerung",
+                            "zuständig"
+                        ]
+                    ]
+                ],
+                "link": "c nhấn mạnh cần làm rõ trách nhiệm dù đa số ủng hộ. Vì thế đoạn sau chỉ gia hạn có thời hạn và chỉ định người phụ trách. g trái cả điều kiện sofern ở trước lẫn quyết định chỉ thử tiếp ở sau."
+            }
+        }
+    },
+    "lesen_t3_bewertungen_20261121b": {
+        "passages": {
+            "article.0": [
+                "Một máy pha cà phê nhận nhiều đánh giá hào hứng, nhưng sau khi mua chủ nhân mới thất vọng: máy quá ồn cho căn bếp nhỏ của cô.",
+                "Điều đó không nhất thiết có nghĩa là các đánh giá tích cực đã bị bịa.",
+                "Người chủ yếu pha nhiều cà phê có thể coi trọng những yếu tố khác với người không muốn đánh thức ai vào sáng sớm.",
+                "Vì thế đánh giá không chỉ mô tả sản phẩm mà còn phản ánh những kỳ vọng thường không được nói ra."
+            ],
+            "article.1": [
+                "Tuy vậy, khi so nhiều sản phẩm, ánh nhìn thường dừng trước tiên ở số sao trung bình.",
+                "Con số này dễ nhìn, nhưng gộp những trải nghiệm rất khác nhau.",
+                "Một khách chấm việc giao nhanh, người khác chấm thao tác, người thứ ba viết về chất lượng sau chỉ một lần dùng.",
+                "Vì vậy trung bình cao có thể định hướng ban đầu, nhưng không thay thế việc hỏi từng nhận xét dựa vào đâu.",
+                "Đặc biệt khi hai sản phẩm được chấm gần nhau, đọc từng nhận xét đáng làm hơn so chữ số thập phân thứ hai."
+            ],
+            "article.2": [
+                "Dấu hiệu xác nhận đã mua cũng dễ bị đánh giá quá cao.",
+                "Nó có thể cho biết một tài khoản khách thực sự đã đặt món hàng qua nền tảng.",
+                "Nhưng từ đó không biết được người ấy đã kiểm tra kỹ, có đủ kinh nghiệm hay được lợi ích để viết đánh giá hay không.",
+                "Do đó dấu hiệu này là thông tin bổ sung, chứ không phải bảo chứng cho chất lượng lập luận của nhận xét."
+            ],
+            "article.3": [
+                "Nhận xét phê bình có thể đặc biệt hữu ích khi nêu điều kiện cụ thể.",
+                "Nói tai nghe gây cấn khi đeo kính sau hai tiếng hữu ích hơn kết luận chung chung rằng nó tệ.",
+                "Với người không đeo kính, nhược điểm này có thể ít quan trọng; với người đeo kính, nó có thể là yếu tố quyết định.",
+                "Cũng hữu ích khi nhiều phản hồi độc lập mô tả cùng vấn đề dưới điều kiện tương tự.",
+                "Điều khiến phê bình giá trị không phải mức gay gắt mà là khả năng hiểu và liên hệ nó với cách sử dụng của mình."
+            ],
+            "article.4": [
+                "Cuối cùng có người cứ đọc tiếp cho tới khi tìm được đánh giá xác nhận lựa chọn ban đầu.",
+                "Khi ấy việc tìm kiếm có vẻ kỹ lưỡng nhưng hầu như không làm cân nhắc cởi mở hơn.",
+                "Vì vậy trong một buổi hướng dẫn, một tư vấn viên tiêu dùng khuyên ghi trước ba đặc tính không thể thiếu và một tiêu chí có thể thỏa hiệp.",
+                "Nhờ đó có thể kiểm tra có mục tiêu hơn xem phản đối nào thực sự chống lại việc mua hay chỉ phản ánh sở thích khác.",
+                "Tuy nhiên danh sách không ngăn mọi quyết định sai và nên được đổi khi đọc thấy một khía cạnh quan trọng trước đó đã bỏ sót."
+            ],
+            "article.5": [
+                "Như vậy nhận xét của khách không vô ích, cũng không phải quyết định mua đã làm sẵn.",
+                "Chúng cung cấp dấu hiệu mà ý nghĩa chỉ rõ khi đặt trong quan hệ với yêu cầu của mình.",
+                "Ai sau khi đọc giải thích rõ hơn vì sao sản phẩm hợp cuộc sống mình đã thu được nhiều hơn người chỉ tìm ra số sao cao nhất."
+            ]
+        },
+        "questions": {
+            "16": {
+                "vi": "Ví dụ máy pha cà phê làm rõ điều gì?",
+                "evidence": [
+                    [
+                        "article.0",
+                        1,
+                        [
+                            "nicht zwangsläufig"
+                        ]
+                    ],
+                    [
+                        "article.0",
+                        3,
+                        [
+                            "Erwartungen"
+                        ]
+                    ]
+                ],
+                "link": "c là luận điểm các kỳ vọng sử dụng khác nhau. a suy diễn nhận xét bị bịa, điều bài phủ nhận là không nhất thiết; b thu hẹp mọi người mua vào tiếng ồn.",
+                "options": {
+                    "a": "Đánh giá tốt thường được viết khi không có trải nghiệm thực.",
+                    "b": "Với đồ gia dụng, tiếng ồn là tiêu chí mua quan trọng nhất.",
+                    "c": "Thiết bị được đánh giá tốt có thể không hợp nhu cầu khác."
+                }
+            },
+            "17": {
+                "vi": "Bài mô tả giới hạn nào của số sao trung bình?",
+                "evidence": [
+                    [
+                        "article.1",
+                        2,
+                        [
+                            "Versand",
+                            "Bedienung",
+                            "einzigen Einsatz"
+                        ]
+                    ],
+                    [
+                        "article.1",
+                        3,
+                        [
+                            "worauf die Urteile jeweils beruhen"
+                        ]
+                    ]
+                ],
+                "link": "a tổng hợp việc giao hàng, thao tác và chất lượng được gộp cùng con số. b nhầm lời khuyên không quá chú ý số lẻ với lỗi tính; c thêm kết luận về số người mà bài không nêu.",
+                "options": {
+                    "a": "Con số không cho thấy các cơ sở đánh giá khác nhau.",
+                    "b": "Các nền tảng thường tính sai khác biệt nhỏ.",
+                    "c": "Con số tự giảm khi có nhiều người đánh giá hơn."
+                }
+            },
+            "18": {
+                "vi": "Theo bài, xác nhận đã mua nói lên điều gì?",
+                "evidence": [
+                    [
+                        "article.2",
+                        1,
+                        [
+                            "ein Kundenkonto",
+                            "bestellt"
+                        ]
+                    ],
+                    [
+                        "article.2",
+                        2,
+                        [
+                            "geht daraus nicht hervor"
+                        ]
+                    ]
+                ],
+                "link": "b chỉ giữ phạm vi xác nhận giao dịch qua tài khoản. Nó không bảo đảm tự do khỏi lợi ích như c hoặc thử đủ lâu như a.",
+                "options": {
+                    "a": "Người đánh giá đã thử sản phẩm đủ lâu.",
+                    "b": "Có chứng cứ tài khoản liên quan đã đặt hàng qua nền tảng.",
+                    "c": "Đánh giá được đưa ra không có động lực tài chính hay lợi ích khác."
+                }
+            },
+            "19": {
+                "vi": "Khi nào một bình luận tiêu cực đặc biệt có giá trị thông tin?",
+                "evidence": [
+                    [
+                        "article.3",
+                        1,
+                        [
+                            "nach zwei Stunden",
+                            "unter einer Brille"
+                        ]
+                    ],
+                    [
+                        "article.3",
+                        4,
+                        [
+                            "Nicht die Schärfe",
+                            "Nachvollziehbarkeit"
+                        ]
+                    ]
+                ],
+                "link": "a diễn đạt điều kiện cụ thể giúp liên hệ với việc dùng của mình. b nhầm tính gay gắt với chất lượng; c thêm tiêu chuẩn tương đồng toàn bộ sở thích, bài chỉ cần điều kiện liên quan.",
+                "options": {
+                    "a": "Khi nhược điểm được mô tả có thể liên hệ với cách dùng của mình.",
+                    "b": "Khi nó được viết dứt khoát hơn hẳn đánh giá tích cực.",
+                    "c": "Khi người viết có cùng sở thích trong mọi lĩnh vực."
+                }
+            },
+            "20": {
+                "vi": "Danh sách lập trước có mục đích gì?",
+                "evidence": [
+                    [
+                        "article.4",
+                        2,
+                        [
+                            "unverzichtbare Eigenschaften",
+                            "Kompromiss"
+                        ]
+                    ],
+                    [
+                        "article.4",
+                        3,
+                        [
+                            "gezielter prüfen"
+                        ]
+                    ],
+                    [
+                        "article.4",
+                        4,
+                        [
+                            "sollte geändert werden"
+                        ]
+                    ]
+                ],
+                "link": "c hướng sự đánh giá vào nhu cầu riêng thay vì chỉ tìm xác nhận lựa chọn có sẵn. a sai vì danh sách vẫn cần chỉnh khi thấy yếu tố mới; b bài không đề nghị bỏ qua phản đối.",
+                "options": {
+                    "a": "Nó chốt quyết định mua trước khi đọc.",
+                    "b": "Nó khiến việc xem xét đánh giá trái ý trở nên thừa.",
+                    "c": "Nó giúp cân nhắc phản đối theo ưu tiên của bản thân."
+                }
+            },
+            "21": {
+                "vi": "Bài rút ra kết luận nào?",
+                "evidence": [
+                    [
+                        "article.5",
+                        0,
+                        [
+                            "weder nutzlos"
+                        ]
+                    ],
+                    [
+                        "article.5",
+                        1,
+                        [
+                            "im Verhältnis",
+                            "eigenen Anforderungen"
+                        ]
+                    ]
+                ],
+                "link": "b là kết luận đánh giá cung cấp căn cứ phải đối chiếu nhu cầu. a biến đánh giá thành quyết định thay người mua; c loại bỏ dữ liệu hữu ích, trái weder nutzlos.",
+                "options": {
+                    "a": "Khi đủ nhiều đánh giá, có thể bỏ việc tự xem xét.",
+                    "b": "Giá trị đánh giá phụ thuộc cách liên hệ chúng với hoàn cảnh riêng.",
+                    "c": "Tốt nhất xác định yêu cầu của mình mà không dùng nhận xét của khách."
+                }
+            }
+        }
+    },
+    "lesen_t4_nebensaison_20261121b": {
+        "passages": {
+            "opinions.a": [
+                "Tôi thích ra biển tháng Mười một vì có thể đi dọc bãi biển lâu mà không phải liên tục tránh các nhóm người.",
+                "Tôi chấp nhận trời tối sớm hơn và một số quán cà phê đóng cửa để đổi lấy điều đó.",
+                "Với tôi thư giãn không nằm ở sử dụng thật nhiều dịch vụ, mà ở việc cuối cùng cũng bớt kích thích xung quanh."
+            ],
+            "opinions.b": [
+                "Người ta cứ nói chỉ cần dời chuyến đi một chút thì mọi thứ sẽ rẻ và yên tĩnh hơn.",
+                "Nhưng với con đang đi học và công ty ấn định kỳ nghỉ từ lâu, đó không phải lựa chọn có thể tự do dùng.",
+                "Vì vậy tôi khó chịu với lời trách rằng các gia đình chỉ vì tiện mà cùng đi một thời điểm.",
+                "Trước khi khuyên họ lên kế hoạch tốt hơn, cần nhìn giới hạn lịch của họ."
+            ],
+            "opinions.c": [
+                "Tôi điều hành khách sạn nhỏ và cũng muốn nhận nhiều khách hơn vào mùa đông.",
+                "Khi đó tôi có thể ký hợp đồng dài hơn với nhân viên thay vì mỗi mùa xuân phải hướng dẫn nhóm mới.",
+                "Chỉ một mùa hè kín khách không đủ cho cam kết ấy khi phần còn lại trong năm hầu như không có đặt phòng.",
+                "Vì vậy với tôi điều quan trọng không hẳn là tổng lượng khách tăng thêm, mà là phân bố đều hơn."
+            ],
+            "opinions.d": [
+                "Khách sạn giá tốt mùa thu trông rất hấp dẫn trong quảng cáo, nhưng xe buýt từ ga khi ấy chỉ chạy hai chuyến một ngày.",
+                "Không có ô tô, chúng tôi phải đi taxi cho vài chuyến tham quan nên tiền tiết kiệm nhanh chóng hết.",
+                "Giờ trước khi đặt tôi kiểm tra trước tiên ở nơi đến thực sự có thể đi tới đâu.",
+                "Giá phòng thấp thực ra nói được rất ít về tổng chi phí lưu trú."
+            ],
+            "opinions.e": [
+                "Là cư dân thị trấn ven biển, vào mùa đông tôi không đơn giản mong có lượng người đông như tháng Tám.",
+                "Những tháng yên hơn cho chúng tôi thời gian sửa đường và hồi phục sau hoạt động mùa hè.",
+                "Nếu giờ tuần nào cũng có sự kiện lớn mới để hút khách, chính khoảng nghỉ ấy sẽ mất.",
+                "Khách được chào đón, nhưng kéo dài mùa du lịch cần giới hạn phù hợp cả với người địa phương."
+            ],
+            "opinions.f": [
+                "Giờ tôi thích lên kế hoạch đi bộ đường dài mùa xuân hơn là nghỉ tắm biển rồi ngày nào cũng trông nắng.",
+                "Không thể đặt trước thời tiết, nhưng có thể điều chỉnh kỳ vọng theo mùa.",
+                "Với tôi một sáng mưa không phải ngày nghỉ bị mất nếu ngay từ đầu tôi đã tính cả bảo tàng hoặc một ngày đọc sách.",
+                "Điều quyết định là tôi không mặc định tháng Tư có cùng chương trình như giữa hè."
+            ],
+            "opinions.g": [
+                "Quảng cáo du lịch mùa xuân thường nhấn mạnh ít chen chúc tự động đồng nghĩa ít tác động môi trường.",
+                "Nhưng nếu vì thế người ta đi thêm chuyến hoặc chọn máy bay tới nơi xa, lợi thế này không hề chắc chắn.",
+                "Vì vậy tôi sẽ xét cách di chuyển và số chuyến của mình trước khi lấy riêng tháng đi làm bằng chứng bền vững.",
+                "Bãi biển vắng hơn có thể dễ chịu, nhưng không thay được sự cân nhắc đó."
+            ],
+            "opinions.h": [
+                "Từ khi đi du lịch một mình, tôi thích đặt sát ngày nhất.",
+                "Khi xuất hiện khoảng thời gian thuận lợi, tôi không muốn bị ràng buộc bởi quyết định đã chốt từ lâu.",
+                "Đôi khi tôi không còn tìm được khách sạn mong muốn, nhưng đổi lại có thể tận dụng tuần rảnh bất ngờ.",
+                "Sự linh hoạt ấy quan trọng với tôi hơn cảm giác chắc chắn biết từng chi tiết từ nhiều tháng trước."
+            ],
+            "example": [
+                "Bớt náo nhiệt đem lại lợi ích nghỉ ngơi cá nhân"
+            ]
+        },
+        "questions": {
+            "22": {
+                "vi": "Ưu đãi rẻ cuối cùng có thể thành đắt",
+                "evidence": [
+                    [
+                        "opinions.d",
+                        1,
+                        [
+                            "Taxi",
+                            "Ersparnis rasch aufgebraucht"
+                        ]
+                    ],
+                    [
+                        "opinions.d",
+                        3,
+                        [
+                            "gesamte Aufenthalt kostet"
+                        ]
+                    ]
+                ],
+                "link": "d đối chiếu giá phòng thấp với chi phí taxi khiến hết tiền tiết kiệm. h có nhắc tìm khách sạn nhưng trọng tâm là linh hoạt đặt sát ngày, không phải tổng chi phí."
+            },
+            "23": {
+                "vi": "Bớt tập trung cao điểm giúp việc làm ổn định hơn",
+                "evidence": [
+                    [
+                        "opinions.c",
+                        1,
+                        [
+                            "längere Verträge"
+                        ]
+                    ],
+                    [
+                        "opinions.c",
+                        3,
+                        [
+                            "gleichmäßigere Verteilung"
+                        ]
+                    ]
+                ],
+                "link": "c muốn phân bố khách đều để ký hợp đồng dài, không nhất thiết tăng tổng khách. b cũng nhắc công ty nhưng nói về giới hạn lịch của người đi du lịch."
+            },
+            "24": {
+                "vi": "Không phải ai cũng tự do chọn thời điểm đi",
+                "evidence": [
+                    [
+                        "opinions.b",
+                        1,
+                        [
+                            "schulpflichtigen Kindern",
+                            "keine frei verfügbare Möglichkeit"
+                        ]
+                    ]
+                ],
+                "link": "b bác lời trách gia đình đi cùng mùa vì lịch học và công ty hạn chế lựa chọn. Không nhầm h: người đó tự chọn giữ sự linh hoạt, không bị ràng buộc như b."
+            },
+            "25": {
+                "vi": "Chỉ phân tán thời điểm chưa bảo đảm lợi ích sinh thái",
+                "evidence": [
+                    [
+                        "opinions.g",
+                        1,
+                        [
+                            "zusätzlich gereist",
+                            "keineswegs sicher"
+                        ]
+                    ],
+                    [
+                        "opinions.g",
+                        2,
+                        [
+                            "Anreise",
+                            "Zahl meiner Reisen"
+                        ]
+                    ]
+                ],
+                "link": "g phân biệt bớt đông với bền vững: cần xét đi thêm chuyến và phương tiện. e lo mất thời gian nghỉ của địa phương, không phân tích tác động cách di chuyển."
+            },
+            "26": {
+                "vi": "Điều chỉnh chương trình nghỉ theo điều kiện thay đổi",
+                "evidence": [
+                    [
+                        "opinions.f",
+                        1,
+                        [
+                            "Erwartungen",
+                            "Jahreszeit anpassen"
+                        ]
+                    ],
+                    [
+                        "opinions.f",
+                        2,
+                        [
+                            "Museen",
+                            "Lesetag"
+                        ]
+                    ]
+                ],
+                "link": "f thay đổi kỳ vọng và chuẩn bị hoạt động thay thế theo mùa, không hứa thời tiết tốt. h nói về thời điểm đặt chứ không về chương trình phù hợp mùa."
+            },
+            "27": {
+                "vi": "Ngay cả điểm du lịch cũng cần thời gian nghỉ",
+                "evidence": [
+                    [
+                        "opinions.e",
+                        1,
+                        [
+                            "Wege instand zu setzen",
+                            "erholen"
+                        ]
+                    ],
+                    [
+                        "opinions.e",
+                        2,
+                        [
+                            "diese Pause verloren"
+                        ]
+                    ]
+                ],
+                "link": "e đòi giữ khoảng nghỉ để sửa chữa và hồi phục. a muốn yên cho kỳ nghỉ cá nhân; e bảo vệ nhịp sống của người địa phương."
+            }
+        }
+    },
+    "lesen_t5_abendkurs_20261121b": {
+        "passages": {
+            "headings.a": [
+                "Đăng ký và hình thành hợp đồng"
+            ],
+            "headings.b": [
+                "Xếp trình độ và chuyển cấp độ khóa học"
+            ],
+            "headings.c": [
+                "Rút đăng ký và hoàn học phí"
+            ],
+            "headings.d": [
+                "Buổi học bỏ lỡ và hình thức học bù"
+            ],
+            "headings.e": [
+                "Điều kiện cấp giấy xác nhận tham gia"
+            ],
+            "headings.f": [
+                "Sử dụng tài liệu học"
+            ],
+            "headings.g": [
+                "Trung tâm hủy khóa học"
+            ],
+            "headings.h": [
+                "Cách thanh toán và hạn trả"
+            ],
+            "example": [
+                "Đăng ký qua mẫu trực tuyến hoặc trực tiếp tại văn phòng.",
+                "Đăng ký chỉ có hiệu lực ràng buộc khi trung tâm đã gửi xác nhận bằng văn bản.",
+                "Chỉ đến học buổi đầu không thay thế việc đăng ký."
+            ],
+            "sections.28": [
+                "Trước khóa ngoại ngữ nâng tiếp cần làm bài xếp trình độ, trừ khi có chứng nhận được công nhận về kiến thức nền cần thiết.",
+                "Kết quả dùng để phân vào nhóm phù hợp và không phải kỳ thi tốt nghiệp.",
+                "Nếu trong hai tuần đầu việc xếp lớp tỏ ra không phù hợp, có thể xin chuyển với sự thống nhất của người phụ trách khóa.",
+                "Việc thực hiện đòi hỏi có chỗ trống ở nhóm muốn chuyển tới.",
+                "Từ đó không phát sinh quyền yêu cầu mở thêm khóa."
+            ],
+            "sections.29": [
+                "Về nguyên tắc các buổi không tham gia không được hoàn tiền cũng không được chuyển cho người khác.",
+                "Khi có chứng cứ ốm dài ngày, ban quản lý có thể cho phép dự buổi tương ứng ở lớp song song nếu còn chỗ.",
+                "Không có quyền đương nhiên được hưởng điều này; cần chấp thuận trước bằng văn bản.",
+                "Dù vậy vẫn có thể tự làm bài tập được cung cấp, nhưng không được tính là đã học bù có mặt.",
+                "Buổi do người phụ trách hủy không thuộc các quy định này và sẽ được xếp lại riêng."
+            ],
+            "sections.30": [
+                "Giấy xác nhận được cấp theo yêu cầu khi đã dự ít nhất bốn phần năm số giờ học quy định.",
+                "Căn cứ là danh sách điểm danh do người phụ trách lập, gồm cả buổi học bù được phê duyệt.",
+                "Giấy này chỉ xác nhận việc tham gia, không khẳng định trình độ ngôn ngữ đạt được.",
+                "Nó không thay thế chứng chỉ kỳ thi riêng.",
+                "Việc cấp còn đòi hỏi đã trả đủ học phí; chỉ có thỏa thuận trả góp thì chưa đủ."
+            ]
+        },
+        "questions": {
+            "28": {
+                "vi": "Điều 28",
+                "evidence": [
+                    [
+                        "sections.28",
+                        0,
+                        [
+                            "Einstufungstest"
+                        ]
+                    ],
+                    [
+                        "sections.28",
+                        2,
+                        [
+                            "Wechsel beantragt"
+                        ]
+                    ],
+                    [
+                        "sections.28",
+                        3,
+                        [
+                            "freien Platz"
+                        ]
+                    ]
+                ],
+                "link": "b bao quát xếp trình độ và điều kiện chuyển nhóm. Đoạn không nói cấp giấy tham gia ở e: Einstufungstest không phải Abschlussprüfung. Không tự có quyền đòi lớp mới khi hết chỗ."
+            },
+            "29": {
+                "vi": "Điều 29",
+                "evidence": [
+                    [
+                        "sections.29",
+                        0,
+                        [
+                            "Nicht wahrgenommene Unterrichtsstunden"
+                        ]
+                    ],
+                    [
+                        "sections.29",
+                        1,
+                        [
+                            "Parallelkurs"
+                        ]
+                    ],
+                    [
+                        "sections.29",
+                        4,
+                        [
+                            "nicht betroffen"
+                        ]
+                    ]
+                ],
+                "link": "d bao quát bỏ lỡ buổi và ngoại lệ học bù. Có nhắc không hoàn tiền nhưng không phải rút cả khóa ở c; câu cuối loại buổi do giáo viên hủy khỏi quy định, nên không chọn g."
+            },
+            "30": {
+                "vi": "Điều 30",
+                "evidence": [
+                    [
+                        "sections.30",
+                        0,
+                        [
+                            "Bescheinigung",
+                            "vier Fünftel"
+                        ]
+                    ],
+                    [
+                        "sections.30",
+                        2,
+                        [
+                            "ausschließlich die Teilnahme"
+                        ]
+                    ],
+                    [
+                        "sections.30",
+                        4,
+                        [
+                            "vollständig entrichtet"
+                        ]
+                    ]
+                ],
+                "link": "e là chủ đề bao trùm: điều kiện và ý nghĩa giấy xác nhận. Trả đủ phí chỉ là một điều kiện phụ, không biến đoạn thành cách và hạn thanh toán ở h. Giấy không chứng nhận trình độ."
+            }
+        }
+    }
+});
