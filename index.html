@@ -750,6 +750,14 @@
             body.learning-focus { padding-top: 10px; }
             body.learning-focus .kapi-container { width: calc(100vw - 18px); }
         }
+    /* One full-body GIF at a time; legacy overlays cannot cover it. */
+        .kapi-container.kapi-gif-mode > .kapi-img,
+        .kapi-container.kapi-gif-mode > .kapi-head,
+        .kapi-container.kapi-gif-mode > .kapi-accessory,
+        .kapi-container.kapi-gif-mode > .kapi-activity-layer,
+        .kapi-container.kapi-gif-mode > .kapi-decor-grass { display:none !important; }
+        .kapi-gif-image { display:block; width:560px; max-width:90vw; height:auto; object-fit:contain; }
+        body.learning-focus .kapi-container > .kapi-gif-image { display:none; }
     </style>
 </head>
 <body>
@@ -792,17 +800,7 @@
             <div id="kapi-head-item" class="kapi-head">👑</div>
             <div id="kapi-accessory" class="kapi-accessory" aria-hidden="true"></div>
             <div id="kapi-activity" class="kapi-activity-layer" aria-hidden="true"><span class="scene-prop"></span><span class="scene-fx"></span></div>
-            <img id="kapi-sleep-image" src="assets/kapi-actions/kapi-sleep.png" onerror="this.onerror=null;this.src='kapi-sleep.png';" class="kapi-sleep-image" alt="Kapi đang ngủ cạnh chiếc gối hình tim">
-            <img id="kapi-radio-image" src="assets/kapi-actions/kapi-radio.png" class="kapi-scene-image" alt="Kapi đung đưa cạnh radio">
-            <img id="kapi-cocoa-image" src="assets/kapi-actions/kapi-cocoa.png" class="kapi-scene-image" alt="Kapi ôm cốc cacao">
-            <img id="kapi-mirror-image" src="assets/kapi-actions/kapi-mirror.png" class="kapi-scene-image" alt="Kapi chỉnh quả cam trước gương">
-            <img id="kapi-star-image" src="assets/kapi-actions/kapi-star-glasses.png" class="kapi-scene-image" alt="Kapi đeo kính sao và gật đầu">
-            <img id="kapi-sunglasses-image" src="assets/kapi-actions/kapi-sunglasses.png" class="kapi-scene-image" alt="Kapi hạ kính râm">
-            <img id="kapi-sunglasses-wink-image" src="assets/kapi-actions/kapi-sunglasses-wink.png" class="kapi-scene-image" alt="Kapi hạ kính râm và nháy mắt">
-            <img id="kapi-top-hat-image" src="assets/kapi-actions/kapi-top-hat.png" class="kapi-scene-image" alt="Kapi cầm mũ quý ông cúi chào">
-            <img id="kapi-headband-image" src="assets/kapi-actions/kapi-headband.png" class="kapi-scene-image" alt="Kapi đưa đơn xin nghỉ phép">
-            <img id="kapi-flower-image" src="assets/kapi-actions/kapi-flower.png" class="kapi-scene-image" alt="Kapi cài hoa và hắt xì">
-            <img id="kapi-beret-image" src="assets/kapi-actions/kapi-beret.png" class="kapi-scene-image" alt="Kapi họa sĩ cầm bảng màu">
+            <img id="kapi-gif-image" class="kapi-gif-image" src="assets/kapi-actions/gifs/kapi-default-still.png" width="560" height="460" alt="Kapi nhún nhảy">
             <img src="capy.png" class="kapi-img" alt="Bé Kapi dễ thương">
         <div class="kapi-decor-grass">
                 <span class="decor-item">🌿</span>
@@ -1086,28 +1084,29 @@
             return '';
         }
 
-        function hasKapiArtwork(item) {
-            return !!item && !item.look.includes(' ');
+        function kapiGifName(item) {
+            return item ? item.look.replaceAll(' ', '-') : 'default';
         }
+        function hasKapiArtwork(item) { return !!item && shopItems.includes(item); }
 
+        function activeKapiItem() {
+            return shopItems.find(item => item.id === sysData.activeDisplayItemId && sysData.inventory.includes(item.id)) || null;
+        }
         function restoreKapiAnimatedOutfit() {
-            // Preserve ownership; only replace unavailable colour overlays in equipped slots.
-            let changed = false;
-            for (const type of ['face', 'head', 'activity']) {
-                const selected = shopItems.find(item => item.id === sysData.equippedItems[type]);
-                if (selected && !hasKapiArtwork(selected)) {
-                    const fallback = type === 'face' && sysData.inventory.includes('item_glass') ? 'item_glass' : null;
-                    sysData.equippedItems[type] = fallback;
-                    if (sysData.activeDisplayItemId === selected.id) sysData.activeDisplayItemId = fallback;
-                    changed = true;
+            // Read legacy slots only once. Never delete purchases or change their prices.
+            if (!sysData.kapiGifSelectionVersion) {
+                if (!activeKapiItem()) {
+                    const ids = [sysData.equippedItems.activity, sysData.equippedItems.face, sysData.equippedItems.head];
+                    sysData.activeDisplayItemId = ids.find(id => sysData.inventory.includes(id) && shopItems.some(item => item.id === id)) || null;
                 }
+                sysData.kapiGifSelectionVersion = 1;
+                saveData();
             }
-            if (changed) saveData();
         }
 
         function renderShopItem(item) {
             const isOwned = sysData.inventory.includes(item.id);
-            const isEquipped = sysData.equippedItems[item.type] === item.id;
+            const isEquipped = activeKapiItem()?.id === item.id;
             const canAfford = sysData.totalLeaves >= item.price;
             const artworkMissing = !hasKapiArtwork(item);
             const requirement = artworkMissing ? 'Chưa có hoạt cảnh · đồ đã mua vẫn giữ trong tủ' : isOwned ? '' : getItemRequirement(item);
@@ -1173,7 +1172,8 @@
             const item = shopItems.find(entry => entry.id === id);
             if (!hasKapiArtwork(item) || !sysData.inventory.includes(id)) return;
             cancelKapiPreview();
-            const isRemoving = sysData.equippedItems[item.type] === id;
+            sysData.kapiGifSelectionVersion = 1;
+            const isRemoving = activeKapiItem()?.id === id;
             sysData.equippedItems[item.type] = isRemoving ? null : id;
             if (isRemoving && sysData.activeDisplayItemId === id) sysData.activeDisplayItemId = null;
             if (!isRemoving) sysData.activeDisplayItemId = id;
@@ -1222,58 +1222,44 @@
             updateKapiActivity(previewItem);
         }
 
-        function updateKapiActivity(previewItem = null) {
+        let kapiGifLoadVersion = 0;
+        let kapiGifPreviewActive = false;
+        function updateKapiActivity(previewItem = null, onReady = null) {
             const kapi = document.querySelector('.kapi-container');
-            const layer = document.getElementById('kapi-activity');
-            if (!kapi || !layer) return;
-            ['radio','cocoa','sleep','mirror','star-nod','sunglasses','top-hat','headband','flower','beret'].forEach(scene => kapi.classList.remove(`kapi-scene-${scene}`));
-            kapi.classList.remove('kapi-full-scene');
-            layer.className = 'kapi-activity-layer';
-            let item = previewItem || shopItems.find(entry => entry.id === sysData.activeDisplayItemId && sysData.equippedItems[entry.type] === entry.id);
-            if (!item) {
-                const fallbackId = sysData.equippedItems.activity || sysData.equippedItems.face || sysData.equippedItems.head;
-                item = shopItems.find(entry => entry.id === fallbackId);
-            }
-            if (item && item.type === 'activity') {
-                if (item.look === 'sleep' && !isKapiSceneImageReady('sleep')) return;
-                kapi.classList.add(`kapi-scene-${item.look}`);
-                layer.classList.add(`${item.look}-scene`);
-                if (item.look !== 'sleep' && isKapiSceneImageReady(item.look)) kapi.classList.add('kapi-full-scene');
-                const fx = layer.querySelector('.scene-fx');
-                if (fx) fx.textContent = item.look === 'radio' ? '♫ ♪' : item.look === 'sleep' ? 'Z z z' : item.look === 'mirror' ? '✦' : '';
-                return;
-            }
-            const fashionScene = getKapiFashionScene(item);
-            if (fashionScene && isKapiSceneImageReady(fashionScene)) {
-                kapi.classList.add('kapi-full-scene');
-                const sceneClass = fashionScene === 'star' ? 'star-nod' : fashionScene;
-                const sceneImage = getKapiSceneImage(fashionScene);
-                if (sceneImage) void sceneImage.offsetWidth;
-                kapi.classList.add(`kapi-scene-${sceneClass}`);
-            }
-        }
-
-        function getKapiSceneImage(look) {
-            return document.getElementById(`kapi-${look}-image`);
-        }
-
-        function isKapiSceneImageReady(look) {
-            const image = getKapiSceneImage(look);
-            return !!(image && image.complete && image.naturalWidth > 0);
-        }
-
-        function getKapiFashionScene(item) {
-            if (!item || item.type === 'activity') return '';
-            // Colour variants have no matching full-body artwork: retain their actual CSS accessory.
-            if (item.look.includes(' ')) return '';
-            if (item.look.includes('star-glasses')) return 'star';
-            return item.look.split(' ')[0];
+            const image = document.getElementById('kapi-gif-image');
+            if (!kapi || !image) return;
+            const item = previewItem || activeKapiItem();
+            const name = kapiGifName(item);
+            const base = 'assets/kapi-actions/gifs/kapi-' + name;
+            const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+            const url = base + (reduced ? '-still.png' : '.gif');
+            const version = ++kapiGifLoadVersion;
+            kapi.classList.add('kapi-gif-mode');
+            image.alt = item ? 'Kapi · ' + item.name : 'Kapi nhún nhảy';
+            image.onload = () => {
+                if (version !== kapiGifLoadVersion) return;
+                image.onload = null;
+                if (onReady) onReady();
+            };
+            image.onerror = () => {
+                if (version !== kapiGifLoadVersion) return;
+                image.onload = null;
+                image.onerror = () => { image.onerror = null; image.src = 'capy.png'; };
+                image.src = base + '-still.png';
+                const bubble = kapi.querySelector('.kapi-bubble');
+                if (bubble) bubble.textContent = 'GIF chưa tải được, Kapi dùng ảnh tĩnh nhé. Đồ của cậu vẫn còn nguyên!';
+            };
+            // A new image request restarts a replay without downloading all shop assets.
+            image.removeAttribute('src');
+            image.src = url;
         }
 
         let kapiPreviewTimer = null;
         function cancelKapiPreview() {
             if (kapiPreviewTimer !== null) window.clearTimeout(kapiPreviewTimer);
             kapiPreviewTimer = null;
+            kapiGifLoadVersion++;
+            kapiGifPreviewActive = false;
         }
         function getKapiActivityPreviews() {
             try { const ids = JSON.parse(localStorage.getItem(KAPI_PREVIEW_KEY)); return Array.isArray(ids) ? ids : []; }
@@ -1291,36 +1277,38 @@
             const isOwned = item && sysData.inventory.includes(id);
             if (!hasKapiArtwork(item) || !kapi || !layer || (!isOwned && hasPreviewedKapiActivity(id))) return;
             const bubble = kapi.querySelector('.kapi-bubble');
-            const sleepImage = document.getElementById('kapi-sleep-image');
-            if (item.type === 'activity' && item.look === 'sleep' && (!sleepImage || !sleepImage.complete || sleepImage.naturalWidth === 0)) {
-                if (bubble) bubble.textContent = 'Kapi chưa tới nơi, vé xem thử vẫn còn nguyên nhé! 🫩';
-                return;
-            }
-            if (item.type === 'activity' && item.look !== 'sleep' && !isKapiSceneImageReady(item.look)) {
-                if (bubble) bubble.textContent = 'Đạo cụ chưa tới nơi, vé xem thử vẫn còn nguyên nhé! 🫩';
-                return;
-            }
-            const fashionScene = getKapiFashionScene(item);
-            if (fashionScene && !isKapiSceneImageReady(fashionScene)) {
-                if (bubble) bubble.textContent = 'Ảnh biểu diễn chưa tới nơi, vé xem thử vẫn còn nguyên nhé! 🫩';
-                return;
-            }
-            if (!isOwned) {
-                const previews = getKapiActivityPreviews();
-                previews.push(id);
-                localStorage.setItem(KAPI_PREVIEW_KEY, JSON.stringify(previews));
-            }
-            renderShopUI();
             cancelKapiPreview();
-            // Preview the requested scene without changing or saving the equipped slots.
-            updateKapiAppearance(item);
-            if (bubble) bubble.textContent = isOwned ? 'Kapi diễn lại theo yêu cầu! 💗' : 'Bản dùng thử 5 giây thôi nhé! 👀';
-            kapiPreviewTimer = window.setTimeout(() => {
-                kapiPreviewTimer = null;
-                updateKapiAppearance();
-                if (bubble) bubble.textContent = isOwned ? 'Kapi đã diễn xong! 💗' : 'Hết lượt xem thử, Kapi mặc lại đồ cũ nhé!';
-            }, 5000);
+            if (isOwned) {
+                // Replaying a purchased scene selects it permanently, including after reload.
+                sysData.equippedItems[item.type] = id;
+                sysData.activeDisplayItemId = id;
+                saveData();
+                renderShopUI();
+                updateKapiAppearance(item);
+                if (bubble) bubble.textContent = 'Kapi diễn mãi cho cậu xem nhé! 💗';
+                return;
+            }
+            kapiGifPreviewActive = true;
+            updateKapiActivity(item, () => {
+                if (!kapiGifPreviewActive) return;
+                const previews = getKapiActivityPreviews();
+                if (!previews.includes(id)) previews.push(id);
+                localStorage.setItem(KAPI_PREVIEW_KEY, JSON.stringify(previews));
+                renderShopUI();
+                if (bubble) bubble.textContent = 'Bản dùng thử 5 giây nhé! 👀';
+                kapiPreviewTimer = window.setTimeout(() => {
+                    kapiPreviewTimer = null;
+                    kapiGifPreviewActive = false;
+                    updateKapiAppearance();
+                    if (bubble) bubble.textContent = 'Kapi mặc lại món cậu đã chọn nhé!';
+                }, 5000);
+            });
         }
+
+        window.matchMedia?.('(prefers-reduced-motion: reduce)').addEventListener?.('change', () => {
+            cancelKapiPreview();
+            updateKapiAppearance();
+        });
 
         function previewKapiActivity(id) { previewKapiItem(id); }
 
@@ -1362,11 +1350,6 @@
         document.addEventListener('DOMContentLoaded', () => {
             try {
                 initSystem();
-                document.querySelectorAll('.kapi-scene-image, .kapi-sleep-image').forEach(image => {
-                    image.addEventListener('load', () => {
-                        if (kapiPreviewTimer === null) updateKapiAppearance();
-                    });
-                });
                 checkAndToggleWidgets();
             } finally {
                 document.documentElement.classList.remove('kapi-booting');
