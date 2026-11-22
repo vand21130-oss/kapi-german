@@ -800,7 +800,7 @@
             <div id="kapi-head-item" class="kapi-head">👑</div>
             <div id="kapi-accessory" class="kapi-accessory" aria-hidden="true"></div>
             <div id="kapi-activity" class="kapi-activity-layer" aria-hidden="true"><span class="scene-prop"></span><span class="scene-fx"></span></div>
-            <img id="kapi-gif-image" class="kapi-gif-image" src="assets/kapi-actions/gifs/kapi-default-still.png" width="560" height="460" alt="Kapi nhún nhảy">
+            <img id="kapi-gif-image" class="kapi-gif-image" src="assets/kapi-actions/gifs/kapi-default-still.png" width="512" height="512" alt="Kapi vẫy chào">
             <img src="capy.png" class="kapi-img" alt="Bé Kapi dễ thương">
         <div class="kapi-decor-grass">
                 <span class="decor-item">🌿</span>
@@ -1235,7 +1235,7 @@
             const url = base + (reduced ? '-still.png' : '.gif');
             const version = ++kapiGifLoadVersion;
             kapi.classList.add('kapi-gif-mode');
-            image.alt = item ? 'Kapi · ' + item.name : 'Kapi nhún nhảy';
+            image.alt = item ? 'Kapi · ' + item.name : 'Kapi vẫy chào';
             image.onload = () => {
                 if (version !== kapiGifLoadVersion) return;
                 image.onload = null;
