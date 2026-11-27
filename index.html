@@ -756,7 +756,17 @@
         .kapi-container.kapi-gif-mode > .kapi-accessory,
         .kapi-container.kapi-gif-mode > .kapi-activity-layer,
         .kapi-container.kapi-gif-mode > .kapi-decor-grass { display:none !important; }
-        .kapi-gif-image { display:block; width:560px; max-width:90vw; height:auto; object-fit:contain; }
+        /* Keep the mascot secondary to the greeting and study controls. */
+        .kapi-gif-image {
+            display:block;
+            width:360px;
+            width:min(360px, 70vw, 42svh);
+            max-width:90vw;
+            height:auto;
+            object-fit:contain;
+            margin-inline:auto;
+        }
+        .kapi-container.kapi-gif-mode { margin:12px 0; }
         body.learning-focus .kapi-container > .kapi-gif-image { display:none; }
     </style>
 </head>
