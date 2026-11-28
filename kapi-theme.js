@@ -11,6 +11,10 @@
       && !!buttons?.querySelector('[onclick="sayHallo()"]')
       && container.style.display !== 'none';
     document.body.classList.toggle('kapi-welcome', welcome);
+    const mood = !!buttons?.querySelector('[onclick="goodAnswer()"]');
+    const levels = !!buttons?.querySelector('[onclick^="chooseLevel("]');
+    document.body.classList.toggle('kapi-conversation', welcome || mood || levels);
+    document.body.classList.toggle('kapi-levels', levels);
     if (!welcome && shop) shop.open = false;
   }
   if (container) new MutationObserver(syncWelcome).observe(container, {childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:['style']});

@@ -1,0 +1,59 @@
+@font-face{font-family:KapiNunito;src:url('assets/kapi-pencil/nunito-400.ttf') format('truetype');font-weight:400;font-display:swap}
+@font-face{font-family:KapiNunito;src:url('assets/kapi-pencil/nunito-600.ttf') format('truetype');font-weight:600;font-display:swap}
+@font-face{font-family:KapiNunito;src:url('assets/kapi-pencil/nunito-700.ttf') format('truetype');font-weight:700;font-display:swap}
+@font-face{font-family:KapiNunito;src:url('assets/kapi-pencil/nunito-800.ttf') format('truetype');font-weight:800;font-display:swap}
+/* Colored-pencil garden: presentation only, shared across learning surfaces. */
+:root{--kapi-cream:#faf5e9;--kapi-paper:#fffaf0;--kapi-ink:#414b2a;--kapi-muted:#817b68;--kapi-green:#627638;--kapi-sage:#e8ebd3;--kapi-line:#d8ceb4;--kapi-shadow:1px 4px 12px #6953330a;--pencil-radius:19px 23px 18px 22px}
+body{background-image:url('assets/kapi-pencil/paper.svg')!important;font-family:KapiNunito,'Trebuchet MS','Segoe UI',sans-serif;position:relative;isolation:isolate;padding-bottom:48px}
+body::before,body::after{content:'';display:block!important;position:fixed;width:210px;height:210px;pointer-events:none;z-index:-1;background:url('assets/kapi-pencil/botanical-corner.png') left bottom/contain no-repeat;opacity:.65}
+body::before{left:0;bottom:0}body::after{right:0;top:0;transform:rotate(180deg)}
+.kapi-site-header{max-width:1200px;min-height:86px;margin-bottom:20px;border-color:#9aab7160}
+.kapi-brand{font-family:KapiNunito,'Trebuchet MS',sans-serif;font-size:30px;color:#485d2e;letter-spacing:-1.2px}.kapi-brand img{width:54px;height:54px}
+h1,h2,h3,.btn-kapi,summary{font-family:KapiNunito,'Trebuchet MS','Segoe UI',sans-serif}
+#container>h1{font-weight:800;color:#4f6032;letter-spacing:-.8px}
+.total-leaves{border:1px solid #bcc69a70;background:#e9edd7;border-radius:48% 43% 46% 40% / 40% 48% 42% 45%}
+/* The same open garden stage for greeting, mood and level selection. */
+body.kapi-conversation #container{display:flex;flex-direction:column;align-items:center;position:relative;background:none;border:0;border-radius:0;padding:20px 24px 0;margin-top:0;text-align:center;max-width:1120px;gap:0;min-height:650px}
+body.kapi-conversation #container>h1{position:absolute;left:12%;top:60px;width:230px;padding:22px 18px;font-size:32px;line-height:1.18;border:2px solid #b4a285;border-radius:49% 48% 42% 45%;background:#fffaf2;transform:rotate(-5deg);z-index:2;margin:0;box-sizing:border-box}
+body.kapi-conversation #container>h1::before{display:none}
+body.kapi-conversation #container>h1::after{content:'';position:absolute;bottom:-12px;right:28px;width:23px;height:22px;background:#fffaf2;border-right:2px solid #b4a285;border-bottom:2px solid #b4a285;transform:skew(22deg) rotate(25deg)}
+body.kapi-conversation .kapi-container{margin:30px 0 0!important;width:100%;max-width:420px;position:relative;align-self:center}
+body.kapi-conversation .kapi-gif-image{width:350px;max-width:100%;height:auto}
+body.kapi-conversation .kapi-bubble{display:none!important}
+body.kapi-conversation #message{font-size:clamp(22px,2.6vw,31px)!important;font-weight:600;color:#4f6032;max-width:700px;margin:16px 0 22px!important;line-height:1.4}
+body.kapi-conversation #buttons{max-width:720px;align-self:center}
+body.kapi-conversation #buttons>div{margin:0!important}
+body.kapi-conversation #buttons>div>div{display:none}
+body.kapi-conversation #timer:empty,body.kapi-conversation #feedback-area{display:none}
+body.kapi-conversation .kapi-visit-count{margin:40px 0 0!important;padding:0!important;font-size:11px;opacity:.65}
+/* A taped attendance note, never a toolbar below the main action. */
+#kapi-eco-widgets{width:0;height:0;margin:0;order:0}
+#leaf-widget{position:absolute;top:142px;right:max(28px,calc((100vw - 1200px)/2));width:260px;max-width:28vw;display:flex;flex-direction:column;padding:24px 18px 18px;gap:18px;background:#fff9e9 url('assets/kapi-pencil/paper.svg');border:1px solid #d2c09a;border-radius:var(--pencil-radius);box-shadow:2px 5px 8px #7e623114;transform:rotate(1deg);z-index:3;text-align:center}
+#leaf-widget::before{content:'';position:absolute;top:-10px;left:calc(50% - 32px);width:64px;height:22px;background:repeating-linear-gradient(60deg,#a8b578aa 0 6px,#bfcb9aaa 6px 9px);transform:rotate(-8deg);opacity:.8}
+#leaf-widget>div:first-child{font-size:18px!important;color:#536333!important}
+.leaves-container{display:flex;gap:10px;justify-content:center;width:100%}.leaf{font-size:0!important;min-width:20px;gap:9px;filter:none!important;opacity:1!important}.leaf small{display:none}
+.leaf::before{font-size:10px!important;line-height:1.2;margin:0;color:#627039}
+.leaf::after,.leaf.leaf-missed::after{content:'';position:static;width:13px;height:20px;box-sizing:border-box;border:1.6px solid #a2b06e;border-radius:85% 0 85% 0;background:transparent;transform:rotate(25deg);box-shadow:none}
+.leaf.leaf-claimed::after{background:repeating-linear-gradient(70deg,#97a85f 0 2px,#a5b671 2px 3px);border-color:#8da25a}
+#btn-claim-leaf{font-size:13px;padding:8px 16px;border:1.5px solid #7c8a4e;border-radius:11px 14px 10px 13px;background:#fffaf0;width:auto;white-space:normal}
+#btn-claim-leaf:disabled{opacity:.6}
+#shop-widget{right:max(150px,calc((100vw - 1200px)/2 + 140px))}
+#shop-widget[open] #shop-items-container{background:#fffaf0 url('assets/kapi-pencil/paper.svg');border:1px solid #c6bb9c;border-radius:var(--pencil-radius)}
+.shop-item{background:#f0eddd;border:1px solid #dbd5bd;border-radius:var(--pencil-radius)}
+/* Pencil outlines and warm paper carry through every existing activity. */
+.btn-kapi,.btn-grid,.gl-btn,.fish-btn{border:1px solid #b9c293;border-radius:13px 17px 12px 16px;box-shadow:1px 2px 0 #a8a17e25!important;color:#465331}
+.btn-kapi:hover,.btn-grid:hover{box-shadow:1px 4px 0 #a8a17e30!important}
+.kapi-welcome #buttons .btn-kapi{background:#627638!important;border:2px solid #596e35;color:#fffbed!important;border-radius:25px 29px 24px 28px;padding:14px 32px;font-size:23px;box-shadow:1px 3px 0 #3c4b2420!important}
+.btn-green,.btn-a1{background:#e5ead0}.btn-a2{background:#e1ebdf}.btn-b1{background:#f2e8c7}.btn-b2{background:#f0ddc6}.btn-red{background:#f1deda}
+#feedback-area,.fish-panel,.gl-panel,.lesen-panel,.lesen-daily-card,.vocab-mission,.vocab-journal-strip,.vocab-review-card,.lt-gate-panel,.koffer-story-card,.transcript-box,.lesen-toolbar,.fish-card,.vocab-links-strip{background-color:#fffcf5;border:1px solid var(--kapi-line);border-radius:var(--pencil-radius);box-shadow:var(--kapi-shadow)}
+.kapi-skill-grid>button,.kapi-skill-grid>a{border-color:#ccc4a8!important;background:#fffaf0!important;border-radius:var(--pencil-radius)!important}
+input[type=text],textarea,select{background:#fffdf7;border-color:#c5cba9;border-radius:10px 13px 9px 12px;font-family:'Segoe UI',sans-serif}
+.lesen-readable-text,.transcript-box,.gl-transcript,.fish-panel{font-family:'Segoe UI',sans-serif;line-height:1.8}
+#kapi-highlighter{background:#fffaf0!important;border-color:#d7c9a5!important}#kapi-highlighter button{background:#edeed8!important}
+body.learning-focus::before,body.learning-focus::after{opacity:.15;width:140px;height:140px}
+@media(max-width:1100px){#leaf-widget{width:225px;right:24px;max-width:none;top:120px}body.kapi-conversation #container>h1{left:5%;width:200px;font-size:27px}body.kapi-conversation .kapi-container{margin-top:75px!important}}
+@media(max-width:760px){body{padding-inline:16px}body::before,body::after{width:115px;height:115px;opacity:.4}.kapi-brand{font-size:24px}.kapi-brand img{width:40px;height:40px}.kapi-site-header{min-height:74px;margin-bottom:12px}#shop-widget{right:110px}body.kapi-conversation #container{padding:12px 0 0;min-height:0}body.kapi-conversation #container>h1{position:relative;left:auto;top:auto;font-size:24px;width:auto;max-width:280px;padding:14px 22px;align-self:center;transform:rotate(-2deg)}body.kapi-conversation .kapi-container{margin:22px 0 0!important;max-width:280px}body.kapi-conversation .kapi-gif-image{width:260px}body.kapi-conversation #message{font-size:22px!important;margin:12px 0 18px!important}body.kapi-conversation .kapi-visit-count{margin:25px 0!important}#kapi-eco-widgets{order:2;width:100%;height:auto;margin-top:24px}#leaf-widget{position:relative;right:auto;top:auto;max-width:300px;width:100%;margin:0 auto;transform:none;padding:20px 18px;gap:14px}#leaf-widget>div:first-child{width:auto}.leaves-container{gap:15px}#btn-claim-leaf{width:auto}.btn-kapi{font-size:16px}#kapi-highlighter{right:8px!important;bottom:8px!important}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+
+body.kapi-conversation #message{max-width:850px;text-wrap:balance}
+body::before{inset:auto auto 0 0!important;background-color:transparent!important;opacity:.65!important}
