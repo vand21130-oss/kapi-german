@@ -4358,7 +4358,7 @@ function showHoerenMenu() {
     document.getElementById("feedback-area").style.display = "none";
     document.getElementById("message").innerHTML = `🎧 Hôm nay Vịt muốn nghe gì?`;
     document.getElementById("buttons").innerHTML = `
-        <div style="max-width:760px;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:center;gap:18px;">
+        <div class="kapi-skill-grid" style="max-width:760px;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:center;gap:18px;">
             <button onclick="showGoetheHoerenMenu()" style="flex:1 1 280px;max-width:350px;min-height:220px;padding:24px;border:2px solid #9ccc65;border-radius:24px;background:linear-gradient(145deg,#f1f8e9,#dcedc8);box-shadow:0 8px 18px rgba(85,139,47,.14);cursor:pointer;text-align:left;color:#2c3e50;transition:transform .2s,box-shadow .2s;" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
                 <div style="font-size:48px;margin-bottom:12px;">📝🎧</div>
                 <div style="font-size:23px;font-weight:800;color:#558b2f;">Goethe B2 Hörtraining</div>
@@ -5649,6 +5649,7 @@ function lesenRestoreHighlights(taskId) {
 // ==========================================
 
 let highlighterUI = document.createElement('div');
+highlighterUI.id = 'kapi-highlighter';
 highlighterUI.style.position = 'fixed';
 highlighterUI.style.bottom = '20px';
 highlighterUI.style.right = '20px';

@@ -769,16 +769,19 @@
         .kapi-container.kapi-gif-mode { margin:12px 0; }
         body.learning-focus .kapi-container > .kapi-gif-image { display:none; }
     </style>
+    <link rel="stylesheet" href="kapi-theme.css?v=1">
+    <script src="kapi-theme.js?v=1" defer></script>
 </head>
-<body>
+<body class="kapi-welcome">
+    <header class="kapi-site-header"><span class="kapi-brand"><img src="assets/kapi-actions/gifs/kapi-default-still.png" alt="" width="48" height="48">Nhà Kapi</span><div id="kapi-header-wallet"></div></header>
 
     <!-- WIDGET SHOP & LÁ (Được bọc chung để tự động ẩn/hiện thông minh) -->
     <div id="kapi-eco-widgets">
         <!-- WIDGET GÓC TRÁI: CỬA HÀNG -->
-        <div id="shop-widget" class="widget-panel widget-left">
-            <h3 style="margin-top: 0; color: #d35400; text-align: center; font-size: 16px;">Kapi Shop 🛍️</h3>
+        <details id="shop-widget" class="widget-panel widget-left">
+            <summary>Kapi Shop <span aria-hidden="true">♧</span></summary>
             <div id="shop-items-container"></div>
-        </div>
+        </details>
 
         <!-- WIDGET GÓC PHẢI: LÁ & ĐIỂM DANH -->
         <div id="leaf-widget" class="widget-panel widget-right">
@@ -802,7 +805,7 @@
     <!-- ========================================================================= -->
     <div id="container">
         
-        <h1>Hallo! Ich bin Kapi 🦫</h1>
+        <h1>Hallo! Ich bin Kapi.</h1>
         
         <!-- KAPI VÀ BONG BÓNG THOẠI -->
         <div class="kapi-container">
@@ -847,7 +850,7 @@
         </div>
 
         <!-- BỘ ĐẾM LƯỢT TRUY CẬP PRO (Đếm view thật, chống F5) -->
-        <div style="text-align: center; margin-top: 40px; margin-bottom: 20px; padding: 10px;">
+        <div class="kapi-visit-count" style="text-align: center; margin-top: 40px; margin-bottom: 20px; padding: 10px;">
             <p style="font-size: 14px; color: #7f8c8d; font-weight: bold; margin-bottom: 5px;">👀 Số lượt ghé thăm bé Kapi:</p>
             <span style="font-family: Arial, sans-serif; font-size: 14px; background: #555; color: white; padding: 4px 8px; border-radius: 4px 0 0 4px;">Profile views</span><span id="fake-views" style="font-family: Arial, sans-serif; font-size: 14px; background: #fe7d37; color: white; padding: 4px 8px; border-radius: 0 4px 4px 0;">...</span>
 

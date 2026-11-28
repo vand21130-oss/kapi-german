@@ -1,0 +1,53 @@
+/* Shared visual language. No content, scoring, storage or routing rules. */
+:root{--kapi-cream:#faf8f1;--kapi-paper:#fffefb;--kapi-ink:#293a2b;--kapi-muted:#73786d;--kapi-green:#55783c;--kapi-sage:#e8eddc;--kapi-line:#e4e5d9;--kapi-shadow:0 8px 28px #30402708}
+html{background:var(--kapi-cream);color-scheme:light}
+body{background:var(--kapi-cream)!important;background-image:none!important;color:var(--kapi-ink);justify-content:flex-start;min-height:100svh;padding:0 24px 40px;box-sizing:border-box;font-family:'Segoe UI',system-ui,sans-serif;line-height:1.55}
+body::before{display:none!important}
+button,input,textarea,select{font-family:inherit}
+button,summary{touch-action:manipulation}
+button:focus-visible,summary:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid #78955b!important;outline-offset:4px}
+.kapi-site-header{display:flex;align-items:center;justify-content:space-between;width:min(1160px,100%);min-height:88px;border-bottom:1px solid var(--kapi-line);margin-bottom:30px;order:0}
+.kapi-brand{display:flex;align-items:center;gap:8px;font-size:27px;font-weight:800;letter-spacing:-1px}.kapi-brand img{object-fit:contain}
+#kapi-header-wallet{min-width:90px}.total-leaves{background:var(--kapi-sage);color:var(--kapi-green);margin:0;border-radius:24px;padding:7px 15px;font-size:14px}
+#container{width:min(1160px,100%);box-sizing:border-box;order:1;margin-inline:auto}
+#container>h1{font-size:clamp(26px,3vw,40px);line-height:1.2;letter-spacing:-1px;margin:20px 0;color:var(--kapi-ink)}
+#message{font-size:clamp(20px,2vw,26px)!important;line-height:1.55;margin:24px 0!important}
+body:not(.kapi-welcome) .kapi-gif-image{width:min(240px,55vw,28svh)}
+.kapi-welcome #container{display:grid;grid-template-columns:1.2fr 1fr;grid-template-rows:auto auto auto;column-gap:24px;text-align:left;background:linear-gradient(110deg,#edf0e1,#e3ead6);border-radius:36px;padding:64px 64px 52px;position:relative;margin-top:8px}
+.kapi-welcome #container>h1{grid-column:1;grid-row:1;align-self:end;font-size:clamp(30px,3.8vw,52px);margin:10px 0 0;letter-spacing:-1.7px}
+.kapi-welcome #container>h1::before{content:'WILLKOMMEN BEI KAPI';display:block;font-size:14px;letter-spacing:2px;color:var(--kapi-green);margin-bottom:28px;font-weight:700}
+.kapi-welcome #message{grid-column:1;grid-row:2;color:#636d5b;font-size:clamp(20px,2vw,25px)!important;max-width:480px;margin:22px 0!important}
+.kapi-welcome #buttons{grid-column:1;grid-row:3;align-self:start}.kapi-welcome #buttons>div{margin:0!important}.kapi-welcome #buttons>div>div{display:none}
+.kapi-welcome .kapi-container{grid-column:2;grid-row:1/4;align-self:center;justify-self:center;margin:0!important;width:100%;text-align:center}
+.kapi-welcome .kapi-gif-image{width:min(360px,100%);max-width:100%;height:auto}
+.kapi-welcome #timer:empty,.kapi-welcome #feedback-area{display:none}
+.kapi-visit-count{color:var(--kapi-muted);font-size:12px;opacity:.85}.kapi-welcome .kapi-visit-count{grid-column:1/-1;margin:32px 0 -24px!important;padding:0!important;text-align:center}
+.kapi-visit-count p{display:inline;font-weight:400!important;font-size:12px!important}.kapi-visit-count span{background:none!important;color:var(--kapi-muted)!important;font-size:12px!important}.kapi-visit-count span:not([id]){display:none}
+#kapi-eco-widgets{order:2;width:min(1160px,100%);margin-top:26px}
+.widget-panel{background:var(--kapi-paper);border:1px solid var(--kapi-line);box-shadow:var(--kapi-shadow);backdrop-filter:none}
+#leaf-widget{position:static;width:100%;max-width:none;box-sizing:border-box;display:flex;flex-direction:row;align-items:center;justify-content:space-between;gap:24px;padding:20px 28px;margin:0;border-radius:22px;text-align:left}
+#leaf-widget>div:first-child{font-size:16px!important;color:var(--kapi-ink)!important}.leaves-container{gap:16px;margin:0}.leaf{font-size:18px}.leaf::before{font-size:10px;color:var(--kapi-muted);margin-bottom:6px}.leaf:nth-child(1)::before{content:'T2'}.leaf:nth-child(2)::before{content:'T3'}.leaf:nth-child(3)::before{content:'T4'}.leaf:nth-child(4)::before{content:'T5'}.leaf:nth-child(5)::before{content:'T6'}.leaf:nth-child(6)::before{content:'T7'}.leaf:nth-child(7)::before{content:'CN'}
+#btn-claim-leaf{width:auto;padding:11px 20px;background:var(--kapi-paper);border:1px solid var(--kapi-green);color:var(--kapi-green);box-shadow:none;font-size:14px;white-space:nowrap}
+#shop-widget{position:absolute;top:26px;left:auto;right:max(150px,calc((100vw - 1160px)/2 + 140px));width:auto;padding:0;border:0;box-shadow:none;background:transparent;max-width:none;display:block;margin:0;z-index:110}
+#shop-widget summary{cursor:pointer;list-style:none;font-size:16px;font-weight:650;padding:9px 14px;color:var(--kapi-ink);border-radius:12px}#shop-widget summary::-webkit-details-marker{display:none}#shop-widget summary:hover{background:var(--kapi-sage)}
+#shop-widget[open] #shop-items-container{position:absolute;right:0;top:52px;width:min(340px,calc(100vw - 48px));max-height:65svh;overflow:auto;background:var(--kapi-paper);border:1px solid var(--kapi-line);padding:18px;border-radius:20px;box-shadow:0 18px 50px #243b2726;box-sizing:border-box}
+.shop-item{background:#f5f5ec;border-radius:14px;padding:12px;margin-bottom:10px}.shop-item-rule{font-size:12px}.shop-item button{font-size:12px;padding:7px 10px}.shop-week-title,.shop-owned-title{font-size:11px;color:var(--kapi-muted)}
+.btn-kapi{font-size:17px;padding:13px 22px;border-radius:14px;border:1px solid transparent;box-shadow:none!important;margin:7px;line-height:1.4;font-weight:600;transition:background .15s,transform .15s}
+.btn-kapi:hover{transform:translateY(-1px);filter:brightness(.98)}
+.btn-green,.btn-a1,.btn-lesson-3{background:#e5edda}.btn-a2,.btn-lesson-2{background:#e5eeef}.btn-b1,.btn-lesson-5{background:#f4edda}.btn-b2{background:#f5e5d7}.btn-lesson-1{background:#eee7f0}.btn-home{background:#eeeee7;color:#626b5c}.btn-red{background:#f6e2df}
+.kapi-welcome #buttons .btn-kapi{background:var(--kapi-green)!important;color:white!important;font-size:21px;padding:16px 30px;border-radius:17px}
+body.learning-focus{padding-top:0}body.learning-focus #container{width:min(1160px,100%)}
+#feedback-area,.fish-panel,.gl-panel,.lesen-panel,.lesen-daily-card,.vocab-mission,.vocab-journal-strip,.vocab-review-card,.lt-gate-panel,.koffer-story-card{background:var(--kapi-paper);border:1px solid var(--kapi-line);border-radius:20px;box-shadow:var(--kapi-shadow);box-sizing:border-box}
+.lesen-shell,.vocab-home{max-width:1080px;margin-inline:auto}.lesen-toolbar,.fish-card,.vocab-links-strip{border-color:var(--kapi-line);border-radius:14px}.lesen-readable-text{line-height:1.85}
+#feedback-area{width:100%;padding:26px}.gl-panel,.fish-panel{padding:28px}.gl-panel .gl-primary{background:var(--kapi-sage);border-color:#b6c6a4}.btn-grid{border:1px solid var(--kapi-line);background:#e8efdf;border-radius:14px}
+input[type=text],textarea,select{border:1px solid #cbd3c1;border-radius:12px;background:#fffefa;color:var(--kapi-ink);font-size:17px;line-height:1.6}input[type=radio],input[type=checkbox]{accent-color:var(--kapi-green)}
+.transcript-box{border:1px solid var(--kapi-line);border-radius:14px}audio{max-width:100%;border-radius:16px}
+#kapi-highlighter{border:1px solid var(--kapi-line)!important;border-radius:18px!important;box-shadow:var(--kapi-shadow)!important;padding:7px!important;right:16px!important;bottom:16px!important;font-family:inherit!important}
+#kapi-highlighter>div{display:none}#kapi-highlighter:hover>div,#kapi-highlighter:focus-within>div{display:block;max-width:240px}#kapi-highlighter button{background:#edf1df!important;border-radius:12px!important;box-shadow:none!important;color:var(--kapi-green)!important}
+@media(max-width:700px){body{padding:0 16px 72px}.kapi-site-header{min-height:74px;margin-bottom:18px}.kapi-brand{font-size:21px}.kapi-brand img{width:36px;height:36px}.total-leaves{font-size:12px;padding:6px 9px}#shop-widget{top:20px;right:110px}#shop-widget summary{font-size:13px;padding:8px}#shop-widget[open] #shop-items-container{right:-85px}.kapi-welcome #container{padding:28px 24px;grid-template-columns:1fr;text-align:center;border-radius:26px;gap:0}.kapi-welcome #container>h1{grid-row:1;font-size:32px;letter-spacing:-1px}.kapi-welcome #container>h1::before{font-size:11px;margin-bottom:16px}.kapi-welcome .kapi-container{grid-column:1;grid-row:2;margin:12px 0!important}.kapi-welcome .kapi-gif-image{width:min(250px,65vw)}.kapi-welcome #message{grid-row:3;font-size:19px!important;margin:8px 0 20px!important}.kapi-welcome #buttons{grid-row:4}.kapi-welcome .kapi-visit-count{grid-row:5;margin:24px 0 0!important}#leaf-widget{flex-wrap:wrap;gap:15px;padding:20px;justify-content:center;text-align:center}#leaf-widget>div:first-child{width:100%}.leaves-container{gap:14px}#btn-claim-leaf{width:100%}.gl-panel,.fish-panel,#feedback-area{padding:18px}.btn-kapi{font-size:16px;padding:12px 16px;margin:5px}.grid-container{max-width:100%}#message{overflow-wrap:anywhere}}
+@media(prefers-reduced-motion:reduce){.btn-kapi{transition:none}.btn-kapi:hover{transform:none}}
+/* Large legacy menu tiles use the same surfaces without changing their actions. */
+.kapi-skill-grid{max-width:1080px!important;display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px!important}
+.kapi-skill-grid>button,.kapi-skill-grid>a{width:100%;max-width:none!important;min-width:0;min-height:230px!important;border:1px solid var(--kapi-line)!important;border-radius:20px!important;background:var(--kapi-paper)!important;box-shadow:var(--kapi-shadow)!important;padding:24px!important;box-sizing:border-box}
+.kapi-skill-grid>button>div:first-child,.kapi-skill-grid>a>div:first-child{font-size:30px!important}.kapi-skill-grid>button>div:nth-child(2),.kapi-skill-grid>a>div:nth-child(2){font-size:20px!important;color:var(--kapi-ink)!important}.kapi-skill-grid>button>div:last-child,.kapi-skill-grid>a>div:last-child{background:var(--kapi-sage)!important;color:var(--kapi-green)!important}
+@media(max-width:760px){.kapi-skill-grid{grid-template-columns:1fr}.kapi-skill-grid>button,.kapi-skill-grid>a{min-height:0!important}}
