@@ -770,7 +770,8 @@
         body.learning-focus .kapi-container > .kapi-gif-image { display:none; }
     </style>
     <link rel="stylesheet" href="kapi-theme.css?v=1">
-    <script src="kapi-theme.js?v=1" defer></script>
+    <link rel="stylesheet" href="kapi-pencil.css?v=1">
+    <script src="kapi-theme.js?v=2" defer></script>
 </head>
 <body class="kapi-welcome">
     <header class="kapi-site-header"><span class="kapi-brand"><img src="assets/kapi-actions/gifs/kapi-default-still.png" alt="" width="48" height="48">Nhà Kapi</span><div id="kapi-header-wallet"></div></header>
@@ -786,7 +787,7 @@
         <!-- WIDGET GÓC PHẢI: LÁ & ĐIỂM DANH -->
         <div id="leaf-widget" class="widget-panel widget-right">
             <div class="total-leaves">💰 Ví: <span id="total-leaves-count">0</span> 🍃</div>
-            <div style="font-size: 13px; font-weight: bold; color: #555;">Chuỗi tuần này:</div>
+            <div style="font-size: 13px; font-weight: bold; color: #555;">Tuần này của cậu</div>
             <div id="leaves-container" class="leaves-container">
                 <span class="leaf" id="day-1">🍂</span>
                 <span class="leaf" id="day-2">🍂</span>
@@ -1050,6 +1051,8 @@
                 const claimed = sysData.weeklyClaims.includes(dateKey);
                 const missed = dateKey < todayKey && !claimed;
                 leaf.classList.toggle('leaf-missed', missed);
+                leaf.classList.toggle('leaf-claimed', claimed);
+                leaf.setAttribute('aria-label', `Ngày ${i}: ${claimed ? 'Đã điểm danh' : 'Chưa điểm danh'}`);
                 leaf.title = claimed ? 'Đã điểm danh 🌿' : missed ? 'Đã bỏ lỡ :(' : dateKey === todayKey ? 'Hôm nay đang chờ điểm danh' : 'Chưa tới ngày';
                 leaf.innerHTML = claimed ? '🌿' : missed ? '🍂<small class="missed-face">:(</small>' : '🍂';
             }
